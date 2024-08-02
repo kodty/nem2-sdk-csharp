@@ -1,3 +1,5 @@
+Contact: kailin.odonnell.it3@gmail.com 
+
 ### Nem2 (Catapult) CSharp SDK
 
 :warning: this sdk is in alpha state and will change in the next versions
