@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35506.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration-Tests", "Integration-Tests\Integration-Tests.csproj", "{8183AA0E-563A-4E6D-A62D-3727EF2129B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unit-Tests", "Unit-Tests\Unit-Tests.csproj", "{88ED0BA7-7DC2-4C8B-A99A-0ADF6B6BE4C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nem2-sdk", "nem2-sdk-csharp\nem2-sdk.csproj", "{B4D2AB5F-7C19-4BC4-AB51-00E5C64EEE72}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8183AA0E-563A-4E6D-A62D-3727EF2129B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8183AA0E-563A-4E6D-A62D-3727EF2129B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8183AA0E-563A-4E6D-A62D-3727EF2129B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8183AA0E-563A-4E6D-A62D-3727EF2129B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88ED0BA7-7DC2-4C8B-A99A-0ADF6B6BE4C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88ED0BA7-7DC2-4C8B-A99A-0ADF6B6BE4C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88ED0BA7-7DC2-4C8B-A99A-0ADF6B6BE4C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88ED0BA7-7DC2-4C8B-A99A-0ADF6B6BE4C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4D2AB5F-7C19-4BC4-AB51-00E5C64EEE72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4D2AB5F-7C19-4BC4-AB51-00E5C64EEE72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4D2AB5F-7C19-4BC4-AB51-00E5C64EEE72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4D2AB5F-7C19-4BC4-AB51-00E5C64EEE72}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,493 @@
+using io.nem2.sdk.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.src.Infrastructure.Buffers.Model.JsonConverters;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using io.nem2.sdk.src.Model.Network;
+using Newtonsoft.Json;
+using System.Diagnostics;
+using System.Reactive.Linq;
+
+namespace Integration_Tests
+{
+    public class Tests
+    {
+
+        [SetUp]
+        public void Setup()
+        {
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchTransactions()
+        {
+            string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
+            PublicAccount acc = new PublicAccount(pubKey, NetworkType.Types.MAIN_NET);
+            Assert.That(acc.Address.Plain, Is.EqualTo("NASYMBOLLK6FSL7GSEMQEAWN7VW55ZSZU25TBOA"));
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.TRANSFER.GetValue());
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.HASH_LOCK.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+                ((SimpleTransfer)i).Mosaics
+                    .ForEach(m =>
+                    {
+                        Assert.That(m.Id, Is.EqualTo("E74B99BA41F4AFEE"));
+                        Assert.That(m.Amount, Is.GreaterThan(0));
+
+                    });
+
+                Assert.That(i.Meta.Height, Is.GreaterThan(0));
+                Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchTransferTransaction()
+        {
+            string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.TRANSFER.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((SimpleTransfer)i);
+
+                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                Assert.That(tx.Mosaics[0].Amount, Is.GreaterThan(0));
+                Assert.That(tx.Mosaics[0].Id, Is.EqualTo("E74B99BA41F4AFEE"));
+                Assert.That(tx.Meta.Hash.Length, Is.EqualTo(64));
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearcNameSpaceRegistrationTransaction()
+        {
+            string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((NamespaceRegistration)i);
+
+                if (tx.RegistrationType == 0)
+                {
+                    tx = (RootNamespaceRegistration)tx;
+                    Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                    Assert.That(tx.Name, Is.EqualTo("symbol"));
+                    Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+                }
+                if (tx.RegistrationType == 1)
+                {
+                    tx = (ChildNamespaceRegistration)tx;
+                    Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                    Assert.That(tx.Name, Is.EqualTo("xym"));
+                    Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+                }
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchMosaicSupplyTransaction()
+        {
+            string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((MosaicSupplyChange)i);
+
+                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                Assert.That(tx.Action, Is.EqualTo(1));
+                Assert.That(tx.Signature, Is.EqualTo("6FC30E98378ADBA9F79D5CEF2ECBCB6D3AD6010FC265708E62419862534D51E3F56B688B55B01AE631281CC589FB1FEFF43D88141B13AD5C9C63A5E15D0E320A"));
+                Assert.That(tx.Version, Is.EqualTo(1));
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchMosaicSupplyRevocationTransaction()
+        {
+            string pubKey = "6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((MosaicSupplyRevocation)i);
+
+                Assert.That(tx.SignerPublicKey, Is.EqualTo("6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D"));
+                Assert.That(tx.SourceAddress.Length, Is.EqualTo(48));
+               // Assert.That(tx.Iri.Length, Is.EqualTo(24));
+                Assert.That(tx.Version, Is.EqualTo(1));
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchMosaicDefinitionTransaction()
+        {
+            string pubKey = "6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.MOSAIC_DEFINITION.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((MosaicDefinition)i);
+
+                Assert.That(tx.Duration, !Is.EqualTo(null));
+                Assert.That(tx.SignerPublicKey, Is.EqualTo("6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D"));
+                Assert.That(tx.Meta, !Is.EqualTo(null));
+                Assert.That(tx.Meta.Hash.Length, Is.EqualTo(64));
+              //  Assert.That(tx.Iri.Length, Is.EqualTo(24));
+                Assert.That(tx.Version, Is.EqualTo(1));
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchHashLockTransaction()
+        {
+            string pubKey = "1799A50301C17D0BA45D2599193B49C4A5377640B3D6695B84F6320466958B5C";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.HASH_LOCK.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((HashLockT)i);
+
+                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                Assert.That(tx.Amount, Is.GreaterThan(0));
+
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchSecretLockTransaction()
+        {
+            string pubKey1 = "1799A50301C17D0BA45D2599193B49C4A5377640B3D6695B84F6320466958B5C";
+            string pubKey = "D4A1468E54DD31B850CF9ABFFD32EFB98547091301668E777A43D3D88BEB76D8";
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            //qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey1);
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.SECRET_LOCK.GetValue());
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.HASH_LOCK.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                if (i.Type.GetValue() == 16722)
+                {
+                    var tx = ((SecretLockT)i);
+
+                    Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                    Assert.That(tx.Secret.Length, Is.GreaterThan(0));
+                }
+                if (i.Type.GetValue() == 16712)
+                {
+                    var tx = ((HashLockT)i);
+
+                    Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                    Assert.That(tx.Hash.Length, Is.GreaterThan(0));
+                }
+
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchSecretProofTransaction()
+        {
+            string pubKey1 = "1799A50301C17D0BA45D2599193B49C4A5377640B3D6695B84F6320466958B5C";
+            string pubKey = "D4A1468E54DD31B850CF9ABFFD32EFB98547091301668E777A43D3D88BEB76D8";
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.SECRET_PROOF.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                if (i.Type.GetValue() == 16722)
+                {
+                    var tx = ((SecretProofT)i);
+
+                    Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                    Assert.That(tx.Secret.Length, Is.GreaterThan(0));
+                }
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchAddressAlias()
+        {
+            string pubKey = "6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.ADDRESS_ALIAS.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((AddressAlias)i);
+
+                Assert.That(tx.Address, Is.EqualTo("684575A96630EC6C0B9FBF3408007213321AFF07A7837E50"));
+                Assert.That(tx.SignerPublicKey, Is.EqualTo("6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D"));
+                Assert.That(tx.Meta, !Is.EqualTo(null));
+                Assert.That(tx.Meta.Hash.Length, Is.EqualTo(64));
+               // Assert.That(tx.Iri.Length, Is.EqualTo(24));
+                Assert.That(tx.Version, Is.EqualTo(1));
+                Assert.That(tx.AliasAction, Is.GreaterThanOrEqualTo(0));
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchMosaicAlias()
+        {
+            string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.MOSAIC_ALIAS.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((MosaicAlias)i);
+
+                Assert.That(tx.AliasAction, Is.GreaterThan(-1));
+                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                Assert.That(tx.Meta, !Is.EqualTo(null));
+                Assert.That(tx.Meta.Hash.Length, Is.EqualTo(64));
+               // Assert.That(tx.Iri.Length, Is.EqualTo(24));
+                Assert.That(tx.Version, Is.EqualTo(1));
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchKeyLinkTransaction()
+        {
+            string pubKey = "0B349D6FB4E93FAB29065D51B7A5375FFAF3856BA7F64DDE66B86579816D6E77";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.NODE_KEY_LINK.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((KeyLink)i);
+
+                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64)); 
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchVotingKeyLinkTransaction()
+        {
+            string pubKey = "AFF16052217A847A6A71B326FEA9073CFF70D07FC5BA9026B3E05FB453C950DF";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.VOTING_KEY_LINK.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((VotingKeyLink)i);
+
+                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
+            });
+        }
+
+       
+
+       
+
+       
+
+        [Test, Timeout(20000)]
+        public async Task SearchMosaicAddressRestriction()
+        {
+            string pubKey = "832BFCCC60E3E76C3B9FC63C10751064FA9A9FCC5E00DE7F283F1D0B66A25486";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((MosaicAddressRestriction)i);
+
+                Assert.That(tx.RestrictionKey.Length, Is.GreaterThan(0));
+                Assert.That(tx.SignerPublicKey, Is.EqualTo("832BFCCC60E3E76C3B9FC63C10751064FA9A9FCC5E00DE7F283F1D0B66A25486"));
+                Assert.That(tx.Meta, !Is.EqualTo(null));
+                Assert.That(tx.Meta.Hash.Length, Is.EqualTo(64));
+                //Assert.That(tx.Iri.Length, Is.EqualTo(24));
+                Assert.That(tx.Version, Is.EqualTo(1));
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchAccountOpperationRestriction()
+        {
+            string pubKey = "6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.ACCOUNT_OPERATION_RESTRICTION.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((AccountOpperationRestriction)i);
+
+                Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_OPERATION_RESTRICTION));
+                Assert.That(tx.SignerPublicKey, Is.EqualTo("6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D"));
+                Assert.That(tx.Meta, !Is.EqualTo(null));
+                Assert.That(tx.Meta.Hash.Length, Is.EqualTo(64));
+                //Assert.That(tx.Iri.Length, Is.EqualTo(24));
+                Assert.That(tx.Version, Is.EqualTo(1));
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchAccountMosaicRestriction()
+        {
+            string pubKey = "6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.ACCOUNT_MOSAIC_RESTRICTION.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((AccountMosaicRestriction)i);
+
+                Assert.That(tx.SignerPublicKey.Length, Is.GreaterThan(0));
+                Assert.That(tx.SignerPublicKey, Is.EqualTo("6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D"));
+                Assert.That(tx.Meta, !Is.EqualTo(null));
+                Assert.That(tx.Meta.Hash.Length, Is.EqualTo(64));
+                //Assert.That(tx.Iri.Length, Is.EqualTo(24));
+                Assert.That(tx.Version, Is.EqualTo(1));
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchAccountAddressRestriction()
+        {
+            string pubKey = "6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((MosaicAddressRestriction)i);
+
+                Assert.That(tx.RestrictionKey.Length, Is.GreaterThan(0));
+                Assert.That(tx.SignerPublicKey, Is.EqualTo("6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D"));
+                Assert.That(tx.Meta, !Is.EqualTo(null));
+                Assert.That(tx.Meta.Hash.Length, Is.EqualTo(64));
+                //Assert.That(tx.Iri.Length, Is.EqualTo(24));
+                Assert.That(tx.Version, Is.EqualTo(1));
+            });
+        }   
+    }
+}
