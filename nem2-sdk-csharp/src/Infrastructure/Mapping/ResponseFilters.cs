@@ -1,126 +1,215 @@
 ﻿using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using io.nem2.sdk.src.Infrastructure.Buffers.Model.JsonConverters;
-
 
 namespace io.nem2.sdk.src.Infrastructure.Mapping
 {
     internal static class ResponseFilters<T> where T : class
     {
-        public static T GetTransaction(TransactionData tx)
+        internal static List<T> FilterEvents(string data, string path = null)
         {
-            return (T)Convert.ChangeType(tx, typeof(T));
-        }
-
-        internal static List<T> FilterEvents(string data)
-        {
-            var evs = JObject.Parse(data);
+            var evs = path == null ?  JToken.Parse(data) : JToken.Parse(data)[path];
 
             List<T> events = new List<T>();
 
             foreach (var e in evs)
             {
-                events.Add(JsonConvert.DeserializeObject<T>(e.ToString(), new EventConverter(typeof(T))));
+                events.Add((T)ObjectComposer.GenerateObject(typeof(T), e));
             }
            
             return events;
         }
 
-        internal static T FilterEvent(string data)
+        internal static List<T> FilterMany(string data, string path = null)
         {
-            return ObjectComposer.GenerateObject<T>(data); //  JsonConvert.DeserializeObject<T>(data, new EventConverter(typeof(T)));
-        }
-
-        internal static List<T> FilterType(string data)
-        {
-            var tx = JObject.Parse(data)["data"].ToList();
+            var tx = path == null ? JToken.Parse(data).ToList() : JToken.Parse(data)[path].ToList();
 
             List<T> txs = new List<T>();
 
             foreach (var t in tx)
             {
-                    txs.Add(JsonConvert.DeserializeObject<T>(t.ToString()));
+                txs.Add(FilterSingle(t.ToString()));
             }
+
             return txs;
         }
 
-        internal static T FilterSingle(string data, bool embedded = false)
+        internal static T GetBaseTransaction(JObject ob)
+        {
+            return ObjectComposer.GenerateObject<T>(ob.ToString());
+        }
+
+        internal static string GetSpecifiedTx(JObject ob)
+        {
+            return ob["transaction"].ToString();
+        }
+
+        internal static TransactionTypes.Types GetTxType(JObject tx)
+        {
+            return TransactionTypes.GetRawValue((ushort)tx["transaction"]["type"]);
+        }
+
+        internal static T FilterSingle(string data)
         {
             var tx = JObject.Parse(data);
 
-            var type = TransactionTypes.GetRawValue((ushort)tx["transaction"]["type"]);
+            dynamic shell = GetBaseTransaction(tx);
+
+            var type = GetTxType(tx);
 
             if (type == TransactionTypes.Types.TRANSFER)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedSimpleTransfer) : typeof(SimpleTransfer))]);
+            { 
+                if(typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<SimpleTransfer>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedSimpleTransfer>(GetSpecifiedTx(tx));
 
+                return shell;
+            }
             if (type == TransactionTypes.Types.NAMESPACE_REGISTRATION)
             {
                 if ((int)tx["transaction"]["registrationType"] == 0)
                 {
-                    return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedRootNamespaceRegistration) : typeof(RootNamespaceRegistration))]);
+                    if (typeof(T) == typeof(TransactionData))
+                        shell.Transaction = ObjectComposer.GenerateObject<RootNamespaceRegistration>(GetSpecifiedTx(tx));
+                    if (typeof(T) == typeof(EmbeddedTransactionData))
+                        shell.Transaction = ObjectComposer.GenerateObject<EmbeddedRootNamespaceRegistration>(GetSpecifiedTx(tx));
+
+                    return shell;
                 }
                 if ((int)tx["transaction"]["registrationType"] == 1)
                 {
-                    return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedChildNamespaceRegistration) : typeof(ChildNamespaceRegistration))]);
+                    if (typeof(T) == typeof(TransactionData))
+                        shell.Transaction = ObjectComposer.GenerateObject<ChildNamespaceRegistration>(GetSpecifiedTx(tx));
+                    if (typeof(T) == typeof(EmbeddedTransactionData))
+                        shell.Transaction = ObjectComposer.GenerateObject<EmbeddedChildNamespaceRegistration>(GetSpecifiedTx(tx));
+
+                    return shell;
                 }
             }
             if (type == TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedMosaicSupplyChange) : typeof(MosaicSupplyChange))]);
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<MosaicSupplyChange>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedMosaicSupplyChange>(GetSpecifiedTx(tx));
 
+                return shell;
+            }
             if (type == TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedMosaicSupplyRevocation) : typeof(MosaicSupplyRevocation))]);
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<MosaicSupplyRevocation>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedMosaicSupplyRevocation>(GetSpecifiedTx(tx));
 
+                return shell;
+            }
             if (type == TransactionTypes.Types.HASH_LOCK)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedHashLockTransaction) : typeof(HashLockT))]);
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<HashLockT>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedHashLockT>(GetSpecifiedTx(tx));
 
+                return shell;
+            }
             if (type == TransactionTypes.Types.SECRET_LOCK)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedSecretLockT) : typeof(SecretLockT))]);
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<SecretLockT>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedSecretLockT>(GetSpecifiedTx(tx));
 
+                return shell;
+            }
             if (type == TransactionTypes.Types.SECRET_PROOF)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedSecretProofT) : typeof(SecretProofT))]);
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<SecretProofT>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedSecretProofT>(GetSpecifiedTx(tx));
 
+                return shell;
+            }
             if (type == TransactionTypes.Types.ADDRESS_ALIAS)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedAddressAlias) : typeof(AddressAlias))]);
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<AddressAlias>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedAddressAlias>(GetSpecifiedTx(tx));
 
+                return shell;
+            }
             if (type == TransactionTypes.Types.MOSAIC_ALIAS)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedMosaicAlias) : typeof(MosaicAlias))]);
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<MosaicAlias>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedMosaicAlias>(GetSpecifiedTx(tx));
 
+                return shell;
+            }
             if (type == TransactionTypes.Types.ACCOUNT_ADDRESS_RESTRICTION)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedAccountAddressRestriction) : typeof(AccountAddressRestriction))]);
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<AccountAddressRestriction>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedAccountAddressRestriction>(GetSpecifiedTx(tx));
 
+                return shell;
+            }
             if (type == TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedAccountAddressRestriction) : typeof(MosaicAddressRestriction))]);
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<MosaicAddressRestriction>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedMosaicAddressRestriction>(GetSpecifiedTx(tx));
 
+                return shell;
+            }
             if (type == TransactionTypes.Types.ACCOUNT_MOSAIC_RESTRICTION)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedAccountMosaicRestriction) : typeof(AccountMosaicRestriction))]);
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<AccountMosaicRestriction>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedAccountMosaicRestriction>(GetSpecifiedTx(tx));
 
+                return shell;
+            }
             if (type == TransactionTypes.Types.ACCOUNT_KEY_LINK
              || type == TransactionTypes.Types.NODE_KEY_LINK
              || type == TransactionTypes.Types.VRF_KEY_LINK)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedKeyLink) : typeof(KeyLink))]);
-
-            if (type == TransactionTypes.Types.VOTING_KEY_LINK)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(embedded ? typeof(EmbeddedVotingKeyLink) : typeof(VotingKeyLink))]);
-
-            if (type == TransactionTypes.Types.AGGREGATE_COMPLETE || type == TransactionTypes.Types.AGGREGATE_BONDED)
-                return JsonConvert.DeserializeObject<T>(tx.ToString(), [new TransactionConverter(typeof(Aggregate))]);
-
-            else throw new NotImplementedException();   
-        }
-        internal static List<T> Filter(string data, bool embedded = false)
-        {
-            var tx = JObject.Parse(data)["data"].ToList();
-
-            List<T> txs = new List<T>();
-
-            foreach (var t in tx)
             {
-                txs.Add(FilterSingle(t.ToString(), embedded));
-            }
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<KeyLink>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedKeyLink>(GetSpecifiedTx(tx));
 
-            return txs;
+                return shell;          
+            }
+            if (type == TransactionTypes.Types.VOTING_KEY_LINK)
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<VotingKeyLink>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedVotingKeyLink>(GetSpecifiedTx(tx));
+
+                return shell;             
+            }
+            if (type == TransactionTypes.Types.AGGREGATE_COMPLETE || type == TransactionTypes.Types.AGGREGATE_BONDED)
+            {
+                shell.Transaction = ObjectComposer.GenerateObject<Aggregate>(GetSpecifiedTx(tx));
+
+                return shell;
+            }
+            if (type == TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION)
+            {
+                shell.Transaction = ObjectComposer.GenerateObject<MultisigModification>(GetSpecifiedTx(tx));
+
+                return shell;
+            }
+            else throw new NotImplementedException("TransactionTypes.Type not implemented");   
         }
     }
 }

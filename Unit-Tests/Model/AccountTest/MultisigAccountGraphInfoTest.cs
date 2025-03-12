@@ -14,7 +14,6 @@
 // 
 
 using io.nem2.sdk.Infrastructure.Buffers.Model;
-using Newtonsoft.Json;
 
 namespace test.Model.AccountTest
 {

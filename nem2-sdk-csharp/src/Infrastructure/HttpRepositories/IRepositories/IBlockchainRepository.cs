@@ -32,7 +32,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
     {
         IObservable<List<BlockInfo>> SearchBlocks(QueryModel queryModel);
         IObservable<BlockInfo> GetBlock(ulong height);
-        IObservable<MerkleRoot> GetBlockTransactionMerkle(ulong height, string hash);
-        IObservable<MerkleRoot> GetBlockRecieptMerkle(ulong height, string hash);
+        IObservable<List<MerklePath>> GetBlockTransactionMerkle(ulong height, string hash);
+        IObservable<List<MerklePath>> GetBlockRecieptMerkle(ulong height, string hash);
     }
 }

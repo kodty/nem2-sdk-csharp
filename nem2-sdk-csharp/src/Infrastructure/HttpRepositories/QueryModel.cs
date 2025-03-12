@@ -23,7 +23,7 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.ComponentModel;
+//using System.ComponentModel;
 using System.Diagnostics;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
@@ -88,41 +88,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
             ParamRequestCompatible(param);
 
             ParamMap.Add(ParamMap.Count == 0 ? ("?" + param.ToString() + "=") : ((ParamMap.Count + 1).ToString() + "&" + param.ToString() + "="), value);
-
-            /*
-            if (param == DefinedParams.pageSize)
-            {
-                ParamMap.Add("?" + DefinedParams.pageSize + "=", value);
-                return;
-            }
-
-            if (param == DefinedParams.order)
-            {
-                ParamMap.Add("?order=", value);
-                return;
-            }
-            if (param == DefinedParams.orderBy)
-            {
-                ParamMap.Add("?orderBy=", value);
-                return;
-            }
-            if (param == DefinedParams.offset)
-            {
-                ParamMap.Add("?offset=", value);
-                return;
-            }
-            if (param == DefinedParams.mosaicId)
-            {
-                ParamMap.Add("?mosaicId=", value);
-                return;
-            }
-            
-            if (param == DefinedParams.pageNumber)
-            {
-                ParamMap.Add("?pageNumber=", value);
-                return;
-            }
-            */
         }
 
         public void SetParam(DefinedParams param, int value) => SetParam(param, value.ToString());
@@ -135,40 +100,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         {
 
             ParamMap.Remove("?" + param.ToString() + "=");
-
-
-            /*
-            if (param == DefinedParams.order)
-            {
-                ParamMap.Remove("?order=");
-                return;
-            }
-            if (param == DefinedParams.orderBy)
-            {
-                ParamMap.Remove("?orderBy=");
-                return;
-            }
-            if (param == DefinedParams.offset)
-            {
-                ParamMap.Remove("?offset=");
-                return;
-            }
-            if (param == DefinedParams.mosaicId)
-            {
-                ParamMap.Remove("?mosaicId=");
-                return;
-            }
-            if (param == DefinedParams.pageSize)
-            {
-                ParamMap.Remove("?" + DefinedParams.pageSize + "=");
-                return;
-            }
-            if (param == DefinedParams.pageNumber)
-            {
-                ParamMap.Remove("?pageNumber=");
-                return;
-            }
-            */
         }
 
         public void Flush()
@@ -247,17 +178,15 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
         public enum Order
         {
-            [Description("desc")]
             Desc = 0,
-            [Description("asc")]
+
             Asc = 1
         }
 
         public enum OrderBy
         {
-            [Description("balance")]
             Balance = 0,
-            [Description("id")]
+
             Id = 1
         }
     }

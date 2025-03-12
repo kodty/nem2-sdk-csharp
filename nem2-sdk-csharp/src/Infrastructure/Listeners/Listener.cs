@@ -32,7 +32,6 @@ using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Infrastructure.Mapping;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace io.nem2.sdk.Infrastructure.Listeners
@@ -68,7 +67,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
                     .GetAwaiter()
                     .GetResult();
 
-                Uid = JsonConvert.DeserializeObject<WebsocketUID>(ReadSocket().Result);
+                Uid = ObjectComposer.GenerateObject<WebsocketUID>(ReadSocket().Result);
 
                 LoopReads = Task.Run(() => LoopRead());
 
@@ -125,9 +124,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
             SubscribeToChannel("block");
 
             return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("block")))
-               .Select(JsonConvert.DeserializeObject<BlockInfo>);
-        
-              //var network = (int)Convert.ToInt64(block.Block.Version.ToString("X").Substring(0, 2), 16);          
+               .Select(ObjectComposer.GenerateObject<BlockInfo>);         
         }
 
         public IObservable<TransactionData> ConfirmedTransactionsGiven(Address address)
@@ -137,7 +134,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
             SubscribeToChannel(string.Concat("confirmedAdded/", address.Plain));
 
             return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("confirmedAdded")))
-               .Select(e => ResponseFilters<TransactionData>.FilterSingle(e));         
+               .Select(ResponseFilters<TransactionData>.FilterSingle);         
             
         }
 
@@ -148,7 +145,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
             SubscribeToChannel(string.Concat("unconfirmedAdded/", address.Plain));
 
             return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("unconfirmedAdded")))
-                 .Select(e => ResponseFilters<TransactionData>.FilterSingle(e));
+                 .Select(ResponseFilters<TransactionData>.FilterSingle);
         }
 
         public IObservable<TransactionData> UnconfirmedTransactionsRemoved(Address address)
@@ -158,7 +155,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
             SubscribeToChannel(string.Concat("unconfirmedRemoved/", address.Plain));
 
             return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("unconfirmedRemoved")))
-                 .Select(e => ResponseFilters<TransactionData>.FilterSingle(e));
+                 .Select(ResponseFilters<TransactionData>.FilterSingle);
         }
 
         public IObservable<TransactionData> AggregateBondedAdded(Address address)
@@ -168,7 +165,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
             SubscribeToChannel(string.Concat("partialAdded/", address.Plain));
 
             return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("partialAdded")))
-                .Select(e => ResponseFilters<TransactionData>.FilterSingle(e));
+                .Select(ResponseFilters<TransactionData>.FilterSingle);
         }
 
         public IObservable<TransactionData> AggregateBondedRemoved(Address address)
@@ -178,7 +175,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
             SubscribeToChannel(string.Concat("partialRemoved/", address.Plain));
 
             return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("partialRemoved")))
-                 .Select(e => ResponseFilters<TransactionData>.FilterSingle(e));
+                 .Select(ResponseFilters<TransactionData>.FilterSingle);
         }
         public class TransactionStatus
         {
@@ -191,7 +188,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
             SubscribeToChannel(string.Concat("status/", address.Plain));
 
             return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Name.ToString().Contains("status")))          
-                .Select(JsonConvert.DeserializeObject<TransactionStatus>);
+                .Select(ObjectComposer.GenerateObject<TransactionStatus>);
         }
 
         public IObservable<CosignatureSignedTransaction> CosignatureAdded(Address address)
@@ -201,7 +198,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
             SubscribeToChannel(string.Concat("cosignature/", address.Plain));
 
             return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("cosignature")))
-                .Select(JsonConvert.DeserializeObject<CosignatureSignedTransaction>);
+                .Select(ObjectComposer.GenerateObject<CosignatureSignedTransaction>);
         }
 
         private bool TransactionFromAddress(Transaction transaction, Address address)

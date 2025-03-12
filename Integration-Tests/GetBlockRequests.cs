@@ -1,13 +1,8 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model.Network;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Integration_Tests
 {
@@ -31,11 +26,11 @@ namespace Integration_Tests
             var response = await blockHttp.SearchBlocks(queryModel);
 
             response.ForEach(i => {
-                Assert.That(i.Block.NetworkType, Is.EqualTo(NetworkType.Types.MAIN_NET.GetNetworkByte()));
+                Assert.That(i.Block.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
                 Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
                 Assert.That(i.Meta.StatementsCount, Is.EqualTo(259));
                 Assert.That(i.Meta.TotalFee, Is.EqualTo(0));
-                Assert.That(i.BlockID, Is.EqualTo("6644D77CED4FBE21460A2223"));
+                Assert.That(i.Id, Is.EqualTo("6644D77CED4FBE21460A2223"));
                 Assert.That(i.Block.Height, Is.GreaterThan(0));
                
             });
@@ -48,22 +43,24 @@ namespace Integration_Tests
 
             var response = await blockHttp.GetBlock(1);
       
-            Assert.That(response.Block.NetworkType, Is.EqualTo(NetworkType.Types.MAIN_NET.GetNetworkByte()));
+            Assert.That(response.Block.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
             Assert.That(response.Meta.StatementsCount, Is.EqualTo(259));
             Assert.That(response.Meta.TotalFee, Is.EqualTo(0));
-            Assert.That(response.BlockID, Is.EqualTo("6644D77CED4FBE21460A2223"));
+            Assert.That(response.Id, Is.EqualTo("6644D77CED4FBE21460A2223"));
             Assert.That(response.Block.Height, Is.GreaterThan(0));
         }
 
-        //[Test, Timeout(20000)]
-        public async Task GetblockMerkle()
+        [Test, Timeout(20000)]
+        public async Task GetBlockTransactionMerkle()
         {
             var blockHttp = new BlockchainHttp("75.119.150.108", 3000);
 
-            var response = await blockHttp.GetBlockTransactionMerkle(1, "31F7F7C54D268BB1DE6FA53C3EC5CCD0F2CEFBB9BFD2AADFEDDD36CD8FEDF444");
+            var response = await blockHttp.GetBlockTransactionMerkle(1, "B3FAD63E287D08209AA9CBE5E2E48CC1BEB1DA57993CBE7BE17E39C089186302");
 
-           // return 
+            Assert.That(response[0].Hash, Is.EqualTo("035B8D7AA90D41724506E2DD1A9A8D5B47B9AF5BB627904B591F9221D08CF335"));
+            Assert.That(response[0].Position, Is.EqualTo("right"));
+           
         }
 
         [Test, Timeout(20000)]

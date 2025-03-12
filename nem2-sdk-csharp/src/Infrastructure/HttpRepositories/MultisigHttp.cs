@@ -1,10 +1,8 @@
-﻿using io.nem2.sdk.Infrastructure.Buffers.Model;
-using io.nem2.sdk.Infrastructure.HttpRepositories;
+﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.src.Model.Network;
-using Newtonsoft.Json;
+using io.nem2.sdk.src.Infrastructure.Mapping;
 using System.Reactive.Linq;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
@@ -20,9 +18,8 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
         public IObservable<MerkleRoot> GetMultisigMerkleInfo(Address account)
         {
-            return Observable.FromAsync(
-                 async ar => await Client.GetStringAsync(Host + ":" + Port + "/accounts/" + account.Plain + "/multisig/merkle"))
-                 .Select(JsonConvert.DeserializeObject<MerkleRoot>);
+            return Observable.FromAsync(async ar => await Client.GetStringAsync(Host + ":" + Port + "/accounts/" + account.Plain + "/multisig/merkle"))
+                 .Select(ObjectComposer.GenerateObject<MerkleRoot>);
         }
 
         /*

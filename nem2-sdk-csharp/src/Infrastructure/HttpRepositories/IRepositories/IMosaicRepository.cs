@@ -30,13 +30,13 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
     interface IMosaicRepository
     {
-        IObservable<Mosaics> SearchMosaics(QueryModel queryModel);
+        IObservable<List<MosaicEvent>> SearchMosaics(QueryModel queryModel);
         IObservable<MosaicEvent> GetMosaic(string mosaicId);
         IObservable<List<MosaicEvent>> GetMosaics(List<string> mosaicIds);
         IObservable<MerkleRoot> GetMosaicMerkle(string mosaicId);
 
         // restrictions
-        IObservable<MosaicRestrictions> SearchMosaicRestrictions(QueryModel queryModel);
+        IObservable<List<MRestrictionData>> SearchMosaicRestrictions(QueryModel queryModel);
         IObservable<MosaicRestrictionEntry> GetMosaicRestriction(string compositeHash);
         IObservable<MerkleRoot> GetMosaicRestrictionMerkle(string compositeHash);
     }

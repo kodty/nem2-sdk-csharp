@@ -31,22 +31,22 @@ namespace io.nem2.sdk.Model.Transactions
     {       
         public enum Types
         {
-            ACCOUNT_KEY_LINK = 0x414C,
+            ACCOUNT_KEY_LINK = 0x414C, 
             NODE_KEY_LINK = 0x424C,
-            AGGREGATE_COMPLETE = 0x4141,
-            AGGREGATE_BONDED = 0x4241,
+            AGGREGATE_COMPLETE = 0x4141, //
+            AGGREGATE_BONDED = 0x4241, //
             VOTING_KEY_LINK = 0x4143,
             VRF_KEY_LINK = 0x4243,
             HASH_LOCK = 0x4148,
             SECRET_LOCK = 0x4152,
             SECRET_PROOF = 0x4252,
-            ACCOUNT_METADATA = 0x4144,
-            MOSAIC_METADATA = 0x4244,
-            NAMESPACE_METADATA = 0x4344,
-            MOSAIC_DEFINITION = 0x414D,
+            ACCOUNT_METADATA = 0x4144, //
+            MOSAIC_METADATA = 0x4244, //
+            NAMESPACE_METADATA = 0x4344, //
+            MOSAIC_DEFINITION = 0x414D, 
             MOSAIC_SUPPLY_CHANGE = 0x424D,
             MOSAIC_SUPPLY_REVOCATION = 0x434D,
-            MULTISIG_ACCOUNT_MODIFICATION = 0x4155,
+            MULTISIG_ACCOUNT_MODIFICATION = 0x4155, //
             ADDRESS_ALIAS = 0x424E,
             MOSAIC_ALIAS = 0x434E,
             NAMESPACE_REGISTRATION = 0x414E,
@@ -54,14 +54,14 @@ namespace io.nem2.sdk.Model.Transactions
             ACCOUNT_MOSAIC_RESTRICTION = 0x4250,
             ACCOUNT_OPERATION_RESTRICTION = 0x4350,
             MOSAIC_ADDRESS_RESTRICTION = 0x4251,
-            MOSAIC_GLOBAL_RESTRICTION = 0x4151,
+            MOSAIC_GLOBAL_RESTRICTION = 0x4151, //
             TRANSFER = 0x4154     
         }
 
         public static ushort GetValue(this Types type)
         {
             if (!Enum.IsDefined(typeof(Types), type))
-                throw new InvalidEnumArgumentException(nameof(type), (int) type, typeof(Types));
+                throw new InvalidEnumArgumentException(nameof(type), (ushort)type, typeof(Types));
 
             return (ushort) type;
         }

@@ -26,6 +26,10 @@ namespace Integration_Tests
 
             Assert.That(response.Hash, Is.EqualTo("BEED005B82B22FC32DA6FDF4DFEB7C11BA6A8C5C504EB7B9CCF91B9B2A09E020"));
             Assert.That(response.FinalizationPoint, Is.EqualTo(1));
+            Assert.That(response.Height, Is.EqualTo(1));
+            Assert.That(response.FinalizationEpoch, Is.EqualTo(1));
+            Assert.That(response.MessageGroups, Is.Empty);
+           
         }
 
         [Test, Timeout(20000)]
@@ -37,6 +41,10 @@ namespace Integration_Tests
 
             Assert.That(response.Hash, Is.EqualTo("F293A16AD9D640A9640F5ABA1C2E7241A8473C1FF277888DECDED9EA3F25D6DE"));
             Assert.That(response.FinalizationPoint, Is.EqualTo(71));
+            Assert.That(response.Height, Is.EqualTo(12960));
+            Assert.That(response.FinalizationEpoch, Is.EqualTo(10));
+            Assert.That(response.MessageGroups[0].Hashes[0].Length, Is.EqualTo(64));
+            Assert.That(response.MessageGroups[0].Signatures[0].Root.ParentPublicKey.Length, Is.EqualTo(64));
         }
     }
 }

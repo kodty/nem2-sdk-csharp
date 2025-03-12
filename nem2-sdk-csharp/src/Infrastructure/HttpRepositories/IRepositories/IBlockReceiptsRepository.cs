@@ -4,8 +4,8 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
 {
     public interface IBlockReceiptsRepository
     {
-        IObservable<TransactionStatements> SearchTransactionStatements(QueryModel queryModel);
-        IObservable<AddressStatements> GetAddressStatements(QueryModel queryModel);
-        IObservable<MosaicStatements> GetMosaicStatements(QueryModel queryModel);
+        IObservable<List<ReceiptDatum>> SearchTransactionStatements(QueryModel queryModel);
+        IObservable<List<AddressDatum>> GetAddressStatements(QueryModel queryModel);
+        IObservable<List<MosaicDatum>> GetMosaicStatements(QueryModel queryModel);
     }
 }

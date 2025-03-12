@@ -23,15 +23,12 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Diagnostics;
 using System.Reactive.Linq;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Infrastructure.Mapping;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -44,27 +41,25 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<List<BlockInfo>> SearchBlocks(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["blocks"], queryModel)))
-                .Select(i => ResponseFilters<List<BlockInfo>>.FilterEvent(JObject.Parse(i)["data"].ToString()));
-               // .Select(i => JsonConvert.DeserializeObject<List<BlockInfo>>(JObject.Parse(i)["data"].ToString()));
+                .Select(b => ResponseFilters<BlockInfo>.FilterEvents(b, "data"));
         }
 
         public IObservable<BlockInfo> GetBlock(ulong height)
         {
-
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["blocks", height])))
                 .Select(ObjectComposer.GenerateObject<BlockInfo>);
         }
 
-        public IObservable<MerkleRoot> GetBlockTransactionMerkle(ulong height, string hash)
+        public IObservable<List<MerklePath>> GetBlockTransactionMerkle(ulong height, string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["blocks", height, "transactions", hash, "merkle"])))
-                .Select(ObjectComposer.GenerateObject<MerkleRoot>);
+                .Select(m => ResponseFilters<MerklePath>.FilterEvents(m, "merklePath"));
         }
 
-        public IObservable<MerkleRoot> GetBlockRecieptMerkle(ulong height, string hash)
+        public IObservable<List<MerklePath>> GetBlockRecieptMerkle(ulong height, string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["blocks", height, "reciepts", hash, "merkle"])))
-                .Select(ObjectComposer.GenerateObject<MerkleRoot>);
+               .Select(m => ResponseFilters<MerklePath>.FilterEvents(m, "merklePath"));
         }
  
         public IObservable<BlockchainInfo> GetBlockchainInfo()

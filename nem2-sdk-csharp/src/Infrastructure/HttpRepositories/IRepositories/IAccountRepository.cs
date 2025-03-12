@@ -30,15 +30,15 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
 {
     interface IAccountRepository
     {
-        IObservable<List<AccountInfo>> SearchAccounts(QueryModel queryModel);
-        IObservable<AccountInfo> GetAccount(PublicAccount account);
-        IObservable<List<AccountInfo>> GetAccounts(List<string> publicKeys);
+        IObservable<List<AccountData>> SearchAccounts(QueryModel queryModel);
+        IObservable<AccountData> GetAccount(PublicAccount account);
+        IObservable<List<AccountData>> GetAccounts(List<string> publicKeys);
         IObservable<MerkleRoot> GetAccountMerkle(Address account);
         IObservable<MerkleRoot> GetAccountMerkle(PublicAccount publicAccount);
 
         // restrictions
-        IObservable<AccountsRestrictions> SearchAccountRestrictions(QueryModel queryModel);
-        IObservable<ARestrictionData> GetAccountRestriction(string compositeHash);
+        IObservable<List<RestrictionData>> SearchAccountRestrictions(QueryModel queryModel);
+        IObservable<RestrictionData> GetAccountRestriction(string compositeHash);
         IObservable<MerkleRoot> GetAccountRestrictionsMerkle(string compositeHash);
     }
 }

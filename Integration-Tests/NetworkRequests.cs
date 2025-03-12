@@ -87,17 +87,12 @@ namespace Integration_Tests
             Assert.That(response.Plugins.Restrictionmosaic.MaxMosaicRestrictionValues, Is.EqualTo("20"));
             Assert.That(response.Plugins.Transfer.MaxMessageSize, Is.GreaterThanOrEqualTo("1024"));
             Assert.That(response.Plugins.Mosaic.MaxMosaicDivisibility, Is.EqualTo("6"));
-             
-            
 
-           
-           
-           
-            
 
-            
-            
-                      
+            Assert.That(response.ForkHeights.TreasuryReissuance, Is.EqualTo("689'761"));
+            Assert.That(response.CorruptAggregateTransactionHashes[0], Is.EqualTo("26FF5E7174DEEF3147DB25C37C7AE9905157ACBA2D233D40D1F77A65B60D59BC = 3A2F78C2E7B10FF84EB33BF1DD0FD61951F8E3EA3303614D1B20060CD88F6E14"));
+            Assert.That(response.TreasuryReissuanceTransactionSignatures.Count, Is.GreaterThan(0));
+
         }
     }
 }

@@ -23,6 +23,7 @@
 // <summary></summary>
 // ***********************************************************************
 
+using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
@@ -36,6 +37,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         IObservable<List<TransactionData>> SearchConfirmedTransactions(QueryModel queryModel);
         IObservable<List<TransactionData>> SearchUnconfirmedTransactions(QueryModel queryModel);
         IObservable<List<TransactionData>> SearchPartialTransactions(QueryModel queryModel);
+        IObservable<TransactionData> GetConfirmedTransaction(string hash);
 
         // Post
         IObservable<List<TransactionData>> GetConfirmedTransactions(string[] transactionIds);
@@ -45,6 +47,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         // Put
         IObservable<TransactionAnnounceResponse> Announce(SignedTransaction payload);
         IObservable<TransactionAnnounceResponse> AnnounceAggregateTransaction(SignedTransaction payload);
-        //IObservable<TransactionAnnounceResponse> AnnounceCosignatureTransaction(CosignatureSignedTransaction payload);  
+        IObservable<TransactionAnnounceResponse> AnnounceCosignatureTransaction(CosignatureSignedTransaction payload);  
     }
 }

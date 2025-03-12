@@ -2,7 +2,6 @@
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Infrastructure.Mapping;
-using Newtonsoft.Json;
 using System.Reactive.Linq;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
@@ -14,17 +13,17 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<List<HashLockEvent>> SearchHashLocks(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["lock", "hash"])))
-              .Select(ResponseFilters<HashLockEvent>.FilterEvents);
+              .Select(h => ResponseFilters<HashLockEvent>.FilterEvents(h, "data"));
         }
         public IObservable<HashLockEvent> GetHashLockInfo(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["lock", "hash", hash])))
-              .Select(ResponseFilters<HashLockEvent>.FilterEvent);
+              .Select(ObjectComposer.GenerateObject<HashLockEvent>);
         }
         public IObservable<MerkleRoot> GetHashLockMerkleInfo(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["lock", "hash", hash, "merkle"])))
-              .Select(JsonConvert.DeserializeObject<MerkleRoot>);
+              .Select(ObjectComposer.GenerateObject<MerkleRoot>);
         }
     }
 }

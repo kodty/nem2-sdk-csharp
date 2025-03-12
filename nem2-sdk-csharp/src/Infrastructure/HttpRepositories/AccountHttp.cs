@@ -24,21 +24,14 @@
 // ***********************************************************************
 
 using io.nem2.sdk.Model.Accounts;
-using Newtonsoft.Json;
 using System.Reactive.Linq;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using Newtonsoft.Json.Linq;
-using System.Diagnostics;
-using System;
-using System.Formats.Tar;
-using Org.BouncyCastle.Asn1.Ocsp;
-using System.Text;
-using System.ComponentModel;
-using System.Security.Principal;
 using io.nem2.sdk.src.Infrastructure.Mapping;
-using System.Collections.Generic;
+using System.Text;
+using System.Text.Json;
+
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -47,40 +40,35 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public AccountHttp(string host, int port) 
             : base(host, port){ }
 
-        public IObservable<List<AccountInfo>> SearchAccounts(QueryModel queryModel)
+        public IObservable<List<AccountData>> SearchAccounts(QueryModel queryModel)
         {
 
-            return Observable.FromAsync(
-                 async ar => await Client.GetStringAsync(GetUri(["accounts"], queryModel)))
-                 .Select(ResponseFilters<AccountInfo>.FilterEvents);
+            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["accounts"], queryModel)))
+                 .Select(a => ResponseFilters<AccountData>.FilterEvents(a, "data"));
         }
 
-        public IObservable<AccountInfo> GetAccount(PublicAccount accountId)
+        public IObservable<AccountData> GetAccount(PublicAccount accountId)
         {
             return GetAccount(accountId.Address);
         }
 
-        public IObservable<AccountInfo> GetAccount(Address accountId)
+        public IObservable<AccountData> GetAccount(Address accountId)
         {
             return Observable.FromAsync(
                  async ar => await Client.GetStringAsync(GetUri(["accounts",accountId.Plain])))
-                 .Select(ObjectComposer.GenerateObject<AccountInfo>);
+                 .Select(ObjectComposer.GenerateObject<AccountData>);
         }
 
-        [Description("accounts must be exclusively public keys or base32 addresses")]
-        public IObservable<List<AccountInfo>> GetAccounts(List<string> accounts)
+        public IObservable<List<AccountData>> GetAccounts(List<string> accounts) // flag
         {
-            var data = new PublicKeys()
+            var data = new Public_Keys()
             {
-                Public_Keys = accounts
+                publicKeys = accounts
             };
 
-            return Observable.FromAsync(
-                 async ar => await Client.PostAsync(GetUri(["accounts"]), new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")))
+            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["accounts"]), new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")))
                  .Select(i => {
-                
-                     return ResponseFilters<AccountInfo>.FilterEvents(i.Content.ReadAsStringAsync().Result);  //  JsonConvert.DeserializeObject<List<AccountInfo>>(i.Content.ReadAsStringAsync().Result);
-                 
+                     return ResponseFilters<AccountData>.FilterEvents(i.Content.ReadAsStringAsync().Result);                 
                  });
         }
 
@@ -92,25 +80,25 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<MerkleRoot> GetAccountMerkle(Address account)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["accounts", account.Plain, "merkle"])))
-                 .Select(JsonConvert.DeserializeObject<MerkleRoot>);
+                 .Select(ObjectComposer.GenerateObject<MerkleRoot>);
         }
 
-        public IObservable<AccountsRestrictions> SearchAccountRestrictions(QueryModel queryModel)
+        public IObservable<List<RestrictionData>> SearchAccountRestrictions(QueryModel queryModel) // flag
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "account"], queryModel)))
-               .Select(JsonConvert.DeserializeObject<AccountsRestrictions>);
+               .Select(a => ResponseFilters<RestrictionData>.FilterEvents(a, "data"));
         }
 
-        public IObservable<ARestrictionData> GetAccountRestriction(string address)
+        public IObservable<RestrictionData> GetAccountRestriction(string address)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "account", address])))
-                .Select(JsonConvert.DeserializeObject<ARestrictionData>);
+                .Select(ObjectComposer.GenerateObject<RestrictionData>);
         }
 
         public IObservable<MerkleRoot> GetAccountRestrictionsMerkle(string compositeHash)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "account", compositeHash, "merkle" ])))
-                .Select(JsonConvert.DeserializeObject<MerkleRoot>);
+                .Select(ObjectComposer.GenerateObject<MerkleRoot>);
         }
     }
 }

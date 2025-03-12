@@ -23,14 +23,13 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System.Diagnostics;
 using System.Reactive.Linq;
-using io.nem2.sdk.Model.Mosaics;
-using io.nem2.sdk.Model.Namespace;
+using System.Text;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using Newtonsoft.Json;
+using io.nem2.sdk.src.Infrastructure.Mapping;
+using System.Text.Json;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -39,49 +38,55 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public NamespaceHttp(string host, int port) 
             : base(host, port) { }
 
-        public IObservable<Namespaces> SearchNamespaces(QueryModel queryModel)
+        public IObservable<List<NamespaceDatum>> SearchNamespaces(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["namespaces"], queryModel)))
-                .Select(JsonConvert.DeserializeObject<Namespaces>);
+                .Select(n => ResponseFilters<NamespaceDatum>.FilterEvents(n, "data"));
         }
 
-        public IObservable<NamespaceDatum> GetNamespace(string namespaceId)
+        public IObservable<NamespaceDatum> GetNamespace(string namespaceId) // flag
         {
-            //if (string.IsNullOrEmpty(namespaceId.Name)) throw new ArgumentException("Value cannot be null or empty.", nameof(namespaceId));
-            //if (namespaceId.HexId.Length != 16 || !Regex.IsMatch(namespaceId.HexId, @"\A\b[0-9a-fA-F]+\b\Z")) throw new ArgumentException("Invalid namespace");
-
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["namespaces", namespaceId])))
-                .Select(JsonConvert.DeserializeObject<NamespaceDatum>);
+                .Select(ObjectComposer.GenerateObject<NamespaceDatum>);
         }
 
         public IObservable<MerkleRoot> GetNamespaceMerkle(string namespaceId)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["namespaces", namespaceId, "merkle"])))
-                .Select(JsonConvert.DeserializeObject<MerkleRoot>);
+                .Select(ObjectComposer.GenerateObject<MerkleRoot>);
         }
 
         public IObservable<List<NamespaceName>> GetNamespacesNames(List<string> namespaceIds)
         {
-            var postBody = "{ namespaceids: " + JsonConvert.SerializeObject(namespaceIds) + "}";
+            var ids = new Namespace_Ids()
+            {
+                namespaceIds = namespaceIds
+            };
 
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "names"]), new StringContent(postBody)))
-                .Select(i => JsonConvert.DeserializeObject<List<NamespaceName>>(i.Content.ToString()));
+            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
+                .Select(i => ResponseFilters<NamespaceName>.FilterEvents(i.Content.ReadAsStringAsync().Result));
         }
 
         public IObservable<List<AccountName>> GetAccountNames(List<string> addresses)
         {
-            var postBody = "{ addresses: " + JsonConvert.SerializeObject(addresses) + "}";
+            var ids = new Account_Ids()
+            {
+                addresses = addresses
+            };
 
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "account", "names"]), new StringContent(postBody)))
-                .Select(i => JsonConvert.DeserializeObject<List<AccountName>>(i.Content.ToString()));
+            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "account", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
+               .Select(i => ResponseFilters<AccountName>.FilterEvents(i.Content.ReadAsStringAsync().Result, "accountNames"));
 
         }
         public IObservable<List<MosaicName>> GetMosaicNames(List<string> mosaicIds)
         {
-            var postBody = "{ mosaicIds: " + JsonConvert.SerializeObject(mosaicIds) + "}";
+            var ids = new MosaicIds()
+            {
+                mosaicIds = mosaicIds
+            };
 
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "mosaic", "names"]), new StringContent(postBody)))
-                .Select(i => JsonConvert.DeserializeObject<List<MosaicName>>(i.Content.ToString()));
+            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "mosaic", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
+                 .Select(i => ResponseFilters<MosaicName>.FilterEvents(i.Content.ReadAsStringAsync().Result, "mosaicNames"));
         }
     }
 }

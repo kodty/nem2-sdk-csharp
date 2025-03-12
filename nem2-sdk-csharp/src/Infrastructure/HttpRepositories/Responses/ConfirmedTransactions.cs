@@ -1,19 +1,25 @@
 ﻿using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Infrastructure.Buffers.Model.JsonConverters;
 using io.nem2.sdk.src.Model.Network;
 using Newtonsoft.Json;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 {   
-    public class Aggregate : TransactionData
+    public class Aggregate : TransactionData.BaseTransaction
     {      
         public string TransactionsHash { get; set; }
         public List<Cosignature> Cosignatures { get; set; }
-        public List<EmbeddedTransactionData> Embedded { get; set; }
+        public List<EmbeddedTransactionData> Transactions { get; set; }
+    }
+
+    public class MultisigModification : EmbeddedTransactionData.EmbeddedBaseTransaction
+    {
+        public int minRemovalDelta { get; set; }
+        public int minApprovalDelta { get; set; }
+        public List<string> addressAdditions { get; set; }
+        public List<string> addressDeletions { get; set; }
     }
 
     public class Cosignature
@@ -25,282 +31,227 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     public class EmbeddedTransactionData
     {
+        public Metadata Meta { get; set; }
+
+        public EmbeddedBaseTransaction Transaction { get; set; }
+
+        public string Id { get; set; }
+
         public class Metadata
         {
-            [JsonProperty("height")]
             public ulong Height { get; set; }
 
-            [JsonProperty("aggregateHash")]
             public string AggregateHash { get; set; }
 
-            [JsonProperty("aggregateId")]
             public string AggregateId { get; set; }
 
-            [JsonProperty("index")]
             public int Index { get; set; }
 
-            [JsonProperty("timestamp")]
             public ulong Timestamp { get; set; }
 
-            [JsonProperty("feeMultiplier")]
             public int FeeMultiplier { get; set; }
         }
 
-        [JsonProperty("meta")]
-        public Metadata Meta { get; set; }
+        public class EmbeddedBaseTransaction
+        {
+            public string SignerPublicKey { get; set; }
 
-        [JsonProperty("signerPublicKey")]
-        public string SignerPublicKey { get; set; }
+            public ushort Version { get; set; }
 
-        [JsonProperty("version")]
-        public int Version;
+            public NetworkType.Types Network { get; set; }
 
-        [JsonProperty("network")]
-        public NetworkType.Types Network { get; set; }
-
-        [JsonProperty("type")]
-        public TransactionTypes.Types Type { get; set; }      
+            public TransactionTypes.Types Type { get; set; }
+        }         
     }
 
     public class TransactionData
     {
+        public Metadata Meta { get; set; }
+
+        public BaseTransaction Transaction { get; set; }
+
+        public string Id { get; set; }
+
         public class Metadata
         {
-            [JsonProperty("height")]
             public ulong Height { get; set; }
 
-            [JsonProperty("hash")]
             public string Hash { get; set; }
 
-            [JsonProperty("merkleComponentHash")]
             public string MerkleComponentHash { get; set; }
 
-            [JsonProperty("index")]
             public int Index { get; set; }
 
-            [JsonProperty("timestamp")]
             public ulong Timestamp { get; set; }
 
-            [JsonProperty("feeMultiplier")]
             public int FeeMultiplier { get; set; }
         }
 
-        [JsonProperty("meta")]
-        public Metadata Meta { get; set; }
+        public class BaseTransaction
+        {
+            public string SignerPublicKey { get; set; }
 
-        [JsonProperty("signerPublicKey")]
-        public string SignerPublicKey { get; set; }
+            public int Version { get; set; }
 
-        [JsonProperty("version")]
-        public int Version { get; set; }
+            public NetworkType.Types Network { get; set; }
 
-        [JsonProperty("network")]
-        public NetworkType.Types Network { get; set; }
+            public TransactionTypes.Types Type { get; set; }
 
-        [JsonProperty("type")]
-        public TransactionTypes.Types Type { get; set; }
+            public int Size { get; set; }
 
-        [JsonProperty("size")]
-        public int Size { get; set; }
+            public string Signature { get; set; }
 
-        [JsonProperty("signature")]
-        public string Signature { get; set; }
+            public ulong MaxFee { get; set; }
 
-        [JsonProperty("maxFee")]
-        public ulong MaxFee { get; set; }
-
-        [JsonProperty("deadline")]
-        public ulong Deadline { get; set; }
+            public ulong Deadline { get; set; }
+        }
     }
 
-    public class EmbeddedSimpleTransfer : EmbeddedTransactionData
+    public class EmbeddedSimpleTransfer : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
-        [JsonProperty("recipientAddress")]
         public string RecipientAddress { get; set; }
 
-        [JsonProperty("mosaics")]
         public List<MosaicTransfer> Mosaics { get; set; }
 
-        [JsonProperty("Message")]
         public string Messege { get; set; }
     }
-    public class SimpleTransfer : TransactionData
+    public class SimpleTransfer : TransactionData.BaseTransaction
     {
-        [JsonProperty("recipientAddress")]
         public string RecipientAddress { get; set; }
 
-        [JsonProperty("mosaics")]
         public List<MosaicTransfer> Mosaics { get; set; }
 
-        [JsonProperty("Message")]
         public string Messege { get; set; }
     }
 
-    public class MosaicTransfer
-    {
-        [JsonProperty("id")]
-        public string Id { get; set; }
-
-        [JsonProperty("amount")]
-        public ulong Amount { get; set; }
-    }
-
-    public class EmbeddedKeyLink : EmbeddedTransactionData // account key link + node key link + VRF key link
+    public class EmbeddedKeyLink : EmbeddedTransactionData.EmbeddedBaseTransaction // account key link + node key link + VRF key link
     {
 
-        [JsonProperty("linkedPublicKey")]
         public string LinkedPublicKey { get; set; }
 
-        [JsonProperty("linkAction")]
         public int LinkAction { get; set; }
     }
 
     [Description("Account, Node, VRF, Differentiate with field Type of type TransactionType.Types")]
-    public class KeyLink : TransactionData // account key link + node key link + VRF key link
+    public class KeyLink : TransactionData.BaseTransaction // account key link + node key link + VRF key link
     {
 
-        [JsonProperty("linkedPublicKey")]
         public string LinkedPublicKey { get; set; }
 
-        [JsonProperty("linkAction")]
         public int LinkAction { get; set; }
     }
 
     public class EmbeddedVotingKeyLink : EmbeddedKeyLink
     {
 
-        [JsonProperty("startEpoch")]
         public ulong StartEpoch { get; set; }
 
-        [JsonProperty("endEpoch")]
         public ulong EndEpoch { get; set; }
     }
 
     public class VotingKeyLink : KeyLink
     {
-        [JsonProperty("startEpoch")]
         public ulong StartEpoch { get; set; }
 
-        [JsonProperty("endEpoch")]
         public ulong EndEpoch { get; set; }
     }
 
-    public class PublicKeys
+    public class Public_Keys
     {
-        [JsonProperty("publicKeys")]
-        public List<string> Public_Keys { get; set; }
+        public List<string> publicKeys { get; set; }
 
        //[JsonProperty("addresses")]
        //public List<string> Addresses { get; set; }    
     }
 
-    public class EmbeddedMosaicSupplyChange : EmbeddedTransactionData
+    public class EmbeddedMosaicSupplyChange : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
 
-        [JsonProperty("mosaicId")]
         public string MosaicId { get; set; }
 
-        [JsonProperty("action")]
         public int Action { get; set; }
 
-        [JsonProperty("delta")]
         public ulong Delta { get; set; }
 
 
     }
 
-    public class MosaicSupplyChange : TransactionData
+    public class MosaicSupplyChange : TransactionData.BaseTransaction
     {
 
-        [JsonProperty("mosaicId")]
         public string MosaicId { get; set; }
 
-        [JsonProperty("action")]
         public int Action { get; set; }
 
-        [JsonProperty("delta")]
-        public ulong Delta { get; set; }
-
-        
+        public ulong Delta { get; set; }     
     }
 
-    public class EmbeddedMosaicSupplyRevocation : EmbeddedTransactionData
+    public class EmbeddedMosaicSupplyRevocation : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
-
-        [JsonProperty("sourceAddress")]
         public string SourceAddress { get; set; }
 
-        [JsonProperty("mosaicId")]
         public string MosaicId { get; set; }
 
-        [JsonProperty("amount")]
         public ulong Amount { get; set; }
     }
 
-    public class MosaicSupplyRevocation : TransactionData
+    public class MosaicSupplyRevocation : TransactionData.BaseTransaction
     {
-
-        [JsonProperty("sourceAddress")]
         public string SourceAddress { get; set; }
 
-        [JsonProperty("mosaicId")]
         public string MosaicId { get; set; }
 
-        [JsonProperty("amount")]
         public ulong Amount { get; set; }
     }
 
-    public class EmbeddedNamespaceRegistration : EmbeddedTransactionData
+    public class EmbeddedNamespaceRegistration : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
-
-        [JsonProperty("registrationType")]
         public int RegistrationType { get; set; }
 
-        [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonProperty("name")]
         public string Name { get; set; }
     }
 
-    public class NamespaceRegistration : TransactionData
+    public class NamespaceRegistration : TransactionData.BaseTransaction
     {
-
-        [JsonProperty("registrationType")]
         public int RegistrationType { get; set; }
 
-        [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonProperty("name")]
         public string Name { get; set; }
     }
 
     public class EmbeddedRootNamespaceRegistration : EmbeddedNamespaceRegistration
     {
-        [JsonProperty("parentId")]
         public string ParentId { get; set; }
     }
 
     public class EmbeddedChildNamespaceRegistration : EmbeddedNamespaceRegistration
     {
-        [JsonProperty("duration")]
-        public ulong Duraation { get; set; }
+        public ulong Duration { get; set; }
     }
 
     public class RootNamespaceRegistration : NamespaceRegistration 
     {
-        [JsonProperty("duration")]
         public ulong Duration { get; set; }
     }
 
     public class ChildNamespaceRegistration : NamespaceRegistration
     {
-        [JsonProperty("parentId")]
         public string ParentId { get; set; }
     }
 
-    public class EmbeddedSecretProofLock : EmbeddedTransactionData
+    public class EmbeddedSecretProofLock : EmbeddedTransactionData.EmbeddedBaseTransaction
+    {
+        public int HashAlgorithm { get; set; }
+
+        public string Secret { get; set; }
+
+        public string RecipientAddress { get; set; }
+    }
+
+    public class SecretProofLock : TransactionData.BaseTransaction
     {
 
         [JsonProperty("hashAlgorithm")]
@@ -313,20 +264,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public string RecipientAddress { get; set; }
     }
 
-    public class SecretProofLock : TransactionData
-    {
-
-        [JsonProperty("hashAlgorithm")]
-        public int HashAlgorithm { get; set; }
-
-        [JsonProperty("secret")]
-        public string Secret { get; set; }
-
-        [JsonProperty("recipientAddress")]
-        public string RecipientAddress { get; set; }
-    }
-
-    public class EmbeddedHashLockTransaction : EmbeddedTransactionData
+    public class EmbeddedHashLockT : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
 
         [JsonProperty("duration")]
@@ -343,7 +281,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     }
 
-    public class HashLockT : TransactionData
+    public class HashLockT : TransactionData.BaseTransaction
     {
 
         [JsonProperty("duration")]
@@ -401,7 +339,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         
     }
 
-    public class EmbeddedAccountAddressRestriction : EmbeddedTransactionData // Address, Mosaic, Operation Restriction
+    public class EmbeddedAccountAddressRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
     {
         [JsonProperty("restrictionAdditions")]
         public List<string> RestrictionAdditions { get; set; }
@@ -413,7 +351,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public int Flags { get; set; }
     }
 
-    public class AccountAddressRestriction : TransactionData // Address, Mosaic
+    public class AccountAddressRestriction : TransactionData.BaseTransaction // Address, Mosaic // check tests, absent
     {
         [JsonProperty("restrictionAdditions")]
         public List<string> RestrictionAdditions { get; set; }
@@ -425,7 +363,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public int Flags { get; set; }
     }
 
-    public class EmbeddedAccountMosaicRestriction : EmbeddedTransactionData // Address, Mosaic, Operation Restriction
+    public class EmbeddedAccountMosaicRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
     {
         [JsonProperty("restrictionAdditions")]
         public List<string> RestrictionAdditions { get; set; }
@@ -437,7 +375,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public int Flags { get; set; }
     }
 
-    public class AccountMosaicRestriction : TransactionData // Address, Mosaic
+    public class AccountMosaicRestriction : TransactionData.BaseTransaction // Address, Mosaic
     {
         [JsonProperty("restrictionAdditions")]
         public List<string> RestrictionAdditions { get; set; }
@@ -449,7 +387,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public int Flags { get; set; }
     }
 
-    public class AccountOpperationRestriction : TransactionData
+    public class AccountOpperationRestriction : TransactionData.BaseTransaction
     {
         [JsonProperty("restrictionAdditions")]
         public List<int> RestrictionAdditions { get; set; }
@@ -461,7 +399,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public int Flags { get; set; }
     }
 
-    public class EmbeddedAccountOpperationRestriction : EmbeddedTransactionData
+    public class EmbeddedAccountOpperationRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
         [JsonProperty("restrictionAdditions")]
         public List<int> RestrictionAdditions { get; set; }
@@ -473,7 +411,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public int Flags { get; set; }
     }
 
-    public class EmbeddedMosaicAddressRestriction : EmbeddedTransactionData
+    public class EmbeddedMosaicAddressRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
         [JsonProperty("mosaicId")]
         public string MosaicId { get; set; }
@@ -491,7 +429,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public string NewRestrictionValue { get; set; }
     }
 
-    public class MosaicAddressRestriction : TransactionData
+    public class MosaicAddressRestriction : TransactionData.BaseTransaction
     {
         [JsonProperty("mosaicId")]
         public string MosaicId { get; set; }
@@ -509,7 +447,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public string NewRestrictionValue { get; set; }      
     }
 
-    public class EmbeddedAliasTransaction : EmbeddedTransactionData
+    public class EmbeddedAliasTransaction : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
         [JsonProperty("namespaceId")]
         public string NamespaceId { get; set; }
@@ -518,7 +456,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public int AliasAction { get; set; }
     }
 
-    public class AliasTransaction : TransactionData
+    public class AliasTransaction : TransactionData.BaseTransaction
     {
         [JsonProperty("namespaceId")] // address
         public string NamespaceId { get; set; }
@@ -552,7 +490,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public string MosaicId { get; set; }
     }
 
-    public class EmbeddedMosaicDefinition : EmbeddedTransactionData
+    public class EmbeddedMosaicDefinition : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
         [JsonProperty("nonce")]
         public int Nonce { get; set; }
@@ -571,7 +509,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     }
 
-    public class MosaicDefinition : TransactionData
+    public class MosaicDefinition : TransactionData.BaseTransaction
     {
         [JsonProperty("nonce")]
         public int Nonce { get; set; }
@@ -589,9 +527,13 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public ulong Duration { get; set; }
 
     }
-
 
     public class SecretLockEvent
+    {
+        public SecretLock Lock { get; set; }
+        public string Id { get; set; }
+    }
+    public class SecretLock
     {
         [JsonProperty("version")]
         public int Version { get; set; }
@@ -646,8 +588,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
         [JsonProperty("status")]
         public int Status { get; set; }
-
-        [JsonProperty("hash")]
         public string Hash { get; set; }
     }
 }

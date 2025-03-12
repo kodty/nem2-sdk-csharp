@@ -28,101 +28,78 @@ using System.ComponentModel;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 {
+    public class AccountData
+    {
+       public AccountInfo Account {  get; set; }
+       public string Id { get; set; }
+    }
+
     public class AccountInfo
     {
-
-        [JsonProperty("Version")]
         public int Version { get; set; }
 
-
-        [JsonProperty("address")]    
         public string Address { get; set; }
 
-
-        [JsonProperty("addressHeight")]
         public ulong AddressHeight { get; set; }
 
-
-        [JsonProperty("publicKey")]
         public string PublicKey { get; set; }
 
-
-        [JsonProperty("publicKeyHeight")]
         public ulong PublicKeyHeight { get; set; }
 
-
-        [JsonProperty("accountType")]
         public int AccountType { get; set; }
 
-
-        [JsonProperty("supplementalPublicKeys")]
         public SupplementalPublicKeys SupplementalPublicKeys { get; set; }
 
-
-        [JsonProperty("acitivityBuckets")]
         public List<ActivityBucket> ActivityBuckets { get; set; }
 
-
-        [JsonProperty("mosaics")]
         public List<MosaicTransfer> Mosaics { get; set; }
 
-
-        [JsonProperty("importance")]
         public ulong Importance { get; set; }
 
-
-        [JsonProperty("importanceHeight")]
         public ulong ImportanceHeight { get; set; }
     }
 
     public class ActivityBucket
     {
-        [JsonProperty("startHeight")]
         public ulong StartHeight { get; set; }
 
-
-        [JsonProperty("totalFeesPaid")]
         public ulong TotalFeesPaid { get; set; }
 
-
-        [JsonProperty("beneficiaryCount")]
         public int BeneficiaryCount { get; set; }
 
-
-        [JsonProperty("rawScore")]
         public ulong RawScore { get; set; }
+    }
+
+    public class Linked
+    {
+        public string PublicKey { get; set; }
+    }
+    public class Node
+    {
+        public string PublicKey { get; set; }
+    }
+    public class VRF
+    {
+        public string PublicKey { get; set; }
     }
 
     public class SupplementalPublicKeys
     {
-        [JsonProperty("linked")]
-        [Description("remote")]
-        public string Linked { get; set; }
+        public Linked Linked { get; set; }
 
+        public Node Node { get; set; }
 
-        [JsonProperty("node")]
-        public string Node { get; set; }
+        public VRF Vrf { get; set; }
 
-
-        [JsonProperty("vrf")]
-        public string Vrf { get; set; }
-
-
-        [JsonProperty("voting")]
         public List<VotingKeys> PublicKeys { get; set; }
     }
 
     public class VotingKeys
     {
-        [JsonProperty("publicKey")]
         public string PublicKey { get; set; }
 
-
-        [JsonProperty("startEpoch")]
         public int StartEpoch { get; set; }
 
-
-        [JsonProperty("endEpoch")]
         public int EndEpoch { get; set; }
     }
 }

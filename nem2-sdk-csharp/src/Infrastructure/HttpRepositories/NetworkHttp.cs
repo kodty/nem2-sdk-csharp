@@ -1,9 +1,7 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using io.nem2.sdk.Model.Namespace;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Infrastructure.Mapping;
-using Newtonsoft.Json;
 using System.Reactive.Linq;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
@@ -15,19 +13,19 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<NetworkInfo> GetNetwork()
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["network"])))
-              .Select(JsonConvert.DeserializeObject<NetworkInfo>);
+              .Select(ObjectComposer.GenerateObject<NetworkInfo>);
         }
 
         public IObservable<NetworkRentalFees> GetRentalFees()
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["network", "fees", "rental"])))
-              .Select(JsonConvert.DeserializeObject<NetworkRentalFees>);
+              .Select(ObjectComposer.GenerateObject<NetworkRentalFees>);
         }
 
         public IObservable<NetworkTransactionFees> GetTransactionFees()
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["network", "fees", "transaction"])))
-              .Select(JsonConvert.DeserializeObject<NetworkTransactionFees>);
+              .Select(ObjectComposer.GenerateObject<NetworkTransactionFees>);
         }
 
         public IObservable<NetworkProperties> GetNetworkProperties()

@@ -1,7 +1,10 @@
 ﻿using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.src.Infrastructure.Buffers.Model;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Network;
 using Newtonsoft.Json.Linq;
-using System.Diagnostics;
+
+
 
 namespace io.nem2.sdk.src.Infrastructure.Mapping
 {
@@ -21,50 +24,104 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             return ValueMapToObject(nameToValueMap, actualObject, type);
         }
 
-        private static Dictionary<string, object> GetPropNamesValues(Type obj, JToken objList, bool recursion = false)
+        private static Dictionary<string, object> GetPropNamesValues(Type type, JToken objList)
         {
             Dictionary<string, object> nameToValueMap = new Dictionary<string, object>();
 
-            obj?.GetProperties().ToList().ForEach(op =>
+            type?.GetProperties().ToList().ForEach(op =>
             {
                 var lwrCase = (char.ToLower(op.Name[0]) + op.Name.Substring(1)).ToString();
 
-                if (!nameToValueMap.ContainsKey(op.Name) && ((op.PropertyType == typeof(ushort) || op.PropertyType == typeof(int) || op.PropertyType == typeof(ulong) || op.PropertyType == typeof(string) || op.PropertyType == typeof(List<string>) || op.PropertyType == typeof(bool))))
+                if (!nameToValueMap.ContainsKey(op.Name))
                 {
-                    nameToValueMap.Add(op.Name, GetTypedValue(op.PropertyType, objList, lwrCase));
-                    return;
-                }
-                else if (!nameToValueMap.ContainsKey(op.Name))
-                {
-                    if (objList.Contains(lwrCase))
-                    {                  
-                        var o = objList.Children().ToList().First(i => {
 
-                            return i.Path == lwrCase || (i.Path == i.Parent.Path + "." + lwrCase);
-
-                        });
-
-                        if (o.Path == lwrCase || o.Path == o.Parent.Path + "." + lwrCase)
-                        {
-                            nameToValueMap.Add(op.Name, GenerateObject(op.PropertyType, o.Single()));
-                            return;
-                        }
+                    if (IsNativeProperty(op))
+                    {
+                        nameToValueMap.Add(op.Name, GetTypedValue(op.PropertyType, objList, lwrCase));
+                        return;
                     }
-                    else if(!nameToValueMap.ContainsKey(op.Name) && !objList.Contains(lwrCase))
-                    {                   
+                    else
+                    {
                         foreach (var obj in objList.Children().Children())
                         {
-                           if (obj.Path.Contains(lwrCase))
-                           {                       
+                            if (obj.Path.Contains(lwrCase))
+                            {
                                 nameToValueMap.Add(op.Name, GenerateObject(op.PropertyType, obj));
                                 break;
-                           }          
-                        }  
-                    }                 
+                            }
+                        }                      
+                    }
                 }
             });
 
             return nameToValueMap;
+        }
+
+        private static List<EmbeddedTransactionData> GetEmbeddedListType(Type type, JToken ob, string path)
+        {
+            List<EmbeddedTransactionData> events = new List<EmbeddedTransactionData>();
+
+            if (ob[path] != null) foreach (var e in ob[path])
+                {
+                    events.Add(ResponseFilters<EmbeddedTransactionData>.FilterSingle(e.ToString()));
+                }
+
+            return events;     
+        }
+
+        private static List<T> GetListTypeValue<T>(Type type, JToken ob, string path)
+        {
+            if(typeof(T) == typeof(string))
+            {              
+                  return ob[path].Values<T>().ToList();
+            }
+            else
+            {
+                List<T> events = new List<T>();
+
+                if(ob[path] != null) foreach (var e in ob[path])
+                {
+                    events.Add((T)GenerateObject(typeof(T), e));
+                }
+
+                return events;
+            }
+        }
+
+        private static bool IsNativeProperty(System.Reflection.PropertyInfo op)
+        {
+            if ((op.PropertyType == typeof(ushort)
+                || op.PropertyType == typeof(int)
+                || op.PropertyType == typeof(ulong)
+                || op.PropertyType == typeof(string)
+                || op.PropertyType == typeof(List<string>)
+                || op.PropertyType == typeof(List<ActivityBucket>)
+                || op.PropertyType == typeof(List<MosaicTransfer>)
+                || op.PropertyType == typeof(List<MessageGroup>)
+                || op.PropertyType == typeof(List<Signature>)
+                || op.PropertyType == typeof(List<Tree>)
+                || op.PropertyType == typeof(List<LinkBit>)
+                || op.PropertyType == typeof(List<RestrictionData>)
+                || op.PropertyType == typeof(List<Restrictions>)
+                || op.PropertyType == typeof(List<MosaicEvent>)
+                || op.PropertyType == typeof(List<MosaicName>)
+                || op.PropertyType == typeof(List<AccountName>) 
+                || op.PropertyType == typeof(List<ReceiptDatum>)
+                || op.PropertyType == typeof(List<AddressDatum>)
+                || op.PropertyType == typeof(List<MosaicDatum>) 
+                || op.PropertyType == typeof(List<Receipt>)
+                || op.PropertyType == typeof(List<ResolutionEntry>)
+                || op.PropertyType == typeof(List<MRestrictionData>)
+                || op.PropertyType == typeof(List<Cosignature>)
+                || op.PropertyType == typeof(List<EmbeddedTransactionData>)
+                || op.PropertyType == typeof(List<MosaicRestriction>)
+                || op.PropertyType == typeof(bool)
+                || op.PropertyType == typeof(TransactionTypes.Types)
+                || op.PropertyType == typeof(NetworkType.Types)))
+            {
+                return true;
+            }
+            else return false;
         }
 
         private static dynamic? GetTypedValue(Type type, JToken ob, string path = null)
@@ -75,11 +132,11 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             }
             if (type == typeof(ushort))
             {
-                return (ushort)((JProperty)ob[path]).Value;
+                return (ushort)ob[path];
             }
             if (type == typeof(ulong))
             {
-                return (ulong)((JProperty)ob[path]).Value;
+                return (ulong)ob[path];
             }
             if (type == typeof(string))
             {
@@ -91,17 +148,97 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             }
             if (type == typeof(List<string>))
             {
-                return ob[path].Values<string>().ToList();
+                return GetListTypeValue<string>(type, ob, path);
+            }
+            if (type == typeof(List<ActivityBucket>))
+            {
+                return GetListTypeValue<ActivityBucket>(type, ob, path);
+            }
+            if (type == typeof(List<MosaicTransfer>))
+            {
+                return GetListTypeValue<MosaicTransfer>(type, ob, path);
+            }
+            if (type == typeof(List<MosaicEvent>))
+            {
+                return GetListTypeValue<MosaicEvent>(type, ob, path);
+            }
+            if (type == typeof(List<MessageGroup>))
+            {
+                return GetListTypeValue<MessageGroup>(type, ob, path);
+            }
+            if (type == typeof(List<Signature>))
+            {
+                return GetListTypeValue<Signature>(type, ob, path);
+            }
+            if (type == typeof(List<Tree>))
+            {
+                return GetListTypeValue<Tree>(type, ob, path);
+            }
+            if (type == typeof(List<LinkBit>))
+            {
+                return GetListTypeValue<LinkBit>(type, ob, path);
+            }
+            if (type == typeof(List<RestrictionData>))
+            {
+                return GetListTypeValue<RestrictionData>(type, ob, path);
+            }
+            if (type == typeof(List<Restrictions>))
+            {
+                return GetListTypeValue<Restrictions>(type, ob, path);
+            }
+            if (type == typeof(List<MosaicName>)) 
+            {
+                return GetListTypeValue<MosaicName>(type, ob, path);
+            }
+            if (type == typeof(List<AccountName>)) 
+            {
+                return GetListTypeValue<AccountName>(type, ob, path);
+            }
+            if (type == typeof(List<ReceiptDatum>))
+            {
+                return GetListTypeValue<ReceiptDatum>(type, ob, path);
+            }
+            if (type == typeof(List<Receipt>))
+            {
+                return GetListTypeValue<Receipt>(type, ob, path);
+            }
+            if (type == typeof(List<AddressDatum>))
+            {
+                return GetListTypeValue<AddressDatum>(type, ob, path);
+            }
+            if (type == typeof(List<ResolutionEntry>))
+            {
+                return GetListTypeValue<ResolutionEntry>(type, ob, path);
+            }
+            if (type == typeof(List<MosaicDatum>))
+            {
+                return GetListTypeValue<MosaicDatum>(type, ob, path);
+            }
+            if (type == typeof(List<MRestrictionData>)) 
+            {
+                return GetListTypeValue<MRestrictionData>(type, ob, path);
+            }
+            if (type == typeof(List<MosaicRestriction>))
+            {
+                return GetListTypeValue<MosaicRestriction>(type, ob, path);
+            }
+            if (type == typeof(List<Cosignature>))
+            {
+                return GetListTypeValue<Cosignature>(type, ob, path);
+            }
+            if (type == typeof(List<EmbeddedTransactionData>))
+            {
+                return GetEmbeddedListType(type, ob, path);
             }
             if (type == typeof(NetworkType.Types))
             {
-                return NetworkType.GetRawValue((ushort)((JProperty)ob[path]).Value);
+                return NetworkType.GetRawValue((ushort)ob[path]);
             }
             if (type == typeof(TransactionTypes.Types))
             {
-                return TransactionTypes.GetRawValue((ushort)((JProperty)ob[path]).Value);
+                return TransactionTypes.GetRawValue((ushort)ob[path]);
             }
-            throw new NotImplementedException(typeof(Type).ToString());
+            throw new NotImplementedException(type.ToString());
         }
 
         internal static object ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)

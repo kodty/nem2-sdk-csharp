@@ -23,16 +23,12 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Text;
-using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using io.nem2.sdk.src.Infrastructure.Mapping;
+using System.Text.Json;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -40,104 +36,54 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
     {
         public MosaicHttp(string host, int port) : base(host, port) { }
 
-
-        public IObservable<Mosaics> SearchMosaics(QueryModel queryModel)
+        public IObservable<List<MosaicEvent>> SearchMosaics(QueryModel queryModel)
         {
-            //if (mosaicIds == null) throw new ArgumentNullException(nameof(mosaicIds));
-            //if (mosaicIds.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(mosaicIds));
-            //if (mosaicIds.Any(e => e.Length != 16 || !Regex.IsMatch(e, @"\A\b[0-9a-fA-F]+\b\Z"))) throw new ArgumentException("Collection contains invalid id.");
-
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["mosaics"], queryModel)))
-                .Select(JsonConvert.DeserializeObject<Mosaics>);
+                .Select(m => ResponseFilters<MosaicEvent>.FilterEvents(m, "data"));
         }
 
-        public IObservable<MosaicEvent> GetMosaic(string mosaicId)
+        public IObservable<MosaicEvent> GetMosaic(string mosaicId) // flag
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["mosaics", mosaicId])))
-                .Select(JsonConvert.DeserializeObject<MosaicEvent>);    
+                .Select(ObjectComposer.GenerateObject<MosaicEvent>);    
         }
 
         public IObservable<List<MosaicEvent>> GetMosaics(List<string> mosaicIds)
         {
             var data = new MosaicIds()
             {
-                Mosaic_Ids = mosaicIds
+                mosaicIds = mosaicIds
             };
           
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["mosaics"]), new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")))
+            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["mosaics"]), new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")))
                 .Select(i => {
-                    return JsonConvert.DeserializeObject<List<MosaicEvent>>(i.Content.ReadAsStringAsync().Result);
-                   
+                    return ResponseFilters<MosaicEvent>.FilterEvents(i.Content.ReadAsStringAsync().Result);     
                 });
         }
 
         public IObservable<MerkleRoot> GetMosaicMerkle(string mosaicId)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["mosaics", mosaicId, "merkle"])))
-                .Select(JsonConvert.DeserializeObject<MerkleRoot>);
+                .Select(ObjectComposer.GenerateObject<MerkleRoot>);
 
         }
 
-        public IObservable<MosaicRestrictions> SearchMosaicRestrictions(QueryModel queryModel)
+        public IObservable<List<MRestrictionData>> SearchMosaicRestrictions(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["mosaics"], queryModel)))
-               .Select(JsonConvert.DeserializeObject<MosaicRestrictions>);
+            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "mosaic"], queryModel)))
+               .Select(m => ResponseFilters<MRestrictionData>.FilterEvents(m, "data"));
         }
 
         public IObservable<MosaicRestrictionEntry> GetMosaicRestriction(string compositeHash)
         { 
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "mosaics", compositeHash])))
-                .Select(JsonConvert.DeserializeObject<MosaicRestrictionEntry>);
+                .Select(ObjectComposer.GenerateObject<MosaicRestrictionEntry>);
         }
 
         public IObservable<MerkleRoot> GetMosaicRestrictionMerkle(string compositeHash)
         { 
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "mosaics", compositeHash, "merkle"])))
-                .Select(JsonConvert.DeserializeObject<MerkleRoot>);
+                .Select(ObjectComposer.GenerateObject<MerkleRoot>);
         }
-
-        /*
-         * 
-         * private MosaicProperties ExtractMosaicProperties(ulong[] properties)
-        {
-            var flags = "00" + Convert.ToString((long)properties[0], 2);
-            var bitMapFlags = flags.Substring(flags.Length - 3, 3);
-
-            return new MosaicProperties(bitMapFlags.ToCharArray()[2] == '1',
-                bitMapFlags.ToCharArray()[1] == '1',
-                bitMapFlags.ToCharArray()[0] == '1',
-                (int)properties[1],
-                properties.Count() == 3 ? properties[2] : 0);
-        }
-
-        public IObservable<List<MosaicInfo>> GetMosaicsFromNamespace(NamespaceId namespaceId)
-        {
-            if (namespaceId == null) throw new ArgumentNullException(nameof(namespaceId));
-            if(namespaceId.HexId.Length != 16 || !Regex.IsMatch(namespaceId.HexId, @"\A\b[0-9a-fA-F]+\b\Z")) throw new ArgumentException("invalid namespace id");
-
-            IObservable<NetworkType.Types> networkTypeResolve = GetNetworkType().Take(1);
-
-            return Observable.FromAsync(async ar => await MosaicRoutesApi.GetMosaicsFromNamespaceAsync(namespaceId.HexId))
-                .Select(e => e.Select(mosaic => new MosaicInfo(
-                    mosaic.Meta.Active,
-                    mosaic.Meta.Index,
-                    mosaic.Meta.Id,
-                    new NamespaceId(BitConverter.ToUInt64(mosaic.Mosaic.NamespaceId.FromHex(), 0)),
-                    new MosaicId(BitConverter.ToUInt64(mosaic.Mosaic.MosaicId.FromHex(), 0)),
-                    mosaic.Mosaic.Supply,
-                    mosaic.Mosaic.Height,
-                    new PublicAccount(mosaic.Mosaic.Owner, networkTypeResolve.Wait()),
-                    ExtractMosaicProperties(mosaic.Mosaic.Properties))).ToList());
-        }*/
-        /*
-        public IObservable<List<MosaicName>> GetMosaicsName(List<string> mosaicIds)
-        {
-            if (mosaicIds == null) throw new ArgumentNullException(nameof(mosaicIds));
-            if (mosaicIds.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(mosaicIds));
-            if (mosaicIds.Any(e => e.Length != 16 || !Regex.IsMatch(e, @"\A\b[0-9a-fA-F]+\b\Z"))) throw new ArgumentException("Collection contains invalid id.");
-
-            return Observable.FromAsync(async ar => await MosaicRoutesApi.GetMosaicsNameAsync(new MosaicIds() { mosaicIds = mosaicIds }))
-                .Select(e => e.Select(mosaic => new MosaicName(new MosaicId(mosaic.MosaicId), mosaic.Name, new NamespaceId(mosaic.ParentId))).ToList());
-        }  */
     }
 }

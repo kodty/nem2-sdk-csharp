@@ -23,145 +23,82 @@
 // <summary></summary>
 // ***********************************************************************
 
-using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.src.Infrastructure.Buffers.Model.JsonConverters;
-using Newtonsoft.Json;
+using io.nem2.sdk.src.Model.Network;
+
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 {
     public class BlockInfo
     {
-
-        [JsonProperty("meta")]
         public Meta Meta { get; set; }
 
-
-        [JsonProperty("block")]
         public Block Block { get; set; }
 
-
-        [JsonProperty("id")]
-        public string BlockID { get; set; }
+        public string Id { get; set; }
     }
 
     public class Block
     {
-        [JsonProperty("size")]
         public int Size { get; set; }
 
-
-        [JsonProperty("signature")]
         public string Signature { get; set; }
 
-
-        [JsonProperty("signerPublicKey")]
         public string SignerPublicKey { get; set; }
 
-
-        [JsonProperty("version")]
         public int Version { get; set; }
 
+        public NetworkType.Types Network { get; set; }
 
-        [JsonProperty("network")]
-        public int NetworkType { get; set; }
-
-
-        [JsonProperty("type")]
         public int Type { get; set; }
-
-
-        [JsonProperty("height")]     
+     
         public ulong Height { get; set; }
-
-
-        [JsonProperty("timestamp")]    
+   
         public ulong Timestamp { get; set; }
 
-
-        [JsonProperty("difficulty")]
         public ulong Difficulty { get; set; }
 
-
-        [JsonProperty("proofGamma")]
         public string ProofGamma { get; set; }
 
-
-        [JsonProperty("proofVerificationHash")]
         public string ProofVerificationHash { get; set; }
 
-
-        [JsonProperty("proofScalar")]
         public string ProofScalar { get; set; }
 
-
-        [JsonProperty("previousBlockHash")]
         public string PreviousBlockHash { get; set; }
 
-
-        [JsonProperty("transactionsHash")]
         public string BlockTransactionsHash { get; set; }
 
-
-        [JsonProperty("receiptsHash")]
         public string ReceiptsHash { get; set; }
 
-
-        [JsonProperty("stateHash")]
         public string StateHash { get; set; }
 
-
-        [JsonProperty("beneficiaryAddress")]
         public string DecodedBeneficiaryAddress { get; set; }
 
-
-        [JsonProperty("feeMultiplier")]
         public int FeeMultiplier { get; set; }
 
-
-        [JsonProperty("votingEligibleAccountsCount")]
         public int VotingEligibleAccountsCount { get; set; }
 
-
-        [JsonProperty("harvestingEligibleAccountsCount")]
         public int HarvestingEligibleAccountsCount { get; set; }
 
-
-        [JsonProperty("totalVotingBalance")]
         public ulong TotalVotingBalance { get; set; }
 
-
-        [JsonProperty("previousImportanceBlockHash")]
         public ulong PreviousImportanceBlockHash { get; set; }
     }
 
     public class Meta
     {
 
-        [JsonProperty("hash")]
         public string Hash { get; set; }
 
-
-        [JsonProperty("generationHash")]
         public string GenerationHash { get; set; }
 
-
-        [JsonProperty("totalFee")]
         public ulong TotalFee { get; set; }
 
-
-        [JsonProperty("totalTransactionsCount")]
         public int TotalTransactionsCount { get; set; }
 
+        public List<string> StateHashSubCacheMerkleRoots { get; set; }
 
-        [JsonProperty("stateHashSubCacheMerkleRoots")]
-        public string[] StateHashSubCacheMerkleRoots { get; set; }
-
-
-        [JsonProperty("transactionsCount")]
         public int TransactionsCount { get; set; }
 
-
-        [JsonProperty("statementsCount")]
         public int StatementsCount { get; set; }
     }
 }

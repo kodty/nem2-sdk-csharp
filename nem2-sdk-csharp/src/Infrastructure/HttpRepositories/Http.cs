@@ -24,17 +24,14 @@
 // ***********************************************************************
 
 using System.Diagnostics;
-using System.Reactive.Linq;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Network;
-using Newtonsoft.Json;
+
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
     public class HttpRouter
     {
-
         internal HttpClient Client { get; }
 
         internal string Host { get; set; }
@@ -49,26 +46,11 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             Host = host;
             Port = port;
-            Client = new HttpClient();   
-            
-            
-        }
-
-        internal HttpRouter GetHttp()
-        {
-            return this;
-        }
-
-        public IObservable<NetworkType.Types> GetNetworkType()
-        {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(Host + ":" + Port + "/network"))
-              .Select(JsonConvert.DeserializeObject<NetworkInfo>)
-              .Select(i => NetworkType.GetNetwork(i.Name));
+            Client = new HttpClient();                    
         }
 
         internal Uri GetUri(object[] segs)
         {
-
             var uri = new UriBuilder(Host)
             {
                 Port = Port,

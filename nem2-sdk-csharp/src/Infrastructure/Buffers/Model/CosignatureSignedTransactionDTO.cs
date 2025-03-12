@@ -27,21 +27,15 @@ using Newtonsoft.Json;
 
 namespace io.nem2.sdk.Infrastructure.Buffers.Model
 {
-    /// <summary>
-    /// Class CosignatureSignedTransactionDTO.
-    /// </summary>
+
     public class CosignatureSignedTransaction
     {
-        [JsonProperty("parentHash")]
         public string ParentHash { get; set; }
 
-        [JsonProperty("signature")]
         public string Signature { get; set; }
 
-        [JsonProperty("signer")]
         public string Signer { get; set; }
 
-        [JsonProperty("version")]
         public int Version { get; set; }
     }
 }

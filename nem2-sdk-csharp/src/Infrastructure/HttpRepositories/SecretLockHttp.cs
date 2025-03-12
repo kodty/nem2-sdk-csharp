@@ -2,10 +2,7 @@
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Infrastructure.Mapping;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Reactive.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 {
@@ -16,13 +13,15 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<List<SecretLockEvent>> SearchSecretLocks(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri([ "lock", "secret"])))
-              .Select(ResponseFilters<SecretLockEvent>.FilterEvents);
+              .Select(s => ResponseFilters<SecretLockEvent>.FilterEvents(s, "data"));
         }
+
         public IObservable<SecretLockEvent> GetSecretLock(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["lock", "secret", hash])))
               .Select(ObjectComposer.GenerateObject<SecretLockEvent>);
         }
+
         public IObservable<MerkleRoot> GetSecretLockMerkle(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["lock", "secret", hash, "merkle"])))

@@ -31,7 +31,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
     interface INamespaceRepository
     {
         // Get
-        IObservable<Namespaces> SearchNamespaces(QueryModel queryModel);
+        IObservable<List<NamespaceDatum>> SearchNamespaces(QueryModel queryModel);
         IObservable<NamespaceDatum> GetNamespace(string namespaceId);
         IObservable<MerkleRoot> GetNamespaceMerkle(string namespaceId);
 

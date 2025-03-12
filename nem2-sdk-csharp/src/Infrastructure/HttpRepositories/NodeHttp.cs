@@ -1,7 +1,7 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
-using Newtonsoft.Json;
+using io.nem2.sdk.src.Infrastructure.Mapping;
 using System.Reactive.Linq;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
@@ -13,43 +13,43 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<NodeHealth> GetNodeHealth()
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["node", "health"])))
-              .Select(JsonConvert.DeserializeObject<NodeHealth>);
+              .Select(ObjectComposer.GenerateObject<NodeHealth>);
         }
 
         public IObservable<NodeInfo> GetNodeInformation()
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["node", "info"])))
-              .Select(JsonConvert.DeserializeObject<NodeInfo>);
+              .Select(ObjectComposer.GenerateObject<NodeInfo>);
         }
 
         public IObservable<List<NodePeer>> GetNodePeers()
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["node", "peers"])))
-              .Select(JsonConvert.DeserializeObject<List<NodePeer>>);
+              .Select(n => ResponseFilters<NodePeer>.FilterEvents(n));
         }
 
         public IObservable<NodeStorage> GetNodeStorageInfo()
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["node", "storage"])))
-              .Select(JsonConvert.DeserializeObject<NodeStorage>);
+              .Select(ObjectComposer.GenerateObject<NodeStorage>);
         }
 
         public IObservable<NodeTime> GetNodeTime()
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["node", "time"])))
-              .Select(JsonConvert.DeserializeObject<NodeTime>);
+              .Select(ObjectComposer.GenerateObject<NodeTime>);
         }
 
         public IObservable<NodeRESTVersion> GetNodeRESTVersion()
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["node", "server"])))
-              .Select(JsonConvert.DeserializeObject<NodeRESTVersion>);
+              .Select(ObjectComposer.GenerateObject<NodeRESTVersion>);
         }
 
         public IObservable<NodeUnlockedAccounts> GetNodeHArvestingAccountInfo()
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["node", "unlocked"])))
-              .Select(JsonConvert.DeserializeObject<NodeUnlockedAccounts>);
+              .Select(ObjectComposer.GenerateObject<NodeUnlockedAccounts>);
         }
     }
 }
