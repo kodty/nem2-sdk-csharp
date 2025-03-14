@@ -16,7 +16,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task Getblocks()
         {
-            string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
+            string pubKey = "3162D9127111F34DEC9C6488E8CB4BBF0BA5CBE195D787836208CFC3B2DC2EE1";
 
             var blockHttp = new BlockchainHttp("75.119.150.108", 3000);
 
@@ -26,13 +26,36 @@ namespace Integration_Tests
             var response = await blockHttp.SearchBlocks(queryModel);
 
             response.ForEach(i => {
-                Assert.That(i.Block.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
-                Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
-                Assert.That(i.Meta.StatementsCount, Is.EqualTo(259));
-                Assert.That(i.Meta.TotalFee, Is.EqualTo(0));
-                Assert.That(i.Id, Is.EqualTo("6644D77CED4FBE21460A2223"));
+
                 Assert.That(i.Block.Height, Is.GreaterThan(0));
+                Assert.That(i.Block.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+                Assert.That(i.Block.Type, Is.GreaterThan(1));
+                Assert.That(i.Block.Height, Is.GreaterThanOrEqualTo(0));
+                Assert.That(i.Block.Size, Is.GreaterThan(1));
+                Assert.That(i.Block.SignerPublicKey.Length, Is.EqualTo(64));
+                Assert.That(i.Block.Version, Is.EqualTo(1));
+                Assert.That(i.Block.Signature.Length, Is.EqualTo(128));
+                Assert.That(i.Block.ProofGamma.Length, Is.EqualTo(64));
+                Assert.That(i.Block.ProofScalar.Length, Is.EqualTo(64));
+                Assert.That(i.Block.ProofVerificationHash.Length, Is.EqualTo(32)); // check why 32
+                Assert.That(i.Block.Timestamp, Is.GreaterThanOrEqualTo(0));
+                Assert.That(i.Block.Difficulty, Is.GreaterThanOrEqualTo(1));
+                Assert.That(i.Block.PreviousBlockHash.Length, Is.EqualTo(64));
+                Assert.That(i.Block.BeneficiaryAddress.Length, Is.EqualTo(48));
+                Assert.That(i.Block.TransactionsHash.Length, Is.EqualTo(64));
+                Assert.That(i.Block.ReceiptsHash.Length, Is.EqualTo(64));
+                Assert.That(i.Block.StateHash.Length, Is.EqualTo(64));
+                Assert.That(i.Block.FeeMultiplier, Is.GreaterThanOrEqualTo(0));
                
+                Assert.That(i.Meta.GenerationHash.Length, Is.EqualTo(64));
+                Assert.That(i.Meta.TransactionsCount, Is.GreaterThanOrEqualTo(0));
+                Assert.That(i.Meta.TotalTransactionsCount, Is.GreaterThanOrEqualTo(0));
+                Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
+                Assert.That(i.Meta.StateHashSubCacheMerkleRoots.Count, Is.GreaterThanOrEqualTo(0));
+                Assert.That(i.Meta.StatementsCount, Is.GreaterThanOrEqualTo(0));
+                Assert.That(i.Meta.TotalFee, Is.GreaterThanOrEqualTo(0));
+
+                Assert.That(i.Id.Length, Is.EqualTo(24));                     
             });
         }
 

@@ -65,24 +65,21 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
         public string PreviousBlockHash { get; set; }
 
-        public string BlockTransactionsHash { get; set; }
+        public string TransactionsHash { get; set; }
 
         public string ReceiptsHash { get; set; }
 
         public string StateHash { get; set; }
 
-        public string DecodedBeneficiaryAddress { get; set; }
+        public string BeneficiaryAddress { get; set; }
 
         public int FeeMultiplier { get; set; }
 
-        public int VotingEligibleAccountsCount { get; set; }
+        //public int VotingEligibleAccountsCount { get; set; } 
 
-        public int HarvestingEligibleAccountsCount { get; set; }
+        //public int HarvestingEligibleAccountsCount { get; set; } 
 
-        public ulong TotalVotingBalance { get; set; }
-
-        public ulong PreviousImportanceBlockHash { get; set; }
-    }
+        //public ulong TotalVotingBalance { get; set; }
 
     public class Meta
     {
