@@ -23,7 +23,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
     public class MessageGroup
     {
         public int Stage { get; set; }
-        public string Height { get; set; }
+        public ulong Height { get; set; }
         public List<string> Hashes { get; set; }
         public List<Signature> Signatures { get; set; }
     }
