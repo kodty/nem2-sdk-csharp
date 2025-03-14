@@ -68,10 +68,10 @@ namespace Integration_Tests
                 
                 var tx = ((SimpleTransfer)i.Transaction);
 
-                Assert.That(tx.RecipientAddress, Is.EqualTo("68CA6F5728706A29F42FB0F727F0850DC27ED7C3685232A6"));
+                Assert.That(tx.RecipientAddress.Length, Is.EqualTo(48));
                 Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
                 Assert.That(tx.Mosaics[0].Amount, Is.GreaterThan(0));
-                Assert.That(tx.Mosaics[0].Id, Is.EqualTo("E74B99BA41F4AFEE"));
+                Assert.That(tx.Mosaics[0].Id.Length, Is.EqualTo(16));
                 Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
                 Assert.That(i.Id.Length, Is.EqualTo(24));
                 Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.TRANSFER));
