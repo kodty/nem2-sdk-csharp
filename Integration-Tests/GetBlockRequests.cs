@@ -72,7 +72,10 @@ namespace Integration_Tests
 
             Assert.That(response.Height, Is.GreaterThan(0));
             Assert.That(response.ScoreHigh, Is.GreaterThan(0));
+            Assert.That(response.ScoreLow, Is.GreaterThan(0));
             Assert.That(response.LatestFinalizedBlock.Hash, Is.EqualTo("4AF66C45DF8DC73501F4ADAB16B737F8C67486B9F06E3C03ED80D0B5C6B9B71B"));
+            Assert.That(response.LatestFinalizedBlock.Height, Is.GreaterThan(0));
+            Assert.That(response.LatestFinalizedBlock.FinalizationEpoch, Is.GreaterThan(0));
         }
     }
 }
