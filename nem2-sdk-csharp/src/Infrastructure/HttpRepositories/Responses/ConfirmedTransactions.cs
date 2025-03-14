@@ -107,7 +107,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         }
     }
 
-    public class EmbeddedSimpleTransfer : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedSimpleTransfer : EmbeddedTransactionData.EmbeddedBaseTransaction // flag
     {
         public string RecipientAddress { get; set; }
 
@@ -115,13 +115,14 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
         public string Messege { get; set; }
     }
+
     public class SimpleTransfer : TransactionData.BaseTransaction
     {
         public string RecipientAddress { get; set; }
 
         public List<MosaicTransfer> Mosaics { get; set; }
 
-        public string Messege { get; set; }
+        public string Message { get; set; }
     }
 
     public class EmbeddedKeyLink : EmbeddedTransactionData.EmbeddedBaseTransaction // account key link + node key link + VRF key link

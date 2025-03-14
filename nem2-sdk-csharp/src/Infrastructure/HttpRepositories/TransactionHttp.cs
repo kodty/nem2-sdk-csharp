@@ -54,6 +54,17 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["transactions", "confirmed", hash])))
                .Select(ResponseFilters<TransactionData>.FilterSingle);
         }
+        public IObservable<TransactionData> GetUnconfirmedTransaction(string hash)
+        {
+            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["transactions", "unconfirmed", hash])))
+               .Select(ResponseFilters<TransactionData>.FilterSingle);
+        }
+
+        public IObservable<TransactionData> GetPartialTransaction(string hash)
+        {
+            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["transactions", "partial", hash])))
+               .Select(ResponseFilters<TransactionData>.FilterSingle);
+        }
 
         public IObservable<List<TransactionData>> SearchUnconfirmedTransactions(QueryModel queryModel)
         {

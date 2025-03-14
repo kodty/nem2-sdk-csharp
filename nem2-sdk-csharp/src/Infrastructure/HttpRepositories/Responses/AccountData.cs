@@ -91,9 +91,14 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
         public VRF Vrf { get; set; }
 
-        public List<VotingKeys> PublicKeys { get; set; }
+        public Voting Voting { get; set; }
+        
     }
 
+    public class Voting
+    {
+        public List<VotingKeys> PublicKeys { get; set; }
+    }
     public class VotingKeys
     {
         public string PublicKey { get; set; }

@@ -22,6 +22,21 @@ namespace Integration_Tests
         }
 
         [Test, Timeout(20000)]
+        public async Task SearchAccountWithVoting()
+        {
+            var accHttp = new AccountHttp("75.119.150.108", 3000);
+
+            var response = await accHttp.GetAccount(new PublicAccount("FC8C66547D7C20CD6CBF7F31DC5657247351AF8C12188E56F885FF012431B8C1", NetworkType.Types.MAIN_NET));
+
+            Assert.That(response.Account.Version, Is.EqualTo(1));
+            Assert.That(response.Account.AddressHeight, Is.EqualTo(1));
+            Assert.That(response.Account.PublicKey, Is.EqualTo("FC8C66547D7C20CD6CBF7F31DC5657247351AF8C12188E56F885FF012431B8C1"));
+            Assert.That(response.Account.Address, Is.EqualTo("68AB07874BCFA82C28D84818217EBC49AE0DF421C738161F"));
+            Assert.That(response.Account.SupplementalPublicKeys.Voting.PublicKeys[0].PublicKey, Is.EqualTo("E1A8274A61DC5D2A378F5719B1FADB64FBF82120B4B876AEA3774E387C2650FF"));
+            Assert.That(response.Account.Importance, Is.EqualTo(0));
+        }
+
+        [Test, Timeout(20000)]
         public async Task SearchAccounts()
         {
             string pubKey = "6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D";

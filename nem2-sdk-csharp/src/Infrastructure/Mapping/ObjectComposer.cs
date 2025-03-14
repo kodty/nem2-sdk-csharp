@@ -96,6 +96,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
                 || op.PropertyType == typeof(string)
                 || op.PropertyType == typeof(List<string>)
                 || op.PropertyType == typeof(List<ActivityBucket>)
+                || op.PropertyType == typeof(List<VotingKeys>)
                 || op.PropertyType == typeof(List<MosaicTransfer>)
                 || op.PropertyType == typeof(List<MessageGroup>)
                 || op.PropertyType == typeof(List<Signature>)
@@ -225,6 +226,10 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             if (type == typeof(List<Cosignature>))
             {
                 return GetListTypeValue<Cosignature>(type, ob, path);
+            }
+            if (type == typeof(List<VotingKeys>))
+            {
+                return GetListTypeValue<VotingKeys>(type, ob, path);
             }
             if (type == typeof(List<EmbeddedTransactionData>))
             {

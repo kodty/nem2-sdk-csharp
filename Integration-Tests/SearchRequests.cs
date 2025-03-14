@@ -68,6 +68,7 @@ namespace Integration_Tests
                 
                 var tx = ((SimpleTransfer)i.Transaction);
 
+                Assert.That(tx.RecipientAddress, Is.EqualTo("68CA6F5728706A29F42FB0F727F0850DC27ED7C3685232A6"));
                 Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
                 Assert.That(tx.Mosaics[0].Amount, Is.GreaterThan(0));
                 Assert.That(tx.Mosaics[0].Id, Is.EqualTo("E74B99BA41F4AFEE"));
@@ -76,6 +77,28 @@ namespace Integration_Tests
                 Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.TRANSFER));
             });
         }
+
+        [Test, Timeout(20000)] 
+        public async Task SearchTransferTransactionWithMessege()
+        {
+            string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
+
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var response = await hashClient.GetConfirmedTransaction("11B55558B111E21CABAE7278DE2D3CF393A2384F65AF2C62B88872312FFD0101");
+
+            
+            var tx = ((SimpleTransfer)response.Transaction);
+
+            Assert.That(tx.Message, Is.EqualTo("FE2A8061577301E2402E3F75637E6EFD62DBA4580EE027304459C8C6C50C0E305766F88AE75F6734F6FA6C36A1E6F5093CBB53FC3F8F4BD34B5709DC46A3DB5104685E233024B972E5543FEC16B4458F712FD0AAA00E61CE3B716811DA4E3BB3F1F6851BCD0D58D892BF213BA3F3CE72918F70AA2F78B333654AB2AF8E09F8318C2A63F5"));
+            Assert.That(tx.RecipientAddress, Is.EqualTo("68BA45B6240991DA609C702A2DC3ECC1BED47FA589ED331B"));
+            Assert.That(tx.SignerPublicKey, Is.EqualTo("D32168A40E4A2DB9F1FB0D60554BFCE3142835CFFFF6D2BB104AE97F8B4829B4"));
+            Assert.That(tx.Mosaics, Is.Empty);
+            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.TRANSFER));
+            Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
+            Assert.That(response.Id.Length, Is.EqualTo(24));
+        }
+
 
         [Test, Timeout(20000)]
         public async Task SearcNameSpaceRegistrationTransaction()
@@ -557,6 +580,12 @@ namespace Integration_Tests
 
                 var tx = ((Aggregate)i.Transaction);
 
+                Assert.That(i.Id, Is.EqualTo("6644D77CED4FBE214609F1C3"));
+                Assert.That(i.Meta.Hash, Is.EqualTo("E906272E7A715CD24D959A51CDFADC4CC8CA0E63097EA161C1DEBD31E9754A74"));
+                Assert.That(i.Meta.Index, Is.EqualTo(25465));
+                Assert.That(i.Meta.Timestamp, Is.EqualTo(0)); 
+                Assert.That(i.Meta.MerkleComponentHash, Is.EqualTo("904E12F6F155A858C89568A63C23E1F5CDB8AC5220969BB59BD22879FF334F83"));
+                Assert.That(i.Meta.FeeMultiplier, Is.EqualTo(0));
                 Assert.That(tx.Size, Is.EqualTo(864));
                 Assert.That(tx.Transactions, !Is.Null);
                 Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET)); 
@@ -567,6 +596,14 @@ namespace Integration_Tests
                 Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.AGGREGATE_COMPLETE));
                 Assert.That(tx.SignerPublicKey, Is.EqualTo("FA9F3974FE3B15585E6B72672C7D8BEAE27D1EDF6C4752BAFDB8B2FEA601C0CF"));
 
+                tx.Cosignatures.ForEach(i => {
+
+                    Assert.That(i.SignerPublicKey.Length, Is.EqualTo(64));
+                    Assert.That(i.Signature.Length, Is.EqualTo(128));
+                    Assert.That(i.Version, Is.EqualTo(0));
+
+                });
+
                 Assert.That(tx.Transactions[0].Transaction.SignerPublicKey, Is.EqualTo("FA9F3974FE3B15585E6B72672C7D8BEAE27D1EDF6C4752BAFDB8B2FEA601C0CF"));
                 Assert.That(tx.Transactions[0].Transaction.Network, Is.EqualTo(NetworkType.Types.MAIN_NET)); // network shouldnt be twice - check why
                 Assert.That(tx.Transactions[0].Transaction.Type, Is.EqualTo(TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION));
@@ -574,6 +611,19 @@ namespace Integration_Tests
 
                 var embedded = (MultisigModification)tx.Transactions[0].Transaction;
 
+                Assert.That(tx.Transactions[0].Id, Is.EqualTo("6644D77CED4FBE214609F1CF"));
+                Assert.That(tx.Transactions[0].Meta.Index, Is.EqualTo(0));
+                Assert.That(tx.Transactions[0].Meta.Height, Is.EqualTo(1));
+                Assert.That(tx.Transactions[0].Meta.Timestamp, Is.EqualTo(0));
+                Assert.That(tx.Transactions[0].Meta.FeeMultiplier, Is.EqualTo(0));
+                Assert.That(tx.Transactions[0].Meta.AggregateHash, Is.EqualTo("E906272E7A715CD24D959A51CDFADC4CC8CA0E63097EA161C1DEBD31E9754A74"));
+                Assert.That(tx.Transactions[0].Meta.AggregateId, Is.EqualTo("6644D77CED4FBE214609F1C3"));
+             
+                Assert.That(embedded.SignerPublicKey, Is.EqualTo("FA9F3974FE3B15585E6B72672C7D8BEAE27D1EDF6C4752BAFDB8B2FEA601C0CF"));
+                Assert.That(embedded.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+                Assert.That(embedded.Version, Is.EqualTo(1));
+                Assert.That(embedded.minApprovalDelta, Is.EqualTo(4));
+                Assert.That(embedded.minRemovalDelta, Is.EqualTo(5));
                 Assert.That(embedded.addressAdditions[0].Length, Is.EqualTo(48));
             });
         }

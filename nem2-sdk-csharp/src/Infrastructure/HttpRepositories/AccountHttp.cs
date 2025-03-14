@@ -42,9 +42,13 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         public IObservable<List<AccountData>> SearchAccounts(QueryModel queryModel)
         {
-
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["accounts"], queryModel)))
                  .Select(a => ResponseFilters<AccountData>.FilterEvents(a, "data"));
+        }
+
+        public IObservable<string> SearchAccountsString(QueryModel queryModel)
+        {
+            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["accounts"], queryModel)));
         }
 
         public IObservable<AccountData> GetAccount(PublicAccount accountId)

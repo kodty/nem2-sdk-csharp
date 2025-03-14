@@ -38,6 +38,8 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         IObservable<List<TransactionData>> SearchUnconfirmedTransactions(QueryModel queryModel);
         IObservable<List<TransactionData>> SearchPartialTransactions(QueryModel queryModel);
         IObservable<TransactionData> GetConfirmedTransaction(string hash);
+        IObservable<TransactionData> GetUnconfirmedTransaction(string hash);
+        IObservable<TransactionData> GetPartialTransaction(string hash);
 
         // Post
         IObservable<List<TransactionData>> GetConfirmedTransactions(string[] transactionIds);
