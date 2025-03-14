@@ -80,6 +80,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         //public int HarvestingEligibleAccountsCount { get; set; } 
 
         //public ulong TotalVotingBalance { get; set; }
+    }
 
     public class Meta
     {
