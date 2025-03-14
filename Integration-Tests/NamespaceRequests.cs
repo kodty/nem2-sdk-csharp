@@ -44,6 +44,8 @@ namespace Integration_Tests
             Assert.That(response.Namespace.Level0, Is.EqualTo("A95F1F8A96159516"));
             Assert.That(response.Namespace.Depth, Is.EqualTo(1));
             Assert.That(response.Namespace.Alias.Type, Is.EqualTo(0));
+            Assert.That(response.Namespace.Alias.Address.Length, Is.EqualTo(48));
+            Assert.That(response.Namespace.Alias.MosaicId.Length, Is.EqualTo(16));
             Assert.That(response.Namespace.ParentId, Is.EqualTo("0000000000000000"));
             Assert.That(response.Namespace.OwnerAddress, Is.EqualTo("68258605CB5ABC592FE691190202CDFD6DDEE659A6BB30B8"));
             Assert.That(response.Namespace.EndHeight, Is.EqualTo(18446744073709551615));

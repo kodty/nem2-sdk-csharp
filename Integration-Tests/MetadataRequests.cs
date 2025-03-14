@@ -51,6 +51,7 @@ namespace Integration_Tests
             Assert.That(response.MetadataEntry.TargetAddress, Is.EqualTo("68FAF5ACB04257242865BBC5D1C712E7538ECC92930660B3"));
             Assert.That(response.MetadataEntry.ScopedMetadataKey, Is.EqualTo("BCCC2EE01677A923"));
             Assert.That(response.MetadataEntry.TargetId, Is.EqualTo("0000000000000000"));
+            Assert.That(response.MetadataEntry.MetadataType, Is.EqualTo(0));
             Assert.That(response.MetadataEntry.Value, Is.EqualTo("323632313738"));
         }
 
