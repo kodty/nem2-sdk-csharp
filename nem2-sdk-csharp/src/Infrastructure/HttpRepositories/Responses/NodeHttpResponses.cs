@@ -14,23 +14,8 @@ namespace io.nem2.sdk.src.Infrastructure.Buffers.Model
         public string Db { get; set; }
     }
 
-    public class NodeInfo
+    public class NodeInfo : NodePeer
     {
-        public int Version { get; set; }
-
-        public string PublicKey { get; set; }
-
-        public string NetworkGenerationHashSeed { get; set; }
-
-        public int Roles { get; set; }
-
-        public int Port { get; set; }
-
-        public int NetworkIdentifier { get; set; }
-
-        public string FriendlyName { get; set; }
-
-        public string Host { get; set; }
 
         public string NodePublicKey { get; set; }
     }
@@ -52,8 +37,6 @@ namespace io.nem2.sdk.src.Infrastructure.Buffers.Model
         public string FriendlyName { get; set; }
 
         public string Host { get; set; }
-
-        public string NodePublicKey { get; set; }
     }
 
     public class NodeStorage
