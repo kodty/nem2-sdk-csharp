@@ -82,7 +82,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         public IObservable<MerkleRoot> GetMosaicRestrictionMerkle(string compositeHash)
         { 
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "mosaics", compositeHash, "merkle"])))
+            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "mosaic", compositeHash, "merkle"])))
                 .Select(ObjectComposer.GenerateObject<MerkleRoot>);
         }
     }
