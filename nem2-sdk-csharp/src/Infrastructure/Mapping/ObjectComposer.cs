@@ -112,7 +112,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
                 || op.PropertyType == typeof(List<MosaicDatum>) 
                 || op.PropertyType == typeof(List<Receipt>)
                 || op.PropertyType == typeof(List<ResolutionEntry>)
-                || op.PropertyType == typeof(List<MRestrictionData>)
+                || op.PropertyType == typeof(List<MosaicRestrictionData>)
                 || op.PropertyType == typeof(List<Cosignature>)
                 || op.PropertyType == typeof(List<EmbeddedTransactionData>)
                 || op.PropertyType == typeof(List<MosaicRestriction>)
@@ -215,9 +215,9 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             {
                 return GetListTypeValue<MosaicDatum>(type, ob, path);
             }
-            if (type == typeof(List<MRestrictionData>)) 
+            if (type == typeof(List<MosaicRestrictionData>)) 
             {
-                return GetListTypeValue<MRestrictionData>(type, ob, path);
+                return GetListTypeValue<MosaicRestrictionData>(type, ob, path);
             }
             if (type == typeof(List<MosaicRestriction>))
             {

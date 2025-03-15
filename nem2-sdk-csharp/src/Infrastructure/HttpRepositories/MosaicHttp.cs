@@ -68,16 +68,16 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         }
 
-        public IObservable<List<MRestrictionData>> SearchMosaicRestrictions(QueryModel queryModel)
+        public IObservable<List<MosaicRestrictionData>> SearchMosaicRestrictions(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "mosaic"], queryModel)))
-               .Select(m => ResponseFilters<MRestrictionData>.FilterEvents(m, "data"));
+               .Select(m => ResponseFilters<MosaicRestrictionData>.FilterEvents(m, "data"));
         }
 
-        public IObservable<MosaicRestrictionEntry> GetMosaicRestriction(string compositeHash)
+        public IObservable<MosaicRestrictionData> GetMosaicRestriction(string compositeHash)
         { 
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "mosaics", compositeHash])))
-                .Select(ObjectComposer.GenerateObject<MosaicRestrictionEntry>);
+            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "mosaic", compositeHash])))
+                .Select(ObjectComposer.GenerateObject<MosaicRestrictionData>);
         }
 
         public IObservable<MerkleRoot> GetMosaicRestrictionMerkle(string compositeHash)

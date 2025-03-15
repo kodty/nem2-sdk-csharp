@@ -212,7 +212,8 @@ namespace Integration_Tests
 
             queryModel.SetParam(QueryModel.DefinedParams.address, address.Plain);
             var response = await accountClient.SearchAccountRestrictions(queryModel);
-            
+
+            Assert.That(response[0].AccountRestrictions.Version, Is.GreaterThan(0));
             Assert.That(response[0].AccountRestrictions.Address.Length, Is.GreaterThan(0));
             Assert.That(response[0].AccountRestrictions.Restrictions[0].RestrictionFlags, Is.GreaterThan(0));
             Assert.That(response[0].AccountRestrictions.Restrictions[0].Values[0], Is.EqualTo("6BED913FA20223F8"));

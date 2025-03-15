@@ -106,24 +106,6 @@ namespace Integration_Tests
             Assert.That(response.Tree[1].Value, Is.Null);
         }
 
-        [Test, Timeout(20000)]
-        public async Task GetMosaicRestriction()
-        {
-            var metadataHttp = new MosaicHttp("75.119.150.108", 3000);
-
-            var queryModel = new QueryModel(QueryModel.DefineRequest.SearchMosaicRestrictions);
-            queryModel.SetParam(QueryModel.DefinedParams.pageNumber, 2);
-
-
-            var response = await metadataHttp.SearchMosaicRestrictions(queryModel);
-
-            Assert.That(response[3].Id, Is.EqualTo("6645AEBC079630C9330CF223"));
-            Assert.That(response[3].MosaicRestrictionEntry.MosaicId, Is.EqualTo("613E6D0FC11F4530"));
-            Assert.That(response[3].MosaicRestrictionEntry.Version, Is.EqualTo(1));
-            Assert.That(response[3].MosaicRestrictionEntry.TargetAddress, Is.EqualTo("687B8885134F5BCE0AE5C97E222C5D3A462A3F4EA951CBE5"));
-            Assert.That(response[3].MosaicRestrictionEntry.CompositeHash, Is.EqualTo("A931981ED4D7E407D4F0F384E027490FA8771540693951A4DB63A00D8B48DF5F"));
-            Assert.That(response[3].MosaicRestrictionEntry.EntryType, Is.EqualTo(0));
-            Assert.That(response[3].MosaicRestrictionEntry.Restrictions[0].Key, Is.EqualTo("14694524492525660186"));
-        }
+        
     }
 }

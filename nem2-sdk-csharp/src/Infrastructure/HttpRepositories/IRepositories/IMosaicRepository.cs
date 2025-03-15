@@ -36,8 +36,8 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         IObservable<MerkleRoot> GetMosaicMerkle(string mosaicId);
 
         // restrictions
-        IObservable<List<MRestrictionData>> SearchMosaicRestrictions(QueryModel queryModel);
-        IObservable<MosaicRestrictionEntry> GetMosaicRestriction(string compositeHash);
+        IObservable<List<MosaicRestrictionData>> SearchMosaicRestrictions(QueryModel queryModel);
+        IObservable<MosaicRestrictionData> GetMosaicRestriction(string compositeHash);
         IObservable<MerkleRoot> GetMosaicRestrictionMerkle(string compositeHash);
     }
 }

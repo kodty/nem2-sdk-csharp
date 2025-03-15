@@ -2,7 +2,7 @@
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 {
-    public class MRestrictionData
+    public class MosaicRestrictionData
     {
         public string Id { get; set; }
 
@@ -24,13 +24,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public List<MosaicRestriction> Restrictions { get; set; }
     }
 
-    public class Pagination
-    {
-        public int PageNumber { get; set; }
-
-        public int PageSize { get; set; }
-    }
-
     public class MosaicRestriction
     {
         public string Key { get; set; }
@@ -38,24 +31,12 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public string Value { get; set; }
     }
 
-    public class MosaicRestrictions
-    {
-        [JsonProperty("data")]
-        public List<MRestrictionData> Data { get; set; }
-
-        [JsonProperty("pagination")]
-        public Pagination Pagination { get; set; }
-    }
-
     public class AccountRestrictions
     {
-        [JsonProperty("version")]
         public int Version { get; set; }
 
-        [JsonProperty("address")]
         public string Address { get; set; }
 
-        [JsonProperty("restrictions")]
         public List<Restrictions> Restrictions { get; set; }
     }
 
@@ -70,15 +51,4 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
         public List<string> Values { get; set; }
     }
-
-    public class AccountsRestrictions
-    {
-        [JsonProperty("data")]
-        public List<RestrictionData> Data { get; set; }
-
-        [JsonProperty("pagination")]
-        public Pagination Pagination { get; set; }
-    }
-
-
 }
