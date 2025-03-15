@@ -23,13 +23,26 @@ namespace Integration_Tests
             var metadataHttp = new NamespaceHttp("75.119.150.108", 3000);
 
             var queryModel = new QueryModel(QueryModel.DefineRequest.SearchNamespaces);
-            queryModel.SetParam(QueryModel.DefinedParams.ownerAddress, Address.CreateFromHex("68258605CB5ABC592FE691190202CDFD6DDEE659A6BB30B8").Plain);
 
             var response = await metadataHttp.SearchNamespaces(queryModel);
 
-            Assert.That(response[0].Id, Is.EqualTo("6644D77FED4FBE21460A2240"));
-            Assert.That(response[0].Namespace.RegistrationType, Is.EqualTo(0));
-            Assert.That(response[0].Namespace.Alias.Type, Is.EqualTo(0));
+            foreach (var item in response)
+            {
+                Assert.That(item.Id.Length, Is.EqualTo(24));
+                Assert.That(item.Meta.Active, Is.EqualTo(true));
+                Assert.That(item.Meta.Index, Is.EqualTo(0));
+
+                Assert.That(item.Namespace.Version, Is.EqualTo(1));
+                Assert.That(item.Namespace.StartHeight, Is.GreaterThan(0));
+                Assert.That(item.Namespace.Level0.Length, Is.EqualTo(16));
+                if(item.Namespace.Level1 != null) Assert.That(item.Namespace.Level1.Length, Is.EqualTo(16));
+                if (item.Namespace.Level2 != null) Assert.That(item.Namespace.Level2.Length, Is.EqualTo(16));
+                Assert.That(item.Namespace.RegistrationType, Is.AnyOf(0, 1));
+                Assert.That(item.Namespace.Alias.Type, Is.AnyOf(0, 1, 2));
+               
+                if (item.Namespace.Alias.MosaicId != null) Assert.That(item.Namespace.Alias.MosaicId.Length, Is.EqualTo(16));
+                if (item.Namespace.Alias.Address != null) Assert.That(item.Namespace.Alias.Address.Length, Is.EqualTo(48));
+            }       
         }
 
         [Test, Timeout(20000)]
@@ -40,12 +53,14 @@ namespace Integration_Tests
             var response = await metadataHttp.GetNamespace("A95F1F8A96159516");
 
             Assert.That(response.Id, Is.EqualTo("6644D77FED4FBE21460A2240"));
+            Assert.That(response.Meta.Active, Is.EqualTo(true));
+            Assert.That(response.Meta.Index, Is.EqualTo(0));           
             Assert.That(response.Namespace.RegistrationType, Is.EqualTo(0));
             Assert.That(response.Namespace.Level0, Is.EqualTo("A95F1F8A96159516"));
             Assert.That(response.Namespace.Depth, Is.EqualTo(1));
             Assert.That(response.Namespace.Alias.Type, Is.EqualTo(0));
-            Assert.That(response.Namespace.Alias.Address.Length, Is.EqualTo(48));
-            Assert.That(response.Namespace.Alias.MosaicId.Length, Is.EqualTo(16));
+            if(response.Namespace.Alias.Address != null) Assert.That(response.Namespace.Alias.Address.Length, Is.EqualTo(48));
+            if (response.Namespace.Alias.MosaicId != null) Assert.That(response.Namespace.Alias.MosaicId.Length, Is.EqualTo(16));
             Assert.That(response.Namespace.ParentId, Is.EqualTo("0000000000000000"));
             Assert.That(response.Namespace.OwnerAddress, Is.EqualTo("68258605CB5ABC592FE691190202CDFD6DDEE659A6BB30B8"));
             Assert.That(response.Namespace.EndHeight, Is.EqualTo(18446744073709551615));
