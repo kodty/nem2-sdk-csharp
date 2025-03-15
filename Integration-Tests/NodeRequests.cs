@@ -40,11 +40,12 @@ namespace Integration_Tests
             Assert.That(response.Version, Is.EqualTo(16777991));
             Assert.That(response.Host, Is.EqualTo("75.119.150.108"));
             Assert.That(response.Roles, Is.EqualTo(3));
+            Assert.That(response.Port, Is.EqualTo(7900));
+            Assert.That(response.NetworkIdentifier, Is.EqualTo(104));
             Assert.That(response.NetworkGenerationHashSeed, Is.EqualTo("57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6"));
             Assert.That(response.FriendlyName, Is.EqualTo("!King.radicasse.jp"));
             Assert.That(response.PublicKey, Is.EqualTo("15F19765910141987A0F9AB925352A2F4060E0EDF7CA34F2EBC39FC012A1196B"));
-
-
+            Assert.That(response.NodePublicKey, Is.EqualTo("B23BA5E2529DA132D9B6BA911BE06D9991DA3E7270310028B4D620314A366C05"));
         }
 
         [Test, Timeout(20000)]
@@ -56,10 +57,13 @@ namespace Integration_Tests
 
             Assert.That(response[0].Version, Is.EqualTo(16777991));
             Assert.That(response[0].Host, !Is.Null);
+            Assert.That(response[0].Port, Is.EqualTo(7900));
+            Assert.That(response[0].NetworkIdentifier, Is.EqualTo(104));
             Assert.That(response[0].Roles, Is.GreaterThan(0));
             Assert.That(response[0].NetworkGenerationHashSeed, Is.EqualTo("57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6"));
             Assert.That(response[0].FriendlyName.Length, Is.GreaterThan(0));
             Assert.That(response[0].PublicKey.Length, Is.EqualTo(64));
+            
         }
 
         [Test, Timeout(20000)]
