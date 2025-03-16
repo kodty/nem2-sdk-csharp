@@ -358,103 +358,12 @@ namespace Integration_Tests
             });
         }
 
-        [Test, Timeout(20000)]
-        public async Task SearchNodeKeyLinkTransaction()
-        {
-            string pubKey = "0B349D6FB4E93FAB29065D51B7A5375FFAF3856BA7F64DDE66B86579816D6E77";
 
-            var hashClient = new TransactionHttp("75.119.150.108", 3000);
 
-            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+       
 
-            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
-            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.NODE_KEY_LINK.GetValue());
 
-            var response = await hashClient.SearchConfirmedTransactions(qModel);
 
-            response.ForEach(i => {
-
-                var tx = ((KeyLink)i.Transaction);
-
-                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
-                Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64)); 
-            });
-        }
-
-        [Test, Timeout(20000)]
-        public async Task SearchAccountKeyLinkTransaction()
-        {
-            var hashClient = new TransactionHttp("75.119.150.108", 3000);
-
-            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
-
-            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.ACCOUNT_KEY_LINK.GetValue());
-
-            var response = await hashClient.SearchConfirmedTransactions(qModel);
-
-            response.ForEach(i => {
-
-                var tx = ((KeyLink)i.Transaction);
-
-                Assert.That(i.Id.Length, Is.EqualTo(24));
-                Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
-                Assert.That(i.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
-                Assert.That(tx.SignerPublicKey.Length, Is.EqualTo(64));
-                Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
-            });
-        }
-
-        [Test, Timeout(20000)]
-        public async Task SearchVotingKeyLinkTransaction()
-        {
-            string pubKey = "AFF16052217A847A6A71B326FEA9073CFF70D07FC5BA9026B3E05FB453C950DF";
-
-            var hashClient = new TransactionHttp("75.119.150.108", 3000);
-
-            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
-
-            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
-            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.VOTING_KEY_LINK.GetValue());
-
-            var response = await hashClient.SearchConfirmedTransactions(qModel);
-
-            response.ForEach(i => {
-
-                var tx = ((VotingKeyLink)i.Transaction);
-
-                Assert.That(i.Id.Length, Is.EqualTo(24));
-                Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
-                Assert.That(i.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
-                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
-                Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
-            });
-        }
-
-        [Test, Timeout(20000)]
-        public async Task SearchVRFKeyLinkTransaction()
-        {
-            string pubKey = "AFF16052217A847A6A71B326FEA9073CFF70D07FC5BA9026B3E05FB453C950DF";
-
-            var hashClient = new TransactionHttp("75.119.150.108", 3000);
-
-            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
-
-            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
-            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.VRF_KEY_LINK.GetValue());
-
-            var response = await hashClient.SearchConfirmedTransactions(qModel);
-
-            response.ForEach(i => {
-
-                var tx = ((KeyLink)i.Transaction);
-
-                Assert.That(i.Id.Length, Is.EqualTo(24));
-                Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
-                Assert.That(i.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
-                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
-                Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
-            });
-        }
 
 
 

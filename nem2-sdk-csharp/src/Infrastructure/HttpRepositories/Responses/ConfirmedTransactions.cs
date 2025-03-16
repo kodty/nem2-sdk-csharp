@@ -6,9 +6,9 @@ using System.ComponentModel;
 
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
-{   
+{
     public class Aggregate : TransactionData.BaseTransaction
-    {      
+    {
         public string TransactionsHash { get; set; }
         public List<Cosignature> Cosignatures { get; set; }
         public List<EmbeddedTransactionData> Transactions { get; set; }
@@ -61,7 +61,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
             public NetworkType.Types Network { get; set; }
 
             public TransactionTypes.Types Type { get; set; }
-        }         
+        }
     }
 
     public class TransactionData
@@ -145,7 +145,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     public class EmbeddedKeyLink : EmbeddedTransactionData.EmbeddedBaseTransaction // account key link + node key link + VRF key link
     {
-
         public string LinkedPublicKey { get; set; }
 
         public int LinkAction { get; set; }
@@ -154,7 +153,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
     [Description("Account, Node, VRF, Differentiate with field Type of type TransactionType.Types")]
     public class KeyLink : TransactionData.BaseTransaction // account key link + node key link + VRF key link
     {
-
         public string LinkedPublicKey { get; set; }
 
         public int LinkAction { get; set; }
@@ -162,7 +160,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     public class EmbeddedVotingKeyLink : EmbeddedKeyLink
     {
-
         public ulong StartEpoch { get; set; }
 
         public ulong EndEpoch { get; set; }
