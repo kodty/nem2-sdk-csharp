@@ -23,20 +23,10 @@
 // <summary></summary>
 // ***********************************************************************
 
-using Newtonsoft.Json;
-
 namespace io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses
 {
-    /// <summary>
-    /// Class TransactionAnnounceResponse.
-    /// </summary>
     public class TransactionAnnounceResponse
     {
-        /// <summary>
-        /// Gets or sets the message.
-        /// </summary>
-        /// <value>The message.</value>
-        [JsonProperty("message")]
         public string Message { get; set; }
     }
 }

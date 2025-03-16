@@ -87,6 +87,15 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
                     return shell;
                 }
             }
+            if (type == TransactionTypes.Types.MOSAIC_DEFINITION)
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<MosaicDefinition>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedMosaicDefinition>(GetSpecifiedTx(tx));
+
+                return shell;
+            }
             if (type == TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE)
             {
                 if (typeof(T) == typeof(TransactionData))

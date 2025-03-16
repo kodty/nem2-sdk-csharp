@@ -87,7 +87,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         {
             ParamRequestCompatible(param);
 
-            ParamMap.Add(ParamMap.Count == 0 ? ("?" + param.ToString() + "=") : ((ParamMap.Count + 1).ToString() + "&" + param.ToString() + "="), value);
+            ParamMap.Add(ParamMap.Count == 0 ? ("?" + param.ToString() + "=") : ((ParamMap.Count + 1).ToString() + param.ToString() + "="), value);
         }
 
         public void SetParam(DefinedParams param, int value) => SetParam(param, value.ToString());

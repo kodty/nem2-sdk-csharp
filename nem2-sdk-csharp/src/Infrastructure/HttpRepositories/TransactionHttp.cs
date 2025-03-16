@@ -49,6 +49,11 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                .Select(t => ResponseFilters<TransactionData>.FilterMany(t, "data"));
         }
 
+        public IObservable<string> SearchConfirmedTransactionsString(QueryModel queryModel)
+        {
+            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["transactions", "confirmed"], queryModel)));
+        }
+
         public IObservable<TransactionData> GetConfirmedTransaction(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["transactions", "confirmed", hash])))

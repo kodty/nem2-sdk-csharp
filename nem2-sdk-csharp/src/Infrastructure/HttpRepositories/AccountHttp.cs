@@ -99,9 +99,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                 .Select(ObjectComposer.GenerateObject<RestrictionData>);
         }
 
-        public IObservable<MerkleRoot> GetAccountRestrictionsMerkle(string compositeHash)
+        public IObservable<MerkleRoot> GetAccountRestrictionsMerkle(string address)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "account", compositeHash, "merkle" ])))
+            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["restrictions", "account", address, "merkle" ])))
                 .Select(ObjectComposer.GenerateObject<MerkleRoot>);
         }
     }

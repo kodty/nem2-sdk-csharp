@@ -349,7 +349,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public List<string> RestrictionDeletions { get; set; }
 
         [JsonProperty("restrictionFlags")]
-        public int Flags { get; set; }
+        public int RestrictionFlags { get; set; }
     }
 
     public class AccountAddressRestriction : TransactionData.BaseTransaction // Address, Mosaic // check tests, absent
@@ -361,7 +361,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public List<string> RestrictionDeletions { get; set; }
 
         [JsonProperty("restrictionFlags")]
-        public int Flags { get; set; }
+        public int RestrictionFlags { get; set; }
     }
 
     public class EmbeddedAccountMosaicRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
@@ -373,7 +373,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public List<string> RestrictionDeletions { get; set; }
 
         [JsonProperty("restrictionFlags")]
-        public int Flags { get; set; }
+        public int RestrictionFlags { get; set; }
     }
 
     public class AccountMosaicRestriction : TransactionData.BaseTransaction // Address, Mosaic
@@ -385,7 +385,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public List<string> RestrictionDeletions { get; set; }
 
         [JsonProperty("restrictionFlags")]
-        public int Flags { get; set; }
+        public int RestrictionFlags { get; set; }
     }
 
     public class AccountOpperationRestriction : TransactionData.BaseTransaction
@@ -397,7 +397,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public List<int> RestrictionDeletions { get; set; }
 
         [JsonProperty("restrictionFlags")]
-        public int Flags { get; set; }
+        public int RestrictionFlags { get; set; }
     }
 
     public class EmbeddedAccountOpperationRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction
@@ -409,7 +409,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public List<int> RestrictionDeletions { get; set; }
 
         [JsonProperty("restrictionFlags")]
-        public int Flags { get; set; }
+        public int RestrictionFlags { get; set; }
     }
 
     public class EmbeddedMosaicAddressRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction
@@ -493,38 +493,28 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     public class EmbeddedMosaicDefinition : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
-        [JsonProperty("nonce")]
-        public int Nonce { get; set; }
+        public ulong Nonce { get; set; }
 
-        [JsonProperty("id")]
         public string MosaicId { get; set; }
 
-        [JsonProperty("flags")]
         public int Flags { get; set; }
 
-        [JsonProperty("divisibility")]
         public int Divisibility { get; set; }
 
-        [JsonProperty("duration")]
         public ulong Duration { get; set; }
 
     }
 
     public class MosaicDefinition : TransactionData.BaseTransaction
     {
-        [JsonProperty("nonce")]
-        public int Nonce { get; set; }
+        public ulong Nonce { get; set; }
 
-        [JsonProperty("id")]
         public string MosaicId { get; set; }
 
-        [JsonProperty("flags")]
         public int Flags { get; set; }
 
-        [JsonProperty("divisibility")]
         public int Divisibility { get; set; }
 
-        [JsonProperty("duration")]
         public ulong Duration { get; set; }
 
     }
