@@ -90,6 +90,8 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
             ParamMap.Add(ParamMap.Count == 0 ? ("?" + param.ToString() + "=") : ((ParamMap.Count + 1).ToString() + param.ToString() + "="), value);
         }
 
+        public void SetParam(DefinedParams param, bool value) => SetParam(param, value.ToString().ToLower()); 
+
         public void SetParam(DefinedParams param, int value) => SetParam(param, value.ToString());
 
         public void SetParam(DefinedParams param, Order order) => SetParam(param, order.ToString());

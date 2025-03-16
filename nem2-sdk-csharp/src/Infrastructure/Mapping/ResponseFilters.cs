@@ -206,6 +206,15 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
 
                 return shell;             
             }
+            if (type == TransactionTypes.Types.ACCOUNT_METADATA)
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<AccountMetadata>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedAccountMetadata>(GetSpecifiedTx(tx));
+
+                return shell;
+            }
             if (type == TransactionTypes.Types.AGGREGATE_COMPLETE || type == TransactionTypes.Types.AGGREGATE_BONDED)
             {
                 shell.Transaction = ObjectComposer.GenerateObject<Aggregate>(GetSpecifiedTx(tx));

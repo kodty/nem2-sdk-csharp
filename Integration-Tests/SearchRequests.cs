@@ -696,9 +696,7 @@ namespace Integration_Tests
                 Assert.That(i.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
                 Assert.That(i.Mosaics[0].Id, Is.EqualTo("6BED913FA20223F8"));
                 Assert.That(i.Mosaics[0].Amount, Is.EqualTo(1000));
-
             }
-
         }
     }
 }

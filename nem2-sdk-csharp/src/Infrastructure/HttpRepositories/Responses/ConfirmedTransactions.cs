@@ -107,7 +107,25 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         }
     }
 
-    public class EmbeddedSimpleTransfer : EmbeddedTransactionData.EmbeddedBaseTransaction // flag
+    public class AccountMetadata : TransactionData.BaseTransaction
+    {
+        public string TargetAddress { get; set; }
+        public string ScopedMetadataKey { get; set; }
+        public int ValueSizeDelta { get; set; }
+        public int ValueSize { get; set; }
+        public string Value { get; set; }
+    }
+
+    public class EmbeddedAccountMetadata : EmbeddedTransactionData.EmbeddedBaseTransaction
+    {
+        public string TargetAddress { get; set; }
+        public string ScopedMetadataKey { get; set; }
+        public int ValueSizeDelta { get; set; }
+        public int ValueSize { get; set; }
+        public string Value { get; set; }
+    }
+
+    public class EmbeddedSimpleTransfer : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
         public string RecipientAddress { get; set; }
 
