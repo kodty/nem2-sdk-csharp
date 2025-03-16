@@ -223,7 +223,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             }
             if (type == TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION)
             {
-                shell.Transaction = ObjectComposer.GenerateObject<MultisigModification>(GetSpecifiedTx(tx));
+                shell.Transaction = ObjectComposer.GenerateObject<EmbeddedMultisigModification>(GetSpecifiedTx(tx));
 
                 return shell;
             }

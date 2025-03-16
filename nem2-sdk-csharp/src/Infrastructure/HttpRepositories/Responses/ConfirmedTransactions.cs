@@ -14,7 +14,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public List<EmbeddedTransactionData> Transactions { get; set; }
     }
 
-    public class MultisigModification : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedMultisigModification : EmbeddedTransactionData.EmbeddedBaseTransaction // Multisig modification must be embedded
     {
         public int minRemovalDelta { get; set; }
         public int minApprovalDelta { get; set; }
