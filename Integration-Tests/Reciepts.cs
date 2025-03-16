@@ -19,11 +19,11 @@ namespace Integration_Tests
         [Test]
         public async Task AddressStatements()
         {
-            var recieptsHttp = new BlockReceiptsHttp("75.119.150.108", 3000);
+            var client = new BlockReceiptsHttp("75.119.150.108", 3000);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.GetRecieptsAddressResolutionStatements);
 
-            var response = await recieptsHttp.GetAddressStatements(qModel);
+            var response = await client.GetAddressStatements(qModel);
 
             Assert.That(response[0].Id, Is.EqualTo("6644D79BED4FBE21460A4898"));
             Assert.That(response[0].Meta.Timestamp, Is.EqualTo(112302496));
@@ -39,11 +39,11 @@ namespace Integration_Tests
         [Test]
         public async Task MosaicStatements()
         {
-            var recieptsHttp = new BlockReceiptsHttp("75.119.150.108", 3000);
+            var client = new BlockReceiptsHttp("75.119.150.108", 3000);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.GetRecieptsAddressResolutionStatements);
 
-            var response = await recieptsHttp.GetMosaicStatements(qModel);
+            var response = await client.GetMosaicStatements(qModel);
 
             Assert.That(response[2].Id, Is.EqualTo("6644D79FED4FBE21460A544C"));
             Assert.That(response[2].Meta.Timestamp, Is.EqualTo(118726452));
@@ -58,11 +58,11 @@ namespace Integration_Tests
         [Test]
         public async Task TransactionStatements()
         {
-            var recieptsHttp = new BlockReceiptsHttp("75.119.150.108", 3000);
+            var client = new BlockReceiptsHttp("75.119.150.108", 3000);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.SearchTransactionStatements);
 
-            var response = await recieptsHttp.SearchTransactionStatements(qModel);
+            var response = await client.SearchTransactionStatements(qModel);
 
             Assert.That(response[2].Id, Is.EqualTo("6644D77CED4FBE21460A2122"));
             Assert.That(response[2].Meta.Timestamp, Is.EqualTo(0));

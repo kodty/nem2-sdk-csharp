@@ -381,13 +381,10 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     public class EmbeddedAccountMosaicRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
     {
-        [JsonProperty("restrictionAdditions")]
         public List<string> RestrictionAdditions { get; set; }
 
-        [JsonProperty("restrictionDeletions")]
         public List<string> RestrictionDeletions { get; set; }
 
-        [JsonProperty("restrictionFlags")]
         public int RestrictionFlags { get; set; }
     }
 
@@ -510,7 +507,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
     {
         public ulong Nonce { get; set; }
 
-        public string MosaicId { get; set; }
+        public string Id { get; set; }
 
         public int Flags { get; set; }
 

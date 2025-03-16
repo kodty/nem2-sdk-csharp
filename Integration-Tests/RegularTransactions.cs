@@ -1,0 +1,106 @@
+﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using io.nem2.sdk.src.Model.Network;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Reactive.Linq;
+
+namespace Integration_Tests
+{
+    internal class RegularTransactions
+    {
+
+        [SetUp]
+        public void Setup()
+        {
+        }
+
+
+        [Test, Timeout(20000)]
+        public async Task SearchTransactions()
+        {
+            string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
+            PublicAccount acc = new PublicAccount(pubKey, NetworkType.Types.MAIN_NET);
+
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.TRANSFER.GetValue());
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.HASH_LOCK.GetValue());
+
+            var response = await client.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+                ((SimpleTransfer)i.Transaction).Mosaics
+                    .ForEach(m =>
+                    {
+                        Assert.That(m.Id, Is.EqualTo("E74B99BA41F4AFEE"));
+                        Assert.That(m.Amount, Is.GreaterThan(0));
+
+                    });
+
+                Assert.That(i.Meta.Height, Is.GreaterThan(0));
+                Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
+            });
+
+            Assert.That(acc.Address.Plain, Is.EqualTo("NASYMBOLLK6FSL7GSEMQEAWN7VW55ZSZU25TBOA"));
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchTransferTransaction()
+        {
+            string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
+
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.TRANSFER.GetValue());
+
+            var response = await client.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+                var tx = ((SimpleTransfer)i.Transaction);
+
+                Assert.That(tx.RecipientAddress.Length, Is.EqualTo(48));
+                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                Assert.That(tx.Mosaics[0].Amount, Is.GreaterThan(0));
+                Assert.That(tx.Mosaics[0].Id.Length, Is.EqualTo(16));
+                Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
+                Assert.That(i.Id.Length, Is.EqualTo(24));
+                Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.TRANSFER));
+            });
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchTransferTransactionWithMessege()
+        {
+            string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
+
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var response = await client.GetConfirmedTransaction("11B55558B111E21CABAE7278DE2D3CF393A2384F65AF2C62B88872312FFD0101");
+
+
+            var tx = ((SimpleTransfer)response.Transaction);
+
+            Assert.That(tx.Message, Is.EqualTo("FE2A8061577301E2402E3F75637E6EFD62DBA4580EE027304459C8C6C50C0E305766F88AE75F6734F6FA6C36A1E6F5093CBB53FC3F8F4BD34B5709DC46A3DB5104685E233024B972E5543FEC16B4458F712FD0AAA00E61CE3B716811DA4E3BB3F1F6851BCD0D58D892BF213BA3F3CE72918F70AA2F78B333654AB2AF8E09F8318C2A63F5"));
+            Assert.That(tx.RecipientAddress, Is.EqualTo("68BA45B6240991DA609C702A2DC3ECC1BED47FA589ED331B"));
+            Assert.That(tx.SignerPublicKey, Is.EqualTo("D32168A40E4A2DB9F1FB0D60554BFCE3142835CFFFF6D2BB104AE97F8B4829B4"));
+            Assert.That(tx.Mosaics, Is.Empty);
+            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.TRANSFER));
+            Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
+            Assert.That(response.Id.Length, Is.EqualTo(24));
+        }
+    }
+}

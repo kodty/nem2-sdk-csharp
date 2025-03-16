@@ -18,12 +18,12 @@ namespace Integration_Tests
         {
             string pubKey = "3162D9127111F34DEC9C6488E8CB4BBF0BA5CBE195D787836208CFC3B2DC2EE1";
 
-            var blockHttp = new BlockchainHttp("75.119.150.108", 3000);
+            var client = new BlockchainHttp("75.119.150.108", 3000);
 
             var queryModel = new QueryModel(QueryModel.DefineRequest.SearchBlocks);
             queryModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
 
-            var response = await blockHttp.SearchBlocks(queryModel);
+            var response = await client.SearchBlocks(queryModel);
 
             response.ForEach(i => {
 
@@ -62,9 +62,9 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetblocksByHeight()
         {
-            var blockHttp = new BlockchainHttp("75.119.150.108", 3000);
+            var client = new BlockchainHttp("75.119.150.108", 3000);
 
-            var response = await blockHttp.GetBlock(1);
+            var response = await client.GetBlock(1);
       
             Assert.That(response.Block.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
@@ -77,9 +77,9 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetBlockTransactionMerkle()
         {
-            var blockHttp = new BlockchainHttp("75.119.150.108", 3000);
+            var client = new BlockchainHttp("75.119.150.108", 3000);
 
-            var response = await blockHttp.GetBlockTransactionMerkle(1, "B3FAD63E287D08209AA9CBE5E2E48CC1BEB1DA57993CBE7BE17E39C089186302");
+            var response = await client.GetBlockTransactionMerkle(1, "B3FAD63E287D08209AA9CBE5E2E48CC1BEB1DA57993CBE7BE17E39C089186302");
 
             Assert.That(response[0].Hash, Is.EqualTo("035B8D7AA90D41724506E2DD1A9A8D5B47B9AF5BB627904B591F9221D08CF335"));
             Assert.That(response[0].Position, Is.EqualTo("right"));
@@ -89,9 +89,9 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetChainInfo()
         {
-            var blockHttp = new BlockchainHttp("75.119.150.108", 3000);
+            var client = new BlockchainHttp("75.119.150.108", 3000);
 
-            var response = await blockHttp.GetBlockchainInfo();
+            var response = await client.GetBlockchainInfo();
 
             Assert.That(response.Height, Is.GreaterThan(0));
             Assert.That(response.ScoreHigh, Is.GreaterThan(0));

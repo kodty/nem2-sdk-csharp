@@ -20,9 +20,9 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeHealth()
         {
-            var nodeClient = new NodeHttp("75.119.150.108", 3000);
+            var client = new NodeHttp("75.119.150.108", 3000);
 
-            var response = await nodeClient.GetNodeHealth();
+            var response = await client.GetNodeHealth();
 
             Assert.That(response.Status.Db, Is.EqualTo("up"));
             Assert.That(response.Status.ApiNode, Is.EqualTo("up"));
@@ -32,9 +32,9 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeInformation()
         {
-            var nodeClient = new NodeHttp("75.119.150.108", 3000);
+            var client = new NodeHttp("75.119.150.108", 3000);
 
-            var response = await nodeClient.GetNodeInformation();
+            var response = await client.GetNodeInformation();
 
             Assert.That(response.FriendlyName, Is.EqualTo("!King.radicasse.jp"));
             Assert.That(response.Version, Is.EqualTo(16777991));
@@ -51,9 +51,9 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodePeers()
         {
-            var nodeClient = new NodeHttp("75.119.150.108", 3000);
+            var client = new NodeHttp("75.119.150.108", 3000);
 
-            var response = await nodeClient.GetNodePeers();
+            var response = await client.GetNodePeers();
 
             Assert.That(response[0].Version, Is.EqualTo(16777991));
             Assert.That(response[0].Host, !Is.Null);
@@ -69,9 +69,9 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeStorage()
         {
-            var nodeClient = new NodeHttp("75.119.150.108", 3000);
+            var client = new NodeHttp("75.119.150.108", 3000);
 
-            var response = await nodeClient.GetNodeStorageInfo();
+            var response = await client.GetNodeStorageInfo();
 
             Assert.That(response.NumBlocks, Is.GreaterThan(1));
             Assert.That(response.NumTransactions, Is.GreaterThan(1));
@@ -81,9 +81,9 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeTime()
         {
-            var nodeClient = new NodeHttp("75.119.150.108", 3000);
+            var client = new NodeHttp("75.119.150.108", 3000);
 
-            var response = await nodeClient.GetNodeTime();
+            var response = await client.GetNodeTime();
 
             Assert.That(response.CommunicationTimestamps.ReceiveTimestamp, Is.GreaterThan(0));
             Assert.That(response.CommunicationTimestamps.SendTimestamp, Is.GreaterThan(1));
@@ -93,9 +93,9 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeRESTVersion()
         {
-            var nodeClient = new NodeHttp("75.119.150.108", 3000);
+            var client = new NodeHttp("75.119.150.108", 3000);
 
-            var response = await nodeClient.GetNodeRESTVersion();
+            var response = await client.GetNodeRESTVersion();
 
             Assert.That(response.ServerInfo.Deployment.LastUpdatedDate, Is.EqualTo("2024-11-17"));
             Assert.That(response.ServerInfo.Deployment.DeploymentToolVersion, Is.EqualTo("1.1.11"));

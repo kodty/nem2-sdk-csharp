@@ -1,4 +1,7 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +16,43 @@ namespace Integration_Tests
         [SetUp]
         public void Setup()
         {
+        }
+
+        [Test, Timeout(20000)]
+        public async Task SearchSecretLockTransaction()
+        {
+            string pubKey1 = "1799A50301C17D0BA45D2599193B49C4A5377640B3D6695B84F6320466958B5C";
+            string pubKey = "D4A1468E54DD31B850CF9ABFFD32EFB98547091301668E777A43D3D88BEB76D8";
+            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+
+            var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
+
+            qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
+
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.SECRET_LOCK.GetValue());
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.HASH_LOCK.GetValue());
+
+            var response = await hashClient.SearchConfirmedTransactions(qModel);
+
+            response.ForEach(i => {
+
+
+                if (i.Transaction.Type.GetValue() == 16722)
+                {
+                    var tx = ((SecretLockT)i.Transaction);
+
+                    Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                    Assert.That(tx.Secret.Length, Is.GreaterThan(0));
+                }
+                if (i.Transaction.Type.GetValue() == 16712)
+                {
+                    var tx = ((HashLockT)i.Transaction);
+
+                    Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                    Assert.That(tx.Hash.Length, Is.GreaterThan(0));
+                }
+
+            });
         }
 
         [Test, Timeout(20000)]
