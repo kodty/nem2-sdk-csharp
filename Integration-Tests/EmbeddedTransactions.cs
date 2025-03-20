@@ -19,6 +19,65 @@ namespace Integration_Tests
         }
 
         [Test, Timeout(20000)]
+        public async Task GetEmbeddedVotingKeyLinkTransaction()
+        {
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var tx = await client.GetConfirmedTransaction("5C949FA7F9CFBEA30525B79224147D5C575C4232E28CA7CEA760B08E2018047F");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var Voting = (EmbeddedVotingKeyLink)aggregate.Transactions[2].Transaction;
+
+            Assert.That(Voting.SignerPublicKey, Is.EqualTo("E7D93592228CD85854F94DFD3F224AC051759DF027CCF6B62F453107EF2C3692"));
+            Assert.That(Voting.LinkedPublicKey, Is.EqualTo("860FBA46061603B80F374E877B2FA673E4AEE7BB61800A80BCF948A7A5601FFF"));
+            Assert.That(Voting.LinkAction, Is.EqualTo(1));
+            Assert.That(Voting.EndEpoch, Is.EqualTo(360));
+            Assert.That(Voting.StartEpoch, Is.EqualTo(1));
+            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+           
+            Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.VOTING_KEY_LINK));
+            Assert.That(Voting.Version, Is.EqualTo(1));
+        }
+
+            [Test, Timeout(20000)]
+        public async Task GetEmbeddedKeyLinkTransaction()
+        {
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var tx = await client.GetConfirmedTransaction("8E7CE907451516EAD51DE86348F51A2950F869A92FEF645CAD2990D5E9BB9121");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var VRF = (EmbeddedKeyLink)aggregate.Transactions[0].Transaction;
+
+            Assert.That(VRF.LinkedPublicKey, Is.EqualTo("F343979EB993481620B8077FAB7E0D5079857C1093CF09856B38F900F214D0D3"));
+            Assert.That(VRF.LinkAction, Is.EqualTo(1));
+            Assert.That(VRF.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(VRF.SignerPublicKey, Is.EqualTo("615ABB16819BDC49EB0DB95121E0A1B52838877128A16C88A3CDE7D7CB3745C3"));
+            Assert.That(VRF.Type, Is.EqualTo(TransactionTypes.Types.VRF_KEY_LINK));
+            Assert.That(VRF.Version, Is.EqualTo(1));
+
+            var Account = (EmbeddedKeyLink)aggregate.Transactions[1].Transaction;
+
+            Assert.That(Account.LinkedPublicKey, Is.EqualTo("BEB4EC4F827EA284F462217295FA3576C0FFF22821509AA49BAB11367C82111E"));
+            Assert.That(Account.LinkAction, Is.EqualTo(1));
+            Assert.That(Account.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(Account.SignerPublicKey, Is.EqualTo("615ABB16819BDC49EB0DB95121E0A1B52838877128A16C88A3CDE7D7CB3745C3"));
+            Assert.That(Account.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_KEY_LINK));
+            Assert.That(Account.Version, Is.EqualTo(1));
+
+            var Node = (EmbeddedKeyLink)aggregate.Transactions[2].Transaction;
+
+            Assert.That(Node.LinkedPublicKey, Is.EqualTo("70B26E947F57BF0CFCDC4968F73F29534DEB947A864B40CF742BE496E28742D3"));
+            Assert.That(Node.LinkAction, Is.EqualTo(1));
+            Assert.That(Node.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(Node.SignerPublicKey, Is.EqualTo("615ABB16819BDC49EB0DB95121E0A1B52838877128A16C88A3CDE7D7CB3745C3"));
+            Assert.That(Node.Type, Is.EqualTo(TransactionTypes.Types.NODE_KEY_LINK));
+            Assert.That(Node.Version, Is.EqualTo(1));
+        }
+
+        [Test, Timeout(20000)]
         public async Task GetEmbeddedSimpleTransfer()
         {
             var client = new TransactionHttp("75.119.150.108", 3000);
