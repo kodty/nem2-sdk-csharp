@@ -131,7 +131,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
         public List<MosaicTransfer> Mosaics { get; set; }
 
-        public string Messege { get; set; }
+        public string Message { get; set; }
     }
 
     public class SimpleTransfer : TransactionData.BaseTransaction
@@ -178,6 +178,43 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
        //[JsonProperty("addresses")]
        //public List<string> Addresses { get; set; }    
+    }
+
+    public class MosaicMetadata : EventMetadata
+    {
+        public string TargetMosaicId { get; set; }
+    }
+
+    public class EmbeddedMosaicMetadata : EmbeddedEventMetadata
+    {
+        public string TargetMosaicId { get; set; }
+    }
+
+    public class NamespaceMetadata : EventMetadata
+    {
+        public string TargetNamespaceId { get; set; }
+    }
+
+    public class EmbeddedNamespaceMetadata : EmbeddedEventMetadata
+    {
+        public string TargetNamespaceId { get; set; }
+    }
+    public class EmbeddedEventMetadata : EmbeddedTransactionData.EmbeddedBaseTransaction
+    {
+        public string TargetAddress { get; set; }
+        public string ScopedMetadataKey { get; set; }
+        public int ValueSizeDelta { get; set; }
+        public int ValueSize { get; set; }
+        public string Value { get; set; }
+    }
+
+    public class EventMetadata : TransactionData.BaseTransaction
+    {
+        public string TargetAddress { get; set; }
+        public string ScopedMetadataKey { get; set; }    
+        public int ValueSizeDelta { get; set; }
+        public int ValueSize { get; set; }
+        public string Value { get; set; }
     }
 
     public class EmbeddedMosaicSupplyChange : EmbeddedTransactionData.EmbeddedBaseTransaction

@@ -206,6 +206,24 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
 
                 return shell;             
             }
+            if (type == TransactionTypes.Types.MOSAIC_METADATA)
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<MosaicMetadata>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedMosaicMetadata>(GetSpecifiedTx(tx));
+
+                return shell;
+            }
+            if (type == TransactionTypes.Types.NAMESPACE_METADATA)
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<NamespaceMetadata>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedNamespaceMetadata>(GetSpecifiedTx(tx));
+
+                return shell;
+            }
             if (type == TransactionTypes.Types.ACCOUNT_METADATA)
             {
                 if (typeof(T) == typeof(TransactionData))
