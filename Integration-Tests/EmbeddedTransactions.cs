@@ -19,6 +19,20 @@ namespace Integration_Tests
         }
 
         [Test, Timeout(20000)]
+        public async Task GetEmbeddedTransferWithMessage()
+        {
+
+
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var response = await client.GetConfirmedTransaction("95837D9332DD2ED42C6FED83DC9EA0907E0046A4EEAEE761E185F5E6FAA2EA4C");
+
+            var embedded = (EmbeddedSimpleTransfer)((Aggregate)response.Transaction).Transactions[0].Transaction;
+
+            Assert.That(embedded.Message, Is.EqualTo("00E5B091E381AAE38184E381A7E38199E38191E381A9E38081E381BFE38293E382B8E383A0E58F82E58AA0E381AEE3818AE7A4BCE381A7E38199E38082"));
+        }
+
+        [Test, Timeout(20000)]
         public async Task GetEmbeddedAccountKeyLinkTransaction()
         {
             var client = new TransactionHttp("75.119.150.108", 3000);
