@@ -81,6 +81,30 @@ namespace Integration_Tests
         }
 
         [Test, Timeout(20000)]
+        public async Task GetEmbeddedNamespaceMetadataTransaction()
+        {
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var tx = await client.GetConfirmedTransaction("F97F223C7C9011DCDECD11F13EBBBB257840BFC4A3D12DA2AD2E8F3047AAD01B");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var Voting = (EmbeddedNamespaceMetadata)aggregate.Transactions[0].Transaction;
+
+            Assert.That(Voting.SignerPublicKey, Is.EqualTo("9EEEE7F96711D0A3D146AD8DE73BA2CF34AC77ACA7A4055DEB25109D69768C51"));
+            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.NAMESPACE_METADATA));
+            Assert.That(Voting.Version, Is.EqualTo(1));
+
+            Assert.That(Voting.Value.Length, Is.EqualTo(2012));
+            Assert.That(Voting.ValueSize, Is.EqualTo(1006));
+            Assert.That(Voting.ValueSizeDelta, Is.EqualTo(1006));
+            Assert.That(Voting.ScopedMetadataKey, Is.EqualTo("E1E9AACD3CDA0F96"));
+            Assert.That(Voting.TargetAddress, Is.EqualTo("68B600B64F71AF064B56178410BBCF945937FB43F6738F73"));
+            Assert.That(Voting.TargetNamespaceId, Is.EqualTo("C47F86D81AC6D480"));
+        }
+
+        [Test, Timeout(20000)]
         public async Task GetEmbeddedVotingKeyLinkTransaction()
         {
             var client = new TransactionHttp("75.119.150.108", 3000);
