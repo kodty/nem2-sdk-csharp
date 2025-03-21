@@ -94,6 +94,26 @@ namespace Integration_Tests
         }
 
         [Test, Timeout(20000)]
+        public async Task SearchVotingKeyLinkTransaction2()
+        {
+            string pubKey = "B26D01FC006EAC09B740A3C8F12C1055AE24AFD3268F0364C92D51800FC07361";
+
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var response = await client.GetConfirmedTransaction("55EB9659C81600F1760C4C0A4F8A7A5C90A39FCEE36E3165143B8E72BBC709E8");
+
+            var agg = (Aggregate)response.Transaction;
+
+            var EmbeddedKeyLink = (EmbeddedVotingKeyLink)agg.Transactions[4].Transaction;
+
+            Assert.That(EmbeddedKeyLink.SignerPublicKey, Is.EqualTo(pubKey));
+            Assert.That(EmbeddedKeyLink.LinkedPublicKey.Length, Is.EqualTo(64));
+            Assert.That(EmbeddedKeyLink.StartEpoch, Is.EqualTo(2));
+            Assert.That(EmbeddedKeyLink.EndEpoch, Is.EqualTo(361));
+            
+        }
+
+        [Test, Timeout(20000)]
         public async Task SearchVRFKeyLinkTransaction()
         {
             string pubKey = "AFF16052217A847A6A71B326FEA9073CFF70D07FC5BA9026B3E05FB453C950DF";
