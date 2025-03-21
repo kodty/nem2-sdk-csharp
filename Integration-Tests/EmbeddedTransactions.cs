@@ -33,9 +33,51 @@ namespace Integration_Tests
             Assert.That(Voting.LinkedPublicKey, Is.EqualTo("ADE50C62D52F59EDF5559ABD258860786567D936F43ABDAE201A27CDADD260A3"));
             Assert.That(Voting.LinkAction, Is.EqualTo(1));
             Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
-
             Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_KEY_LINK));
             Assert.That(Voting.Version, Is.EqualTo(1));
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetEmbeddedVRFKeyLinkTransaction()
+        {
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var tx = await client.GetConfirmedTransaction("55EB9659C81600F1760C4C0A4F8A7A5C90A39FCEE36E3165143B8E72BBC709E8");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var Voting = (EmbeddedKeyLink)aggregate.Transactions[3].Transaction;
+
+            Assert.That(Voting.SignerPublicKey, Is.EqualTo("B26D01FC006EAC09B740A3C8F12C1055AE24AFD3268F0364C92D51800FC07361"));
+            Assert.That(Voting.LinkedPublicKey, Is.EqualTo("6A1D20D5D699FBF289A6594A1C18E12A1169BB2608F0A0E3A15D11AFD33EE30F"));
+            Assert.That(Voting.LinkAction, Is.EqualTo(1));
+            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.VRF_KEY_LINK));
+            Assert.That(Voting.Version, Is.EqualTo(1));
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetEmbeddedMosaicMetadataTransaction()
+        {
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var tx = await client.GetConfirmedTransaction("384CF682EFFE8CBA4CF8A7F2C832B89547828DA024ECAC25E50A61B5C9E400F2");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var Voting = (EmbeddedMosaicMetadata)aggregate.Transactions[4].Transaction;
+
+            Assert.That(Voting.SignerPublicKey, Is.EqualTo("C78E8455A9192F222D3A490B8D92DFDF6B0E9E30B04FD1CBA415B1FA848EA8E8"));
+            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_METADATA));
+            Assert.That(Voting.Version, Is.EqualTo(1));
+
+            Assert.That(Voting.Value, Is.EqualTo("636F6D73612D6E6366742D312E31"));
+            Assert.That(Voting.ValueSize, Is.EqualTo(14));
+            Assert.That(Voting.ValueSizeDelta, Is.EqualTo(14));
+            Assert.That(Voting.ScopedMetadataKey, Is.EqualTo("8D9A3BDD21391AA2"));
+            Assert.That(Voting.TargetAddress, Is.EqualTo("688FA72E197170C1366358934C520AC679B7D097662DE274"));
+            Assert.That(Voting.TargetMosaicId, Is.EqualTo("5E2D18B856E4AED4"));
         }
 
         [Test, Timeout(20000)]
