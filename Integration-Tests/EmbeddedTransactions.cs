@@ -104,6 +104,67 @@ namespace Integration_Tests
             Assert.That(Voting.TargetNamespaceId, Is.EqualTo("C47F86D81AC6D480"));
         }
 
+        [Test, Timeout(20000)] 
+        public async Task GetEmbeddedSupplyChangeTransaction()
+        {
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var tx = await client.GetConfirmedTransaction("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var change = (EmbeddedMosaicSupplyChange)aggregate.Transactions[1].Transaction;
+
+            Assert.That(change.Delta, Is.EqualTo(3800000));
+            Assert.That(change.SignerPublicKey, Is.EqualTo("7E43EC810A64FCCA5F9FBF6FC3E51AA89A0507762DC7E6B8047DCACBE97A8D4B"));
+            Assert.That(change.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(change.Version, Is.EqualTo(1));
+            Assert.That(change.MosaicId, Is.EqualTo("63078E73FBCC2CAC"));
+            Assert.That(change.Action, Is.EqualTo(1));
+            Assert.That(change.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE));           
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetEmbeddedMosaicDefinitionTransaction()
+        {
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var tx = await client.GetConfirmedTransaction("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var change = (EmbeddedMosaicDefinition)aggregate.Transactions[0].Transaction;
+
+            Assert.That(change.Nonce, Is.EqualTo(3525458556));
+            Assert.That(change.SignerPublicKey, Is.EqualTo("7E43EC810A64FCCA5F9FBF6FC3E51AA89A0507762DC7E6B8047DCACBE97A8D4B"));
+            Assert.That(change.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(change.Version, Is.EqualTo(1));
+            Assert.That(change.Duration, Is.EqualTo(0));
+            Assert.That(change.Divisibility, Is.EqualTo(0));
+            Assert.That(change.Flags, Is.EqualTo(3));
+            Assert.That(change.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_DEFINITION));
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetEmbeddedMosaicRestrictionTransaction()
+        {
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var tx = await client.GetConfirmedTransaction("55EB9659C81600F1760C4C0A4F8A7A5C90A39FCEE36E3165143B8E72BBC709E8");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var restriction = (EmbeddedAccountMosaicRestriction)aggregate.Transactions[1].Transaction;
+            
+            Assert.That(restriction.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_MOSAIC_RESTRICTION));
+            Assert.That(restriction.SignerPublicKey, Is.EqualTo("B26D01FC006EAC09B740A3C8F12C1055AE24AFD3268F0364C92D51800FC07361"));
+            Assert.That(restriction.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(restriction.Version, Is.EqualTo(1));
+            Assert.That(restriction.RestrictionAdditions[0], Is.EqualTo("6BED913FA20223F8"));
+            Assert.That(restriction.RestrictionDeletions.Count, Is.EqualTo(0));
+            Assert.That(restriction.RestrictionFlags, Is.EqualTo(2));           
+        }
+
         [Test, Timeout(20000)]
         public async Task GetEmbeddedVotingKeyLinkTransaction()
         {
@@ -120,8 +181,7 @@ namespace Integration_Tests
             Assert.That(Voting.LinkAction, Is.EqualTo(1));
             Assert.That(Voting.EndEpoch, Is.EqualTo(360));
             Assert.That(Voting.StartEpoch, Is.EqualTo(1));
-            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
-           
+            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));           
             Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.VOTING_KEY_LINK));
             Assert.That(Voting.Version, Is.EqualTo(1));
         }
