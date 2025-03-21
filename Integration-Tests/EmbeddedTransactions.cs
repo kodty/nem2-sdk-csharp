@@ -19,6 +19,26 @@ namespace Integration_Tests
         }
 
         [Test, Timeout(20000)]
+        public async Task GetEmbeddedAccountKeyLinkTransaction()
+        {
+            var client = new TransactionHttp("75.119.150.108", 3000);
+
+            var tx = await client.GetConfirmedTransaction("55EB9659C81600F1760C4C0A4F8A7A5C90A39FCEE36E3165143B8E72BBC709E8");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var Voting = (EmbeddedKeyLink)aggregate.Transactions[2].Transaction;
+
+            Assert.That(Voting.SignerPublicKey, Is.EqualTo("B26D01FC006EAC09B740A3C8F12C1055AE24AFD3268F0364C92D51800FC07361"));
+            Assert.That(Voting.LinkedPublicKey, Is.EqualTo("ADE50C62D52F59EDF5559ABD258860786567D936F43ABDAE201A27CDADD260A3"));
+            Assert.That(Voting.LinkAction, Is.EqualTo(1));
+            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+
+            Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_KEY_LINK));
+            Assert.That(Voting.Version, Is.EqualTo(1));
+        }
+
+        [Test, Timeout(20000)]
         public async Task GetEmbeddedVotingKeyLinkTransaction()
         {
             var client = new TransactionHttp("75.119.150.108", 3000);
