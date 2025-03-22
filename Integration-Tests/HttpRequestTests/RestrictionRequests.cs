@@ -2,15 +2,9 @@
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Network;
-using NuGet.Frameworks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     public class RestrictionRequests
     {

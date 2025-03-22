@@ -1,18 +1,10 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Network;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests.AccountHttpTests
 {
     public class AccountRequests
     {
@@ -47,12 +39,13 @@ namespace Integration_Tests
             var accountClient = new AccountHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchAccounts);
-            queryModel.SetParam(QueryModel.DefinedParams.mosaicId, "63078E73FBCC2CAC");  
+            queryModel.SetParam(QueryModel.DefinedParams.mosaicId, "63078E73FBCC2CAC");
             var response = await accountClient.SearchAccounts(queryModel);
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
                 Assert.That(i.Account.PublicKey.Length, Is.GreaterThan(0));
                 Assert.That(i.Account.Importance, Is.GreaterThanOrEqualTo(0));
                 Assert.That(i.Account.AccountType, Is.GreaterThanOrEqualTo(0));
@@ -87,25 +80,26 @@ namespace Integration_Tests
         public async Task GetAccounts()
         {
             string pubKey = "6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D";
-           
+
             var accountClient = new AccountHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await accountClient.GetAccounts(new List<string> { pubKey, "D3D95BFD3E990F418B4CFAD6A67081ECD0AE229000CEC981E380EB0528FD7DE4" });
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {  
-                
+            response.ForEach(i =>
+            {
+
                 Assert.That(i.Account.PublicKey.Length, Is.GreaterThan(0));
                 Assert.That(i.Account.Importance, Is.GreaterThanOrEqualTo(0));
                 Assert.That(i.Account.AccountType, Is.GreaterThanOrEqualTo(0));
                 Assert.That(i.Account.AddressHeight, Is.GreaterThan(0));
-                            
+
                 Assert.That(i.Account.PublicKey.Length, Is.EqualTo(64));
-                
-                if(i.Account.SupplementalPublicKeys != null)
+
+                if (i.Account.SupplementalPublicKeys != null)
                 {
-                    if(i.Account.SupplementalPublicKeys.Linked != null)
+                    if (i.Account.SupplementalPublicKeys.Linked != null)
                     {
                         Assert.That(i.Account.SupplementalPublicKeys.Linked.PublicKey.Length, Is.EqualTo(64));
                     }
@@ -120,9 +114,9 @@ namespace Integration_Tests
                 }
                 if (i.Account.Mosaics != null)
                 {
-                    i.Account.Mosaics.ForEach(m => Assert.That(m.Amount, Is.GreaterThan(0))); 
-                   
-                }      
+                    i.Account.Mosaics.ForEach(m => Assert.That(m.Amount, Is.GreaterThan(0)));
+
+                }
             });
         }
 
@@ -133,7 +127,7 @@ namespace Integration_Tests
 
             var accountClient = new AccountHttp(HttpSetUp.Node, HttpSetUp.Port);
             var account = new PublicAccount(pubKey, NetworkType.Types.MAIN_NET);
-           
+
             var response = await accountClient.GetAccount(account.Address.Plain);
 
             Assert.That(response.Id.Length, Is.EqualTo(24));
@@ -143,7 +137,7 @@ namespace Integration_Tests
             Assert.That(response.Account.Importance, Is.GreaterThan(1));
             Assert.That(response.Account.AccountType, Is.GreaterThanOrEqualTo(0));
             Assert.That(response.Account.AddressHeight, Is.GreaterThan(0));
-            
+
             Assert.That(response.Account.PublicKey.Length, Is.GreaterThan(0));
             Assert.That(response.Account.SupplementalPublicKeys, !Is.Null);
             Assert.That(response.Account.SupplementalPublicKeys.Linked, !Is.Null);
@@ -153,16 +147,16 @@ namespace Integration_Tests
             Assert.That(response.Account.SupplementalPublicKeys.Vrf, !Is.Null);
             Assert.That(response.Account.SupplementalPublicKeys.Vrf.PublicKey.Length, Is.EqualTo(64));
             Assert.That(response.Account.SupplementalPublicKeys.Linked.PublicKey.Length, Is.EqualTo(64));
-            
+
             Assert.That(response.Account.ImportanceHeight, Is.GreaterThan(0));
 
             if (response.Account.Mosaics != null)
             {
-                foreach(var item in response.Account.Mosaics)
+                foreach (var item in response.Account.Mosaics)
                 {
                     Assert.That(item.Amount, Is.GreaterThan(0));
                     Assert.That(item.Id.Length, Is.EqualTo(16));
-                }    
+                }
             }
             if (response.Account.ActivityBuckets != null)
             {
@@ -190,7 +184,7 @@ namespace Integration_Tests
 
             response.Tree.ForEach(t =>
             {
-                if(t.Links.Count > 0) Assert.That(t.Links[0].Link.Length, Is.EqualTo(64));
+                if (t.Links.Count > 0) Assert.That(t.Links[0].Link.Length, Is.EqualTo(64));
                 Assert.That(t.Type, Is.GreaterThanOrEqualTo(0));
                 if (t.Path != null) Assert.That(t.Path.Length, Is.AnyOf(60, 0));
                 Assert.That(t.EncodedPath.Length, Is.GreaterThan(0));
@@ -199,7 +193,7 @@ namespace Integration_Tests
                 if (t.Value != null) Assert.That(t.Value.Length, Is.EqualTo(64));
                 if (t.BranchHash != null) Assert.That(t.BranchHash.Length, Is.EqualTo(64));
             });
-            
+
         }
 
         [Test, Timeout(20000)]

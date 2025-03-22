@@ -2,20 +2,15 @@
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     public class MosaicRestrictionRequests
     {
         [SetUp]
         public async Task SetUp()
-        {       
+        {
         }
 
         [Test, Timeout(20000)]
@@ -70,9 +65,10 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
-                var tx = ((MosaicAddressRestriction)i.Transaction);
+                var tx = (MosaicAddressRestriction)i.Transaction;
 
                 Assert.That(tx.RestrictionKey.Length, Is.GreaterThan(0));
                 Assert.That(tx.SignerPublicKey, Is.EqualTo("A39EA1EEA2BF80902ED5B573FC9DEE1EDF53FB6E05099669743DFA3E8233400E"));

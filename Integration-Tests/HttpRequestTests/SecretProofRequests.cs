@@ -2,14 +2,9 @@
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     internal class SecretProofRequests
     {
@@ -20,7 +15,7 @@ namespace Integration_Tests
 
         [Test, Timeout(20000)]
         public async Task SearchSecretProofTransaction()
-        {       
+        {
             string pubKey = "D4A1468E54DD31B850CF9ABFFD32EFB98547091301668E777A43D3D88BEB76D8";
 
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
@@ -33,11 +28,12 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
                 if (i.Transaction.Type == TransactionTypes.Types.SECRET_PROOF)
                 {
-                    var tx = ((SecretProofT)i.Transaction);
+                    var tx = (SecretProofT)i.Transaction;
 
                     Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
                     Assert.That(tx.Secret.Length, Is.GreaterThan(0));

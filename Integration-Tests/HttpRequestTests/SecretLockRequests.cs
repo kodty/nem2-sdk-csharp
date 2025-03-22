@@ -2,14 +2,9 @@
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     internal class SecretLockRequests
     {
@@ -21,9 +16,9 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task SearchSecretLockTransaction()
         {
-            
+
             string pubKey1 = "38F6ED41900877DF6AA8E70A352EDC9B24504ED88EE5CF9BE5A034D05483DCC3";
-          
+
 
             var hashClient = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
@@ -37,12 +32,13 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
 
                 if (i.Transaction.Type.GetValue() == 16722)
                 {
-                    var tx = ((SecretLockT)i.Transaction);
+                    var tx = (SecretLockT)i.Transaction;
 
                     Assert.That(tx.HashAlgorithm, Is.EqualTo(0));
                     Assert.That(tx.MosaicId.Length, Is.EqualTo(16));
@@ -54,7 +50,7 @@ namespace Integration_Tests
                 }
                 if (i.Transaction.Type.GetValue() == 16712)
                 {
-                    var tx = ((HashLockT)i.Transaction);
+                    var tx = (HashLockT)i.Transaction;
 
                     Assert.That(tx.MosaicId.Length, Is.EqualTo(16));
                     Assert.That(tx.Duration, Is.LessThan(10000000));
@@ -92,7 +88,7 @@ namespace Integration_Tests
             var response = await nodeClient.GetSecretLock("EEA42C40275F6705D75E22D73C2B1D19D780EDE2A8E94BF774E704804D32075A");
 
             Assert.That(response.Id.Length, Is.GreaterThan(0));
-            Assert.That(response.Lock.OwnerAddress, Is.EqualTo("68219E09E01CAEA6136339345177DDED5A8027A2F54BBF40"));          
+            Assert.That(response.Lock.OwnerAddress, Is.EqualTo("68219E09E01CAEA6136339345177DDED5A8027A2F54BBF40"));
             Assert.That(response.Lock.MosaicId, Is.EqualTo("6BED913FA20223F8"));
             Assert.That(response.Lock.Status, Is.EqualTo(0));
             Assert.That(response.Lock.Amount, Is.EqualTo(10000000));
@@ -115,7 +111,7 @@ namespace Integration_Tests
             Assert.That(response.Tree[0].BranchHash, Is.EqualTo("69A79B4396A841A10E21C3C8F830DC88C8034F0B46CCC3B350D1C3D27B6255B7"));
             Assert.That(response.Tree[0].Links[0].Link, Is.EqualTo("3152A69FDEF6E1ADCB108E6867446FCD04DDF3B4398B6F1AA4422F0E61CDDF01"));
 
-            
+
             Assert.That(response.Tree[1].Type, Is.EqualTo(255));
             Assert.That(response.Tree[1].NibbleCount, Is.EqualTo(63));
             Assert.That(response.Tree[1].LeafHash, Is.EqualTo("5CABF63918136CADA1EA009D849D1CCAB513CE02AE692D025E2B92B359FE5040"));

@@ -1,12 +1,5 @@
-﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Integration_Tests
 {

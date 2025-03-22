@@ -2,14 +2,9 @@
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     internal class HashlockRequests
     {
@@ -34,9 +29,10 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
-                var tx = ((HashLockT)i.Transaction);
+                var tx = (HashLockT)i.Transaction;
 
                 Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
                 Assert.That(tx.Amount, Is.GreaterThan(0));
@@ -44,6 +40,6 @@ namespace Integration_Tests
                 Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
 
             });
-        }       
+        }
     }
 }

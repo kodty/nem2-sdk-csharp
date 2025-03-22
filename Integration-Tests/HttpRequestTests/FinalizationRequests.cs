@@ -1,14 +1,7 @@
-﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Model.Network;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     internal class FinalizationRequests
     {
@@ -29,7 +22,7 @@ namespace Integration_Tests
             Assert.That(response.Height, Is.EqualTo(1));
             Assert.That(response.Version, Is.EqualTo(1));
             Assert.That(response.FinalizationEpoch, Is.EqualTo(1));
-            Assert.That(response.MessageGroups, Is.Empty);          
+            Assert.That(response.MessageGroups, Is.Empty);
         }
 
         [Test, Timeout(20000)]

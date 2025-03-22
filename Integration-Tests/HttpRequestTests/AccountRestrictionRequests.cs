@@ -2,14 +2,9 @@
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     public class AccountRestrictionRequests
     {
@@ -47,9 +42,10 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
-                var tx = ((AccountOpperationRestriction)i.Transaction);
+                var tx = (AccountOpperationRestriction)i.Transaction;
 
                 Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_OPERATION_RESTRICTION));
                 Assert.That(tx.SignerPublicKey, Is.EqualTo("9B8534E757F7AD292430FC5EF6ED970D92BA1B93EBF5BB2265864594CCD75E60"));
@@ -82,7 +78,7 @@ namespace Integration_Tests
             Assert.That(response[0].Id.Length, Is.EqualTo(24));
             Assert.That(response.Count, Is.EqualTo(2));
 
-            var tx1 = ((AccountRestriction)response[0].Transaction);
+            var tx1 = (AccountRestriction)response[0].Transaction;
 
             Assert.That(tx1.SignerPublicKey.Length, Is.GreaterThan(0));
             Assert.That(tx1.SignerPublicKey, Is.EqualTo("BD15F73AEC98D613DC7290095B96328A76A0D41324E21F717E67FA2C73074D8D"));
@@ -91,7 +87,7 @@ namespace Integration_Tests
             Assert.That(tx1.RestrictionAdditions[0], Is.EqualTo("051FAEC15105C808"));
             Assert.That(tx1.RestrictionDeletions.Count, Is.EqualTo(0));
 
-            var tx2 = ((AccountRestriction)response[1].Transaction);
+            var tx2 = (AccountRestriction)response[1].Transaction;
 
             Assert.That(tx2.SignerPublicKey.Length, Is.GreaterThan(0));
             Assert.That(tx2.SignerPublicKey, Is.EqualTo("BD15F73AEC98D613DC7290095B96328A76A0D41324E21F717E67FA2C73074D8D"));
@@ -99,6 +95,6 @@ namespace Integration_Tests
             Assert.That(tx2.RestrictionFlags, Is.EqualTo(32770));
             Assert.That(tx2.RestrictionDeletions[0], Is.EqualTo("051FAEC15105C808"));
             Assert.That(tx2.RestrictionAdditions.Count, Is.EqualTo(0));
-        }  
+        }
     }
 }

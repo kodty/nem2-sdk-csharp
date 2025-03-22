@@ -1,17 +1,11 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Network;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     internal class NamespaceRequests
     {
@@ -36,9 +30,10 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
-                var tx = ((NamespaceRegistration)i.Transaction);
+                var tx = (NamespaceRegistration)i.Transaction;
 
                 if (tx.RegistrationType == 0)
                 {
@@ -53,7 +48,7 @@ namespace Integration_Tests
                 if (tx.RegistrationType == 1)
                 {
                     var t = (ChildNamespaceRegistration)tx;
-                    Assert.That(t.SignerPublicKey, Is.EqualTo(pubKey));                
+                    Assert.That(t.SignerPublicKey, Is.EqualTo(pubKey));
                     Assert.That(t.Name, Is.EqualTo("xym"));
                     Assert.That(t.Id, Is.EqualTo("E74B99BA41F4AFEE"));
                     Assert.That(t.ParentId, Is.EqualTo("A95F1F8A96159516"));
@@ -82,14 +77,14 @@ namespace Integration_Tests
                 Assert.That(item.Namespace.Version, Is.EqualTo(1));
                 Assert.That(item.Namespace.StartHeight, Is.GreaterThan(0));
                 Assert.That(item.Namespace.Level0.Length, Is.EqualTo(16));
-                if(item.Namespace.Level1 != null) Assert.That(item.Namespace.Level1.Length, Is.EqualTo(16));
+                if (item.Namespace.Level1 != null) Assert.That(item.Namespace.Level1.Length, Is.EqualTo(16));
                 if (item.Namespace.Level2 != null) Assert.That(item.Namespace.Level2.Length, Is.EqualTo(16));
                 Assert.That(item.Namespace.RegistrationType, Is.AnyOf(0, 1));
                 Assert.That(item.Namespace.Alias.Type, Is.AnyOf(0, 1, 2));
-               
+
                 if (item.Namespace.Alias.MosaicId != null) Assert.That(item.Namespace.Alias.MosaicId.Length, Is.EqualTo(16));
                 if (item.Namespace.Alias.Address != null) Assert.That(item.Namespace.Alias.Address.Length, Is.EqualTo(48));
-            }       
+            }
         }
 
         [Test, Timeout(20000)]
@@ -101,12 +96,12 @@ namespace Integration_Tests
 
             Assert.That(response.Id, Is.EqualTo("64503822B0FC9F6D340B0B89"));
             Assert.That(response.Meta.Active, Is.EqualTo(true));
-            Assert.That(response.Meta.Index, Is.EqualTo(0));           
+            Assert.That(response.Meta.Index, Is.EqualTo(0));
             Assert.That(response.Namespace.RegistrationType, Is.EqualTo(0));
             Assert.That(response.Namespace.Level0, Is.EqualTo("A95F1F8A96159516"));
             Assert.That(response.Namespace.Depth, Is.EqualTo(1));
             Assert.That(response.Namespace.Alias.Type, Is.EqualTo(0));
-            if(response.Namespace.Alias.Address != null) Assert.That(response.Namespace.Alias.Address.Length, Is.EqualTo(48));
+            if (response.Namespace.Alias.Address != null) Assert.That(response.Namespace.Alias.Address.Length, Is.EqualTo(48));
             if (response.Namespace.Alias.MosaicId != null) Assert.That(response.Namespace.Alias.MosaicId.Length, Is.EqualTo(16));
             Assert.That(response.Namespace.ParentId, Is.EqualTo("0000000000000000"));
             Assert.That(response.Namespace.OwnerAddress, Is.EqualTo("68258605CB5ABC592FE691190202CDFD6DDEE659A6BB30B8"));
@@ -146,7 +141,7 @@ namespace Integration_Tests
 
             Assert.That(response[0].Address, Is.EqualTo("684575A96630EC6C0B9FBF3408007213321AFF07A7837E50"));
             Assert.That(response[0].Names, Is.Empty);
-           
+
         }
 
         [Test, Timeout(20000)]

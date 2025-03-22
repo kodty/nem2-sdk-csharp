@@ -2,15 +2,9 @@
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     public class KeyLinkRequests
     {
@@ -32,15 +26,17 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
-                var tx = ((KeyLink)i.Transaction);
+                var tx = (KeyLink)i.Transaction;
 
                 Assert.That(i.Id.Length, Is.EqualTo(24));
                 Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
                 Assert.That(i.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
                 Assert.That(tx.SignerPublicKey.Length, Is.EqualTo(64));
                 Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
+                Assert.That(tx.LinkAction, Is.EqualTo(1));
             });
         }
 
@@ -60,9 +56,10 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
-                var tx = ((KeyLink)i.Transaction);
+                var tx = (KeyLink)i.Transaction;
 
                 Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
                 Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
@@ -85,9 +82,10 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
-                var tx = ((VotingKeyLink)i.Transaction);
+                var tx = (VotingKeyLink)i.Transaction;
 
                 Assert.That(i.Id.Length, Is.EqualTo(24));
                 Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
@@ -116,7 +114,7 @@ namespace Integration_Tests
             Assert.That(EmbeddedKeyLink.LinkedPublicKey.Length, Is.EqualTo(64));
             Assert.That(EmbeddedKeyLink.StartEpoch, Is.EqualTo(2));
             Assert.That(EmbeddedKeyLink.EndEpoch, Is.EqualTo(361));
-            
+
         }
 
         [Test, Timeout(20000)]
@@ -135,9 +133,10 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
-                var tx = ((KeyLink)i.Transaction);
+                var tx = (KeyLink)i.Transaction;
 
                 Assert.That(i.Id.Length, Is.EqualTo(24));
                 Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
@@ -172,7 +171,7 @@ namespace Integration_Tests
 
             var response = await client.GetConfirmedTransaction("F6A12DDA59412CF3A74D558E631FF6C6F5E2B43620CDC950698BBD17FF8F0B57");
 
-            var tx = ((KeyLink)response.Transaction);
+            var tx = (KeyLink)response.Transaction;
 
             Assert.That(response.Id.Length, Is.EqualTo(24));
             Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
@@ -188,7 +187,7 @@ namespace Integration_Tests
 
             var response = await client.GetConfirmedTransaction("901807C96B582AACC140BE64CE3C18AF754E3DFBD2269AC573A5121097005DF8");
 
-            var tx = ((KeyLink)response.Transaction);
+            var tx = (KeyLink)response.Transaction;
 
             Assert.That(response.Id.Length, Is.EqualTo(24));
             Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
@@ -204,7 +203,7 @@ namespace Integration_Tests
 
             var response = await client.GetConfirmedTransaction("5C27AD1B777E811946DDB9AB5ABCC464C7B80CCE77CDA3870EB19F1DD1AF22BA");
 
-            var tx = ((KeyLink)response.Transaction);
+            var tx = (KeyLink)response.Transaction;
 
             Assert.That(response.Id.Length, Is.EqualTo(24));
             Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));

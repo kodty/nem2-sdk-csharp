@@ -1,19 +1,4 @@
-﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using io.nem2.sdk.Infrastructure.Listeners;
-using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model.Mosaics;
-using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.src.Model.Network;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Integration_Tests
+﻿namespace Integration_Tests.HttpRequests
 {/*
     [TestClass]
     public class ListenerTests

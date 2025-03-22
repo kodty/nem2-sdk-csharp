@@ -524,6 +524,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
     public class SecretLockEvent
     {
         public SecretLock Lock { get; set; }
+
         public string Id { get; set; }
     }
     public class SecretLock

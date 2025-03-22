@@ -2,14 +2,9 @@
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Network;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     internal class EmbeddedTransactions
     {
@@ -116,7 +111,7 @@ namespace Integration_Tests
             Assert.That(Voting.TargetNamespaceId, Is.EqualTo("C47F86D81AC6D480"));
         }
 
-        [Test, Timeout(20000)] 
+        [Test, Timeout(20000)]
         public async Task GetEmbeddedSupplyChangeTransaction()
         {
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
@@ -133,7 +128,7 @@ namespace Integration_Tests
             Assert.That(change.Version, Is.EqualTo(1));
             Assert.That(change.MosaicId, Is.EqualTo("63078E73FBCC2CAC"));
             Assert.That(change.Action, Is.EqualTo(1));
-            Assert.That(change.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE));           
+            Assert.That(change.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE));
         }
 
         [Test, Timeout(20000)]
@@ -143,7 +138,7 @@ namespace Integration_Tests
 
             var response = await client.GetConfirmedTransaction("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059");
 
-            var tx = ((Aggregate)response.Transaction);
+            var tx = (Aggregate)response.Transaction;
             var embedded = tx.Transactions;
             var definition = (EmbeddedMosaicDefinition)embedded[0].Transaction;
 
@@ -164,7 +159,7 @@ namespace Integration_Tests
 
             var response = await client.GetConfirmedTransaction("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059");
 
-            var tx = ((Aggregate)response.Transaction);
+            var tx = (Aggregate)response.Transaction;
             var embedded = tx.Transactions;
             var definition = (EmbeddedMosaicSupplyChange)embedded[1].Transaction;
 
@@ -186,14 +181,14 @@ namespace Integration_Tests
             var aggregate = (Aggregate)tx.Transaction;
 
             var restriction = (EmbeddedAccountMosaicRestriction)aggregate.Transactions[1].Transaction;
-            
+
             Assert.That(restriction.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_MOSAIC_RESTRICTION));
             Assert.That(restriction.SignerPublicKey, Is.EqualTo("B26D01FC006EAC09B740A3C8F12C1055AE24AFD3268F0364C92D51800FC07361"));
             Assert.That(restriction.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(restriction.Version, Is.EqualTo(1));
             Assert.That(restriction.RestrictionAdditions[0], Is.EqualTo("6BED913FA20223F8"));
             Assert.That(restriction.RestrictionDeletions.Count, Is.EqualTo(0));
-            Assert.That(restriction.RestrictionFlags, Is.EqualTo(2));           
+            Assert.That(restriction.RestrictionFlags, Is.EqualTo(2));
         }
 
         [Test, Timeout(20000)]
@@ -235,7 +230,7 @@ namespace Integration_Tests
             Assert.That(Voting.LinkAction, Is.EqualTo(1));
             Assert.That(Voting.EndEpoch, Is.EqualTo(360));
             Assert.That(Voting.StartEpoch, Is.EqualTo(1));
-            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));           
+            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.VOTING_KEY_LINK));
             Assert.That(Voting.Version, Is.EqualTo(1));
         }
@@ -278,12 +273,12 @@ namespace Integration_Tests
             Assert.That(Voting.SignerPublicKey.Length, Is.EqualTo(64));
             Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.SECRET_PROOF));
-            Assert.That(Voting.Version, Is.EqualTo(1));            
+            Assert.That(Voting.Version, Is.EqualTo(1));
             Assert.That(Voting.HashAlgorithm, Is.EqualTo(0));
             Assert.That(Voting.Secret, Is.EqualTo("6B69F838867471B81A38B908C1ADA48A101E1A4F6711E5217F5A51E969A3ABB6"));
             Assert.That(Voting.RecipientAddress, Is.EqualTo("68E0286048AE7ACB3789B41578A5B78B560B6A45F5AC8E55"));
             Assert.That(Voting.Proof.Length, Is.EqualTo(40));
-        } 
+        }
 
         [Test, Timeout(20000)]
         public async Task GetEmbeddedAddressAliasTransaction()
@@ -406,8 +401,8 @@ namespace Integration_Tests
 
             var response = await client.GetConfirmedTransactions(new string[] { "6450381FB0FC9F6D340B00F5", "6450382BB0FC9F6D340B0D69" });
 
-            var aggTx1 = ((Aggregate)response[0].Transaction);
-            var aggTx2 = ((Aggregate)response[1].Transaction);
+            var aggTx1 = (Aggregate)response[0].Transaction;
+            var aggTx2 = (Aggregate)response[1].Transaction;
 
 
             Assert.That(response[0].Id, Is.EqualTo("6450381FB0FC9F6D340B00F5"));
@@ -445,7 +440,8 @@ namespace Integration_Tests
             Assert.That(aggTx2.Type, Is.EqualTo(TransactionTypes.Types.AGGREGATE_COMPLETE));
             Assert.That(aggTx2.SignerPublicKey, Is.EqualTo("7E43EC810A64FCCA5F9FBF6FC3E51AA89A0507762DC7E6B8047DCACBE97A8D4B"));
 
-            aggTx1.Cosignatures.ForEach(i => {
+            aggTx1.Cosignatures.ForEach(i =>
+            {
 
                 Assert.That(i.SignerPublicKey.Length, Is.EqualTo(64));
                 Assert.That(i.Signature.Length, Is.EqualTo(128));
@@ -507,7 +503,7 @@ namespace Integration_Tests
 
             var response = await client.GetConfirmedTransaction("E906272E7A715CD24D959A51CDFADC4CC8CA0E63097EA161C1DEBD31E9754A74");
 
-            var tx = ((Aggregate)response.Transaction);
+            var tx = (Aggregate)response.Transaction;
 
             Assert.That(response.Meta.Hash, Is.EqualTo("E906272E7A715CD24D959A51CDFADC4CC8CA0E63097EA161C1DEBD31E9754A74"));
             Assert.That(response.Meta.Index, Is.EqualTo(25465));

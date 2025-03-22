@@ -2,14 +2,9 @@
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     internal class AliasRequests
     {
@@ -34,9 +29,10 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
-                var tx = ((AddressAlias)i.Transaction);
+                var tx = (AddressAlias)i.Transaction;
 
                 Assert.That(tx.Address, Is.EqualTo("684575A96630EC6C0B9FBF3408007213321AFF07A7837E50"));
                 Assert.That(tx.SignerPublicKey, Is.EqualTo("6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D"));
@@ -45,6 +41,7 @@ namespace Integration_Tests
                 Assert.That(i.Id.Length, Is.EqualTo(24));
                 Assert.That(tx.Version, Is.EqualTo(1));
                 Assert.That(tx.AliasAction, Is.GreaterThanOrEqualTo(0));
+                Assert.That(tx.NamespaceId.Length, Is.EqualTo(16));
             });
         }
 
@@ -64,9 +61,10 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
-                var tx = ((MosaicAlias)i.Transaction);
+                var tx = (MosaicAlias)i.Transaction;
 
                 Assert.That(tx.AliasAction, Is.GreaterThan(-1));
                 Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));

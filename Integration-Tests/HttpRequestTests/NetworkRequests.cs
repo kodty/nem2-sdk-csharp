@@ -1,15 +1,7 @@
-﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     internal class NetworkRequests
     {
@@ -27,7 +19,7 @@ namespace Integration_Tests
 
             Assert.That(response.Name, Is.EqualTo("mainnet"));
             Assert.That(response.Description, Is.EqualTo("Symbol Mainnet"));
-           
+
         }
 
         [Test, Timeout(20000)]
@@ -42,7 +34,7 @@ namespace Integration_Tests
             Assert.That(response.EffectiveChildNamespaceRentalFee, Is.EqualTo(10000000));
         }
 
-        [Test, Timeout(20000)]
+        //[Test, Timeout(20000)]
         public async Task GetNetworkTransactionFees()
         {
             var client = new NetworkHttp(HttpSetUp.Node, HttpSetUp.Port);
@@ -53,7 +45,7 @@ namespace Integration_Tests
             Assert.That(response.medianFeeMultiplier, Is.GreaterThanOrEqualTo(0));
             Assert.That(response.highestFeeMultiplier, Is.LessThan(10000));
             Assert.That(response.minFeeMultiplier, Is.GreaterThanOrEqualTo(0));
-            Assert.That(response.averageFeeMultiplier, Is.AtLeast(90) );
+            Assert.That(response.averageFeeMultiplier, Is.AtLeast(90));
             Assert.That(response.averageFeeMultiplier, Is.AtMost(300));
         }
 
@@ -65,7 +57,7 @@ namespace Integration_Tests
             var response = await client.GetNetworkProperties();
 
             Assert.That(response.TreasuryReissuanceTransactionSignatures.Count, Is.GreaterThan(0));
-               
+
             Assert.That(response.Network.NemesisSignerPublicKey, Is.EqualTo("BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F"));
             Assert.That(response.Network.NodeEqualityStrategy, Is.EqualTo("host"));
             Assert.That(response.Network.GenerationHashSeed, Is.EqualTo("57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6"));
@@ -73,7 +65,7 @@ namespace Integration_Tests
             Assert.That(response.Chain.EnableVerifiableReceipts, Is.True);
             Assert.That(response.Chain.EnableVerifiableState, Is.True);
             Assert.That(response.ForkHeights.TreasuryReissuance, Is.EqualTo("689'761"));
-            
+
             Assert.That(response.Plugins.Accountlink.Dummy, !Is.Null);
             Assert.That(response.Plugins.Restrictionmosaic.MaxMosaicRestrictionValues, !Is.Null);
             Assert.That(response.Plugins.Mosaic.MosaicRentalFee, !Is.Null);

@@ -4,7 +4,7 @@ using io.nem2.sdk.src.Model.Network;
 using System.Reactive.Linq;
 
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     public class BlockRequests
     {
@@ -27,7 +27,8 @@ namespace Integration_Tests
 
             Assert.That(response.Count, Is.GreaterThan(0));
 
-            response.ForEach(i => {
+            response.ForEach(i =>
+            {
 
                 Assert.That(i.Block.Height, Is.GreaterThan(0));
                 Assert.That(i.Block.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
@@ -48,7 +49,7 @@ namespace Integration_Tests
                 Assert.That(i.Block.ReceiptsHash.Length, Is.EqualTo(64));
                 Assert.That(i.Block.StateHash.Length, Is.EqualTo(64));
                 Assert.That(i.Block.FeeMultiplier, Is.GreaterThanOrEqualTo(0));
-               
+
                 Assert.That(i.Meta.GenerationHash.Length, Is.EqualTo(64));
                 Assert.That(i.Meta.TransactionsCount, Is.GreaterThanOrEqualTo(0));
                 Assert.That(i.Meta.TotalTransactionsCount, Is.GreaterThanOrEqualTo(0));
@@ -57,7 +58,7 @@ namespace Integration_Tests
                 Assert.That(i.Meta.StatementsCount, Is.GreaterThanOrEqualTo(0));
                 Assert.That(i.Meta.TotalFee, Is.GreaterThanOrEqualTo(0));
 
-                Assert.That(i.Id.Length, Is.EqualTo(24));                     
+                Assert.That(i.Id.Length, Is.EqualTo(24));
             });
         }
 
@@ -67,7 +68,7 @@ namespace Integration_Tests
             var client = new BlockchainHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetBlock(1);
-      
+
             Assert.That(response.Block.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
             Assert.That(response.Meta.StatementsCount, Is.EqualTo(259));
@@ -85,7 +86,7 @@ namespace Integration_Tests
 
             Assert.That(response[0].Hash, Is.EqualTo("035B8D7AA90D41724506E2DD1A9A8D5B47B9AF5BB627904B591F9221D08CF335"));
             Assert.That(response[0].Position, Is.EqualTo("right"));
-           
+
         }
 
         [Test, Timeout(20000)]

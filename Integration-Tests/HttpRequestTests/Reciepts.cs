@@ -1,13 +1,7 @@
-﻿using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequests
 {
     internal class Reciepts
     {
