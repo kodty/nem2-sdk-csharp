@@ -21,7 +21,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetEmbeddedTransferWithMessage()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetConfirmedTransaction("95837D9332DD2ED42C6FED83DC9EA0907E0046A4EEAEE761E185F5E6FAA2EA4C");
 
@@ -33,7 +33,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetEmbeddedAccountKeyLinkTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var tx = await client.GetConfirmedTransaction("55EB9659C81600F1760C4C0A4F8A7A5C90A39FCEE36E3165143B8E72BBC709E8");
 
@@ -52,7 +52,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetEmbeddedVRFKeyLinkTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var tx = await client.GetConfirmedTransaction("55EB9659C81600F1760C4C0A4F8A7A5C90A39FCEE36E3165143B8E72BBC709E8");
 
@@ -71,7 +71,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetEmbeddedMosaicMetadataTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var tx = await client.GetConfirmedTransaction("384CF682EFFE8CBA4CF8A7F2C832B89547828DA024ECAC25E50A61B5C9E400F2");
 
@@ -95,7 +95,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetEmbeddedNamespaceMetadataTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var tx = await client.GetConfirmedTransaction("F97F223C7C9011DCDECD11F13EBBBB257840BFC4A3D12DA2AD2E8F3047AAD01B");
 
@@ -119,7 +119,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)] 
         public async Task GetEmbeddedSupplyChangeTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var tx = await client.GetConfirmedTransaction("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059");
 
@@ -139,7 +139,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetEmbeddedMosaicDefinitionTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var tx = await client.GetConfirmedTransaction("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059");
 
@@ -160,7 +160,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetEmbeddedMosaicRestrictionTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var tx = await client.GetConfirmedTransaction("55EB9659C81600F1760C4C0A4F8A7A5C90A39FCEE36E3165143B8E72BBC709E8");
 
@@ -180,7 +180,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetEmbeddedAccountMetadataTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var tx = await client.GetConfirmedTransaction("F6421D85126AD4E4795848BFB1E6FCAC606F6C0B8D89A6D9825E36C83D594F3C");
 
@@ -203,7 +203,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetEmbeddedVotingKeyLinkTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var tx = await client.GetConfirmedTransaction("5C949FA7F9CFBEA30525B79224147D5C575C4232E28CA7CEA760B08E2018047F");
 
@@ -221,10 +221,96 @@ namespace Integration_Tests
             Assert.That(Voting.Version, Is.EqualTo(1));
         }
 
-            [Test, Timeout(20000)]
+        [Test, Timeout(20000)]
+        public async Task GetEmbeddedSecretLockTransaction()
+        {
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var tx = await client.GetConfirmedTransaction("38504353F21B9D4FE327923E8813EF39549CAA01AFC978F25F0CCF1C206F6F7E");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var Voting = (EmbeddedSecretLockT)aggregate.Transactions[0].Transaction;
+
+            Assert.That(Voting.SignerPublicKey, Is.EqualTo("69C2325CFE51AF39444822C17C09E17DFA1DA8D4828234C8A41B1316E9E0D3CC"));
+            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.SECRET_LOCK));
+            Assert.That(Voting.Version, Is.EqualTo(1));
+            Assert.That(Voting.MosaicId, Is.EqualTo("6BED913FA20223F8"));
+            Assert.That(Voting.Duration, Is.EqualTo(8576));
+            Assert.That(Voting.Amount, Is.EqualTo(250000000));
+            Assert.That(Voting.HashAlgorithm, Is.EqualTo(0));
+            Assert.That(Voting.Secret, Is.EqualTo("05CABA4BCB96D98FD124AC9A1A3AD75582145A421685E58F4BC4436438E4DFDE"));
+            Assert.That(Voting.RecipientAddress, Is.EqualTo("68613BF2E2FD362C92A9A6F7A530B43BB8A945BEF74B20E8"));
+        }
+
+
+        [Test, Timeout(20000)]
+        public async Task GetEmbeddedSecretProofTransaction()
+        {
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var tx = await client.GetConfirmedTransaction("890B8D3B84A65FF5C3A4F743CD0A4A98D6F92250D4DB53463CBF2010C4CC7F39");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var Voting = (EmbeddedSecretProofT)aggregate.Transactions[0].Transaction;
+
+            Assert.That(Voting.SignerPublicKey.Length, Is.EqualTo(64));
+            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.SECRET_PROOF));
+            Assert.That(Voting.Version, Is.EqualTo(1));            
+            Assert.That(Voting.HashAlgorithm, Is.EqualTo(0));
+            Assert.That(Voting.Secret, Is.EqualTo("6B69F838867471B81A38B908C1ADA48A101E1A4F6711E5217F5A51E969A3ABB6"));
+            Assert.That(Voting.RecipientAddress, Is.EqualTo("68E0286048AE7ACB3789B41578A5B78B560B6A45F5AC8E55"));
+            Assert.That(Voting.Proof.Length, Is.EqualTo(40));
+        } 
+
+        [Test, Timeout(20000)]
+        public async Task GetEmbeddedAddressAliasTransaction()
+        {
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var tx = await client.GetConfirmedTransaction("5C15C196C2B0924142B45901EF99AA821C8DA9096EC9B5FAD61DCC605B977028");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var Voting = (EmbeddedAddressAlias)aggregate.Transactions[0].Transaction;
+
+            Assert.That(Voting.SignerPublicKey.Length, Is.EqualTo(64));
+            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.ADDRESS_ALIAS));
+            Assert.That(Voting.Version, Is.EqualTo(1));
+            Assert.That(Voting.AliasAction, Is.EqualTo(1));
+            Assert.That(Voting.NamespaceId, Is.EqualTo("F021153ACEBD5810"));
+            Assert.That(Voting.Address, Is.EqualTo("685B64616B3A5368CF20AE78D30DB9EB911A71A95A07F03F"));
+
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetEmbeddedMosaicSupplyRevocationTransaction()
+        {
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var tx = await client.GetConfirmedTransaction("377CEFFC0FB99B9289E627D14729D9341AC082832EBFC54A25098594E732FB82");
+
+            var aggregate = (Aggregate)tx.Transaction;
+
+            var Voting = (EmbeddedMosaicSupplyRevocation)aggregate.Transactions[1].Transaction;
+
+            Assert.That(Voting.SignerPublicKey, Is.EqualTo("1B22ADD1B1EA8920153EDA0F27936A1EE941388F27284618599D8F83EBE92A8B"));
+            Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION));
+            Assert.That(Voting.Version, Is.EqualTo(1));
+            Assert.That(Voting.MosaicId, Is.EqualTo("5CD6CBFDEE0F1D8E"));
+            Assert.That(Voting.SourceAddress, Is.EqualTo("687CDA0541F388DF9D46138DA8516558B98453D98E75A02E"));
+            Assert.That(Voting.Amount, Is.EqualTo(8));
+        }
+
+        [Test, Timeout(20000)]
         public async Task GetEmbeddedKeyLinkTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var tx = await client.GetConfirmedTransaction("8E7CE907451516EAD51DE86348F51A2950F869A92FEF645CAD2990D5E9BB9121");
 
@@ -261,7 +347,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetEmbeddedSimpleTransfer()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var tx = await client.GetConfirmedTransaction("BFBD18CE27575CF154826C9ECFE587C472193AB035E8F8E4ABFEB6FE1E53520C");
 
@@ -276,7 +362,7 @@ namespace Integration_Tests
                 Assert.That(item.Meta.Index, Is.AnyOf(0, 1));
                 Assert.That(item.Meta.Height, Is.EqualTo(1995));
                 Assert.That(item.Meta.Timestamp, Is.EqualTo(144382262));
-                Assert.That(item.Meta.AggregateId, Is.EqualTo("6644D7ADED4FBE21460AA2E3"));
+                Assert.That(item.Meta.AggregateId, Is.EqualTo("6450384AB0FC9F6D340B8C12"));
                 Assert.That(item.Meta.AggregateHash, Is.EqualTo("BFBD18CE27575CF154826C9ECFE587C472193AB035E8F8E4ABFEB6FE1E53520C"));
                 Assert.That(item.Meta.FeeMultiplier, Is.EqualTo(138));
 
@@ -295,22 +381,22 @@ namespace Integration_Tests
         {
             string pubKey = "6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D";
 
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
-            var response = await client.GetConfirmedTransactions(new string[] { "6644D77CED4FBE214609F1C3", "6644D78DED4FBE21460A2439" });
+            var response = await client.GetConfirmedTransactions(new string[] { "6450381FB0FC9F6D340B00F5", "6450382BB0FC9F6D340B0D69" });
 
             var aggTx1 = ((Aggregate)response[0].Transaction);
             var aggTx2 = ((Aggregate)response[1].Transaction);
 
 
-            Assert.That(response[0].Id, Is.EqualTo("6644D77CED4FBE214609F1C3"));
+            Assert.That(response[0].Id, Is.EqualTo("6450381FB0FC9F6D340B00F5"));
             Assert.That(response[0].Meta.Hash, Is.EqualTo("E906272E7A715CD24D959A51CDFADC4CC8CA0E63097EA161C1DEBD31E9754A74"));
             Assert.That(response[0].Meta.Index, Is.EqualTo(25465));
             Assert.That(response[0].Meta.Timestamp, Is.EqualTo(0));
             Assert.That(response[0].Meta.MerkleComponentHash, Is.EqualTo("904E12F6F155A858C89568A63C23E1F5CDB8AC5220969BB59BD22879FF334F83"));
             Assert.That(response[0].Meta.FeeMultiplier, Is.EqualTo(0));
 
-            Assert.That(response[1].Id, Is.EqualTo("6644D78DED4FBE21460A2439"));
+            Assert.That(response[1].Id, Is.EqualTo("6450382BB0FC9F6D340B0D69"));
             Assert.That(response[1].Meta.Hash, Is.EqualTo("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059"));
             Assert.That(response[1].Meta.Index, Is.EqualTo(0));
             Assert.That(response[1].Meta.Height, Is.EqualTo(117));
@@ -359,21 +445,21 @@ namespace Integration_Tests
             var embedded1 = (EmbeddedMultisigModification)aggTx1.Transactions[0].Transaction;
             var embedded2 = (EmbeddedMosaicSupplyChange)aggTx2.Transactions[1].Transaction;
 
-            Assert.That(aggTx1.Transactions[0].Id, Is.EqualTo("6644D77CED4FBE214609F1CF"));
+            Assert.That(aggTx1.Transactions[0].Id, Is.EqualTo("6450381FB0FC9F6D340B0107"));
             Assert.That(aggTx1.Transactions[0].Meta.Index, Is.EqualTo(0));
             Assert.That(aggTx1.Transactions[0].Meta.Height, Is.EqualTo(1));
             Assert.That(aggTx1.Transactions[0].Meta.Timestamp, Is.EqualTo(0));
             Assert.That(aggTx1.Transactions[0].Meta.FeeMultiplier, Is.EqualTo(0));
             Assert.That(aggTx1.Transactions[0].Meta.AggregateHash, Is.EqualTo("E906272E7A715CD24D959A51CDFADC4CC8CA0E63097EA161C1DEBD31E9754A74"));
-            Assert.That(aggTx1.Transactions[0].Meta.AggregateId, Is.EqualTo("6644D77CED4FBE214609F1C3"));
+            Assert.That(aggTx1.Transactions[0].Meta.AggregateId, Is.EqualTo("6450381FB0FC9F6D340B00F5"));
 
-            Assert.That(aggTx2.Transactions[1].Id, Is.EqualTo("6644D78DED4FBE21460A243B"));
+            Assert.That(aggTx2.Transactions[1].Id, Is.EqualTo("6450382BB0FC9F6D340B0D6B"));
             Assert.That(aggTx2.Transactions[1].Meta.Index, Is.EqualTo(1));
             Assert.That(aggTx2.Transactions[1].Meta.Height, Is.EqualTo(117));
             Assert.That(aggTx2.Transactions[1].Meta.Timestamp, Is.EqualTo(88309778));
             Assert.That(aggTx2.Transactions[1].Meta.FeeMultiplier, Is.EqualTo(100));
             Assert.That(aggTx2.Transactions[1].Meta.AggregateHash, Is.EqualTo("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059"));
-            Assert.That(aggTx2.Transactions[1].Meta.AggregateId, Is.EqualTo("6644D78DED4FBE21460A2439"));
+            Assert.That(aggTx2.Transactions[1].Meta.AggregateId, Is.EqualTo("6450382BB0FC9F6D340B0D69"));
 
             Assert.That(embedded1.SignerPublicKey, Is.EqualTo("FA9F3974FE3B15585E6B72672C7D8BEAE27D1EDF6C4752BAFDB8B2FEA601C0CF"));
             Assert.That(embedded1.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
@@ -396,7 +482,7 @@ namespace Integration_Tests
         {
             string pubKey = "6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D";
 
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetConfirmedTransaction("E906272E7A715CD24D959A51CDFADC4CC8CA0E63097EA161C1DEBD31E9754A74");
 
@@ -407,7 +493,7 @@ namespace Integration_Tests
             Assert.That(response.Meta.MerkleComponentHash, Is.EqualTo("904E12F6F155A858C89568A63C23E1F5CDB8AC5220969BB59BD22879FF334F83"));
             Assert.That(response.Meta.Height, Is.EqualTo(1));
             Assert.That(response.Meta.Timestamp, Is.EqualTo(0));
-            Assert.That(response.Id, Is.EqualTo("6644D77CED4FBE214609F1C3"));
+            Assert.That(response.Id, Is.EqualTo("6450381FB0FC9F6D340B00F5"));
 
             Assert.That(tx.Size, Is.EqualTo(864));
             Assert.That(tx.Transactions, !Is.Null);

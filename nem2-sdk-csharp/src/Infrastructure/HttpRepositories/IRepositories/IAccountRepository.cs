@@ -31,10 +31,9 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
     interface IAccountRepository
     {
         IObservable<List<AccountData>> SearchAccounts(QueryModel queryModel);
-        IObservable<AccountData> GetAccount(PublicAccount account);
+        IObservable<AccountData> GetAccount(string pubkOrAddress);
         IObservable<List<AccountData>> GetAccounts(List<string> publicKeys);
-        IObservable<MerkleRoot> GetAccountMerkle(Address account);
-        IObservable<MerkleRoot> GetAccountMerkle(PublicAccount publicAccount);
+        IObservable<MerkleRoot> GetAccountMerkle(string pubkOrAddress);
 
         // restrictions
         IObservable<List<RestrictionData>> SearchAccountRestrictions(QueryModel queryModel);

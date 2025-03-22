@@ -40,32 +40,32 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         public IObservable<List<BlockInfo>> SearchBlocks(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["blocks"], queryModel)))
-                .Select(b => ResponseFilters<BlockInfo>.FilterEvents(b, "data"));
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks"], queryModel)))
+                 .Select(r => { return ResponseFilters<BlockInfo>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<BlockInfo> GetBlock(ulong height)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["blocks", height])))
-                .Select(ObjectComposer.GenerateObject<BlockInfo>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height])))
+                .Select(r => { return ObjectComposer.GenerateObject<BlockInfo>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<MerklePath>> GetBlockTransactionMerkle(ulong height, string hash)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["blocks", height, "transactions", hash, "merkle"])))
-                .Select(m => ResponseFilters<MerklePath>.FilterEvents(m, "merklePath"));
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height, "transactions", hash, "merkle"])))
+                .Select(r => { return ResponseFilters<MerklePath>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "merklePath"); });
         }
 
         public IObservable<List<MerklePath>> GetBlockRecieptMerkle(ulong height, string hash)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["blocks", height, "reciepts", hash, "merkle"])))
-               .Select(m => ResponseFilters<MerklePath>.FilterEvents(m, "merklePath"));
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height, "reciepts", hash, "merkle"])))
+              .Select(r => { return ResponseFilters<MerklePath>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "merklePath"); });
         }
  
         public IObservable<BlockchainInfo> GetBlockchainInfo()
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["chain", "info"])))
-                .Select(ObjectComposer.GenerateObject<BlockchainInfo>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["chain", "info"])))
+                .Select(r => { return ObjectComposer.GenerateObject<BlockchainInfo>(OverrideEnsureSuccessStatusCode(r)); });
         }
     }
 }

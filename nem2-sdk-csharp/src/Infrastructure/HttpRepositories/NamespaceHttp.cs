@@ -40,20 +40,20 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         public IObservable<List<NamespaceDatum>> SearchNamespaces(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["namespaces"], queryModel)))
-                .Select(n => ResponseFilters<NamespaceDatum>.FilterEvents(n, "data"));
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["namespaces"], queryModel)))
+                .Select(r => { return ResponseFilters<NamespaceDatum>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
-        public IObservable<NamespaceDatum> GetNamespace(string namespaceId) // flag
+        public IObservable<NamespaceDatum> GetNamespace(string namespaceId)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["namespaces", namespaceId])))
-                .Select(ObjectComposer.GenerateObject<NamespaceDatum>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["namespaces", namespaceId])))
+                .Select(r => { return ObjectComposer.GenerateObject<NamespaceDatum>(OverrideEnsureSuccessStatusCode(r)); });            
         }
 
         public IObservable<MerkleRoot> GetNamespaceMerkle(string namespaceId)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["namespaces", namespaceId, "merkle"])))
-                .Select(ObjectComposer.GenerateObject<MerkleRoot>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["namespaces", namespaceId, "merkle"])))
+                .Select(r => { return ObjectComposer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<NamespaceName>> GetNamespacesNames(List<string> namespaceIds)
@@ -64,7 +64,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             };
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
-                .Select(i => ResponseFilters<NamespaceName>.FilterEvents(i.Content.ReadAsStringAsync().Result));
+                .Select(r => { return ResponseFilters<NamespaceName>.FilterEvents(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<AccountName>> GetAccountNames(List<string> addresses)
@@ -75,9 +75,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             };
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "account", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
-               .Select(i => ResponseFilters<AccountName>.FilterEvents(i.Content.ReadAsStringAsync().Result, "accountNames"));
-
+               .Select(r => { return ResponseFilters<AccountName>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "accountNames"); });
         }
+
         public IObservable<List<MosaicName>> GetMosaicNames(List<string> mosaicIds)
         {
             var ids = new MosaicIds()
@@ -86,7 +86,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             };
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "mosaic", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
-                 .Select(i => ResponseFilters<MosaicName>.FilterEvents(i.Content.ReadAsStringAsync().Result, "mosaicNames"));
+                 .Select(r => { return ResponseFilters<MosaicName>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "mosaicNames"); });
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Integration_Tests
         {
             string pubKey1 = "1799A50301C17D0BA45D2599193B49C4A5377640B3D6695B84F6320466958B5C";
             string pubKey = "D4A1468E54DD31B850CF9ABFFD32EFB98547091301668E777A43D3D88BEB76D8";
-            var hashClient = new TransactionHttp("75.119.150.108", 3000);
+            var hashClient = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
 

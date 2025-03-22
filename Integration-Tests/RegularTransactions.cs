@@ -28,7 +28,7 @@ namespace Integration_Tests
             string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
             PublicAccount acc = new PublicAccount(pubKey, NetworkType.Types.MAIN_NET);
 
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
 

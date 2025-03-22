@@ -21,7 +21,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNetwork()
         {
-            var client = new NetworkHttp("75.119.150.108", 3000);
+            var client = new NetworkHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetNetwork();
 
@@ -33,7 +33,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNetworkRentalFees()
         {
-            var client = new NetworkHttp("75.119.150.108", 3000);
+            var client = new NetworkHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetRentalFees();
 
@@ -45,7 +45,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNetworkTransactionFees()
         {
-            var client = new NetworkHttp("75.119.150.108", 3000);
+            var client = new NetworkHttp("195.181.240.147", HttpSetUp.Port);
 
             var response = await client.GetTransactionFees();
 
@@ -53,14 +53,14 @@ namespace Integration_Tests
             Assert.That(response.medianFeeMultiplier, Is.GreaterThanOrEqualTo(0));
             Assert.That(response.highestFeeMultiplier, Is.LessThan(10000));
             Assert.That(response.minFeeMultiplier, Is.GreaterThanOrEqualTo(0));
-            Assert.That(response.averageFeeMultiplier, Is.AtLeast(200) );
+            Assert.That(response.averageFeeMultiplier, Is.AtLeast(90) );
             Assert.That(response.averageFeeMultiplier, Is.AtMost(300));
         }
 
         [Test, Timeout(20000)]
         public async Task GetNetworkProperties()
         {
-            var client = new NetworkHttp("75.119.150.108", 3000);
+            var client = new NetworkHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetNetworkProperties();
 

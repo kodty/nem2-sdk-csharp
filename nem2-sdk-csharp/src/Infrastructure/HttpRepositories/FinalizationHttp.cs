@@ -12,14 +12,14 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
         public IObservable<FinalizationProof> GetFinalizationProofByHeight(ulong height)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["finalization", "proof", "height", height])))
-                .Select(ObjectComposer.GenerateObject<FinalizationProof>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["finalization", "proof", "height", height])))
+                .Select(r => { return ObjectComposer.GenerateObject<FinalizationProof>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<FinalizationProof> GetFinalizationProofByEpoch(ulong epoch)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["finalization", "proof", "epoch", epoch])))
-                .Select(ObjectComposer.GenerateObject<FinalizationProof>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["finalization", "proof", "epoch", epoch])))
+                .Select(r => { return ObjectComposer.GenerateObject<FinalizationProof>(OverrideEnsureSuccessStatusCode(r)); });
         }
     }
 }

@@ -25,15 +25,14 @@
 
 using System.Reactive.Linq;
 using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Infrastructure.Mapping;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
-using System.Diagnostics;
 using System.Text;
-using io.nem2.sdk.Infrastructure.Buffers.Model;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -45,52 +44,45 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         public IObservable<List<TransactionData>> SearchConfirmedTransactions(QueryModel queryModel)
         {          
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["transactions", "confirmed"], queryModel)))
-               .Select(t => ResponseFilters<TransactionData>.FilterMany(t, "data"));
-        }
-
-        public IObservable<string> SearchConfirmedTransactionsString(QueryModel queryModel)
-        {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["transactions", "confirmed"], queryModel)));
-        }
-
-        public IObservable<TransactionData> GetConfirmedTransaction(string hash)
-        {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["transactions", "confirmed", hash])))
-               .Select(ResponseFilters<TransactionData>.FilterSingle);
-        }
-        public IObservable<TransactionData> GetUnconfirmedTransaction(string hash)
-        {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["transactions", "unconfirmed", hash])))
-               .Select(ResponseFilters<TransactionData>.FilterSingle);
-        }
-
-        public IObservable<TransactionData> GetPartialTransaction(string hash)
-        {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["transactions", "partial", hash])))
-               .Select(ResponseFilters<TransactionData>.FilterSingle);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "confirmed"], queryModel)))
+               .Select(r => { return ResponseFilters<TransactionData>.FilterTransactions(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<List<TransactionData>> SearchUnconfirmedTransactions(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["transactions", "unconfirmed"], queryModel)))
-               .Select(t => ResponseFilters<TransactionData>.FilterMany(t));
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "unconfirmed"], queryModel)))
+               .Select(r => { return ResponseFilters<TransactionData>.FilterTransactions(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<List<TransactionData>> SearchPartialTransactions(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["transactions", "partial"], queryModel)))
-               .Select(t => ResponseFilters<TransactionData>.FilterMany(t));
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "partial"], queryModel)))
+                .Select(r => { return ResponseFilters<TransactionData>.FilterTransactions(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
+        public IObservable<TransactionData> GetConfirmedTransaction(string hash)
+        {
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "confirmed", hash])))
+               .Select(r => { return ResponseFilters<TransactionData>.FilterSingle(OverrideEnsureSuccessStatusCode(r)); });
+        }
+        public IObservable<TransactionData> GetUnconfirmedTransaction(string hash)
+        {
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "unconfirmed", hash])))
+               .Select(r => { return ResponseFilters<TransactionData>.FilterSingle(OverrideEnsureSuccessStatusCode(r)); });
+        }
+
+        public IObservable<TransactionData> GetPartialTransaction(string hash)
+        {
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "partial", hash])))
+               .Select(r => { return ResponseFilters<TransactionData>.FilterSingle(OverrideEnsureSuccessStatusCode(r)); });
+        }
+      
         public IObservable<List<TransactionData>> GetConfirmedTransactions(string[] transactionIds)
         {
             var postBody = JsonSerializer.Serialize(new TransactionIdentifiers() { transactionIds = transactionIds });
 
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["transactions", "confirmed"]), new StringContent(postBody, Encoding.UTF8, "application/json")))    
-                .Select(i => {
-                    return ResponseFilters<TransactionData>.FilterMany(i.Content.ReadAsStringAsync().Result.ToString()); 
-                });
+            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["transactions", "confirmed"]), new StringContent(postBody, Encoding.UTF8, "application/json")))
+                 .Select(r => { return ResponseFilters<TransactionData>.FilterTransactions(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<TransactionData>> GetUnconfirmedTransactions(string[] transactionIds)
@@ -98,7 +90,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             var postBody = JsonSerializer.Serialize(new TransactionIdentifiers() { transactionIds = transactionIds });
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["transactions", "unconfirmed"]), new StringContent(postBody, Encoding.UTF8, "application/json")))
-                .Select(i => ResponseFilters<TransactionData>.FilterMany(i.Content.ToString()));
+                 .Select(r => { return ResponseFilters<TransactionData>.FilterTransactions(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<TransactionData>> GetPartialTransactions(string[] transactionIds)
@@ -106,7 +98,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             var postBody = JsonSerializer.Serialize(new TransactionIdentifiers() { transactionIds = transactionIds });
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["transactions", "partial"]), new StringContent(postBody, Encoding.UTF8, "application/json")))
-                .Select(i => ResponseFilters<TransactionData>.FilterMany(i.Content.ToString()));
+                 .Select(r => { return ResponseFilters<TransactionData>.FilterTransactions(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<TransactionAnnounceResponse> Announce(SignedTransaction signedTransaction)
@@ -123,9 +115,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         public IObservable<TransactionAnnounceResponse> AnnounceCosignatureTransaction(CosignatureSignedTransaction signedTransaction)
         {
-            var postBody = JsonSerializer.Serialize(signedTransaction);
-
-            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions", "cosignature"]), new StringContent(postBody)))
+            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions", "cosignature"]), new StringContent(JsonSerializer.Serialize(signedTransaction))))
                 .Select(i => new TransactionAnnounceResponse() { Message = JObject.Parse(i.Content.ToString())["message"].ToString() });
         }
     }

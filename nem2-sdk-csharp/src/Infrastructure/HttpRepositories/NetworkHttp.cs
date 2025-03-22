@@ -12,26 +12,26 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
         public IObservable<NetworkInfo> GetNetwork()
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["network"])))
-              .Select(ObjectComposer.GenerateObject<NetworkInfo>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network"])))
+              .Select(r => { return ObjectComposer.GenerateObject<NetworkInfo>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<NetworkRentalFees> GetRentalFees()
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["network", "fees", "rental"])))
-              .Select(ObjectComposer.GenerateObject<NetworkRentalFees>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network", "fees", "rental"])))
+              .Select(r => { return ObjectComposer.GenerateObject<NetworkRentalFees>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<NetworkTransactionFees> GetTransactionFees()
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["network", "fees", "transaction"])))
-              .Select(ObjectComposer.GenerateObject<NetworkTransactionFees>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network", "fees", "transaction"])))
+              .Select(r => { return ObjectComposer.GenerateObject<NetworkTransactionFees>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<NetworkProperties> GetNetworkProperties()
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["network", "properties"])))
-             .Select(ObjectComposer.GenerateObject<NetworkProperties>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network", "properties"])))
+             .Select(r => { return ObjectComposer.GenerateObject<NetworkProperties>(OverrideEnsureSuccessStatusCode(r)); });
         }
     }
 }

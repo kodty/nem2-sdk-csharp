@@ -23,7 +23,7 @@ namespace Integration_Tests
         {
             string pubKey = "1799A50301C17D0BA45D2599193B49C4A5377640B3D6695B84F6320466958B5C";
 
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
 

@@ -12,20 +12,20 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
         public IObservable<List<ReceiptDatum>> SearchTransactionStatements(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["statements", "transaction"])))
-              .Select(a => ResponseFilters<ReceiptDatum>.FilterEvents(a, "data"));
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["statements", "transaction"])))
+              .Select(r => { return ResponseFilters<ReceiptDatum>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<List<AddressDatum>> GetAddressStatements(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["statements", "resolutions", "address"])))
-              .Select(a => ResponseFilters<AddressDatum>.FilterEvents(a, "data"));
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["statements", "resolutions", "address"])))
+              .Select(r => { return ResponseFilters<AddressDatum>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<List<MosaicDatum>> GetMosaicStatements(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["statements", "resolutions", "mosaic"])))
-              .Select(m => ResponseFilters<MosaicDatum>.FilterEvents(m, "data"));
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["statements", "resolutions", "mosaic"])))
+              .Select(r => { return ResponseFilters<MosaicDatum>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
     }
 }

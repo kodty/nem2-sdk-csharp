@@ -20,7 +20,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             return events;
         }
 
-        internal static List<T> FilterMany(string data, string path = null)
+        internal static List<T> FilterTransactions(string data, string path = null)
         {
             var tx = path == null ? JToken.Parse(data).ToList() : JToken.Parse(data)[path].ToList();
 

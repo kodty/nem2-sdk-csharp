@@ -11,15 +11,10 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
     {
         public MultisigHttp(string host, int port) : base(host, port) { }
 
-        public IObservable<MerkleRoot> GetMultisigMerkleInfo(PublicAccount account)
+        public IObservable<MerkleRoot> GetMultisigMerkleInfo(string pubkOrAddress)
         {
-            return GetMultisigMerkleInfo(account.Address);
-        }
-
-        public IObservable<MerkleRoot> GetMultisigMerkleInfo(Address account)
-        {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(Host + ":" + Port + "/accounts/" + account.Plain + "/multisig/merkle"))
-                 .Select(ObjectComposer.GenerateObject<MerkleRoot>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(Host + ":" + Port + "/accounts/" + pubkOrAddress + "/multisig/merkle"))
+                 .Select(r => { return ObjectComposer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         /*

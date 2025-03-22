@@ -12,14 +12,14 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
         public IObservable<List<Metadata>> SearchMetadataEntries(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["metadata"], queryModel)))
-               .Select(m => ResponseFilters<Metadata>.FilterEvents(m, "data"));
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["metadata"], queryModel)))
+               .Select(r => { return ResponseFilters<Metadata>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<Metadata> GetMetadata(string compositeHash)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["metadata", compositeHash])))
-               .Select(ObjectComposer.GenerateObject<Metadata>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["metadata", compositeHash])))
+               .Select(r => { return ObjectComposer.GenerateObject<Metadata>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<MerkleRoot> GetMetadataMerkle(string compositeHash) 
@@ -30,8 +30,8 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
                 Path = "/metadata/" + compositeHash + "/merkle"
             };
 
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["metadata", compositeHash, "merkle"])))
-               .Select(ObjectComposer.GenerateObject<MerkleRoot>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["metadata", compositeHash, "merkle"])))
+               .Select(r => { return ObjectComposer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
         }
     }
 }

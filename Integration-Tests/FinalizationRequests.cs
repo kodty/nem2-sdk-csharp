@@ -20,7 +20,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetFinalizationProof()
         {
-            var client = new FinalizationHttp("75.119.150.108", 3000);
+            var client = new FinalizationHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetFinalizationProofByHeight(1);
 
@@ -35,7 +35,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetFinalizationProofByEpoch()
         {
-            var client = new FinalizationHttp("75.119.150.108", 3000);
+            var client = new FinalizationHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetFinalizationProofByEpoch(10);
 

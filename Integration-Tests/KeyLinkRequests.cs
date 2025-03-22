@@ -22,7 +22,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task SearchAccountKeyLinkTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
 
@@ -47,7 +47,7 @@ namespace Integration_Tests
         {
             string pubKey = "0B349D6FB4E93FAB29065D51B7A5375FFAF3856BA7F64DDE66B86579816D6E77";
 
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
 
@@ -70,7 +70,7 @@ namespace Integration_Tests
         {
             string pubKey = "AFF16052217A847A6A71B326FEA9073CFF70D07FC5BA9026B3E05FB453C950DF";
 
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
 
@@ -98,7 +98,7 @@ namespace Integration_Tests
         {
             string pubKey = "B26D01FC006EAC09B740A3C8F12C1055AE24AFD3268F0364C92D51800FC07361";
 
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetConfirmedTransaction("55EB9659C81600F1760C4C0A4F8A7A5C90A39FCEE36E3165143B8E72BBC709E8");
 
@@ -118,7 +118,7 @@ namespace Integration_Tests
         {
             string pubKey = "AFF16052217A847A6A71B326FEA9073CFF70D07FC5BA9026B3E05FB453C950DF";
 
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
             qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
@@ -142,7 +142,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetVotingKeyLinkTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetConfirmedTransaction("901807C96B582AACC140BE64CE3C18AF754E3DFBD2269AC573A5121097005DF8");
 
@@ -160,7 +160,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeKeyLinkTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetConfirmedTransaction("F6A12DDA59412CF3A74D558E631FF6C6F5E2B43620CDC950698BBD17FF8F0B57");
 
@@ -176,7 +176,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetVRFKeyLinkTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetConfirmedTransaction("901807C96B582AACC140BE64CE3C18AF754E3DFBD2269AC573A5121097005DF8");
 
@@ -192,7 +192,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetAccountKeyLinkTransaction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetConfirmedTransaction("5C27AD1B777E811946DDB9AB5ABCC464C7B80CCE77CDA3870EB19F1DD1AF22BA");
 

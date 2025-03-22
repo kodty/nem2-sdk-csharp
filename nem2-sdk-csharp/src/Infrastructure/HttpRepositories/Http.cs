@@ -75,5 +75,15 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             return uri.Uri;
         }
+
+        public string OverrideEnsureSuccessStatusCode(HttpResponseMessage r)
+        {
+            var result = r.Content.ReadAsStringAsync().Result;
+
+            if (!r.IsSuccessStatusCode)
+                throw new HttpRequestException(r.Content.ReadAsStringAsync().Result);
+
+            return result;
+        }
     }
 }

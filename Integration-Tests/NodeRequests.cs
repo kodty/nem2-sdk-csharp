@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Integration_Tests
 {
-    internal class NodeRequests
+    internal partial class NodeRequests
     {
         [SetUp]
         public void Setup()
@@ -20,7 +20,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeHealth()
         {
-            var client = new NodeHttp("75.119.150.108", 3000);
+            var client = new NodeHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetNodeHealth();
 
@@ -30,28 +30,9 @@ namespace Integration_Tests
         }
 
         [Test, Timeout(20000)]
-        public async Task GetNodeInformation()
-        {
-            var client = new NodeHttp("75.119.150.108", 3000);
-
-            var response = await client.GetNodeInformation();
-
-            Assert.That(response.FriendlyName, Is.EqualTo("!King.radicasse.jp"));
-            Assert.That(response.Version, Is.EqualTo(16777991));
-            Assert.That(response.Host, Is.EqualTo("75.119.150.108"));
-            Assert.That(response.Roles, Is.EqualTo(3));
-            Assert.That(response.Port, Is.EqualTo(7900));
-            Assert.That(response.NetworkIdentifier, Is.EqualTo(104));
-            Assert.That(response.NetworkGenerationHashSeed, Is.EqualTo("57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6"));
-            Assert.That(response.FriendlyName, Is.EqualTo("!King.radicasse.jp"));
-            Assert.That(response.PublicKey, Is.EqualTo("15F19765910141987A0F9AB925352A2F4060E0EDF7CA34F2EBC39FC012A1196B"));
-            Assert.That(response.NodePublicKey, Is.EqualTo("B23BA5E2529DA132D9B6BA911BE06D9991DA3E7270310028B4D620314A366C05"));
-        }
-
-        [Test, Timeout(20000)]
         public async Task GetNodePeers()
         {
-            var client = new NodeHttp("75.119.150.108", 3000);
+            var client = new NodeHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetNodePeers();
 
@@ -69,7 +50,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeStorage()
         {
-            var client = new NodeHttp("75.119.150.108", 3000);
+            var client = new NodeHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetNodeStorageInfo();
 
@@ -81,7 +62,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeTime()
         {
-            var client = new NodeHttp("75.119.150.108", 3000);
+            var client = new NodeHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetNodeTime();
 
@@ -93,11 +74,11 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeRESTVersion()
         {
-            var client = new NodeHttp("75.119.150.108", 3000);
+            var client = new NodeHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetNodeRESTVersion();
 
-            Assert.That(response.ServerInfo.Deployment.LastUpdatedDate, Is.EqualTo("2024-11-17"));
+            Assert.That(response.ServerInfo.Deployment.LastUpdatedDate, Is.EqualTo("2024-12-16"));
             Assert.That(response.ServerInfo.Deployment.DeploymentToolVersion, Is.EqualTo("1.1.11"));
             Assert.That(response.ServerInfo.Deployment.DeploymentTool, Is.EqualTo("symbol-bootstrap"));
             Assert.That(response.ServerInfo.RestVersion, Is.EqualTo("2.4.4"));

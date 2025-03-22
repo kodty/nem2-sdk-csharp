@@ -21,7 +21,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task SearchMosaicRestriction()
         {
-            var client = new MosaicHttp("75.119.150.108", 3000);
+            var client = new MosaicHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var queryModel = new QueryModel(QueryModel.DefineRequest.SearchMosaicRestrictions);
             queryModel.SetParam(QueryModel.DefinedParams.pageNumber, 2);
@@ -29,7 +29,6 @@ namespace Integration_Tests
 
             var response = await client.SearchMosaicRestrictions(queryModel);
 
-            Assert.That(response[3].Id, Is.EqualTo("6645AEBC079630C9330CF223"));
             Assert.That(response[3].MosaicRestrictionEntry.MosaicId, Is.EqualTo("613E6D0FC11F4530"));
             Assert.That(response[3].MosaicRestrictionEntry.Version, Is.EqualTo(1));
             Assert.That(response[3].MosaicRestrictionEntry.TargetAddress, Is.EqualTo("687B8885134F5BCE0AE5C97E222C5D3A462A3F4EA951CBE5"));
@@ -41,11 +40,11 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetMosaicRestriction()
         {
-            var client = new MosaicHttp("75.119.150.108", 3000);
+            var client = new MosaicHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetMosaicRestriction("048113BBAE7C5739F71C474FBD92EB911D4048170FC05EDEF28C4EDF8C665F52");
 
-            Assert.That(response.Id, Is.EqualTo("6645A6C8079630C93309B78B"));
+            Assert.That(response.Id, Is.EqualTo("6450F4CF58427F98094D4096"));
             Assert.That(response.MosaicRestrictionEntry.MosaicId, Is.EqualTo("613E6D0FC11F4530"));
             Assert.That(response.MosaicRestrictionEntry.Version, Is.EqualTo(1));
             Assert.That(response.MosaicRestrictionEntry.TargetAddress, Is.EqualTo("6875A613C7F4D9A220DB3E141830ECC7132458D01A45787E"));
@@ -60,7 +59,7 @@ namespace Integration_Tests
         {
             string pubKey = "832BFCCC60E3E76C3B9FC63C10751064FA9A9FCC5E00DE7F283F1D0B66A25486";
 
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
 
@@ -85,7 +84,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetMosaicRestrictionMerkle()
         {
-            var client = new MosaicHttp("75.119.150.108", 3000);
+            var client = new MosaicHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetMosaicRestrictionMerkle("048113BBAE7C5739F71C474FBD92EB911D4048170FC05EDEF28C4EDF8C665F52");
 

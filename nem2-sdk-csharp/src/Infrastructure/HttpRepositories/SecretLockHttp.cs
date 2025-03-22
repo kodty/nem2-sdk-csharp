@@ -12,20 +12,20 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         
         public IObservable<List<SecretLockEvent>> SearchSecretLocks(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri([ "lock", "secret"])))
-              .Select(s => ResponseFilters<SecretLockEvent>.FilterEvents(s, "data"));
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri([ "lock", "secret"])))
+              .Select(r => { return ResponseFilters<SecretLockEvent>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<SecretLockEvent> GetSecretLock(string hash)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["lock", "secret", hash])))
-              .Select(ObjectComposer.GenerateObject<SecretLockEvent>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "secret", hash])))
+              .Select(r => { return ObjectComposer.GenerateObject<SecretLockEvent>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<MerkleRoot> GetSecretLockMerkle(string hash)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["lock", "secret", hash, "merkle"])))
-              .Select(ObjectComposer.GenerateObject<MerkleRoot>);
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "secret", hash, "merkle"])))
+              .Select(r => { return ObjectComposer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
         }
     }
 }

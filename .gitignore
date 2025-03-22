@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 nis2-sdk-csharp/ConsoleApp1/
+Integration-Tests/TestConfig.cs
