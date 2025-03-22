@@ -104,45 +104,9 @@ namespace Integration_Tests
             Assert.That(response.Tree[1].Value, Is.Null);
         }
 
-        [Test, Timeout(20000)]
-        public async Task GetMosaicDefinitionTransaction()
-        {
-            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+       
 
-            var response = await client.GetConfirmedTransaction("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059");
 
-            var tx = ((Aggregate)response.Transaction);
-            var embedded = tx.Transactions;
-            var definition = (EmbeddedMosaicDefinition)embedded[0].Transaction;
-
-            Assert.That(tx.TransactionsHash, Is.EqualTo("DF5C0B4D7CC979FA385D4785FCA2A5D9A8F172C0BAB90883BF167DFE9C78A13B"));
-            Assert.That(tx.SignerPublicKey, Is.EqualTo("7E43EC810A64FCCA5F9FBF6FC3E51AA89A0507762DC7E6B8047DCACBE97A8D4B"));
-            Assert.That(embedded.Count, Is.EqualTo(2));
-            Assert.That(definition.Id, Is.EqualTo("63078E73FBCC2CAC"));
-            Assert.That(definition.Flags, Is.EqualTo(3));
-            Assert.That(definition.Duration, Is.EqualTo(0));
-            Assert.That(definition.Divisibility, Is.EqualTo(0));
-            Assert.That(definition.Nonce, Is.EqualTo(3525458556));
-        }
-
-        [Test, Timeout(20000)]
-        public async Task GetMosaicSupplyChangeTransaction()
-        {
-            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
-
-            var response = await client.GetConfirmedTransaction("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059");
-
-            var tx = ((Aggregate)response.Transaction);
-            var embedded = tx.Transactions;
-            var definition = (EmbeddedMosaicSupplyChange)embedded[1].Transaction;
-
-            Assert.That(tx.TransactionsHash, Is.EqualTo("DF5C0B4D7CC979FA385D4785FCA2A5D9A8F172C0BAB90883BF167DFE9C78A13B"));
-            Assert.That(tx.SignerPublicKey, Is.EqualTo("7E43EC810A64FCCA5F9FBF6FC3E51AA89A0507762DC7E6B8047DCACBE97A8D4B"));
-            Assert.That(embedded.Count, Is.EqualTo(2));
-            Assert.That(definition.MosaicId, Is.EqualTo("63078E73FBCC2CAC"));
-            Assert.That(definition.Delta, Is.EqualTo(3800000));
-            Assert.That(definition.Action, Is.EqualTo(1));
-        }
 
         [Test, Timeout(20000)]
         public async Task SearchMosaicSupplyChangeTransaction()

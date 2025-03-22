@@ -50,7 +50,7 @@ namespace io.nem2.sdk.Model.Transactions
             ADDRESS_ALIAS = 0x424E,
             MOSAIC_ALIAS = 0x434E,
             NAMESPACE_REGISTRATION = 0x414E,
-            ACCOUNT_ADDRESS_RESTRICTION = 0x4150, //
+            ACCOUNT_ADDRESS_RESTRICTION = 0x4150,
             ACCOUNT_MOSAIC_RESTRICTION = 0x4250,
             ACCOUNT_OPERATION_RESTRICTION = 0x4350,
             MOSAIC_ADDRESS_RESTRICTION = 0x4251,

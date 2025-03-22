@@ -55,7 +55,26 @@ namespace Integration_Tests
 
             Assert.That(acc.Address.Plain, Is.EqualTo("NASYMBOLLK6FSL7GSEMQEAWN7VW55ZSZU25TBOA"));
         }
-        
+
+        [Test, Timeout(20000)]
+        public async Task GetMosaicDefinitionTransaction()
+        {
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetConfirmedTransaction("B48A3BCE25D31A458303489D8EC02006CB74B72F05E046E5D7428C654CDC0625");
+
+            var tx = (MosaicDefinition)response.Transaction;
+
+            Assert.That(tx.Nonce, Is.EqualTo(0));
+            Assert.That(tx.Duration, Is.EqualTo(0));
+            Assert.That(tx.Divisibility, Is.EqualTo(6));
+            Assert.That(tx.Flags, Is.EqualTo(2));
+            Assert.That(tx.Id, Is.EqualTo("6BED913FA20223F8"));
+            Assert.That(tx.MaxFee, Is.EqualTo(0));
+          
+
+        }
+
         [Test, Timeout(20000)]
         public async Task SearchTransferTransaction()
         {
