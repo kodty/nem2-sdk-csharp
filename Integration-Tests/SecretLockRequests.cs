@@ -58,7 +58,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task SearchSecreltLocks()
         {
-            var nodeClient = new SecretLockHttp("75.119.150.108", 3000);
+            var nodeClient = new SecretLockHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockTransactions);
 
@@ -74,7 +74,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetSecretLock()
         {
-            var nodeClient = new SecretLockHttp("75.119.150.108", 3000);
+            var nodeClient = new SecretLockHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockTransactions);
 
@@ -92,7 +92,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetSecretLockMerkle()
         {
-            var nodeClient = new SecretLockHttp("75.119.150.108", 3000);
+            var nodeClient = new SecretLockHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockTransactions);
 

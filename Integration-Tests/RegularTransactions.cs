@@ -53,13 +53,13 @@ namespace Integration_Tests
 
             Assert.That(acc.Address.Plain, Is.EqualTo("NASYMBOLLK6FSL7GSEMQEAWN7VW55ZSZU25TBOA"));
         }
-
+        
         [Test, Timeout(20000)]
         public async Task SearchTransferTransaction()
         {
             string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
 
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
 
@@ -83,11 +83,28 @@ namespace Integration_Tests
         }
 
         [Test, Timeout(20000)]
+        public async Task SearchMosaicSupplyRevocationTransaction()
+        {
+
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetConfirmedTransaction("9B4D7D69E671E60D7862D7AFC183896A1758FD144C0C1A93BA1BA93191F1CDFE");
+
+            var tx = ((MosaicSupplyRevocation)response.Transaction);
+
+            Assert.That(tx.Amount, Is.EqualTo(9));
+            Assert.That(tx.SourceAddress, Is.EqualTo("68EC4E549EB78CF7623F1CF4CDE5FE5BBADA55C5D504DAF9"));
+            Assert.That(tx.Size, Is.EqualTo(168));
+            Assert.That(tx.MosaicId, Is.EqualTo("0CEDE2DEDDB4832F"));
+            Assert.That(tx.SignerPublicKey, Is.EqualTo("A2B0D50C7DB2724FEF6037821C86E62CC6C31F57AC166A36033267DA47424304"));                
+        }
+
+        [Test, Timeout(20000)]
         public async Task SearchTransferTransactionWithMessege()
         {
             string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
 
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetConfirmedTransaction("11B55558B111E21CABAE7278DE2D3CF393A2384F65AF2C62B88872312FFD0101");
 

@@ -45,7 +45,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNetworkTransactionFees()
         {
-            var client = new NetworkHttp("195.181.240.147", HttpSetUp.Port);
+            var client = new NetworkHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetTransactionFees();
 

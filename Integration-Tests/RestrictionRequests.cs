@@ -36,7 +36,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task SearchAccountMosaicRestriction()
         {
-            var client = new TransactionHttp("75.119.150.108", 3000);
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var acc = new PublicAccount("C807BE28855D0C87A8A2C032E51790CCB9158C15CBACB8B222E27DFFFEB3697D", NetworkType.Types.MAIN_NET);
 
