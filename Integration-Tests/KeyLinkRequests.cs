@@ -30,6 +30,8 @@ namespace Integration_Tests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
+            Assert.That(response.Count, Is.GreaterThan(0));
+
             response.ForEach(i => {
 
                 var tx = ((KeyLink)i.Transaction);
@@ -56,6 +58,8 @@ namespace Integration_Tests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
+            Assert.That(response.Count, Is.GreaterThan(0));
+
             response.ForEach(i => {
 
                 var tx = ((KeyLink)i.Transaction);
@@ -78,6 +82,8 @@ namespace Integration_Tests
             qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.VOTING_KEY_LINK.GetValue());
 
             var response = await client.SearchConfirmedTransactions(qModel);
+
+            Assert.That(response.Count, Is.GreaterThan(0));
 
             response.ForEach(i => {
 
@@ -126,6 +132,8 @@ namespace Integration_Tests
             qModel.SetParam(QueryModel.DefinedParams.height, 1);
 
             var response = await client.SearchConfirmedTransactions(qModel);
+
+            Assert.That(response.Count, Is.GreaterThan(0));
 
             response.ForEach(i => {
 

@@ -50,6 +50,8 @@ namespace Integration_Tests
             queryModel.SetParam(QueryModel.DefinedParams.mosaicId, "63078E73FBCC2CAC");  
             var response = await accountClient.SearchAccounts(queryModel);
 
+            Assert.That(response.Count, Is.GreaterThan(0));
+
             response.ForEach(i => {
                 Assert.That(i.Account.PublicKey.Length, Is.GreaterThan(0));
                 Assert.That(i.Account.Importance, Is.GreaterThanOrEqualTo(0));
@@ -89,6 +91,8 @@ namespace Integration_Tests
             var accountClient = new AccountHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await accountClient.GetAccounts(new List<string> { pubKey, "D3D95BFD3E990F418B4CFAD6A67081ECD0AE229000CEC981E380EB0528FD7DE4" });
+
+            Assert.That(response.Count, Is.GreaterThan(0));
 
             response.ForEach(i => {  
                 
@@ -210,6 +214,8 @@ namespace Integration_Tests
 
             queryModel.SetParam(QueryModel.DefinedParams.address, address.Plain);
             var response = await accountClient.SearchAccountRestrictions(queryModel);
+
+            Assert.That(response.Count, Is.GreaterThan(0));
 
             foreach (var item in response)
             {

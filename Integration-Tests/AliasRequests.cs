@@ -32,6 +32,8 @@ namespace Integration_Tests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
+            Assert.That(response.Count, Is.GreaterThan(0));
+
             response.ForEach(i => {
 
                 var tx = ((AddressAlias)i.Transaction);
@@ -59,6 +61,8 @@ namespace Integration_Tests
             qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.MOSAIC_ALIAS.GetValue());
 
             var response = await client.SearchConfirmedTransactions(qModel);
+
+            Assert.That(response.Count, Is.GreaterThan(0));
 
             response.ForEach(i => {
 

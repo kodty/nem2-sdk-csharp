@@ -34,23 +34,30 @@ namespace Integration_Tests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
+            Assert.That(response.Count, Is.GreaterThan(0));
+
             response.ForEach(i => {
 
                 var tx = ((NamespaceRegistration)i.Transaction);
 
                 if (tx.RegistrationType == 0)
                 {
-                    tx = (RootNamespaceRegistration)tx;
-                    Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
-                    Assert.That(tx.Name, Is.EqualTo("symbol"));
+                    var t = (RootNamespaceRegistration)tx;
+                    Assert.That(t.SignerPublicKey, Is.EqualTo(pubKey));
+                    Assert.That(t.Name, Is.EqualTo("symbol"));
+                    Assert.That(t.Duration, Is.EqualTo(0));
+                    Assert.That(t.Id, Is.EqualTo("A95F1F8A96159516"));
+
                     Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
                 }
                 if (tx.RegistrationType == 1)
                 {
-                    tx = (ChildNamespaceRegistration)tx;
-                    Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
-                    Assert.That(tx.Name, Is.EqualTo("xym"));
-                    Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+                    var t = (ChildNamespaceRegistration)tx;
+                    Assert.That(t.SignerPublicKey, Is.EqualTo(pubKey));                
+                    Assert.That(t.Name, Is.EqualTo("xym"));
+                    Assert.That(t.Id, Is.EqualTo("E74B99BA41F4AFEE"));
+                    Assert.That(t.ParentId, Is.EqualTo("A95F1F8A96159516"));
+                    Assert.That(t.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
                 }
             });
         }
@@ -63,6 +70,8 @@ namespace Integration_Tests
             var queryModel = new QueryModel(QueryModel.DefineRequest.SearchNamespaces);
 
             var response = await client.SearchNamespaces(queryModel);
+
+            Assert.That(response.Count, Is.GreaterThan(0));
 
             foreach (var item in response)
             {

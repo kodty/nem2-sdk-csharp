@@ -162,9 +162,18 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             if (type == TransactionTypes.Types.ACCOUNT_ADDRESS_RESTRICTION)
             {
                 if (typeof(T) == typeof(TransactionData))
-                    shell.Transaction = ObjectComposer.GenerateObject<AccountAddressRestriction>(GetSpecifiedTx(tx));
+                    shell.Transaction = ObjectComposer.GenerateObject<AccountRestriction>(GetSpecifiedTx(tx));
                 if (typeof(T) == typeof(EmbeddedTransactionData))
                     shell.Transaction = ObjectComposer.GenerateObject<EmbeddedAccountAddressRestriction>(GetSpecifiedTx(tx));
+
+                return shell;
+            }
+            if (type == TransactionTypes.Types.ACCOUNT_OPERATION_RESTRICTION)
+            {
+                if (typeof(T) == typeof(TransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<AccountOpperationRestriction>(GetSpecifiedTx(tx));
+                if (typeof(T) == typeof(EmbeddedTransactionData))
+                    shell.Transaction = ObjectComposer.GenerateObject<EmbeddedAccountOpperationRestriction>(GetSpecifiedTx(tx));
 
                 return shell;
             }
@@ -180,7 +189,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             if (type == TransactionTypes.Types.ACCOUNT_MOSAIC_RESTRICTION)
             {
                 if (typeof(T) == typeof(TransactionData))
-                    shell.Transaction = ObjectComposer.GenerateObject<AccountMosaicRestriction>(GetSpecifiedTx(tx));
+                    shell.Transaction = ObjectComposer.GenerateObject<AccountRestriction>(GetSpecifiedTx(tx));
                 if (typeof(T) == typeof(EmbeddedTransactionData))
                     shell.Transaction = ObjectComposer.GenerateObject<EmbeddedAccountMosaicRestriction>(GetSpecifiedTx(tx));
 

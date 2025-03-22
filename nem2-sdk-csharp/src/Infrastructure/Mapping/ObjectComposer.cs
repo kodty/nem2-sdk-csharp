@@ -71,7 +71,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
 
         private static List<T> GetListTypeValue<T>(Type type, JToken ob, string path)
         {
-            if(typeof(T) == typeof(string))
+            if(typeof(T) == typeof(string) || typeof(T) == typeof(int))
             {              
                   return ob[path].Values<T>().ToList();
             }
@@ -91,10 +91,12 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
         private static bool IsNativeProperty(System.Reflection.PropertyInfo op)
         {
             if ((op.PropertyType == typeof(ushort)
+                || op.PropertyType == typeof(bool)
                 || op.PropertyType == typeof(int)
                 || op.PropertyType == typeof(ulong)
                 || op.PropertyType == typeof(string)
                 || op.PropertyType == typeof(List<string>)
+                || op.PropertyType == typeof(List<int>)
                 || op.PropertyType == typeof(List<ActivityBucket>)
                 || op.PropertyType == typeof(List<VotingKeys>)
                 || op.PropertyType == typeof(List<MosaicTransfer>)
@@ -115,10 +117,10 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
                 || op.PropertyType == typeof(List<MosaicRestrictionData>)
                 || op.PropertyType == typeof(List<Cosignature>)
                 || op.PropertyType == typeof(List<EmbeddedTransactionData>)
-                || op.PropertyType == typeof(List<MosaicRestriction>)
-                || op.PropertyType == typeof(bool)
+                || op.PropertyType == typeof(List<MosaicRestriction>)  
                 || op.PropertyType == typeof(TransactionTypes.Types)
                 || op.PropertyType == typeof(NetworkType.Types)))
+                
             {
                 return true;
             }
@@ -150,6 +152,10 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             if (type == typeof(List<string>))
             {
                 return GetListTypeValue<string>(type, ob, path);
+            }
+            if (type == typeof(List<int>))
+            {
+                return GetListTypeValue<int>(type, ob, path);
             }
             if (type == typeof(List<ActivityBucket>))
             {

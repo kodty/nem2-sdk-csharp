@@ -158,6 +158,8 @@ namespace Integration_Tests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
+            Assert.That(response.Count, Is.GreaterThan(0));
+
             response.ForEach(i => {
 
                 var tx = ((MosaicSupplyChange)i.Transaction);

@@ -355,6 +355,8 @@ namespace Integration_Tests
 
             var Embedded = aggregate.Transactions;
 
+            Assert.That(Embedded.Count, Is.GreaterThan(0));
+
             foreach (var item in Embedded)
             {
                 var i = (EmbeddedSimpleTransfer)item.Transaction;

@@ -31,6 +31,8 @@ namespace Integration_Tests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
+            Assert.That(response.Count, Is.GreaterThan(0));
+
             response.ForEach(i => {
 
                 if (i.Transaction.Type == TransactionTypes.Types.SECRET_PROOF)
@@ -39,6 +41,7 @@ namespace Integration_Tests
 
                     Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
                     Assert.That(tx.Secret.Length, Is.GreaterThan(0));
+                    Assert.That(tx.Proof.Length, Is.GreaterThan(0));
                 }
             });
         }

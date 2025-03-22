@@ -38,6 +38,8 @@ namespace Integration_Tests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
+            Assert.That(response.Count, Is.GreaterThan(0));
+
             response.ForEach(i => {
                 ((SimpleTransfer)i.Transaction).Mosaics
                     .ForEach(m =>
@@ -67,6 +69,8 @@ namespace Integration_Tests
             qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.TRANSFER.GetValue());
 
             var response = await client.SearchConfirmedTransactions(qModel);
+
+            Assert.That(response.Count, Is.GreaterThan(0));
 
             response.ForEach(i => {
 

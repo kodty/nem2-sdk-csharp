@@ -57,7 +57,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task SearchMosaicAddressRestriction()
         {
-            string pubKey = "832BFCCC60E3E76C3B9FC63C10751064FA9A9FCC5E00DE7F283F1D0B66A25486";
+            string pubKey = "A39EA1EEA2BF80902ED5B573FC9DEE1EDF53FB6E05099669743DFA3E8233400E";
 
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
@@ -68,16 +68,22 @@ namespace Integration_Tests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
+            Assert.That(response.Count, Is.GreaterThan(0));
+
             response.ForEach(i => {
 
                 var tx = ((MosaicAddressRestriction)i.Transaction);
 
                 Assert.That(tx.RestrictionKey.Length, Is.GreaterThan(0));
-                Assert.That(tx.SignerPublicKey, Is.EqualTo("832BFCCC60E3E76C3B9FC63C10751064FA9A9FCC5E00DE7F283F1D0B66A25486"));
+                Assert.That(tx.SignerPublicKey, Is.EqualTo("A39EA1EEA2BF80902ED5B573FC9DEE1EDF53FB6E05099669743DFA3E8233400E"));
                 Assert.That(i.Meta, !Is.EqualTo(null));
                 Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
-                Assert.That(i.Id.Length, Is.EqualTo(24));
                 Assert.That(tx.Version, Is.EqualTo(1));
+                Assert.That(tx.MosaicId.Length, Is.EqualTo(16));
+                Assert.That(tx.RestrictionKey.Length, Is.EqualTo(16));
+                Assert.That(tx.TargetAddress.Length, Is.EqualTo(48));
+                Assert.That(tx.NewRestrictionValue, Is.GreaterThan(0));
+                Assert.That(tx.PreviousRestrictionValue, Is.LessThanOrEqualTo(18446744073709551615));
             });
         }
 

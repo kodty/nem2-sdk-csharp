@@ -25,6 +25,8 @@ namespace Integration_Tests
 
             var response = await client.SearchBlocks(queryModel);
 
+            Assert.That(response.Count, Is.GreaterThan(0));
+
             response.ForEach(i => {
 
                 Assert.That(i.Block.Height, Is.GreaterThan(0));
@@ -96,7 +98,7 @@ namespace Integration_Tests
             Assert.That(response.Height, Is.GreaterThan(0));
             Assert.That(response.ScoreHigh, Is.GreaterThan(0));
             Assert.That(response.ScoreLow, Is.GreaterThan(0));
-            Assert.That(response.LatestFinalizedBlock.Hash, Is.EqualTo("DAD54D3771AB06BBB0656AADC7E36907D5CC9064A39BC6512645411D73AF433F"));
+            Assert.That(response.LatestFinalizedBlock.Hash.Length, Is.EqualTo(64));
             Assert.That(response.LatestFinalizedBlock.Height, Is.GreaterThan(0));
             Assert.That(response.LatestFinalizedBlock.FinalizationEpoch, Is.GreaterThan(0));
         }

@@ -306,14 +306,10 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     public class SecretProofLock : TransactionData.BaseTransaction
     {
-
-        [JsonProperty("hashAlgorithm")]
         public int HashAlgorithm { get; set; }
 
-        [JsonProperty("secret")]
         public string Secret { get; set; }
 
-        [JsonProperty("recipientAddress")]
         public string RecipientAddress { get; set; }
     }
 
@@ -335,84 +331,64 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
     }
 
     public class HashLockT : TransactionData.BaseTransaction
-    {
-
-        [JsonProperty("duration")]
-       
+    {     
         public ulong Duration { get; set; }
 
-        [JsonProperty("mosaicId")]
         public string MosaicId { get; set; }
 
-        [JsonProperty("amount")]
         public ulong Amount { get; set; }
 
-        [JsonProperty("hash")]
         public string Hash { get; set; }
 
     }
 
     public class EmbeddedSecretLockT : EmbeddedSecretProofLock
     {
-        [JsonProperty("duration")]
         public ulong Duration { get; set; }
 
-        [JsonProperty("mosaicId")]
         public string MosaicId { get; set; }
 
-        [JsonProperty("amount")]
         public ulong Amount { get; set; }
 
     }
 
     public class SecretLockT : SecretProofLock
     {
-        [JsonProperty("duration")]
         public ulong Duration { get; set; }
 
-        [JsonProperty("mosaicId")]
         public string MosaicId { get; set; }
 
-        [JsonProperty("amount")]
         public ulong Amount { get; set; }
        
     }
 
     public class EmbeddedSecretProofT : EmbeddedSecretProofLock
     {
-        [JsonProperty("proof")]
         public string Proof { get; set; }
 
     }
 
     public class SecretProofT : SecretProofLock
     {
-        [JsonProperty("proof")]
         public string Proof { get; set; }
         
     }
 
     public class EmbeddedAccountAddressRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
     {
-        [JsonProperty("restrictionAdditions")]
         public List<string> RestrictionAdditions { get; set; }
 
-        [JsonProperty("restrictionDeletions")]
         public List<string> RestrictionDeletions { get; set; }
 
-        [JsonProperty("restrictionFlags")]
         public int RestrictionFlags { get; set; }
     }
 
-    public class AccountAddressRestriction : TransactionData.BaseTransaction // Address, Mosaic // check tests, absent
+    public class AccountRestriction : TransactionData.BaseTransaction
     {
-        [JsonProperty("restrictionAdditions")]
         public List<string> RestrictionAdditions { get; set; }
 
-        [JsonProperty("restrictionDeletions")]
         public List<string> RestrictionDeletions { get; set; }
 
-        [JsonProperty("restrictionFlags")]
         public int RestrictionFlags { get; set; }
     }
 
@@ -425,27 +401,12 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public int RestrictionFlags { get; set; }
     }
 
-    public class AccountMosaicRestriction : TransactionData.BaseTransaction // Address, Mosaic
-    {
-        [JsonProperty("restrictionAdditions")]
-        public List<string> RestrictionAdditions { get; set; }
-
-        [JsonProperty("restrictionDeletions")]
-        public List<string> RestrictionDeletions { get; set; }
-
-        [JsonProperty("restrictionFlags")]
-        public int RestrictionFlags { get; set; }
-    }
-
     public class AccountOpperationRestriction : TransactionData.BaseTransaction
     {
-        [JsonProperty("restrictionAdditions")]
         public List<int> RestrictionAdditions { get; set; }
 
-        [JsonProperty("restrictionDeletions")]
         public List<int> RestrictionDeletions { get; set; }
 
-        [JsonProperty("restrictionFlags")]
         public int RestrictionFlags { get; set; }
     }
 
@@ -488,13 +449,13 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public string RestrictionKey { get; set; }
 
         [JsonProperty("targetAddress")]
-        public Address TargetAddress { get; set; }
+        public string TargetAddress { get; set; }
 
         [JsonProperty("previousRestrictionValue")]
-        public string PreviousRestrictionValue { get; set; }
+        public ulong PreviousRestrictionValue { get; set; }
 
         [JsonProperty("newRestrictionValue")]
-        public string NewRestrictionValue { get; set; }      
+        public ulong NewRestrictionValue { get; set; }      
     }
 
     public class EmbeddedAliasTransaction : EmbeddedTransactionData.EmbeddedBaseTransaction
