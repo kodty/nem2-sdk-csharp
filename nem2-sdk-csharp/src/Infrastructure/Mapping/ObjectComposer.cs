@@ -4,7 +4,6 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model.Network;
 using Newtonsoft.Json.Linq;
-using System.Diagnostics;
 
 namespace io.nem2.sdk.src.Infrastructure.Mapping
 {
@@ -80,24 +79,22 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
 
         private static List<EmbeddedTransactionData> GetEmbeddedListType(JToken ob, string path)
         {
-            List<EmbeddedTransactionData> events = new List<EmbeddedTransactionData>();
+            List<EmbeddedTransactionData> embeddedTransactions = new List<EmbeddedTransactionData>();
 
             if (ob[path] != null) foreach (var e in ob[path])
-                events.Add(ResponseFilters<EmbeddedTransactionData>.FilterSingle(e.ToString()));
+                embeddedTransactions.Add(ResponseFilters<EmbeddedTransactionData>.FilterSingle(e.ToString()));
 
-            return events;     
+            return embeddedTransactions;     
         }
 
         private static List<TransactionTypes.Types> ExtractTransactionTypes(JToken ob, string path)
         {
-            List<TransactionTypes.Types> events = new List<TransactionTypes.Types>();
+            List<TransactionTypes.Types> types = new List<TransactionTypes.Types>();
 
             if (ob[path] != null) foreach (var e in ob[path])
-                {
-                    events.Add(TransactionTypes.GetRawValue((ushort)e));
-                }
-
-            return events;           
+                types.Add(TransactionTypes.GetRawValue((ushort)e));
+                
+            return types;           
         }
 
         private static List<T> GetListTypeValue<T>(JToken ob, string path)
@@ -163,141 +160,108 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
         private static dynamic? GetTypedValue(Type type, JToken ob, string path = null)
         {
             if (type == typeof(int))
-            {
                 return (int)ob[path];
-            }
+            
             if (type == typeof(ushort))
-            {
                 return (ushort)ob[path];
-            }
+            
             if (type == typeof(ulong))
-            {
-                return (ulong)ob[path];
-            }
+                 return (ulong)ob[path];
+            
             if (type == typeof(string))
-            {
-                return (string)(ob[path]);
-            }
+                 return (string)(ob[path]);
+            
             if (type == typeof(bool))
-            {
-                return (bool)ob[path];
-            }
+                 return (bool)ob[path];
+            
             if (type == typeof(List<string>))
-            {
-                return GetListTypeValue<string>(ob, path);
-            }
+                 return GetListTypeValue<string>(ob, path);
+            
             if (type == typeof(List<int>))
-            {
                 return GetListTypeValue<int>(ob, path);
-            }
+            
             if (type == typeof(List<ActivityBucket>))
-            {
                 return GetListTypeValue<ActivityBucket>(ob, path);
-            }
+            
             if (type == typeof(List<MosaicTransfer>))
-            {
                 return GetListTypeValue<MosaicTransfer>(ob, path);
-            }
+            
             if (type == typeof(List<MosaicEvent>))
-            {
                 return GetListTypeValue<MosaicEvent>(ob, path);
-            }
+            
             if (type == typeof(List<MessageGroup>))
-            {
                 return GetListTypeValue<MessageGroup>(ob, path);
-            }
+            
             if (type == typeof(List<Signature>))
-            {
                 return GetListTypeValue<Signature>(ob, path);
-            }
+            
             if (type == typeof(List<Tree>))
-            {
                 return GetListTypeValue<Tree>(ob, path);
-            }
+            
             if (type == typeof(List<LinkBit>))
-            {
                 return GetListTypeValue<LinkBit>(ob, path);
-            }
+            
             if (type == typeof(List<RestrictionData>))
-            {
                 return GetListTypeValue<RestrictionData>(ob, path);
-            }
+            
             if (type == typeof(List<Restrictions>))
-            {
                 return GetListTypeValue<Restrictions>(ob, path);
-            }
+            
             if (type == typeof(List<MosaicName>)) 
-            {
                 return GetListTypeValue<MosaicName>(ob, path);
-            }
+            
             if (type == typeof(List<AccountName>)) 
-            {
                 return GetListTypeValue<AccountName>(ob, path);
-            }
+            
             if (type == typeof(List<ReceiptDatum>))
-            {
                 return GetListTypeValue<ReceiptDatum>(ob, path);
-            }
+            
             if (type == typeof(List<Receipt>))
-            {
                 return GetListTypeValue<Receipt>(ob, path);
-            }
+            
             if (type == typeof(List<AddressDatum>))
-            {
                 return GetListTypeValue<AddressDatum>(ob, path);
-            }
+            
             if (type == typeof(List<ResolutionEntry>))
-            {
                 return GetListTypeValue<ResolutionEntry>(ob, path);
-            }
+            
             if (type == typeof(List<MosaicDatum>))
-            {
                 return GetListTypeValue<MosaicDatum>(ob, path);
-            }
+            
             if (type == typeof(List<MosaicRestrictionData>)) 
-            {
                 return GetListTypeValue<MosaicRestrictionData>(ob, path);
-            }
+            
             if (type == typeof(List<MosaicRestriction>))
-            {
                 return GetListTypeValue<MosaicRestriction>(ob, path);
-            }
+            
             if (type == typeof(List<Cosignature>))
-            {
                 return GetListTypeValue<Cosignature>(ob, path);
-            }
+            
             if (type == typeof(List<VotingKeys>))
-            {
                 return GetListTypeValue<VotingKeys>(ob, path);
-            }
+            
             if (type == typeof(List<EmbeddedTransactionData>))
-            {
                 return GetEmbeddedListType(ob, path);
-            }
+            
             if (type == typeof(NetworkType.Types))
-            {
                 return NetworkType.GetRawValue((ushort)ob[path]);
-            }
+            
             if (type == typeof(List<RestrictionTypes.Types>))
-            {
-                return ExtractRestrictionFlags(ob, path);
-            }
+                 return ExtractRestrictionFlags(ob, path);
+            
             if (type == typeof(List<TransactionTypes.Types>))
-            {
                 return ExtractTransactionTypes(ob, path);
-            }
+            
             if (type == typeof(TransactionTypes.Types))
-            {
                 return TransactionTypes.GetRawValue((ushort)ob[path]);
-            }
-            throw new NotImplementedException(type.ToString());
+ 
+            else throw new NotImplementedException(type.ToString());
         }
 
         internal static object ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)
         {
             foreach (var prop in nameToValueMap)
             {
-
                 var actualObjProp = actualObject.GetType().GetProperties()?
                       .First(m =>
                       {
