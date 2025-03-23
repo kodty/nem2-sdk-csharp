@@ -54,8 +54,10 @@ namespace Integration_Tests.HttpRequests
                 Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
                 Assert.That(i.Id.Length, Is.EqualTo(24));
                 Assert.That(tx.Version, Is.EqualTo(1));
-                Assert.That(tx.RestrictionFlags, Is.EqualTo(49156));
-                Assert.That(tx.RestrictionAdditions[0], Is.EqualTo(16961));
+                Assert.That(tx.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
+                Assert.That(tx.RestrictionFlags[1], Is.EqualTo(RestrictionTypes.Types.OUTGOING));
+                Assert.That(tx.RestrictionFlags[2], Is.EqualTo(RestrictionTypes.Types.TRANSACTION_TYPE));
+                Assert.That(tx.RestrictionAdditions[0], Is.EqualTo(TransactionTypes.Types.AGGREGATE_BONDED));
                 Assert.That(tx.RestrictionDeletions.Count, Is.EqualTo(0));
             });
         }

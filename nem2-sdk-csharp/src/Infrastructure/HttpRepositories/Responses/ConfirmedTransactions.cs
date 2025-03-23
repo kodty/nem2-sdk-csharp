@@ -416,11 +416,11 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     public class AccountOpperationRestriction : TransactionData.BaseTransaction
     {
-        public List<int> RestrictionAdditions { get; set; }
+        public List<TransactionTypes.Types> RestrictionAdditions { get; set; }
 
-        public List<int> RestrictionDeletions { get; set; }
+        public List<TransactionTypes.Types> RestrictionDeletions { get; set; }
 
-        public int RestrictionFlags { get; set; }
+        public List<RestrictionTypes.Types> RestrictionFlags { get; set; }
     }
 
     public class EmbeddedAccountOpperationRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction

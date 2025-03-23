@@ -217,7 +217,6 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
                 Assert.That(item.AccountRestrictions.Restrictions[0].RestrictionFlags[0], Is.GreaterThan(RestrictionTypes.Types.ADDRESS));
                 Assert.That(item.AccountRestrictions.Restrictions[0].Values[0].Length, Is.EqualTo(16));
                 Assert.That(Address.CreateFromHex(item.AccountRestrictions.Address).Plain.Length, Is.EqualTo(39));
-
             }
         }
 

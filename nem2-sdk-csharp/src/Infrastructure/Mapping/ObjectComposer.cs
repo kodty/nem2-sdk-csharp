@@ -4,6 +4,7 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model.Network;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
 namespace io.nem2.sdk.src.Infrastructure.Mapping
 {
@@ -82,11 +83,21 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             List<EmbeddedTransactionData> events = new List<EmbeddedTransactionData>();
 
             if (ob[path] != null) foreach (var e in ob[path])
-                {
-                    events.Add(ResponseFilters<EmbeddedTransactionData>.FilterSingle(e.ToString()));
-                }
+                events.Add(ResponseFilters<EmbeddedTransactionData>.FilterSingle(e.ToString()));
 
             return events;     
+        }
+
+        private static List<TransactionTypes.Types> ExtractTransactionTypes(JToken ob, string path)
+        {
+            List<TransactionTypes.Types> events = new List<TransactionTypes.Types>();
+
+            if (ob[path] != null) foreach (var e in ob[path])
+                {
+                    events.Add(TransactionTypes.GetRawValue((ushort)e));
+                }
+
+            return events;           
         }
 
         private static List<T> GetListTypeValue<T>(JToken ob, string path)
@@ -137,10 +148,12 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
                 || op.PropertyType == typeof(List<MosaicRestrictionData>)
                 || op.PropertyType == typeof(List<Cosignature>)
                 || op.PropertyType == typeof(List<EmbeddedTransactionData>)
-                || op.PropertyType == typeof(List<MosaicRestriction>)  
+                || op.PropertyType == typeof(List<MosaicRestriction>)
+                || op.PropertyType == typeof(List<RestrictionTypes.Types>)
+                || op.PropertyType == typeof(List<TransactionTypes.Types>)
                 || op.PropertyType == typeof(TransactionTypes.Types)
-                || op.PropertyType == typeof(NetworkType.Types)
-                || op.PropertyType == typeof(List<RestrictionTypes.Types>))
+                || op.PropertyType == typeof(NetworkType.Types))
+                
             {
                 return true;
             }
@@ -268,6 +281,10 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             if (type == typeof(List<RestrictionTypes.Types>))
             {
                 return ExtractRestrictionFlags(ob, path);
+            }
+            if (type == typeof(List<TransactionTypes.Types>))
+            {
+                return ExtractTransactionTypes(ob, path);
             }
             if (type == typeof(TransactionTypes.Types))
             {
