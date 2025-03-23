@@ -26,7 +26,7 @@ namespace io.nem2.sdk.Model.Accounts
             return (ushort)type;
         }
 
-        public static Types GetRawValue(this ushort type)
+        public static Types GetRawValue(this int type)
         {
             switch (type)
             {

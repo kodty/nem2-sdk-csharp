@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
@@ -23,7 +24,7 @@ namespace Integration_Tests.HttpRequests
 
             Assert.That(tx.RestrictionAdditions[0], Is.EqualTo("68E1B300EDBBCE31ED8F922BFDEE477D47061E44CB46CC64"));
             Assert.That(tx.RestrictionDeletions.Count, Is.EqualTo(0));
-            Assert.That(tx.RestrictionFlags, Is.EqualTo(1));
+            Assert.That(tx.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.ADDRESS));
         }
 
         [Test, Timeout(20000)]
@@ -83,7 +84,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(tx1.SignerPublicKey.Length, Is.GreaterThan(0));
             Assert.That(tx1.SignerPublicKey, Is.EqualTo("BD15F73AEC98D613DC7290095B96328A76A0D41324E21F717E67FA2C73074D8D"));
             Assert.That(tx1.Version, Is.EqualTo(1));
-            Assert.That(tx1.RestrictionFlags, Is.EqualTo(32770));
+            Assert.That(tx1.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
             Assert.That(tx1.RestrictionAdditions[0], Is.EqualTo("051FAEC15105C808"));
             Assert.That(tx1.RestrictionDeletions.Count, Is.EqualTo(0));
 
@@ -92,7 +93,8 @@ namespace Integration_Tests.HttpRequests
             Assert.That(tx2.SignerPublicKey.Length, Is.GreaterThan(0));
             Assert.That(tx2.SignerPublicKey, Is.EqualTo("BD15F73AEC98D613DC7290095B96328A76A0D41324E21F717E67FA2C73074D8D"));
             Assert.That(tx2.Version, Is.EqualTo(1));
-            Assert.That(tx2.RestrictionFlags, Is.EqualTo(32770));
+            Assert.That(tx2.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
+            Assert.That(tx2.RestrictionFlags[1], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
             Assert.That(tx2.RestrictionDeletions[0], Is.EqualTo("051FAEC15105C808"));
             Assert.That(tx2.RestrictionAdditions.Count, Is.EqualTo(0));
         }

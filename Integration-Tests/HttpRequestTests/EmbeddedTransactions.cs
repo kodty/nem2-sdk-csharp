@@ -189,7 +189,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(restriction.Version, Is.EqualTo(1));
             Assert.That(restriction.RestrictionAdditions[0], Is.EqualTo("6BED913FA20223F8"));
             Assert.That(restriction.RestrictionDeletions.Count, Is.EqualTo(0));
-            Assert.That(restriction.RestrictionFlags, Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
+            Assert.That(restriction.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
         }
 
         [Test, Timeout(20000)]
@@ -370,7 +370,7 @@ namespace Integration_Tests.HttpRequests
 
             var restriction = (EmbeddedAccountMosaicRestriction)((Aggregate)transaction.Transaction).Transactions[1].Transaction;
 
-            Assert.That(restriction.RestrictionFlags, Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
+            Assert.That(restriction.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
             Assert.That(restriction.RestrictionAdditions[0], Is.EqualTo("6BED913FA20223F8"));
             Assert.That(restriction.RestrictionDeletions.Count, Is.EqualTo(0)); // flag
         }
