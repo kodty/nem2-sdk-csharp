@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using io.nem2.sdk.Model.Accounts;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 {
@@ -47,7 +47,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     public class Restrictions
     {
-        public int RestrictionFlags { get; set; }
+        public RestrictionTypes.Types RestrictionFlags { get; set; }
 
         public List<string> Values { get; set; }
     }

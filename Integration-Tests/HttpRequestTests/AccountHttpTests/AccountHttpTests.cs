@@ -27,7 +27,6 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             Assert.That(response.Account.SupplementalPublicKeys.Voting.PublicKeys[0].PublicKey, Is.EqualTo("E1A8274A61DC5D2A378F5719B1FADB64FBF82120B4B876AEA3774E387C2650FF"));
             Assert.That(response.Account.SupplementalPublicKeys.Voting.PublicKeys[0].StartEpoch, Is.EqualTo(181));
             Assert.That(response.Account.SupplementalPublicKeys.Voting.PublicKeys[0].EndEpoch, Is.EqualTo(357));
-
             Assert.That(response.Account.Importance, Is.EqualTo(0));
         }
 
@@ -215,12 +214,29 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             {
                 Assert.That(item.AccountRestrictions.Version, Is.GreaterThan(0));
                 Assert.That(item.AccountRestrictions.Address.Length, Is.GreaterThan(0));
-                Assert.That(item.AccountRestrictions.Restrictions[0].RestrictionFlags, Is.GreaterThan(0));
+                Assert.That(item.AccountRestrictions.Restrictions[0].RestrictionFlags, Is.GreaterThan(RestrictionTypes.Types.ADDRESS));
                 Assert.That(item.AccountRestrictions.Restrictions[0].Values[0].Length, Is.EqualTo(16));
                 Assert.That(Address.CreateFromHex(item.AccountRestrictions.Address).Plain.Length, Is.EqualTo(39));
 
             }
         }
+
+
+        [Test, Timeout(20000)]
+        public async Task GetAccountMosaicRestriction()
+        {
+            var client = new AccountHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var acc = new PublicAccount("C807BE28855D0C87A8A2C032E51790CCB9158C15CBACB8B222E27DFFFEB3697D", NetworkType.Types.MAIN_NET);
+
+            var restriction = await client.GetAccountRestriction(acc.Address.Plain);
+           
+            Assert.That(Address.CreateFromHex(restriction.AccountRestrictions.Address).Plain, Is.EqualTo(acc.Address.Plain));
+            Assert.That(restriction.AccountRestrictions.Restrictions[0].RestrictionFlags, Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
+            Assert.That(restriction.AccountRestrictions.Restrictions[0].Values[0], Is.EqualTo("6BED913FA20223F8"));
+        }
+
+
 
         [Test, Timeout(20000)]
         public async Task GetAccountRestrictions()
@@ -233,8 +249,7 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             var response = await accountClient.GetAccountRestriction(address.Plain);
 
             Assert.That(response.AccountRestrictions.Address.Length, Is.GreaterThan(0));
-            Assert.That(response.AccountRestrictions.Restrictions[0].RestrictionFlags, Is.GreaterThan(0));
-            Assert.That(response.AccountRestrictions.Restrictions[0].RestrictionFlags, Is.GreaterThan(0));
+            Assert.That(response.AccountRestrictions.Restrictions[0].RestrictionFlags, Is.GreaterThan(RestrictionTypes.Types.ADDRESS));
             Assert.That(response.AccountRestrictions.Restrictions[0].Values[0], Is.EqualTo("6BED913FA20223F8"));
             Assert.That(Address.CreateFromHex(response.AccountRestrictions.Address).Plain, Is.EqualTo("NAEON4SL7TQIZW5WFLEK5SVTJZLT7NDNMF6WYKA"));
         }

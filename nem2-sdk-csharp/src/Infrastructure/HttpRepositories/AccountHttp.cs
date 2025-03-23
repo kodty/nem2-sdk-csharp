@@ -54,12 +54,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         public IObservable<List<AccountData>> GetAccounts(List<string> accounts) // flag
         {
-            var data = new Public_Keys()
-            {
-                publicKeys = accounts
-            };
-
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["accounts"]), new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")))
+            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["accounts"]), new StringContent(JsonSerializer.Serialize(new Public_Keys() { publicKeys = accounts }), Encoding.UTF8, "application/json")))
                  .Select(r => {  return ResponseFilters<AccountData>.FilterEvents(OverrideEnsureSuccessStatusCode(r)); });
         }
 
@@ -70,7 +65,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                  .Select(r => { return ObjectComposer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
-        public IObservable<List<RestrictionData>> SearchAccountRestrictions(QueryModel queryModel) // flag
+        public IObservable<List<RestrictionData>> SearchAccountRestrictions(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account"], queryModel)))
                .Select(r => { return ResponseFilters<RestrictionData>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });

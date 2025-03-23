@@ -1,6 +1,7 @@
 ﻿using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model.Network;
 using Newtonsoft.Json.Linq;
 
@@ -90,7 +91,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
 
         private static bool IsNativeProperty(System.Reflection.PropertyInfo op)
         {
-            if ((op.PropertyType == typeof(ushort)
+               if (op.PropertyType == typeof(ushort)
                 || op.PropertyType == typeof(bool)
                 || op.PropertyType == typeof(int)
                 || op.PropertyType == typeof(ulong)
@@ -119,8 +120,8 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
                 || op.PropertyType == typeof(List<EmbeddedTransactionData>)
                 || op.PropertyType == typeof(List<MosaicRestriction>)  
                 || op.PropertyType == typeof(TransactionTypes.Types)
-                || op.PropertyType == typeof(NetworkType.Types)))
-                
+                || op.PropertyType == typeof(NetworkType.Types)
+                || op.PropertyType == typeof(RestrictionTypes.Types))
             {
                 return true;
             }
@@ -244,6 +245,10 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             if (type == typeof(NetworkType.Types))
             {
                 return NetworkType.GetRawValue((ushort)ob[path]);
+            }
+            if (type == typeof(RestrictionTypes.Types))
+            {
+                return RestrictionTypes.GetRawValue((ushort)ob[path]);
             }
             if (type == typeof(TransactionTypes.Types))
             {

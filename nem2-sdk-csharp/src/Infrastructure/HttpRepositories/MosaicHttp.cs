@@ -49,13 +49,8 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         }
 
         public IObservable<List<MosaicEvent>> GetMosaics(List<string> mosaicIds)
-        {
-            var data = new MosaicIds()
-            {
-                mosaicIds = mosaicIds
-            };
-          
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["mosaics"]), new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")))
+        {     
+            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["mosaics"]), new StringContent(JsonSerializer.Serialize(new MosaicIds() { mosaicIds = mosaicIds }), Encoding.UTF8, "application/json")))
                 .Select(r => { return ResponseFilters<MosaicEvent>.FilterEvents(OverrideEnsureSuccessStatusCode(r)); });
         }
 

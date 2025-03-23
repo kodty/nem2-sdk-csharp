@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Network;
@@ -188,7 +189,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(restriction.Version, Is.EqualTo(1));
             Assert.That(restriction.RestrictionAdditions[0], Is.EqualTo("6BED913FA20223F8"));
             Assert.That(restriction.RestrictionDeletions.Count, Is.EqualTo(0));
-            Assert.That(restriction.RestrictionFlags, Is.EqualTo(2));
+            Assert.That(restriction.RestrictionFlags, Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
         }
 
         [Test, Timeout(20000)]
@@ -356,6 +357,22 @@ namespace Integration_Tests.HttpRequests
             Assert.That(Node.SignerPublicKey, Is.EqualTo("615ABB16819BDC49EB0DB95121E0A1B52838877128A16C88A3CDE7D7CB3745C3"));
             Assert.That(Node.Type, Is.EqualTo(TransactionTypes.Types.NODE_KEY_LINK));
             Assert.That(Node.Version, Is.EqualTo(1));
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetEmbeddedAccountMosaicRestriction()
+        {
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var acc = new PublicAccount("C807BE28855D0C87A8A2C032E51790CCB9158C15CBACB8B222E27DFFFEB3697D", NetworkType.Types.MAIN_NET);
+
+            var transaction = await client.GetConfirmedTransaction("30FA71E6D1E34DF1E430A07E1B0817BED9A4ED6B0245B7471B0557380A700E1B");
+
+            var restriction = (EmbeddedAccountMosaicRestriction)((Aggregate)transaction.Transaction).Transactions[1].Transaction;
+
+            Assert.That(restriction.RestrictionFlags, Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
+            Assert.That(restriction.RestrictionAdditions[0], Is.EqualTo("6BED913FA20223F8"));
+            Assert.That(restriction.RestrictionDeletions.Count, Is.EqualTo(0)); // flag
         }
 
         [Test, Timeout(20000)]
