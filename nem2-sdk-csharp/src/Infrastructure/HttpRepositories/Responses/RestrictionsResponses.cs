@@ -47,7 +47,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     public class Restrictions
     {
-        public RestrictionTypes.Types RestrictionFlags { get; set; }
+        public List<RestrictionTypes.Types> RestrictionFlags { get; set; }
 
         public List<string> Values { get; set; }
     }

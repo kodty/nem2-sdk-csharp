@@ -214,13 +214,12 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             {
                 Assert.That(item.AccountRestrictions.Version, Is.GreaterThan(0));
                 Assert.That(item.AccountRestrictions.Address.Length, Is.GreaterThan(0));
-                Assert.That(item.AccountRestrictions.Restrictions[0].RestrictionFlags, Is.GreaterThan(RestrictionTypes.Types.ADDRESS));
+                Assert.That(item.AccountRestrictions.Restrictions[0].RestrictionFlags[0], Is.GreaterThan(RestrictionTypes.Types.ADDRESS));
                 Assert.That(item.AccountRestrictions.Restrictions[0].Values[0].Length, Is.EqualTo(16));
                 Assert.That(Address.CreateFromHex(item.AccountRestrictions.Address).Plain.Length, Is.EqualTo(39));
 
             }
         }
-
 
         [Test, Timeout(20000)]
         public async Task GetAccountMosaicRestriction()
@@ -232,11 +231,9 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             var restriction = await client.GetAccountRestriction(acc.Address.Plain);
            
             Assert.That(Address.CreateFromHex(restriction.AccountRestrictions.Address).Plain, Is.EqualTo(acc.Address.Plain));
-            Assert.That(restriction.AccountRestrictions.Restrictions[0].RestrictionFlags, Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
+            Assert.That(restriction.AccountRestrictions.Restrictions[0].RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
             Assert.That(restriction.AccountRestrictions.Restrictions[0].Values[0], Is.EqualTo("6BED913FA20223F8"));
         }
-
-
 
         [Test, Timeout(20000)]
         public async Task GetAccountRestrictions()
@@ -249,7 +246,7 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             var response = await accountClient.GetAccountRestriction(address.Plain);
 
             Assert.That(response.AccountRestrictions.Address.Length, Is.GreaterThan(0));
-            Assert.That(response.AccountRestrictions.Restrictions[0].RestrictionFlags, Is.GreaterThan(RestrictionTypes.Types.ADDRESS));
+            Assert.That(response.AccountRestrictions.Restrictions[0].RestrictionFlags[0], Is.GreaterThan(RestrictionTypes.Types.ADDRESS));
             Assert.That(response.AccountRestrictions.Restrictions[0].Values[0], Is.EqualTo("6BED913FA20223F8"));
             Assert.That(Address.CreateFromHex(response.AccountRestrictions.Address).Plain, Is.EqualTo("NAEON4SL7TQIZW5WFLEK5SVTJZLT7NDNMF6WYKA"));
         }
