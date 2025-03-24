@@ -184,6 +184,7 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             response.Tree.ForEach(t =>
             {
                 if (t.Links.Count > 0) Assert.That(t.Links[0].Link.Length, Is.EqualTo(64));
+                if (t.Links.Count > 0) Assert.That(t.Links[0].Bit.Length, Is.EqualTo(1));
                 Assert.That(t.Type, Is.GreaterThanOrEqualTo(0));
                 if (t.Path != null) Assert.That(t.Path.Length, Is.AnyOf(60, 0));
                 Assert.That(t.EncodedPath.Length, Is.GreaterThan(0));

@@ -9,11 +9,9 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
 {
     internal static class ObjectComposer
     {
-        internal static T GenerateObject<T>(string data)
-        {
-            return (T)GenerateObject(typeof(T), JToken.Parse(data));
-        }
-
+        internal static T GenerateObject<T>(string data) 
+            => (T)GenerateObject(typeof(T), JToken.Parse(data));
+        
         internal static object GenerateObject(Type type, JToken jObject)
         {
             var actualObject = Activator.CreateInstance(type);
@@ -55,7 +53,22 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
 
             return nameToValueMap;
         }
-        
+        internal static object ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)
+        {
+            foreach (var prop in nameToValueMap)
+            {
+                var actualObjProp = actualObject.GetType().GetProperties()?
+                      .First(m =>
+                      {
+                          return (char.ToLower(m.Name[0]) + m.Name.Substring(1)).ToString() == (char.ToLower(prop.Key[0]) + prop.Key.Substring(1)).ToString();
+                      });
+
+                actualObjProp.SetValue(actualObject, prop.Value);
+            }
+
+            return Convert.ChangeType(actualObject, type);
+        }
+
         private static List<RestrictionTypes.Types> ExtractRestrictionFlags(JToken ob, string path)
         {
             var values = new List<RestrictionTypes.Types>();
@@ -76,7 +89,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
 
             return values;
         }
-
+        
         private static List<EmbeddedTransactionData> GetEmbeddedListType(JToken ob, string path)
         {
             List<EmbeddedTransactionData> embeddedTransactions = new List<EmbeddedTransactionData>();
@@ -87,33 +100,30 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             return embeddedTransactions;     
         }
 
-        private static List<TransactionTypes.Types> ExtractTransactionTypes(JToken ob, string path)
-        {
-            List<TransactionTypes.Types> types = new List<TransactionTypes.Types>();
-
-            if (ob[path] != null) foreach (var e in ob[path])
-                types.Add(TransactionTypes.GetRawValue((ushort)e));
-                
-            return types;           
-        }
-
         private static List<T> GetListTypeValue<T>(JToken ob, string path)
         {
             if(typeof(T) == typeof(string) || typeof(T) == typeof(int))
-            {              
-                  return ob[path].Values<T>().ToList();
-            }
+                return ob[path].Values<T>().ToList();
+            
             else
             {
                 List<T> events = new List<T>();
 
                 if(ob[path] != null) foreach (var e in ob[path])
-                {
-                    events.Add((T)GenerateObject(typeof(T), e));
-                }
+                    events.Add((T)GenerateObject(typeof(T), e));  
 
                 return events;
             }
+        }
+
+        private static List<TransactionTypes.Types> ExtractTransactionTypes(JToken ob, string path)
+        {
+            List<TransactionTypes.Types> types = new List<TransactionTypes.Types>();
+
+            if (ob[path] != null) foreach (var e in ob[path])
+                    types.Add(TransactionTypes.GetRawValue((ushort)e));
+
+            return types;
         }
 
         private static bool IsNativeProperty(System.Reflection.PropertyInfo op)
@@ -149,9 +159,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
                 || op.PropertyType == typeof(List<RestrictionTypes.Types>)
                 || op.PropertyType == typeof(List<TransactionTypes.Types>)
                 || op.PropertyType == typeof(TransactionTypes.Types)
-                || op.PropertyType == typeof(NetworkType.Types))
-                
-            {
+                || op.PropertyType == typeof(NetworkType.Types)){
                 return true;
             }
             else return false;
@@ -256,22 +264,6 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
                 return TransactionTypes.GetRawValue((ushort)ob[path]);
  
             else throw new NotImplementedException(type.ToString());
-        }
-
-        internal static object ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)
-        {
-            foreach (var prop in nameToValueMap)
-            {
-                var actualObjProp = actualObject.GetType().GetProperties()?
-                      .First(m =>
-                      {
-                          return (char.ToLower(m.Name[0]) + m.Name.Substring(1)).ToString() == (char.ToLower(prop.Key[0]) + prop.Key.Substring(1)).ToString();
-                      });
-
-                actualObjProp.SetValue(actualObject, prop.Value);
-            }
-
-            return Convert.ChangeType(actualObject, type);
         }
     }
 }

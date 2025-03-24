@@ -41,12 +41,12 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetTransactionFees();
 
-            Assert.That(response.lowestFeeMultiplier, Is.GreaterThanOrEqualTo(0));
-            Assert.That(response.medianFeeMultiplier, Is.GreaterThanOrEqualTo(0));
-            Assert.That(response.highestFeeMultiplier, Is.LessThan(10000));
-            Assert.That(response.minFeeMultiplier, Is.GreaterThanOrEqualTo(0));
-            Assert.That(response.averageFeeMultiplier, Is.AtLeast(90));
-            Assert.That(response.averageFeeMultiplier, Is.AtMost(300));
+            Assert.That(response.LowestFeeMultiplier, Is.GreaterThanOrEqualTo(0));
+            Assert.That(response.MedianFeeMultiplier, Is.GreaterThanOrEqualTo(0));
+            Assert.That(response.HighestFeeMultiplier, Is.LessThan(10000));
+            Assert.That(response.MinFeeMultiplier, Is.GreaterThanOrEqualTo(0));
+            Assert.That(response.AverageFeeMultiplier, Is.AtLeast(90));
+            Assert.That(response.AverageFeeMultiplier, Is.AtMost(300));
         }
 
         [Test, Timeout(20000)]

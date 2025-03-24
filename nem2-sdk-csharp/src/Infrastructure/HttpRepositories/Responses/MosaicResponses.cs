@@ -1,7 +1,6 @@
 ﻿
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 {
-
     public class MosaicIds
     {
         public List<string> mosaicIds { get; set; }

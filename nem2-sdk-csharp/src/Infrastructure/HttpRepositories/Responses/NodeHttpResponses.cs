@@ -16,7 +16,6 @@ namespace io.nem2.sdk.src.Infrastructure.Buffers.Model
 
     public class NodeInfo : NodePeer
     {
-
         public string NodePublicKey { get; set; }
     }
 

@@ -36,8 +36,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public string LeafHash { get; set; }
     }
 
-
-
     public class LinkBit
     {
         public string Bit { get; set; }

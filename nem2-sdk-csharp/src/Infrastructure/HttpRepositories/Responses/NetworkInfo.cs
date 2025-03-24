@@ -21,15 +21,15 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     public class NetworkTransactionFees
     {
-        public int averageFeeMultiplier { get; set; }
+        public int AverageFeeMultiplier { get; set; }
 
-        public int medianFeeMultiplier { get; set; }
+        public int MedianFeeMultiplier { get; set; }
 
-        public int highestFeeMultiplier { get; set; }
+        public int HighestFeeMultiplier { get; set; }
 
-        public int lowestFeeMultiplier { get; set; }
+        public int LowestFeeMultiplier { get; set; }
 
-        public int minFeeMultiplier { get; set; }
+        public int MinFeeMultiplier { get; set; }
     }
 
     public class Accountlink
