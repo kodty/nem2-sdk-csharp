@@ -1,8 +1,8 @@
-Contact: kailin.odonnell.it3@gmail.com 
+
 
 ### Nem2 (Catapult) CSharp SDK
 
-:warning: this sdk is in alpha state and will change in the next versions
+:warning: this sdk is in alpha state. Use at own risk.
 
 ## Requirements
 .NetStandard 2.0
