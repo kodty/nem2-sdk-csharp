@@ -92,7 +92,7 @@ namespace Integration_Tests.HttpRequests
 
             Assert.That(response.Tree[1].Type, Is.EqualTo(0));
             Assert.That(response.Tree[1].NibbleCount, Is.EqualTo(0));
-            Assert.That(response.Tree[1].Links[0].Link, Is.EqualTo("C3ED57BC62D90EDEB02F390061ED622B43F3ACB2A60C193B91466A6A002F8675"));
+            Assert.That(response.Tree[1].Links[0].Link, Is.EqualTo("7357B8E977CD17AD28D0CB3D9D219420EF1992EC2455044AABBB98769A23FA08"));
             Assert.That(response.Tree[0].BranchHash.Length, Is.EqualTo(64));
             Assert.That(response.Tree[1].Value, Is.Null);
         }
