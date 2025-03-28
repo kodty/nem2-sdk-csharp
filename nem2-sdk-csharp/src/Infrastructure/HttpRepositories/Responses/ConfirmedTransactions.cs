@@ -414,7 +414,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public List<RestrictionTypes.Types> RestrictionFlags { get; set; }
     }
 
-    public class AccountOpperationRestriction : TransactionData.BaseTransaction
+    public class AccountOperationRestriction : TransactionData.BaseTransaction
     {
         public List<TransactionTypes.Types> RestrictionAdditions { get; set; }
 

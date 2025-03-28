@@ -171,7 +171,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             if (type == TransactionTypes.Types.ACCOUNT_OPERATION_RESTRICTION)
             {
                 if (typeof(T) == typeof(TransactionData))
-                    shell.Transaction = ObjectComposer.GenerateObject<AccountOpperationRestriction>(GetSpecifiedTx(tx));
+                    shell.Transaction = ObjectComposer.GenerateObject<AccountOperationRestriction>(GetSpecifiedTx(tx));
                 if (typeof(T) == typeof(EmbeddedTransactionData))
                     shell.Transaction = ObjectComposer.GenerateObject<EmbeddedAccountOpperationRestriction>(GetSpecifiedTx(tx));
 

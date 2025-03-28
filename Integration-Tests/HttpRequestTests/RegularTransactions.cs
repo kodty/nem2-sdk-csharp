@@ -123,6 +123,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(tx.Duration, Is.EqualTo(0));
             Assert.That(tx.Divisibility, Is.EqualTo(6));
             Assert.That(tx.Flags, Is.EqualTo(2));
+            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_DEFINITION));
             Assert.That(tx.Id, Is.EqualTo("6BED913FA20223F8"));
             Assert.That(tx.MaxFee, Is.EqualTo(0));
 
@@ -243,6 +244,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(tx.Secret, Is.EqualTo("90A3DAF40EAEDAF79B79C8E8B9AF78EF59CF18A39866BD253404EAB737F41829"));
             Assert.That(tx.RecipientAddress, Is.EqualTo("68DDFBC7F8E3676FB5158D924C9E204496D8ADB1A36658EB"));
         }
+
         [Test, Timeout(20000)]
         public async Task GetSecretproofNonEmbeddedTransaction()
         {
@@ -308,7 +310,143 @@ namespace Integration_Tests.HttpRequests
             Assert.That(tx.SourceAddress, Is.EqualTo("68EC4E549EB78CF7623F1CF4CDE5FE5BBADA55C5D504DAF9"));
             Assert.That(tx.Size, Is.EqualTo(168));
             Assert.That(tx.MosaicId, Is.EqualTo("0CEDE2DEDDB4832F"));
+            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION));
             Assert.That(tx.SignerPublicKey, Is.EqualTo("A2B0D50C7DB2724FEF6037821C86E62CC6C31F57AC166A36033267DA47424304"));
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetAddressAliasTransaction()
+        {
+
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetConfirmedTransaction("54B99E12887443F0B6A2DAA6120EF72384B1A2BBC1CA4AF345198E6E72653770");
+
+            var tx = (AddressAlias)response.Transaction;
+
+
+            Assert.That(tx.AliasAction, Is.EqualTo(1));
+            Assert.That(tx.NamespaceId, Is.EqualTo("EF2AB54AFF2588B0"));
+            Assert.That(tx.Address, Is.EqualTo("68F5D60E17C33D26DD24E0BE4E1C0DF26E8D758A250398B4"));
+            Assert.That(tx.Size, Is.EqualTo(161));
+            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ADDRESS_ALIAS));
+            Assert.That(tx.SignerPublicKey, Is.EqualTo("CE493A883EE3DE0DFF72ECC93E8AE6B5D7A1C67C4979BFF887EE0C379DAF11DE"));
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetMosaicAliasTransaction()
+        {
+
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetConfirmedTransaction("8135D5533F45765ADE747BFEB06474CB11EEB02E221ACBD42295F8F1D237C467");
+
+            var tx = (MosaicAlias)response.Transaction;
+
+
+            Assert.That(tx.AliasAction, Is.EqualTo(1));
+            Assert.That(tx.NamespaceId, Is.EqualTo("E74B99BA41F4AFEE"));
+            Assert.That(tx.MosaicId, Is.EqualTo("6BED913FA20223F8"));
+            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_ALIAS));
+            Assert.That(tx.SignerPublicKey, Is.EqualTo("BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F"));
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetRootNamespaceRegistrationTransaction()
+        {
+
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetConfirmedTransaction("FF31ABA28DEA461AFC0C4A68F31AB7CCD86EFCAA6A3781B6B741B59A4DDC01C2");
+
+            var tx = (RootNamespaceRegistration)response.Transaction;
+        
+            Assert.That(tx.RegistrationType, Is.EqualTo(0));
+            Assert.That(tx.Duration, Is.EqualTo(0));
+            Assert.That(tx.Id, Is.EqualTo("A95F1F8A96159516"));
+            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.NAMESPACE_REGISTRATION));
+            Assert.That(tx.Size, Is.EqualTo(152));
+
+            Assert.That(tx.SignerPublicKey, Is.EqualTo("BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F"));
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetAccountAddressRestrictionTransaction()
+        {
+
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetConfirmedTransaction("2A5280F16603DCF1544619D87BB0BC367F29C32D3D52C5B659744B7CEE6301A6");
+
+            var tx = (AccountRestriction)response.Transaction;
+
+            Assert.That(tx.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.ADDRESS));
+            Assert.That(tx.RestrictionAdditions[0], Is.EqualTo("68E1B300EDBBCE31ED8F922BFDEE477D47061E44CB46CC64"));
+            Assert.That(tx.RestrictionDeletions.Count, Is.EqualTo(0));
+            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_ADDRESS_RESTRICTION));
+            Assert.That(tx.Size, Is.EqualTo(160));
+
+            Assert.That(tx.SignerPublicKey, Is.EqualTo("832BFCCC60E3E76C3B9FC63C10751064FA9A9FCC5E00DE7F283F1D0B66A25486"));
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetAccountMosaicRestrictionTransaction()
+        {
+
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetConfirmedTransaction("B8A9E72ADC49D2A880C49D6D4A8F88D3B64137DC0EC0A399CD9A1A8FB4C16FC0");
+
+            var tx = (AccountRestriction)response.Transaction;
+
+            Assert.That(tx.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
+            Assert.That(tx.RestrictionFlags[1], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
+            Assert.That(tx.RestrictionAdditions[0], Is.EqualTo("051FAEC15105C808"));
+            Assert.That(tx.RestrictionDeletions.Count, Is.EqualTo(0));
+            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_MOSAIC_RESTRICTION));
+            Assert.That(tx.Size, Is.EqualTo(144));
+
+            Assert.That(tx.SignerPublicKey, Is.EqualTo("BD15F73AEC98D613DC7290095B96328A76A0D41324E21F717E67FA2C73074D8D"));
+        }
+
+        [Test, Timeout(20000)] 
+        public async Task GetAccountOperationRestrictionTransaction()
+        {
+
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetConfirmedTransaction("53D3ED8322AF889A37DFB6DC42B07269E413D91B6ACE51E065A2030C0D4E5266");
+
+            var tx = (AccountOperationRestriction)response.Transaction;
+
+            Assert.That(tx.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
+            Assert.That(tx.RestrictionFlags[1], Is.EqualTo(RestrictionTypes.Types.OUTGOING));
+            Assert.That(tx.RestrictionAdditions[0], Is.EqualTo(TransactionTypes.Types.ACCOUNT_ADDRESS_RESTRICTION));
+            Assert.That(tx.RestrictionDeletions.Count, Is.EqualTo(0));
+            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_OPERATION_RESTRICTION));
+            Assert.That(tx.Size, Is.EqualTo(138));
+
+            Assert.That(tx.SignerPublicKey, Is.EqualTo("95B0EA9B688FB7670D4FD5AC4754CB2DFCCEE04592D5D82CC24C342A5BA0B799"));
+        }
+
+        [Test, Timeout(20000)] 
+        public async Task GetMosaicAddressRestrictionTransaction()
+        {
+
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetConfirmedTransaction("FF44C70577FDE571DC03A3827A3DAD138EC9D21C3839C63217896B4E992F7897");
+
+            var tx = (MosaicAddressRestriction)response.Transaction;
+
+            Assert.That(tx.NewRestrictionValue, Is.EqualTo(1));
+            Assert.That(tx.PreviousRestrictionValue, Is.EqualTo(18446744073709551615));
+            Assert.That(tx.RestrictionKey, Is.EqualTo("CBED702BC844E81A"));
+            Assert.That(tx.TargetAddress, Is.EqualTo("6827E508C5BB821AAB4541547D0307278DE378846AB824D7")); 
+            Assert.That(tx.MosaicId, Is.EqualTo("613E6D0FC11F4530"));
+            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION));
+            Assert.That(tx.Size, Is.EqualTo(184));
+            Assert.That(tx.SignerPublicKey, Is.EqualTo("A39EA1EEA2BF80902ED5B573FC9DEE1EDF53FB6E05099669743DFA3E8233400E"));
         }
 
         [Test, Timeout(20000)]

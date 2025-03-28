@@ -73,7 +73,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
             Assert.That(response.Meta.StatementsCount, Is.EqualTo(259));
             Assert.That(response.Meta.TotalFee, Is.EqualTo(0));
-            Assert.That(response.Id, Is.EqualTo("6450381FB0FC9F6D340B0B53"));
+            Assert.That(response.Id, Is.EqualTo("66641FAF9E09C6EE9601A233"));
             Assert.That(response.Block.Height, Is.GreaterThan(0));
         }
 

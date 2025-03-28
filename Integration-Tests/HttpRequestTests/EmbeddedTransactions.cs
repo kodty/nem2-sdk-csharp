@@ -395,7 +395,7 @@ namespace Integration_Tests.HttpRequests
                 Assert.That(item.Meta.Index, Is.AnyOf(0, 1));
                 Assert.That(item.Meta.Height, Is.EqualTo(1995));
                 Assert.That(item.Meta.Timestamp, Is.EqualTo(144382262));
-                Assert.That(item.Meta.AggregateId, Is.EqualTo("6450384AB0FC9F6D340B8C12"));
+                Assert.That(item.Meta.AggregateId, Is.EqualTo("666420199E09C6EE960222F3"));
                 Assert.That(item.Meta.AggregateHash, Is.EqualTo("BFBD18CE27575CF154826C9ECFE587C472193AB035E8F8E4ABFEB6FE1E53520C"));
                 Assert.That(item.Meta.FeeMultiplier, Is.EqualTo(138));
 
@@ -416,20 +416,20 @@ namespace Integration_Tests.HttpRequests
 
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
-            var response = await client.GetConfirmedTransactions(new string[] { "6450381FB0FC9F6D340B00F5", "6450382BB0FC9F6D340B0D69" });
+            var response = await client.GetConfirmedTransactions(new string[] { "66641FAD9E09C6EE96018A30", "66641FCA9E09C6EE9601A449" });
 
             var aggTx1 = (Aggregate)response[0].Transaction;
             var aggTx2 = (Aggregate)response[1].Transaction;
 
 
-            Assert.That(response[0].Id, Is.EqualTo("6450381FB0FC9F6D340B00F5"));
+            Assert.That(response[0].Id, Is.EqualTo("66641FAD9E09C6EE96018A30"));
             Assert.That(response[0].Meta.Hash, Is.EqualTo("E906272E7A715CD24D959A51CDFADC4CC8CA0E63097EA161C1DEBD31E9754A74"));
             Assert.That(response[0].Meta.Index, Is.EqualTo(25465));
             Assert.That(response[0].Meta.Timestamp, Is.EqualTo(0));
             Assert.That(response[0].Meta.MerkleComponentHash, Is.EqualTo("904E12F6F155A858C89568A63C23E1F5CDB8AC5220969BB59BD22879FF334F83"));
             Assert.That(response[0].Meta.FeeMultiplier, Is.EqualTo(0));
 
-            Assert.That(response[1].Id, Is.EqualTo("6450382BB0FC9F6D340B0D69"));
+            Assert.That(response[1].Id, Is.EqualTo("66641FCA9E09C6EE9601A449"));
             Assert.That(response[1].Meta.Hash, Is.EqualTo("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059"));
             Assert.That(response[1].Meta.Index, Is.EqualTo(0));
             Assert.That(response[1].Meta.Height, Is.EqualTo(117));
@@ -479,21 +479,21 @@ namespace Integration_Tests.HttpRequests
             var embedded1 = (EmbeddedMultisigModification)aggTx1.Transactions[0].Transaction;
             var embedded2 = (EmbeddedMosaicSupplyChange)aggTx2.Transactions[1].Transaction;
 
-            Assert.That(aggTx1.Transactions[0].Id, Is.EqualTo("6450381FB0FC9F6D340B0107"));
+            Assert.That(aggTx1.Transactions[0].Id, Is.EqualTo("66641FAD9E09C6EE96018A31"));
             Assert.That(aggTx1.Transactions[0].Meta.Index, Is.EqualTo(0));
             Assert.That(aggTx1.Transactions[0].Meta.Height, Is.EqualTo(1));
             Assert.That(aggTx1.Transactions[0].Meta.Timestamp, Is.EqualTo(0));
             Assert.That(aggTx1.Transactions[0].Meta.FeeMultiplier, Is.EqualTo(0));
             Assert.That(aggTx1.Transactions[0].Meta.AggregateHash, Is.EqualTo("E906272E7A715CD24D959A51CDFADC4CC8CA0E63097EA161C1DEBD31E9754A74"));
-            Assert.That(aggTx1.Transactions[0].Meta.AggregateId, Is.EqualTo("6450381FB0FC9F6D340B00F5"));
+            Assert.That(aggTx1.Transactions[0].Meta.AggregateId, Is.EqualTo("66641FAD9E09C6EE96018A30"));
 
-            Assert.That(aggTx2.Transactions[1].Id, Is.EqualTo("6450382BB0FC9F6D340B0D6B"));
+            Assert.That(aggTx2.Transactions[1].Id, Is.EqualTo("66641FCA9E09C6EE9601A44B"));
             Assert.That(aggTx2.Transactions[1].Meta.Index, Is.EqualTo(1));
             Assert.That(aggTx2.Transactions[1].Meta.Height, Is.EqualTo(117));
             Assert.That(aggTx2.Transactions[1].Meta.Timestamp, Is.EqualTo(88309778));
             Assert.That(aggTx2.Transactions[1].Meta.FeeMultiplier, Is.EqualTo(100));
             Assert.That(aggTx2.Transactions[1].Meta.AggregateHash, Is.EqualTo("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059"));
-            Assert.That(aggTx2.Transactions[1].Meta.AggregateId, Is.EqualTo("6450382BB0FC9F6D340B0D69"));
+            Assert.That(aggTx2.Transactions[1].Meta.AggregateId, Is.EqualTo("66641FCA9E09C6EE9601A449"));
 
             Assert.That(embedded1.SignerPublicKey, Is.EqualTo("FA9F3974FE3B15585E6B72672C7D8BEAE27D1EDF6C4752BAFDB8B2FEA601C0CF"));
             Assert.That(embedded1.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
@@ -527,7 +527,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(response.Meta.MerkleComponentHash, Is.EqualTo("904E12F6F155A858C89568A63C23E1F5CDB8AC5220969BB59BD22879FF334F83"));
             Assert.That(response.Meta.Height, Is.EqualTo(1));
             Assert.That(response.Meta.Timestamp, Is.EqualTo(0));
-            Assert.That(response.Id, Is.EqualTo("6450381FB0FC9F6D340B00F5"));
+            Assert.That(response.Id, Is.EqualTo("66641FAD9E09C6EE96018A30"));
 
             Assert.That(tx.Size, Is.EqualTo(864));
             Assert.That(tx.Transactions, !Is.Null);

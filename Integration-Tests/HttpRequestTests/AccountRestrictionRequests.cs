@@ -46,7 +46,7 @@ namespace Integration_Tests.HttpRequests
             response.ForEach(i =>
             {
 
-                var tx = (AccountOpperationRestriction)i.Transaction;
+                var tx = (AccountOperationRestriction)i.Transaction;
 
                 Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_OPERATION_RESTRICTION));
                 Assert.That(tx.SignerPublicKey, Is.EqualTo("9B8534E757F7AD292430FC5EF6ED970D92BA1B93EBF5BB2265864594CCD75E60"));

@@ -13,7 +13,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeHealth()
         {
-            var client = new NodeHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new NodeHttp(HttpSetUp.NodeTest, HttpSetUp.Port);
 
             var response = await client.GetNodeHealth();
 
@@ -25,7 +25,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodePeers()
         {
-            var client = new NodeHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new NodeHttp(HttpSetUp.NodeTest, HttpSetUp.Port);
 
             var response = await client.GetNodePeers();
 
@@ -43,7 +43,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeStorage()
         {
-            var client = new NodeHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new NodeHttp(HttpSetUp.NodeTest, HttpSetUp.Port);
 
             var response = await client.GetNodeStorageInfo();
 
@@ -55,7 +55,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeTime()
         {
-            var client = new NodeHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new NodeHttp(HttpSetUp.NodeTest, HttpSetUp.Port);
 
             var response = await client.GetNodeTime();
 
@@ -67,11 +67,11 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeRESTVersion()
         {
-            var client = new NodeHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new NodeHttp(HttpSetUp.NodeTest, HttpSetUp.Port);
 
             var response = await client.GetNodeRESTVersion();
 
-            Assert.That(response.ServerInfo.Deployment.LastUpdatedDate, Is.EqualTo("2024-12-16"));
+            Assert.That(response.ServerInfo.Deployment.LastUpdatedDate, Is.EqualTo("2025-02-07"));
             Assert.That(response.ServerInfo.Deployment.DeploymentToolVersion, Is.EqualTo("1.1.11"));
             Assert.That(response.ServerInfo.Deployment.DeploymentTool, Is.EqualTo("symbol-bootstrap"));
             Assert.That(response.ServerInfo.RestVersion, Is.EqualTo("2.4.4"));
