@@ -20,6 +20,7 @@ using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.src.Model.Network;
+using System.Diagnostics;
 
 namespace test.Model.AccountTest
 {
@@ -27,9 +28,17 @@ namespace test.Model.AccountTest
     public class AccountTest
     {
         [Test]
+        public void CreateNewTestNetAccount()
+        {
+            var pubAccount = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
+            Debug.WriteLine(pubAccount.PrivateKey);
+            Debug.WriteLine(pubAccount.Address.Pretty);
+        }
+
+        [Test]
         public void ShouldCreateAccountViaConstructor()
         {
-            Account account = new Account("787225aaff3d2c71f4ffa32d4f19ec4922f3cd869747f267378f81f8e3fcb12d", NetworkType.Types.MIJIN_TEST);
+            Account account = new Account("787225aaff3d2c71f4ffa32d4f19ec4922f3cd869747f267378f81f8e3fcb12d", NetworkType.Types.TEST_NET);
             Assert.AreEqual("SDRDGFTDLLCB67D4HPGIMIHPNSRYRJRT7DOBGWZY", account.Address.Plain);
             Assert.AreEqual("1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755", account.PublicKey);
             Assert.AreEqual("787225AAFF3D2C71F4FFA32D4F19EC4922F3CD869747F267378F81F8E3FCB12D", account.PrivateKey);
@@ -38,7 +47,7 @@ namespace test.Model.AccountTest
         [Test]
         public void ShouldCreateAccountViaStaticConstructor()
         {
-            Account account = Account.CreateFromPrivateKey("787225AAFF3D2C71F4FFA32D4F19EC4922F3CD869747F267378F81F8E3FCB12D", NetworkType.Types.MIJIN_TEST);
+            Account account = Account.CreateFromPrivateKey("787225AAFF3D2C71F4FFA32D4F19EC4922F3CD869747F267378F81F8E3FCB12D", NetworkType.Types.TEST_NET);
             Assert.AreEqual("787225AAFF3D2C71F4FFA32D4F19EC4922F3CD869747F267378F81F8E3FCB12D", account.PrivateKey);
             Assert.AreEqual("SDRDGFTDLLCB67D4HPGIMIHPNSRYRJRT7DOBGWZY", account.Address.Plain);
             Assert.AreEqual("1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755", account.PublicKey);
@@ -47,7 +56,7 @@ namespace test.Model.AccountTest
         [Test]
         public void ShouldCreateAccountViaStaticConstructor2()
         {
-            Account account = Account.CreateFromPrivateKey("9FC72A5116EB37C343E0B6CA907A3CFFEE14FC625CFDCBD77DDECD96E783C1AF", NetworkType.Types.MIJIN_TEST);
+            Account account = Account.CreateFromPrivateKey("9FC72A5116EB37C343E0B6CA907A3CFFEE14FC625CFDCBD77DDECD96E783C1AF", NetworkType.Types.TEST_NET);
             Assert.AreEqual("9FC72A5116EB37C343E0B6CA907A3CFFEE14FC625CFDCBD77DDECD96E783C1AF", account.PrivateKey);
             Assert.AreEqual("14A239D2ADB96753CFC160BB262F27B01BCCC8C74599F51771BC6BD39980F4E7", account.PublicKey);
             Assert.AreEqual("SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL", account.Address.Plain);
@@ -56,7 +65,7 @@ namespace test.Model.AccountTest
         [Test]
         public void ShouldCreateAccountViaStaticConstructor3()
         {
-            Account account = Account.CreateFromPrivateKey("B8AFAE6F4AD13A1B8AAD047B488E0738A437C7389D4FF30C359AC068910C1D59", NetworkType.Types.MIJIN_TEST);
+            Account account = Account.CreateFromPrivateKey("B8AFAE6F4AD13A1B8AAD047B488E0738A437C7389D4FF30C359AC068910C1D59", NetworkType.Types.TEST_NET);
             Assert.AreEqual("B8AFAE6F4AD13A1B8AAD047B488E0738A437C7389D4FF30C359AC068910C1D59", account.PrivateKey);
             Assert.AreEqual("68B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763", account.PublicKey);
             Assert.AreEqual("SBE6CS7LZKJXLDVTNAC3VZ3AUVZDTF3PACNFIXFN", account.Address.Plain);

@@ -1,24 +1,31 @@
-﻿namespace Integration_Tests.HttpRequests
-{/*
-    [TestClass]
+﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Infrastructure.Listeners;
+using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.src.Model.Network;
+using System.Reactive.Linq;
+
+namespace Integration_Tests.HttpRequests
+{
+    
     public class ListenerTests
     {
-        [TestMethod, Timeout(30000)]
+        [Test, Timeout(30000)]
         public async Task ListenForBlock()
         {
-            var listener = new Listener(Config.Domain);
+            var listener = new Listener(HttpSetUp.Node, HttpSetUp.Port);
 
             await listener.Open();
 
             var block = await listener.NewBlock().Take(1);
 
-            Assert.AreEqual(36867, block.Version);
+            Assert.AreEqual(36867, block.Block.Version);
         }
 
-        [TestMethod, Timeout(20000)]
+        [Test, Timeout(20000)]
         public async Task ListenForUnconfirmedTransactionAdded()
         {
-            var listener = new Listener(Config.Domain);
+            var listener = new Listener(HttpSetUp.Node, HttpSetUp.Port);
 
             await listener.Open();
 
@@ -28,52 +35,52 @@
 
             var result = await tx;
 
-            Assert.AreEqual("B974668ABED344BE9C35EE257ACC246117EFFED939EAF42391AE995912F985FE", result.Signer.PublicKey);
+            Assert.AreEqual("B974668ABED344BE9C35EE257ACC246117EFFED939EAF42391AE995912F985FE", result.Transaction.SignerPublicKey);
         }
 
-        //[TestMethod, Timeout(20000)]
+        [Test, Timeout(20000)]
         public async Task ListenForPartialTransactionAdded()
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var keyPair = KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var aggregateTransaction = AggregateTransaction.CreateBonded(
-                NetworkType.Types.MIJIN_TEST,
+                NetworkType.Types.TEST_NET,
                 Deadline.CreateHours(2),
                 new List<Transaction>
                 {
-                TransferTransactionTests.CreateInnerTransferTransaction("nem:xem"),
+                    TransferTransactionTests.CreateInnerTransferTransaction("nem:xem"),
                 },
                 null
             ).SignWith(keyPair);
 
             var hashLock = LockFundsTransaction.Create(NetworkType.Types.MIJIN_TEST, Deadline.CreateHours(2), 0, duration: 10000, mosaic: new Mosaic(new MosaicId("nem:xem"), 10000000), transaction: aggregateTransaction)
-                .SignWith(KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain));
+                .SignWith(KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK));
 
-            await new TransactionHttp("http://" + Config.Domain + ":3000").Announce(hashLock);
+            await new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port).Announce(hashLock);
 
-            var listener = new Listener(Config.Domain);
+            var listener = new Listener(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             await listener.Open();
 
             await listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(
                 keyPair.PublicKeyString,
-                NetworkType.Types.MIJIN_TEST)
+                NetworkType.Types.TEST_NET)
             ).Take(1);
 
-            await new TransactionHttp("http://" + Config.Domain + ":3000").AnnounceAggregateBonded(aggregateTransaction);
+            await new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port).AnnounceAggregateTransaction(aggregateTransaction);
 
             var result = await listener.AggregateBondedAdded(Address.CreateFromPublicKey(
                 keyPair.PublicKeyString,
-                NetworkType.Types.MIJIN_TEST)
+                NetworkType.Types.TEST_NET)
             ).Take(1);
 
-            Assert.AreEqual("10CC07742437C205D9A0BC0434DC5B4879E002114753DE70CDC4C4BD0D93A64A", result.Signer);
+            Assert.AreEqual("10CC07742437C205D9A0BC0434DC5B4879E002114753DE70CDC4C4BD0D93A64A", result.Transaction.SignerPublicKey);
         }
 
-
+        [Test, Timeout(20000)]
         public async Task ListenForUnconfirmedTransactionRemoved()
         {
-            var listener = new Listener(Config.Domain);
+            var listener = new Listener(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             await listener.Open();
 
@@ -83,13 +90,13 @@
 
             var result = await tx;
 
-            Assert.AreEqual("10CC07742437C205D9A0BC0434DC5B4879E002114753DE70CDC4C4BD0D93A64A", result.Signer);
+            Assert.AreEqual("10CC07742437C205D9A0BC0434DC5B4879E002114753DE70CDC4C4BD0D93A64A", result.Transaction.SignerPublicKey);
         }
 
-        [TestMethod, Timeout(20000)]
+        [Test, Timeout(20000)]
         public async Task ListenForConfirmedTransactionAdded()
         {
-            var listener = new Listener(Config.Domain);
+            var listener = new Listener(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             await listener.Open();
 
@@ -99,17 +106,17 @@
 
             var result = await tx;
 
-            Assert.AreEqual("B974668ABED344BE9C35EE257ACC246117EFFED939EAF42391AE995912F985FE", result.Signer.PublicKey);
+            Assert.AreEqual("B974668ABED344BE9C35EE257ACC246117EFFED939EAF42391AE995912F985FE", result.Transaction.SignerPublicKey);
         }
 
-        [TestMethod, Timeout(20000)]
+        [Test, Timeout(20000)]
         public async Task ListenForTransactionStatus()
         {
-            var listener = new Listener(Config.Domain);
+            var listener = new Listener(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             await listener.Open();
 
-            var tx = listener.TransactionStatus(Address.CreateFromEncoded("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR")).Take(1);
+            var tx = listener.GetTransactionStatus(Address.CreateFromEncoded("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR")).Take(1);
 
             await new TransferTransactionTests().AnnounceTransaction(2000000000000000000);
 
@@ -117,6 +124,6 @@
 
             Assert.AreEqual("Failure_Core_Insufficient_Balance", result.Status);
         }
-    }*/
+    }
 }
 
