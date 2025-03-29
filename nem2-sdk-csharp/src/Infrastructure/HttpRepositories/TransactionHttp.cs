@@ -16,7 +16,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public TransactionHttp(string host, int port) 
             : base(host, port) {}
 
-
         public IObservable<List<TransactionData>> SearchConfirmedTransactions(QueryModel queryModel)
         {          
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "confirmed"], queryModel)))
@@ -79,12 +78,12 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<TransactionAnnounceResponse> Announce(SignedTransaction signedTransaction)
         {
             return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(signedTransaction.Payload, Encoding.UTF8, "application/json")))
-                .Select(i => new TransactionAnnounceResponse() { Message = JObject.Parse(i.Content.ToString())["message"].ToString() });
+                .Select(i => new TransactionAnnounceResponse() { Message = JObject.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
         }
 
         public IObservable<TransactionAnnounceResponse> AnnounceAggregateTransaction(SignedTransaction signedTransaction)
         {
-            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions", "partial"]), new StringContent(signedTransaction.Payload, Encoding.UTF8, "application/json")))
+            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions", "partial"]), new StringContent(JObject.Parse(signedTransaction.Payload).ToString(), Encoding.UTF8, "application/json")))
                 .Select(i => new TransactionAnnounceResponse() { Message = JObject.Parse(i.Content.ToString())["message"].ToString() });
         }
 

@@ -34,7 +34,6 @@ namespace Integration_Tests.HttpRequests
                 Assert.That(i.Block.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
                 Assert.That(i.Block.Type, Is.GreaterThan(1));
                 Assert.That(i.Block.Height, Is.GreaterThanOrEqualTo(0));
-                Assert.That(i.Block.Size, Is.GreaterThan(1));
                 Assert.That(i.Block.SignerPublicKey.Length, Is.EqualTo(64));
                 Assert.That(i.Block.Version, Is.EqualTo(1));
                 Assert.That(i.Block.Signature.Length, Is.EqualTo(128));
@@ -57,7 +56,6 @@ namespace Integration_Tests.HttpRequests
                 Assert.That(i.Meta.StateHashSubCacheMerkleRoots.Count, Is.GreaterThanOrEqualTo(0));
                 Assert.That(i.Meta.StatementsCount, Is.GreaterThanOrEqualTo(0));
                 Assert.That(i.Meta.TotalFee, Is.GreaterThanOrEqualTo(0));
-
                 Assert.That(i.Id.Length, Is.EqualTo(24));
             });
         }

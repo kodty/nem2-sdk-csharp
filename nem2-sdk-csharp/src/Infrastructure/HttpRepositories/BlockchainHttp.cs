@@ -14,16 +14,16 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public BlockchainHttp(string host, int port) 
             : base(host, port) { }
 
-        public IObservable<List<BlockInfo>> SearchBlocks(QueryModel queryModel)
+        public IObservable<List<ExtendedBlockInfo>> SearchBlocks(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks"], queryModel)))
-                 .Select(r => { return ResponseFilters<BlockInfo>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
+                 .Select(r => { return ResponseFilters<ExtendedBlockInfo>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
-        public IObservable<BlockInfo> GetBlock(ulong height)
+        public IObservable<ExtendedBlockInfo> GetBlock(ulong height)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height])))
-                .Select(r => { return ObjectComposer.GenerateObject<BlockInfo>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(r => { return ObjectComposer.GenerateObject<ExtendedBlockInfo>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<MerklePath>> GetBlockTransactionMerkle(ulong height, string hash)

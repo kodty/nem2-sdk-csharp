@@ -1,27 +1,25 @@
-﻿// ***********************************************************************
-// Assembly         : nem2-sdk
-// Author           : kailin
-// Created          : 01-15-2018
-//
-// Last Modified By : kailin
-// Last Modified On : 01-29-2018
-
-using io.nem2.sdk.src.Model.Network;
+﻿using io.nem2.sdk.src.Model.Network;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 {
-    public class BlockInfo
+    public class ExtendedBlockInfo
     {
-        public Meta Meta { get; set; }
+        public ExtendedMeta Meta { get; set; }
 
         public Block Block { get; set; }
 
         public string Id { get; set; }
     }
 
+    public class BlockInfo
+    {
+        public Meta Meta { get; set; }
+
+        public Block Block { get; set; }
+    }
+
     public class Block
     {
-        public int Size { get; set; }
 
         public string Signature { get; set; }
 
@@ -56,15 +54,15 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public string BeneficiaryAddress { get; set; }
 
         public int FeeMultiplier { get; set; }
-
-        //public int VotingEligibleAccountsCount { get; set; } 
-
-        //public int HarvestingEligibleAccountsCount { get; set; } 
-
-        //public ulong TotalVotingBalance { get; set; }
     }
 
     public class Meta
+    {
+        public string Hash { get; set; }
+
+        public string GenerationHash { get; set; }
+    }
+    public class ExtendedMeta
     {
         public string Hash { get; set; }
 

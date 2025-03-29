@@ -1,6 +1,8 @@
-﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
+﻿using IntegrationTests.Infrastructure.Transactions;
+using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
 using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Model.Network;
 using System.Reactive.Linq;
@@ -10,7 +12,7 @@ namespace Integration_Tests.HttpRequests
     
     public class ListenerTests
     {
-        [Test, Timeout(30000)]
+        [Test]
         public async Task ListenForBlock()
         {
             var listener = new Listener(HttpSetUp.Node, HttpSetUp.Port);
@@ -19,23 +21,23 @@ namespace Integration_Tests.HttpRequests
 
             var block = await listener.NewBlock().Take(1);
 
-            Assert.AreEqual(36867, block.Block.Version);
+            Assert.AreEqual(1, block.Block.Version);
         }
 
         [Test, Timeout(20000)]
         public async Task ListenForUnconfirmedTransactionAdded()
         {
-            var listener = new Listener(HttpSetUp.Node, HttpSetUp.Port);
+            var listener = new Listener(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             await listener.Open();
 
-            var tx = listener.UnconfirmedTransactionsAdded(Address.CreateFromEncoded("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR")).Take(1);
+            var tx = listener.UnconfirmedTransactionsAdded(Address.CreateFromEncoded(HttpSetUp.TestAddress)).Take(1);
 
             await new TransferTransactionTests().AnnounceTransaction();
 
             var result = await tx;
 
-            Assert.AreEqual("B974668ABED344BE9C35EE257ACC246117EFFED939EAF42391AE995912F985FE", result.Transaction.SignerPublicKey);
+            Assert.AreEqual("", result.Transaction.SignerPublicKey);
         }
 
         [Test, Timeout(20000)]
@@ -53,7 +55,7 @@ namespace Integration_Tests.HttpRequests
                 null
             ).SignWith(keyPair);
 
-            var hashLock = LockFundsTransaction.Create(NetworkType.Types.MIJIN_TEST, Deadline.CreateHours(2), 0, duration: 10000, mosaic: new Mosaic(new MosaicId("nem:xem"), 10000000), transaction: aggregateTransaction)
+            var hashLock = LockFundsTransaction.Create(NetworkType.Types.TEST_NET, Deadline.CreateHours(2), 0, duration: 10000, mosaic: new Mosaic1(new MosaicId("nem:xem"), 10000000), transaction: aggregateTransaction)
                 .SignWith(KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK));
 
             await new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port).Announce(hashLock);

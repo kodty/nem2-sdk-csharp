@@ -19,13 +19,29 @@ namespace io.nem2.sdk.Infrastructure.Listeners
 
         private Task LoopReads { get; set; }
 
+
         private readonly Subject<string> _subject = new Subject<string>();
 
         public string Domain { get; set; }
 
         public int Port { get; set; }
 
-        public Listener(string domain, int port = 3000) //7902
+        public class SocketTopic
+        {
+            public string Topic { get; set; }
+        }
+
+        public class WebsocketUID
+        {
+            public string Uid { get; set; }
+        }
+
+        public class TransactionStatus
+        {
+            public string Status { get; set; }
+        }
+
+        public Listener(string domain, int port = 3000)
         {
             ClientSocket = new ClientWebSocket();
 
@@ -85,108 +101,86 @@ namespace io.nem2.sdk.Infrastructure.Listeners
 
         internal void SubscribeToChannel(string channel)
         {
-            var encoded = Encoding.UTF8.GetBytes(string.Concat("{ \"uid\": \"", Uid.UID, "\", \"subscribe\":\"", channel, "\"}"));
+            var encoded = Encoding.UTF8.GetBytes(string.Concat("{ \"uid\": \"", Uid.Uid, "\", \"subscribe\":\"", channel, "\"}"));
 
             var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
 
             ClientSocket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
-
-            Console.WriteLine("Subscribed to channel: " + channel + ", UID: " + Uid.UID);
         }
-
+      
         public IObservable<BlockInfo> NewBlock()
         {
             SubscribeToChannel("block");
 
-            return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("block")))
-               .Select(ObjectComposer.GenerateObject<BlockInfo>);         
+            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "block")  
+               .Select(ReturnSocketBlockResponse);         
         }
 
         public IObservable<TransactionData> ConfirmedTransactionsGiven(Address address)
         {
-            if (address == null) throw new ArgumentNullException(nameof(address));
-
             SubscribeToChannel(string.Concat("confirmedAdded/", address.Plain));
 
-            return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("confirmedAdded")))
-               .Select(ResponseFilters<TransactionData>.FilterSingle);         
+            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic ==  "confirmedAdded")
+               .Select(ReturnSocketTransactionResponse);         
             
         }
 
         public IObservable<TransactionData> UnconfirmedTransactionsAdded(Address address)
         {
-            if (address == null) throw new ArgumentNullException(nameof(address));
-
             SubscribeToChannel(string.Concat("unconfirmedAdded/", address.Plain));
 
-            return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("unconfirmedAdded")))
-                 .Select(ResponseFilters<TransactionData>.FilterSingle);
+            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "unconfirmedAdded")
+                 .Select(ReturnSocketTransactionResponse);
         }
 
         public IObservable<TransactionData> UnconfirmedTransactionsRemoved(Address address)
         {
-            if (address == null) throw new ArgumentNullException(nameof(address));
-
             SubscribeToChannel(string.Concat("unconfirmedRemoved/", address.Plain));
 
-            return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("unconfirmedRemoved")))
-                 .Select(ResponseFilters<TransactionData>.FilterSingle);
+            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "unconfirmedRemoved")
+                 .Select(ReturnSocketTransactionResponse);
         }
 
         public IObservable<TransactionData> AggregateBondedAdded(Address address)
         {
-            if (address == null) throw new ArgumentNullException(nameof(address));
-
             SubscribeToChannel(string.Concat("partialAdded/", address.Plain));
 
-            return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("partialAdded")))
-                .Select(ResponseFilters<TransactionData>.FilterSingle);
+            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "partialAdded")
+                .Select(ReturnSocketTransactionResponse);
         }
 
         public IObservable<TransactionData> AggregateBondedRemoved(Address address)
         {
-            if (address == null) throw new ArgumentNullException(nameof(address));
-
             SubscribeToChannel(string.Concat("partialRemoved/", address.Plain));
 
-            return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("partialRemoved")))
-                 .Select(ResponseFilters<TransactionData>.FilterSingle);
+            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "partialRemoved")
+                 .Select(ReturnSocketTransactionResponse);
         }
-        public class TransactionStatus
+
+        private BlockInfo ReturnSocketBlockResponse(string data)
         {
-            public string Status { get; set; }
+            return ObjectComposer.GenerateObject<BlockInfo>(JObject.Parse(data)["data"].ToString()); 
         }
+
+        private TransactionData ReturnSocketTransactionResponse(string data)
+        {
+            return ResponseFilters<TransactionData>.FilterSingle(JObject.Parse(data)["data"].ToString());
+        }
+
         public IObservable<TransactionStatus> GetTransactionStatus(Address address)
         {
-            if (address == null) throw new ArgumentNullException(nameof(address));
-
             SubscribeToChannel(string.Concat("status/", address.Plain));
 
-            return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Name.ToString().Contains("status")))          
+            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "status")         
                 .Select(ObjectComposer.GenerateObject<TransactionStatus>);
         }
 
         public IObservable<CosignatureSignedTransaction> CosignatureAdded(Address address)
         {
-            if (address == null) throw new ArgumentNullException(nameof(address));
-
             SubscribeToChannel(string.Concat("cosignature/", address.Plain));
 
-            return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("cosignature")))
+            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "cosignature")
                 .Select(ObjectComposer.GenerateObject<CosignatureSignedTransaction>);
-        }
-
-        private bool TransactionFromAddress(Transaction transaction, Address address)
-        {
-            var transactionFromAddress = TransactionHasSignerOrReceptor(transaction, address);
-
-            if (!transactionFromAddress && transaction.TransactionType.GetValue() == TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue() && ((AggregateTransaction)transaction).Cosignatures != null)
-            {
-                transactionFromAddress = ((AggregateTransaction)transaction).Cosignatures.Any(e => Address.CreateFromPublicKey(e.Signer.PublicKey, address.NetworkByte).Plain == address.Plain);
-            }
-
-
-            return transactionFromAddress;
         }
 
         private bool TransactionHasSignerOrReceptor(Transaction transaction, Address address)
@@ -207,9 +201,16 @@ namespace io.nem2.sdk.Infrastructure.Listeners
             LoopReads.Dispose();
         }
 
-        public string GetUid()
+        private bool TransactionFromAddress(Transaction transaction, Address address)
         {
-            return Uid.UID;
-        }
+            var transactionFromAddress = TransactionHasSignerOrReceptor(transaction, address);
+
+            if (!transactionFromAddress && transaction.TransactionType.GetValue() == TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue() && ((AggregateTransaction)transaction).Cosignatures != null)
+            {
+                transactionFromAddress = ((AggregateTransaction)transaction).Cosignatures.Any(e => Address.CreateFromPublicKey(e.Signer.PublicKey, address.NetworkByte).Plain == address.Plain);
+            }
+
+            return transactionFromAddress;
+        }     
     }
 }

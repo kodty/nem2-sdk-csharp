@@ -43,8 +43,7 @@ namespace IntegrationTests.Infrastructure.Transactions
 
         public async Task AnnounceTransaction(ulong amount = 10)
         {
-            var keyPair =
-                KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+            var keyPair = KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.TEST_NET,
@@ -62,7 +61,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         {
             var keyPair = KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
-            var account = new Account("E45030D2A22D97FDC4C78923C4BBF7602BBAC3B018FFAD2ED278FB49CD6F218C", NetworkType.Types.TEST_NET);
+            var account = new Account(HttpSetUp.TestSK, NetworkType.Types.TEST_NET);
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.TEST_NET,
