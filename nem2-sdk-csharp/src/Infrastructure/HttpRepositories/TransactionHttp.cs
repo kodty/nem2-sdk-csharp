@@ -50,7 +50,13 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "partial", hash])))
                .Select(r => { return ResponseFilters<TransactionData>.FilterSingle(OverrideEnsureSuccessStatusCode(r)); });
         }
-      
+
+        public IObservable<ExtendedBroadcastStatus> GetTransactionStatus(string hash)
+        {
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactionStatus", hash])))
+               .Select(r => { return ObjectComposer.GenerateObject<ExtendedBroadcastStatus>(OverrideEnsureSuccessStatusCode(r)); });
+        }
+
         public IObservable<List<TransactionData>> GetConfirmedTransactions(string[] transactionIds)
         {
             var postBody = JsonSerializer.Serialize(new TransactionIdentifiers() { transactionIds = transactionIds });
@@ -75,10 +81,15 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                  .Select(r => { return ResponseFilters<TransactionData>.FilterTransactions(OverrideEnsureSuccessStatusCode(r)); });
         }
 
+        public class _Payload
+        {
+            public string payload { get; set; }
+        }
+
         public IObservable<TransactionAnnounceResponse> Announce(SignedTransaction signedTransaction)
         {
-            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(signedTransaction.Payload, Encoding.UTF8, "application/json")))
-                .Select(i => new TransactionAnnounceResponse() { Message = JObject.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
+            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new _Payload() { payload = signedTransaction.Payload }), Encoding.UTF8, "application/json")))
+                .Select(i =>  new TransactionAnnounceResponse() { Message = JObject.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
         }
 
         public IObservable<TransactionAnnounceResponse> AnnounceAggregateTransaction(SignedTransaction signedTransaction)
