@@ -47,15 +47,15 @@ namespace Integration_Tests.HttpRequests
 
             var aggregateTransaction = AggregateTransaction.CreateBonded(
                 NetworkType.Types.TEST_NET,
-                Deadline.CreateHours(2),
+                Deadline.AddHours(2),
                 new List<Transaction>
                 {
-                    TransferTransactionTests.CreateInnerTransferTransaction("nem:xem"),
+                    TransferTransactionTests.CreateInnerTransferTransaction("symbol:xym"),
                 },
                 null
             ).SignWith(keyPair);
 
-            var hashLock = LockFundsTransaction.Create(NetworkType.Types.TEST_NET, Deadline.CreateHours(2), 0, duration: 10000, mosaic: new Mosaic1(new MosaicId("nem:xem"), 10000000), transaction: aggregateTransaction)
+            var hashLock = LockFundsTransaction.Create(NetworkType.Types.TEST_NET, Deadline.AddHours(2), 0, duration: 10000, mosaic: new Mosaic1(new MosaicId("symbol:xym"), 10000000), transaction: aggregateTransaction)
                 .SignWith(KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK));
 
             await new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port).Announce(hashLock);
@@ -120,7 +120,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = listener.GetTransactionStatus(Address.CreateFromEncoded("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR")).Take(1);
 
-            await new TransferTransactionTests().AnnounceTransaction(2000000000000000000);
+            await new TransferTransactionTests().AnnounceTransaction(200);
 
             var result = await tx;
 
