@@ -66,7 +66,7 @@ namespace io.nem2.sdk.Model.Accounts
         public static NetworkType.Types GetNetworkType(string address)
         {
             if (address.Length == Constants.AddressDecoded) 
-                    address = address.FromHex().ToBase32String();
+                    address = AddressEncoder.EncodeAddress(address);
 
             switch (address.ToCharArray()[0])
             {
@@ -122,7 +122,7 @@ namespace io.nem2.sdk.Model.Accounts
 
         public static Address CreateFromHex(string address)
         {
-            return CreateFromEncoded(address.FromHex().ToBase32String());
+            return CreateFromEncoded(AddressEncoder.EncodeAddress(address));
         }
         
 
@@ -159,7 +159,7 @@ namespace io.nem2.sdk.Model.Accounts
             Array.Copy(stepFive, 0, stepSix, Constants.NetworkByte + Constants.Ripemd160, Constants.Checksum);
 
             // step 7) return base 32 encode address byte array
-            return CreateFromEncoded(stepSix.ToBase32String());
+            return CreateFromEncoded(AddressEncoder.EncodeAddress(stepSix));
         }
 
        

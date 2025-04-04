@@ -154,7 +154,7 @@ namespace io.nem2.sdk.Model.Transactions
             var duration = SecretLockTransactionBuffer.CreateDurationVector(builder, Duration.ToUInt8Array());
             var secretVector = SecretLockTransactionBuffer.CreateSecretVector(builder, Secret);
            
-            var recipientVector = SecretLockTransactionBuffer.CreateRecipientVector(builder, Recipient.Plain.FromBase32String());
+            var recipientVector = SecretLockTransactionBuffer.CreateRecipientVector(builder, AddressEncoder.DecodeAddress(Recipient.Plain));
             ushort version = ushort.Parse(NetworkType.GetNetworkByte().ToString("X") + "0" + Version.ToString("X"), System.Globalization.NumberStyles.HexNumber);
 
             // add vectors
