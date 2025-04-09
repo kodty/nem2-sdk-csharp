@@ -154,11 +154,12 @@ namespace io.nem2.sdk.Model.Accounts
             Array.Copy(stepFour, 0, stepFive, 0, Constants.Checksum);
 
             // step 6) append stepFive to resulst of stepThree
-            var stepSix = new byte[Constants.AddressDecoded];
+            var stepSix = new byte[Constants.AddressDecoded + 1];
             Array.Copy(stepThree, 0, stepSix, 0, Constants.NetworkByte + Constants.Ripemd160);
             Array.Copy(stepFive, 0, stepSix, Constants.NetworkByte + Constants.Ripemd160, Constants.Checksum);
 
             // step 7) return base 32 encode address byte array
+            
             return CreateFromEncoded(AddressEncoder.EncodeAddress(stepSix));
         }
 

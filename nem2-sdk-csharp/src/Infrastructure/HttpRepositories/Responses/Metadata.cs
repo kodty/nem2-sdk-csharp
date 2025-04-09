@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
+﻿namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 {
     public class Metadata
     {

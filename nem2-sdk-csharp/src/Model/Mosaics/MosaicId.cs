@@ -23,7 +23,8 @@
 // <summary></summary>
 // ***********************************************************************
 
-using io.nem2.sdk.Core.Utils;
+using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+using io.nem2.sdk.src.Infrastructure.Buffers.NativeBuffer;
 
 namespace io.nem2.sdk.Model.Mosaics
 {
@@ -50,27 +51,32 @@ namespace io.nem2.sdk.Model.Mosaics
         public MosaicId(ulong id)
         {
             Id = id;
-            HexId = Id.ToString("X");
+
+            HexId = DataConverter.ConvertFromUInt64(id).ToHexLower();
         }
-        
-        
-        public MosaicId(string identifier)
+
+        public MosaicId(string hexId)
         {
-            if (string.IsNullOrEmpty(identifier)) throw new ArgumentException(identifier + " is not valid");
-            if (!identifier.Contains(":")) throw new ArgumentException(identifier + " is not valid");
-            var parts = identifier.Split(':');
-            if (parts.Length != 2) throw new ArgumentException(identifier + " is not valid");
-            if (parts[0] == "") throw new ArgumentException(identifier + " is not valid");
-            if (parts[1] == "") throw new ArgumentException(identifier + " is not valid");
-            var namespaceName = parts[0];
-            MosaicName = parts[1];
-            FullName = identifier;
-            Id = IdGenerator.GenerateId(IdGenerator.GenerateId(0, namespaceName), MosaicName);     
-            HexId = Id.ToString("X");
+            Id = DataConverter.ConvertToUInt64(hexId.FromHex());
+
+            HexId = hexId;
+        }
+
+        public MosaicId(string[] identifierParts)
+        {
+            if (identifierParts.Count() > 3)
+                throw new Exception("too many parts");
+
+            var namespaceName = identifierParts[0];
+            MosaicName = identifierParts[1];
+            FullName = String.Join(':', identifierParts);
+
+            Id = 0;     
+            HexId = "";
         }
 
         
-        public static MosaicId CreateFromMosaicIdentifier(string identifier)
+        public static MosaicId CreateFromHexMosaicIdentifier(string identifier)
         {
             return new MosaicId(identifier);
         } 

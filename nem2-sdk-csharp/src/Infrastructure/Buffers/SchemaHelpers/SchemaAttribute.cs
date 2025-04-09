@@ -72,7 +72,7 @@ namespace io.nem2.sdk.Infrastructure.Buffers.SchemaHelpers
         protected int  ReadInt16(int offset, byte[] bytes)
         {
               return bytes[offset] | (bytes[offset + 1] << 8);
-         }
+        }
         
         protected int __vector_length(int offset, byte[] buffer)
         {

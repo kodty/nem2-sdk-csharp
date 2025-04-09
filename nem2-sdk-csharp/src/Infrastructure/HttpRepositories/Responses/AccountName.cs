@@ -24,8 +24,8 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     public class MosaicName
     {
-        public string mosaicId { get; set; }
+        public string MosaicId { get; set; }
 
-        public List<string> names { get; set; }
+        public List<string> Names { get; set; }
     }
 }

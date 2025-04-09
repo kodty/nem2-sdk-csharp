@@ -50,7 +50,7 @@ namespace Integration_Tests.HttpRequests
                 Deadline.AddHours(2),
                 new List<Transaction>
                 {
-                    TransferTransactionTests.CreateInnerTransferTransaction("symbol:xym"),
+                    TransferTransactionTests.CreateInnerTransferTransaction(["symbol", "xym"]),
                 },
                 null
             ).SignWith(keyPair);

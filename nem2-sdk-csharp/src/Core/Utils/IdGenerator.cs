@@ -1,10 +1,11 @@
 ﻿using System.Text;
-using System.Text.RegularExpressions;
+using io.nem2.sdk.src.Infrastructure.Buffers.NativeBuffer;
 using Org.BouncyCastle.Crypto.Digests;
+
 
 namespace io.nem2.sdk.Core.Utils
 {
-    internal static class IdGenerator
+    public static class IdGenerator
     {
         internal struct Constants
         {
@@ -13,63 +14,36 @@ namespace io.nem2.sdk.Core.Utils
             internal static string NamePattern = "/^[a-z0-9] [a-z0-9-_]*$/";
         }
 
-
-
-        /// <summary>
-        /// Generates an in based on parentId and name
-        /// </summary>
-        /// <param name="parentId">The 64 bit id of the parent namespace.</param>
-        /// <param name="name">The name of the bottom most namespace or mosaic.</param>
-        /// <returns type="long">The 64 bit id.</returns>
-        internal static ulong GenerateId(ulong parentId, string name)
+        public static ulong GenerateId(byte[] hexAddress, uint nonce)
         {
-            var p = BitConverter.GetBytes(parentId);
+            return ReturnId(hexAddress, nonce.ConvertFromUInt32().Reverse().ToArray());
+        }
+
+        
+        public static ulong GenerateId(ulong parentId, string name)
+        {
             var n = Encoding.UTF8.GetBytes(name);
+
+            return ReturnId(n, parentId.ConvertFromUInt64().Reverse().ToArray(), true);
+        }
+
+        private static ulong ReturnId(byte[] n, byte[] p, bool nsFlag = false)
+        {
             var hash = new Sha3Digest(256);
 
-            hash.BlockUpdate(p.Concat(n).ToArray(), 0, p.Length + n.Length);     
-            
+            hash.BlockUpdate(p, 0, p.Length);
+            hash.BlockUpdate(n, 0, n.Length);
+
             var result = new byte[32];
+
             hash.DoFinal(result, 0);
 
-            return (ulong)BitConverter.ToInt64(result, 0);
-        }
+            if(nsFlag)
+                result[7] ^= (1 << 7);
 
-        private static void ThrowInvalidFqn(string reason, string name)
-        {
-            throw new Exception(string.Concat("Fully qualified id is invalid due to {0} {1}", reason, name));
-        }
+            result = result.Take(8).Reverse().ToArray();
 
-        internal static int FindMosaicSeperatorIndex(string name)
-        {
-            var mosaicSeparatorIndex = name.LastIndexOf(':');
-            if (0 > mosaicSeparatorIndex)
-                ThrowInvalidFqn("missing mosaic", name);
-
-            if (0 == mosaicSeparatorIndex)
-                ThrowInvalidFqn("empty part", name);
-
-            return mosaicSeparatorIndex;
-        }
-
-        internal static string ExtractPartName(string name, int start, int size)
-        {
-            if (0 == size)
-                ThrowInvalidFqn("empty part", name);
-
-            var partName = name.Substring(start, size);
-            if (Regex.IsMatch(partName, Constants.NamePattern))
-                ThrowInvalidFqn("invalid part name ", name);
-
-            return partName;
-        }
-
-        internal static string Append(string path, string id, string name)
-        {
-            if (Constants.NamespaceMaxDepth == path.Length)
-                ThrowInvalidFqn("too many parts", name);
-
-            return string.Concat(path, id);
-        }
+            return result.ConvertToUInt64();
+        }    
     }
 }

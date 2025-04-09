@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net.WebSockets;
+﻿using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;

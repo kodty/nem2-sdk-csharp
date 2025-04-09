@@ -1,8 +1,4 @@
-﻿using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-
-
-namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
+﻿namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
 {
     internal interface IMultisigRepository
     {

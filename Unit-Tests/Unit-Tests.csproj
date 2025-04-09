@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Integration-Tests\Integration-Tests.csproj" />
     <ProjectReference Include="..\nem2-sdk-csharp\nem2-sdk.csproj" />
   </ItemGroup>
 

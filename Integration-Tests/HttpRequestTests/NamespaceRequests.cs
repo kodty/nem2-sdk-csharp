@@ -3,6 +3,7 @@ using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Network;
+using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests
@@ -147,12 +148,13 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetMosaicNames()
         {
-            var client = new NamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new NamespaceHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            var response = await client.GetMosaicNames(new List<string> { "A95F1F8A96159516" });
+            var response = await client.GetMosaicNames(new List<string> { "6BED913FA20223F8" });
 
-            Assert.That(response[0].names, Is.Empty);
-            Assert.That(response[0].mosaicId, Is.EqualTo("A95F1F8A96159516"));
+            Debug.WriteLine(response[0].Names[0]);
+            Assert.That(response[0].Names[0], Is.EqualTo( "symbol.xym"));
+            Assert.That(response[0].MosaicId, Is.EqualTo("6BED913FA20223F8"));
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace io.nem2.sdk.src.Infrastructure.Buffers.Model
+﻿namespace io.nem2.sdk.src.Infrastructure.Buffers.Model
 {
     public class NodeHealth
     {

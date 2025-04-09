@@ -1,10 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("integration-test")]
-[assembly: InternalsVisibleTo("test")]
+[assembly: InternalsVisibleTo("Test")]
 namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl
 {
-    internal static class CryptoBytes
+    public static class CryptoBytes
     {
         internal static void Wipe(byte[] data)
         {
@@ -49,7 +49,7 @@ namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl
         // * I didn't use a second loop variable to index into `c`, since measurement shows that calculating it from `i` is cheaper. 
         // * Using exactly `i < bytes.Length` as upper bound of the loop allows the JITter to eliminate bounds checks on `bytes[i]`, so I chose that variant.
         // * Making `b` an int avoids unnecessary conversions from and to byte.
-        internal static string ToHexUpper(this byte[] data)
+        public static string ToHexUpper(this byte[] data)
         {
             if (data == null)
                 return null;
@@ -83,7 +83,7 @@ namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl
             return new string(c);
         }
 
-        internal static byte[] FromHex(this string hexString)
+        public static byte[] FromHex(this string hexString)
         {
             if (hexString == null)
                 return null;

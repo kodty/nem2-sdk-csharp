@@ -1,9 +1,6 @@
-﻿using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Infrastructure.Mapping;
-using io.nem2.sdk.src.Model.Network;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

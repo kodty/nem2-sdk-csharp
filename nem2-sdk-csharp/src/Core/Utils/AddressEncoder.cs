@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.Core.Utils;
+using Org.BouncyCastle.Security;
 
 namespace io.nem2.sdk.Core.Utils
 {
@@ -8,27 +9,35 @@ namespace io.nem2.sdk.Core.Utils
 
         public static string EncodeAddress(byte[] input)
         {
+            if (input.Length != 25)
+                throw new InvalidParameterException("padding missing");
+
             char[] chunks = new char[input.Length / 5 * 8];
 
             for (int i = 0; i < input.Length / 5; i++)
                 ReturnAddressChunk(input, i * 5, chunks, i * 8);
 
-            return String.Concat(chunks);
+            return String.Concat(chunks.Take(39));
         }
 
         public static string EncodeAddress(string hexString)
         {
-            var input = new byte[25];
+            if(hexString.Length != 48 && hexString.Length != 50)
+                throw new InvalidParameterException("decoded address is invalid length, must be 48 or 50 with padding.");
+
+            byte[] input = FromHex(hexString);
+
+            return EncodeAddress(input);
+        }
+
+        private static byte[] FromHex(string hexString)
+        {
+            var bytes = new byte[25];
 
             for (int i = 0; i < hexString.Length / 2; i++)
-                input[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+                bytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
 
-            char[] chunks = new char[input.Length / 5 * 8];
-
-            for (int i = 0; i < input.Length / 5; i++)
-                ReturnAddressChunk(input, i * 5, chunks, i * 8);
-
-            return String.Concat(chunks);
+            return bytes;
         }
 
         public static byte[] DecodeAddress(string encodedAddress)

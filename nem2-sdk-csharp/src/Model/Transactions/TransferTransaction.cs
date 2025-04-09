@@ -23,14 +23,14 @@
 // <summary></summary>
 // ***********************************************************************
 
+using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
 using io.nem2.sdk.Core.Utils;
-using io.nem2.sdk.Infrastructure.Buffers;
-using io.nem2.sdk.Infrastructure.Buffers.Schema;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions.Messages;
-using io.nem2.sdk.src.Infrastructure.Buffers.FlatBuffers;
+using io.nem2.sdk.src.Infrastructure.Buffers.NativeBuffer;
 using io.nem2.sdk.src.Model.Network;
+using System.Diagnostics;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -132,7 +132,12 @@ namespace io.nem2.sdk.Model.Transactions
         /// <returns><see cref="TransferTransaction" />.</returns>
         public static TransferTransaction Create(NetworkType.Types netowrkType, Deadline deadline, Address address, List<Mosaic1> mosaics, IMessage message)
         {
-            return new TransferTransaction(netowrkType, 3, deadline, 0, address, mosaics, message);
+            return new TransferTransaction(netowrkType, 1, deadline, 100, address, mosaics, message);
+        }
+
+        public static TransferTransaction Create(NetworkType.Types netowrkType, Deadline deadline,ulong fee, Address address, List<Mosaic1> mosaics, IMessage message)
+        {
+            return new TransferTransaction(netowrkType, 1, deadline, fee, address, mosaics, message);
         }
 
         /// <summary>
@@ -141,63 +146,37 @@ namespace io.nem2.sdk.Model.Transactions
         /// <returns>The transaction bytes.</returns>
         internal override byte[] GenerateBytes()
         {
-            var builder = new FlatBufferBuilder(1);
-
-            // create vectors
-            var signatureVector = TransferTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
-            var signerVector = TransferTransactionBuffer.CreateSignerVector(builder, GetSigner());
-            var feeVector = TransferTransactionBuffer.CreateFeeVector(builder, Fee.ToUInt8Array());
-            var deadlineVector = TransferTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
-            var recipientVector = TransferTransactionBuffer.CreateRecipientVector(builder, Address.Plain.FromBase32String());
-
-            ushort version = ushort.Parse(NetworkType.GetNetworkByte().ToString("X") + "0" + Version.ToString("X"), System.Globalization.NumberStyles.HexNumber);
-
             if (Message == null) Message = EmptyMessage.Create();
 
-            // create message vector
-            var bytePayload = Message.GetPayload(); 
-            var payload = MessageBuffer.CreatePayloadVector(builder, bytePayload);
-            MessageBuffer.StartMessageBuffer(builder);
-            if (bytePayload != null) MessageBuffer.AddType(builder, Message.GetMessageType());
-            MessageBuffer.AddPayload(builder, payload);
-            var message = MessageBuffer.EndMessageBuffer(builder);
+            ushort size = (ushort)(147 + (16 * Mosaics.Count) + Message.GetLength());
 
-            // create mosaics vector
-            var mosaics = new Offset<MosaicBuffer>[Mosaics.Count];
-            for (var index = 0; index < Mosaics.Count; index++)
+            var serializer = new DataSerializer(size);
+
+            serializer.WriteUInt(size);         
+            serializer.Reserve(64);            
+            serializer.WriteBytes(GetSigner()); 
+            serializer.WriteByte((byte)Version);
+            serializer.WriteByte(NetworkType.GetNetworkByte()); 
+            serializer.WriteUShort(TransactionType.GetValue()); 
+            serializer.WriteUlong(Fee); 
+            serializer.WriteUlong(Deadline.Ticks);
+            Debug.WriteLine("hex");
+            Debug.WriteLine(AddressEncoder.DecodeAddress(Address.Plain).ToHexUpper());
+            serializer.WriteBytes(AddressEncoder.DecodeAddress(Address.Plain));
+            serializer.WriteUShort(Message.GetLength());
+            serializer.WriteByte((byte)Mosaics.Count);
+                
+            
+            for (var i= 0; i < Mosaics.Count; i++)
             {
-                var mosaic = Mosaics[index];
-                var idPayload = MosaicBuffer.CreateIdVector(builder, mosaic.MosaicId.Id.ToUInt8Array());
-                var amountVector = MosaicBuffer.CreateAmountVector(builder, mosaic.Amount.ToUInt8Array());
-                MosaicBuffer.StartMosaicBuffer(builder);
-                MosaicBuffer.AddId(builder, idPayload);
-                MosaicBuffer.AddAmount(builder, amountVector);
-
-                mosaics[index] = MosaicBuffer.EndMosaicBuffer(builder);
+                Debug.WriteLine(Mosaics[i].MosaicId.HexId);
+                serializer.WriteBytes(Mosaics[i].MosaicId.HexId.FromHex()); 
+                serializer.WriteUlong(Mosaics[i].Amount);
             }
 
-            var mosaicsVector = TransferTransactionBuffer.CreateMosaicsVector(builder, mosaics);
+            serializer.WriteBytes(Message.GetPayload());
 
-            // add vectors
-            TransferTransactionBuffer.StartTransferTransactionBuffer(builder);
-            TransferTransactionBuffer.AddSize(builder, (uint)(/*fixed size*/148 + 16 * Mosaics.Count + Message.GetLength()));
-            TransferTransactionBuffer.AddSignature(builder, signatureVector);
-            TransferTransactionBuffer.AddSigner(builder, signerVector);
-            TransferTransactionBuffer.AddVersion(builder, version);
-            TransferTransactionBuffer.AddType(builder, TransactionTypes.Types.TRANSFER.GetValue());
-            TransferTransactionBuffer.AddFee(builder, feeVector);
-            TransferTransactionBuffer.AddDeadline(builder, deadlineVector);
-            TransferTransactionBuffer.AddRecipient(builder, recipientVector);
-            TransferTransactionBuffer.AddNumMosaics(builder, (byte)Mosaics.Count);
-            TransferTransactionBuffer.AddMessageSize(builder, (byte)Message.GetLength());
-            TransferTransactionBuffer.AddMessage(builder, message);
-            TransferTransactionBuffer.AddMosaics(builder, mosaicsVector);
-
-            // end build
-            var codedTransfer = TransferTransactionBuffer.EndTransferTransactionBuffer(builder);
-            builder.Finish(codedTransfer.Value);
-
-            return new TransferTransactionSchema().Serialize(builder.SizedByteArray());
+            return serializer.Bytes;
         }
     }  
 }

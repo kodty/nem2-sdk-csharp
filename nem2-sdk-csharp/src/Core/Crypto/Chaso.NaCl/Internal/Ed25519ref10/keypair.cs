@@ -1,4 +1,4 @@
-﻿using Org.BouncyCastle.Crypto.Digests;
+﻿using System.Security.Cryptography;
 
 namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl.Internal.Ed25519ref10
 {
@@ -9,18 +9,19 @@ namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl.Internal.Ed25519ref10
             GroupElementP3 A;
             int i;
             
-            Array.Copy(seed, seedoffset, sk, skoffset, 32);
-            var digest = new Sha3Digest(512); //new  // tried and failed -> new Sha3Digest(512);
-            byte[] h = new byte[64];   // byte[] ha = Sha512.Hash(sk, skoffset, 32);//ToDo: Remove alloc
-            digest.BlockUpdate(sk, skoffset, 32); // new
-            digest.DoFinal(h, 0);  // new
-         
+            Array.Copy(seed, 0, sk, 0, 32);
+            
+            byte[] h = new byte[64];
+
+            SHA512.HashData(seed, h);
+
             ScalarOperations.sc_clamp(h, 0);
             GroupOperations.ge_scalarmult_base(out A, h, 0);
-            GroupOperations.ge_p3_tobytes(pk, pkoffset, ref A);
+            GroupOperations.ge_p3_tobytes(pk, 0, ref A);
 
-            for (i = 0; i < 32; ++i) sk[skoffset + 32 + i] = pk[pkoffset + i];
-            CryptoBytes.Wipe(h);
+            for (i = 0; i < 32; i++) sk[32 + i] = pk[i];
+
+            Array.Clear(h, 0, h.Length);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Model.Network;
-using Newtonsoft.Json;
 using System.ComponentModel;
 
 

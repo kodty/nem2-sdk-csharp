@@ -38,21 +38,13 @@ namespace io.nem2.sdk.Model.Transactions
     /// </summary>
     internal static class TransactionExtensions
     {
-        /// <summary>
-        /// Hashers the specified payload.
-        /// </summary>
-        /// <param name="payload">The payload.</param>
-        /// <returns>The transaction hash.</returns>
         internal static byte[] Hasher(byte[] payload)
         {
-            var sigAndKey = payload.Take(4, 32)
-                                   .Concat(
-                                       payload.Take(4 + 64, payload.Length - (4 + 64)) 
-                                   ).ToArray();
+            var txData = payload.Take(100, payload.Length - 100);
 
             var hash = new byte[32];
             var sha3Hasher = new Sha3Digest(256);
-            sha3Hasher.BlockUpdate(sigAndKey, 0, sigAndKey.Length);
+            sha3Hasher.BlockUpdate(txData, 0, txData.Length);
             sha3Hasher.DoFinal(hash, 0);
 
             return hash;
@@ -86,7 +78,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             Ed25519.crypto_sign2(sig,Subset(payload, 4 + 64 + 32, payload.Length - (4 + 64 + 32)).ToArray(), sk, 32);
 
-            CryptoBytes.Wipe(sk);
+            Array.Clear(sk, 0, sk.Length);
 
             return sig;
         }

@@ -5,10 +5,10 @@ namespace io.nem2.sdk.Model.Transactions
     {
         internal DateTime EpochDate { get; set; }
 
-        internal ulong Ticks { get; }   
+        public ulong Ticks { get; }   
 
         public Deadline(TimeSpan time)
-        {
+        { //2022-10-31 21:07:47
             EpochDate = new DateTime(2022, 10, 31, 21, 07, 47).ToUniversalTime();
 
             var now = DateTime.Now.ToUniversalTime();
@@ -16,6 +16,17 @@ namespace io.nem2.sdk.Model.Transactions
             var deadline = now - EpochDate;
 
             Ticks = (ulong)deadline.Add(time).TotalMilliseconds;
+        }
+
+        public Deadline(ulong hours)
+        { //2022-10-31 21:07:47
+            EpochDate = new DateTime(2022, 10, 31, 21, 07, 47).ToUniversalTime();
+
+            var now = DateTime.Now.ToUniversalTime();
+
+            var deadline = now - EpochDate;
+
+            Ticks = (ulong)deadline.Add(TimeSpan.FromHours(hours)).TotalMilliseconds;
         }
 
         public Deadline(DateTime dateTime, TimeSpan time)
@@ -27,13 +38,6 @@ namespace io.nem2.sdk.Model.Transactions
             var deadline = now - EpochDate;
 
             Ticks = (ulong)deadline.Add(time).TotalMilliseconds;
-        }
-
-        public Deadline(ulong ticks)
-        {
-            EpochDate = new DateTime(2022, 10, 31, 21, 07, 47).ToUniversalTime();
-        
-            Ticks = ticks;
         }
 
         public static Deadline AddHours(int hours)

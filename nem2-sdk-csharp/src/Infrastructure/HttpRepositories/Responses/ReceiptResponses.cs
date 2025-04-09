@@ -1,8 +1,4 @@
-﻿using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using Newtonsoft.Json;
-
-namespace io.nem2.sdk.src.Infrastructure.Buffers.Model
+﻿namespace io.nem2.sdk.src.Infrastructure.Buffers.Model
 {
     public class ReceiptDatum
     {

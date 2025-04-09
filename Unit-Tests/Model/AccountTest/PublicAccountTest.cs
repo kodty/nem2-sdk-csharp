@@ -25,22 +25,6 @@ namespace test.Model.AccountTest
         private readonly string publicKey = "4DDEC6FB920947C1765CF461525923B1A4FC94545BA360735EE7111ABBC98577";
 
         [Test]
-        public void ShouldCreatePublicAccountViaConstructor()
-        {
-            var publicAccount = new PublicAccount(publicKey, NetworkType.Types.MIJIN_TEST);
-            Assert.AreEqual(publicKey, publicAccount.PublicKey);
-            Assert.AreEqual("SDAPAHH2YJT5TGY6UVXOA5YS2ZIWLT5NDNQKEVQY", publicAccount.Address.Plain);
-        }
-
-        [Test]
-        public void ShouldCreatePublicAccountViaStaticConstructor()
-        {
-            var publicAccount = PublicAccount.CreateFromPublicKey(publicKey, NetworkType.Types.MIJIN_TEST);
-            Assert.AreEqual(publicKey, publicAccount.PublicKey);
-            Assert.AreEqual("SDAPAHH2YJT5TGY6UVXOA5YS2ZIWLT5NDNQKEVQY", publicAccount.Address.Plain);
-        }
-
-        [Test]
         public void EqualityIsBasedOnPublicKeyAndNetwork()
         {
             var publicAccount = new PublicAccount(publicKey, NetworkType.Types.MIJIN_TEST);

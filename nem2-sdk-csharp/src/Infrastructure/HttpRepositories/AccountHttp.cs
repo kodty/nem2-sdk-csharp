@@ -1,6 +1,4 @@
-﻿
-using io.nem2.sdk.Model.Accounts;
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;

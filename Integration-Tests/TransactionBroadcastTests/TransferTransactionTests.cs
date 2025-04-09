@@ -13,19 +13,16 @@
 // limitations under the License.
 // 
 
-using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.Messages;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Network;
 using Integration_Tests;
+using System.Diagnostics;
 
 
 namespace IntegrationTests.Infrastructure.Transactions
@@ -47,9 +44,9 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.TEST_NET,
-                Deadline.CreateHours(2),
+                Deadline.AddHours(2),
                 Address.CreateFromEncoded("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR"),
-                new List<Mosaic1> { Mosaic1.CreateFromIdentifier("nem:xem", amount) },
+                new List<Mosaic1> { Mosaic1.CreateFromIdentifierParts([ "symbol", "xym" ], amount) },
                 PlainMessage.Create("hello")
                 ).SignWith(keyPair);
 
@@ -62,26 +59,31 @@ namespace IntegrationTests.Infrastructure.Transactions
             var keyPair = KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var account = new Account(HttpSetUp.TestSK, NetworkType.Types.TEST_NET);
+            var address = Address.CreateFromEncoded("");
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.TEST_NET,
-                Deadline.CreateHours(2),
-                account.Address,
-                new List<Mosaic1> { Mosaic1.CreateFromIdentifier("nem:xem", 100000000000) },
+                new Deadline(1),
+                address,
+                new List<Mosaic1> { Mosaic1.CreateFromHexIdentifier("72C0212E67A08BCE", 1000) },
                 PlainMessage.Create("hello")
             ).SignWith(keyPair);
 
             listener.GetTransactionStatus(Address.CreateFromPublicKey(transaction.Signer, NetworkType.Types.TEST_NET))
                 .Subscribe(e =>
                 {
-                    Console.WriteLine(e.Status);
+                    Debug.WriteLine(e.Status);
                 });
 
-            await new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port).Announce(transaction);
+            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+      
+            await client.Announce(transaction);
 
-            var status = await listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(transaction.Signer, NetworkType.Types.TEST_NET)).Take(1);
+            var status = await client.GetTransactionStatus(transaction.Hash);
 
-            Assert.AreEqual(keyPair.PublicKeyString, status.Transaction.SignerPublicKey);
+            var listenerStatus = await listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(transaction.Signer, NetworkType.Types.TEST_NET)).Take(1);
+
+            Assert.AreEqual(keyPair.PublicKeyString, listenerStatus.Transaction.SignerPublicKey);
         }
 
         [Test, Timeout(20000)]
@@ -91,9 +93,9 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.TEST_NET,
-                Deadline.CreateHours(2),
+                Deadline.AddHours(2),
                 Address.CreateFromEncoded("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
-                new List<Mosaic1> { Mosaic1.CreateFromIdentifier("nem:xem", 10) },
+                new List<Mosaic1> { Mosaic1.CreateFromIdentifierParts(["symbol", "xym"], 10) },
                 SecureMessage.Create("hello2", HttpSetUp.TestSK, "5D8BEBBE80D7EA3B0088E59308D8671099781429B449A0BBCA6D950A709BA068")
                 ).SignWith(keyPair);
 
@@ -115,11 +117,11 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.TEST_NET,
-                Deadline.CreateHours(2),
+                Deadline.AddHours(2),
                 Address.CreateFromEncoded("SAOV4Y5W627UXLIYS5O43SVU23DD6VNRCFP222P2"),
                 new List<Mosaic1>()
                 {
-                    Mosaic1.CreateFromIdentifier("nem:xem", 1000000000000),
+                    Mosaic1.CreateFromIdentifierParts([ "symbol", "xym" ], 1000000000000),
                     //Mosaic.CreateFromIdentifier("happy:test2", 10), YOU DID NOT BREAK THIS!
                 },
                 SecureMessage.Create("hello2", HttpSetUp.TestSK, "5D8BEBBE80D7EA3B0088E59308D8671099781429B449A0BBCA6D950A709BA068")
@@ -141,13 +143,13 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
-                Deadline.CreateHours(2),
+                Deadline.AddHours(2),
                 Address.CreateFromEncoded("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
                 new List<Mosaic1>()
                 {
 
-                    Mosaic1.CreateFromIdentifier("happy:test2", 10),
-                    Mosaic1.CreateFromIdentifier("nem:xem", 10),
+                    Mosaic1.CreateFromIdentifierParts([ "happy", "test2" ], 10),
+                    Mosaic1.CreateFromIdentifierParts([ "symbol", "xym" ], 10),
                 },
                 EmptyMessage.Create()
             ).SignWith(keyPair);
@@ -162,13 +164,13 @@ namespace IntegrationTests.Infrastructure.Transactions
             Assert.AreEqual(keyPair.PublicKeyString, status.Transaction.SignerPublicKey);
         }
 
-        internal static TransferTransaction CreateInnerTransferTransaction(string mosaic, ulong amount = 10)
+        internal static TransferTransaction CreateInnerTransferTransaction(string[] mosaic, ulong amount = 10)
         {
             return TransferTransaction.Create(
                         NetworkType.Types.TEST_NET,
-                        Deadline.CreateHours(2),
+                        Deadline.AddHours(2),
                         Address.CreateFromEncoded("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
-                        new List<Mosaic1> { Mosaic1.CreateFromIdentifier(mosaic, amount) },
+                        new List<Mosaic1> { Mosaic1.CreateFromIdentifierParts(mosaic, amount) },
                         PlainMessage.Create("hey")
 
                     );

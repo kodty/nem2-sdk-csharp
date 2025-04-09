@@ -27,6 +27,7 @@ using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
 using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model.Network;
+using System.Diagnostics;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -107,16 +108,16 @@ namespace io.nem2.sdk.Model.Transactions
             Signer = PublicAccount.CreateFromPublicKey(keyPair.PublicKeyString, NetworkType);
 
             Bytes = GenerateBytes();
-
+            
             var sig = TransactionExtensions.SignTransaction(keyPair, Bytes);
-          
+
             var signedBuffer = Bytes.Take(4)
                                     .Concat(sig)
                                     .Concat(keyPair.PublicKey)
                                     .Concat(
                                         Bytes.Take(4 + 64 + 32, Bytes.Length - (4 + 64 + 32))
                                     ).ToArray();
-
+            Debug.WriteLine(signedBuffer.ToHexLower());
             return SignedTransaction.Create(signedBuffer, TransactionExtensions.Hasher(signedBuffer), keyPair.PublicKey, TransactionType);
         }
 

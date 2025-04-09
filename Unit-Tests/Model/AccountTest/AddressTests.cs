@@ -15,7 +15,6 @@
 
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model.Network;
-using System.Diagnostics;
 
 
 namespace test.Model.AccountTest

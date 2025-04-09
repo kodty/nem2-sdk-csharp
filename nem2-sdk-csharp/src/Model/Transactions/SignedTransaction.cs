@@ -25,56 +25,19 @@
 
 using System.Text.RegularExpressions;
 using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
-using Newtonsoft.Json;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    /// <summary>
-    /// Class SignedTransaction.
-    /// </summary>
     public class SignedTransaction
     {
-        /// <summary>
-        /// Gets or sets the payload.
-        /// </summary>
-        /// <value>The payload.</value>
-        [JsonProperty("payload")]
         public string Payload { get; set; }
 
-        /// <summary>
-        /// Gets or sets the hash.
-        /// </summary>
-        /// <value>The hash.</value>
-        [JsonProperty("hash")]
         public string Hash { get; set; }
 
-        /// <summary>
-        /// Gets or sets the signer.
-        /// </summary>
-        /// <value>The signer.</value>
-        [JsonProperty("signer")]
         public string Signer { get; set; }
 
-        /// <summary>
-        /// Gets the type of the transaction.
-        /// </summary>
-        /// <value>The type of the transaction.</value>
         public TransactionTypes.Types TransactionType { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SignedTransaction"/> class.
-        /// </summary>
-        /// <param name="payload">The payload.</param>
-        /// <param name="hash">The hash.</param>
-        /// <param name="signer">The signer.</param>
-        /// <param name="transactionType">The transaction type.</param>
-        /// <exception cref="ArgumentException">
-        /// Value cannot be null or empty. - payload
-        /// or
-        /// Invalid hash.
-        /// or
-        /// Invalid signer key.
-        /// </exception>
         internal SignedTransaction(string payload, string hash, string signer, TransactionTypes.Types transactionType)
         {          
             if (hash.Length != 64 || !Regex.IsMatch(hash, @"\A\b[0-9a-fA-F]+\b\Z")) throw new ArgumentException("Invalid hash.");
@@ -84,26 +47,6 @@ namespace io.nem2.sdk.Model.Transactions
             Signer = signer;
         }
 
-        /// <summary>
-        /// Static creates a new instance of the <see cref="SignedTransaction"/> class.
-        /// </summary>
-        /// <param name="payload">The payload.</param>
-        /// <param name="hash">The hash.</param>
-        /// <param name="signer">The signer.</param>
-        /// <param name="transactionType">The transaction type.</param>
-        /// <returns><see cref="SignedTransaction"/>.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// payload
-        /// or
-        /// hash
-        /// or
-        /// signer
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// invalid hash length
-        /// or
-        /// invalid signer length
-        /// </exception>
         public static SignedTransaction Create(byte[] payload, byte[] hash, byte[] signer, TransactionTypes.Types transactionType)
         {
             if (payload == null) throw new ArgumentNullException(nameof(payload));
@@ -111,7 +54,7 @@ namespace io.nem2.sdk.Model.Transactions
             if(hash.Length != 32) throw new ArgumentException("invalid hash length");
             if (signer == null) throw new ArgumentNullException(nameof(signer));
             if (signer.Length != 32) throw new ArgumentException("invalid signer length");
-            
+
             return new SignedTransaction(payload.ToHexLower().ToUpper(), hash.ToHexLower().ToUpper(), signer.ToHexLower().ToUpper(), transactionType);
         }
     }

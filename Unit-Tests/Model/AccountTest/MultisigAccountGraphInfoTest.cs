@@ -13,8 +13,6 @@
 // limitations under the License.
 // 
 
-using io.nem2.sdk.Infrastructure.Buffers.Model;
-
 namespace test.Model.AccountTest
 {
     public class MultisigAccountGraphInfoTest

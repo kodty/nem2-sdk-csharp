@@ -67,9 +67,9 @@ namespace io.nem2.sdk.Model.Transactions.Messages
         /// Gets the length.
         /// </summary>
         /// <returns>System.UInt32.</returns>
-        public override uint GetLength()
+        public override ushort GetLength()
         {
-            return 1;
+            return 0;
         }
 
         /// <summary>

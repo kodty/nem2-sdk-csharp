@@ -42,13 +42,16 @@ namespace io.nem2.sdk.Model.Namespace
 
             Id = IdGenerator.GenerateId(0, id);
             Name = id;
-            HexId = BitConverter.GetBytes(Id).Reverse().ToArray().ToHexUpper();
+
+            HexId = BitConverter.GetBytes(Id).ToHexUpper();
         }
+
+
 
         public NamespaceId(ulong id)
         {
             Id = id;
-            HexId = BitConverter.GetBytes(id).Reverse().ToArray().ToHexUpper();
+            HexId = BitConverter.GetBytes(id).ToHexUpper();
         }
         
         public static NamespaceId Create(string id)

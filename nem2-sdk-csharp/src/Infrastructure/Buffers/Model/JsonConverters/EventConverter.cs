@@ -1,13 +1,6 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Infrastructure.Mapping;
+﻿using io.nem2.sdk.src.Infrastructure.Mapping;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 
 namespace io.nem2.sdk.src.Infrastructure.Buffers.Model.JsonConverters
 {

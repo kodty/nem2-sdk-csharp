@@ -101,7 +101,7 @@ namespace io.nem2.sdk.Model.Transactions
                 0,             
                 mosaicName,
                 NamespaceId.Create(namespaceId),
-                MosaicId.CreateFromMosaicIdentifier(namespaceId + ":" + mosaicName),              
+                MosaicId.CreateFromHexMosaicIdentifier(namespaceId + ":" + mosaicName),              
                 properties
             );
         }

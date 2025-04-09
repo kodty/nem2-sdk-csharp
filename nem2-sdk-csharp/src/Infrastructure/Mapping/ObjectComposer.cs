@@ -9,9 +9,11 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
 {
     internal static class ObjectComposer
     {
-        internal static T GenerateObject<T>(string data) 
-            => (T)GenerateObject(typeof(T), JToken.Parse(data));
-        
+        internal static T GenerateObject<T>(string data)
+        {
+            return (T)GenerateObject(typeof(T), JToken.Parse(data)); 
+        }
+                   
         internal static object GenerateObject(Type type, JToken jObject)
         {
             var actualObject = Activator.CreateInstance(type);
