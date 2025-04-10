@@ -27,116 +27,88 @@ using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
 using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model.Network;
+using Org.BouncyCastle.Crypto.Digests;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
+using System.Xml.Linq;
+using TweetNaclSharp;
+using TweetNaclSharp.Core;
+using TweetNaclSharp.Core.Extensions;
+using static io.nem2.sdk.Infrastructure.HttpRepositories.TransactionHttp;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    /// <summary>
-    /// An abstract transaction class that serves as the base class of all NEM transactions.
-    /// </summary>
     public abstract class Transaction
     {
-        /// <summary>
-        /// Gets or sets the fee.
-        /// </summary>
-        /// <value>The fee.</value>
         public ulong Fee { get; internal set; }
 
-        /// <summary>
-        /// Gets or sets the deadline.
-        /// </summary>
-        /// <value>The deadline.</value>
         public Deadline Deadline { get; internal set; }
 
-        /// <summary>
-        /// Gets or sets the type of the network.
-        /// </summary>
-        /// <value>The type of the network.</value>
         public NetworkType.Types NetworkType { get; internal set; }
 
         public int Version { get; set; }
 
-        /// <summary>
-        /// Gets or sets the type of the transaction.
-        /// </summary>
-        /// <value>The type of the transaction.</value>
         public TransactionTypes.Types TransactionType { get; internal set; }
 
-        /// <summary>
-        /// Gets or sets the signer.
-        /// </summary>
-        /// <value>The signer.</value>
         public PublicAccount Signer { get; internal set; }
 
-        /// <summary>
-        /// Gets the signature.
-        /// </summary>
-        /// <value>The signature.</value>
         public string Signature { get; internal set; }
 
-        /// <summary>
-        /// Gets the transaction information.
-        /// </summary>
-        /// <value>The transaction information.</value>
         public TransactionInfo TransactionInfo { get; internal set; }
 
-        /// <summary>
-        /// Gets or sets the bytes.
-        /// </summary>
-        /// <value>The bytes.</value>
         private byte[] Bytes { get; set; }
 
-        /// <summary>
-        /// Gets the signer.
-        /// </summary>
-        /// <returns>System.Byte[].</returns>
+        private byte[] SignedBytes { get; set; }
+
         internal byte[] GetSigner()
         {
             return Signer == null ? new byte[32] : Signer.PublicKey.DecodeHexString();
         }
 
-        /// <summary>
-        /// Signs the transaction with the given <see cref="KeyPair"/>.
-        /// </summary>
-        /// <param name="keyPair">The <see cref="KeyPair"/>.</param>
-        /// <returns><see cref="SignedTransaction"/>.</returns>
-        /// <exception cref="ArgumentNullException">keyPair</exception>
-        public SignedTransaction SignWith(KeyPair keyPair)
+        public byte[] PrepareSignature(SecretKeyPair keyPair, byte[] networkGenHash)
         {
-            if (keyPair == null) throw new ArgumentNullException(nameof(keyPair));
-
             Signer = PublicAccount.CreateFromPublicKey(keyPair.PublicKeyString, NetworkType);
 
             Bytes = GenerateBytes();
-            
-            var sig = TransactionExtensions.SignTransaction(keyPair, Bytes);
 
-            var signedBuffer = Bytes.Take(4)
-                                    .Concat(sig)
-                                    .Concat(keyPair.PublicKey)
-                                    .Concat(
-                                        Bytes.Take(4 + 64 + 32, Bytes.Length - (4 + 64 + 32))
-                                    ).ToArray();
-            Debug.WriteLine(signedBuffer.ToHexLower());
-            return SignedTransaction.Create(signedBuffer, TransactionExtensions.Hasher(signedBuffer), keyPair.PublicKey, TransactionType);
+            byte[] signingBytes = Bytes.SubArray(4 + 64 + 32 + 8, Bytes.Length - 108);
+
+            SignedBytes = networkGenHash.Concat(signingBytes).ToArray();
+
+            Signature = keyPair.Sign(SignedBytes).ToHexLower();
+
+            return Signature.FromHex();
         }
 
-        /// <summary>
-        /// Generates the hash for a serialized transaction payload.
-        /// </summary>
-        /// <param name="transactionPayload">The transaction payload in hex format.</param>
-        /// <returns>The hash in hex format.</returns>
-        public static string CreateTransactionHash(string transactionPayload)
+
+        public byte[] HashTransaction(byte[] signature, byte[] signer, byte[] genHash, byte[] headlessTxData)
         {
-            if (transactionPayload == null) throw new ArgumentNullException(nameof(transactionPayload));
+            var hash = new byte[32];
 
-            return TransactionExtensions.Hasher(transactionPayload.FromHex()).ToHexUpper();
+            var sha3Hasher = new Sha3Digest(256);
+            
+            sha3Hasher.BlockUpdate(signature, 0, signature.Length);
+            sha3Hasher.BlockUpdate(signer, 0, signer.Length);
+            sha3Hasher.BlockUpdate(genHash, 0, genHash.Length);
+            sha3Hasher.BlockUpdate(headlessTxData, 0, headlessTxData.Length);
+            sha3Hasher.DoFinal(hash, 0);
+
+            return hash;
+        }
+        public SignedTransaction SignWith(SecretKeyPair keyPair, byte[] networkGenHash)
+        {
+            PrepareSignature(keyPair, networkGenHash);
+
+            for (int x = 8; x < 64 + 8; x++) Bytes[x] = Signature.FromHex()[x - 8];
+
+            var headlessTx = Bytes.SubArray(8 + 64 + 32 + 4, Bytes.Length - (8 + 64 + 32 + 4));
+            
+            var hash = HashTransaction(Signature.FromHex(), keyPair.PublicKey, networkGenHash, headlessTx);
+
+            return SignedTransaction.Create(Bytes, SignedBytes, hash, keyPair.PublicKey, Signature.FromHex(), TransactionType);
         }
 
-        /// <summary>
-        /// Takes a transaction and formats the bytes to be included in an aggregate transaction
-        /// </summary>
-        /// <returns>System.Byte[].</returns>
         internal byte[] ToAggregate()
         {
             var bytes = GenerateBytes();

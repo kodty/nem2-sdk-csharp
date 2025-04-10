@@ -1,4 +1,5 @@
 ﻿using IntegrationTests.Infrastructure.Transactions;
+using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
 using io.nem2.sdk.Model.Accounts;
@@ -43,7 +44,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task ListenForPartialTransactionAdded()
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+            var keyPair = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var aggregateTransaction = AggregateTransaction.CreateBonded(
                 NetworkType.Types.TEST_NET,
@@ -53,10 +54,10 @@ namespace Integration_Tests.HttpRequests
                     TransferTransactionTests.CreateInnerTransferTransaction(["symbol", "xym"]),
                 },
                 null
-            ).SignWith(keyPair);
+            ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
 
             var hashLock = LockFundsTransaction.Create(NetworkType.Types.TEST_NET, Deadline.AddHours(2), 0, duration: 10000, mosaic: new Mosaic1(new MosaicId("symbol:xym"), 10000000), transaction: aggregateTransaction)
-                .SignWith(KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK));
+                .SignWith(SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK), HttpSetUp.NetworkGenHash.FromHex());
 
             await new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port).Announce(hashLock);
 

@@ -48,7 +48,7 @@ namespace io.nem2.sdk.Model.Accounts
         /// Gets or sets the key pair.
         /// </summary>
         /// <value>The key pair.</value>
-        public KeyPair KeyPair { get; }
+        public SecretKeyPair KeyPair { get; }
 
         /// <summary>
         /// Gets the private key.
@@ -76,7 +76,7 @@ namespace io.nem2.sdk.Model.Accounts
         /// <returns>Account.</returns>
         public static Account CreateFromPrivateKey(string privateKey, NetworkType.Types networkType)
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(privateKey);
+            var keyPair = SecretKeyPair.CreateFromPrivateKey(privateKey);
             var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
             
             return new Account(address, keyPair);
@@ -87,7 +87,7 @@ namespace io.nem2.sdk.Model.Accounts
         /// </summary>
         /// <param name="address">The address.</param>
         /// <param name="keyPair">The key pair.</param>
-        public Account(Address address, KeyPair keyPair)
+        public Account(Address address, SecretKeyPair keyPair)
         {
             Address = address;
             KeyPair = keyPair;
@@ -101,7 +101,7 @@ namespace io.nem2.sdk.Model.Accounts
         /// <param name="networkType">Type of the network.</param>
         public Account(string privateKey, NetworkType.Types networkType)
         {
-            KeyPair = KeyPair.CreateFromPrivateKey(privateKey);
+            KeyPair = SecretKeyPair.CreateFromPrivateKey(privateKey);
             Address = Address.CreateFromPublicKey(KeyPair.PublicKeyString, networkType);
             PublicAccount = new PublicAccount(KeyPair.PublicKeyString, networkType);
         }
@@ -111,9 +111,9 @@ namespace io.nem2.sdk.Model.Accounts
         /// </summary>
         /// <param name="transaction">The transaction.</param>
         /// <returns>SignedTransaction.</returns>
-        public SignedTransaction Sign(Transaction transaction)
+        public SignedTransaction Sign(Transaction transaction, string networkGenHash)
         {
-            return transaction.SignWith(KeyPair);
+            return transaction.SignWith(KeyPair, networkGenHash.FromHex());
         }
 
         /// <summary>
@@ -132,9 +132,9 @@ namespace io.nem2.sdk.Model.Accounts
         /// <param name="transaction">The transaction.</param>
         /// <param name="cosignatories">The cosignatories.</param>
         /// <returns>SignedTransaction.</returns>
-        public SignedTransaction SignTransactionWithCosignatories(AggregateTransaction transaction, List<Account> cosignatories)
+        public SignedTransaction SignTransactionWithCosignatories(AggregateTransaction transaction, List<Account> cosignatories, string networkGenHash)
         {
-            return transaction.SignWithAggregateCosigners(KeyPair, cosignatories);
+            return transaction.SignWithAggregateCosigners(KeyPair, cosignatories, networkGenHash);
         }
 
         public static Account GenerateNewAccount(NetworkType.Types networkType)
@@ -149,7 +149,7 @@ namespace io.nem2.sdk.Model.Accounts
                 digestSha3.BlockUpdate(bytes, 0, 32);
                 digestSha3.DoFinal(stepOne, 0);
 
-                var keyPair = KeyPair.CreateFromPrivateKey(stepOne.ToHexLower());
+                var keyPair = SecretKeyPair.CreateFromPrivateKey(stepOne.ToHexLower());
 
                 return new Account(Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType), keyPair);
             }         

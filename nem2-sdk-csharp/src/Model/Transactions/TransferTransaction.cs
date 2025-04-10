@@ -148,20 +148,20 @@ namespace io.nem2.sdk.Model.Transactions
         {
             if (Message == null) Message = EmptyMessage.Create();
 
-            ushort size = (ushort)(147 + (16 * Mosaics.Count) + Message.GetLength());
+            ushort size = (ushort)(155 + (16 * Mosaics.Count) + Message.GetLength());
 
             var serializer = new DataSerializer(size);
 
-            serializer.WriteUInt(size);         
+            serializer.WriteUInt(size);
+            serializer.Reserve(4);
             serializer.Reserve(64);            
-            serializer.WriteBytes(GetSigner()); 
+            serializer.WriteBytes(GetSigner());
+            serializer.Reserve(4);
             serializer.WriteByte((byte)Version);
             serializer.WriteByte(NetworkType.GetNetworkByte()); 
             serializer.WriteUShort(TransactionType.GetValue()); 
             serializer.WriteUlong(Fee); 
             serializer.WriteUlong(Deadline.Ticks);
-            Debug.WriteLine("hex");
-            Debug.WriteLine(AddressEncoder.DecodeAddress(Address.Plain).ToHexUpper());
             serializer.WriteBytes(AddressEncoder.DecodeAddress(Address.Plain));
             serializer.WriteUShort(Message.GetLength());
             serializer.WriteByte((byte)Mosaics.Count);

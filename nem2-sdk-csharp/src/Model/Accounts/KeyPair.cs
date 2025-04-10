@@ -34,7 +34,7 @@ namespace io.nem2.sdk.Model.Accounts
     /// The KeyPair structure describes a private key and public key in two formats, and contains static classes from creating the structure from raw data.
     /// </summary>
     /// <seealso cref="IKeyPair" />
-    public class KeyPair : IKeyPair
+    public class SecretKeyPair : IKeyPair
     {
         
         /// <inheritdoc />
@@ -56,7 +56,7 @@ namespace io.nem2.sdk.Model.Accounts
         public string PublicKeyString => PublicKey.ToHexLower().ToUpper();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyPair"/> class.
+        /// Initializes a new instance of the <see cref="SecretKeyPair"/> class.
         /// </summary>
         /// <param name="privateKey">The private key.</param>
         /// <param name="publicKey">The public key.</param>
@@ -70,7 +70,7 @@ namespace io.nem2.sdk.Model.Accounts
         /// or
         /// publicKey
         /// </exception>
-        internal KeyPair(string privateKey, string publicKey)
+        internal SecretKeyPair(string privateKey, string publicKey)
         {
             if (publicKey == null) throw new ArgumentNullException(nameof(publicKey));
             if (publicKey.Length != 64) throw new ArgumentException(nameof(publicKey));
@@ -87,7 +87,7 @@ namespace io.nem2.sdk.Model.Accounts
         /// <returns>KeyPair.</returns>
         /// <exception cref="ArgumentNullException">privateKey</exception>
         /// <exception cref="ArgumentException">privateKey</exception>
-        public static KeyPair CreateFromPrivateKey(string privateKey)
+        public static SecretKeyPair CreateFromPrivateKey(string privateKey)
         {
             if (privateKey == null) throw new ArgumentNullException(nameof(privateKey));
             if (privateKey.Length != 64) throw new ArgumentException(nameof(privateKey));
@@ -108,7 +108,7 @@ namespace io.nem2.sdk.Model.Accounts
 
             Array.Clear(h, 0, h.Length);
 
-            return new KeyPair(privateKey, pk.ToHexLower());
+            return new SecretKeyPair(privateKey, pk.ToHexLower());
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace io.nem2.sdk.Model.Accounts
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
 
-            return NaclFast.Sign(data, PrivateKey.Concat(PublicKey).ToArray());
-        }      
+            return NaclFast.SignDetached(data, PrivateKey.Concat(PublicKey).ToArray());
+        }
     }
 }
