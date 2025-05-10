@@ -2,8 +2,8 @@
 using System.Text;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.src.Infrastructure.Mapping;
 using System.Text.Json;
+using io.nem2.sdk.src.Export;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {

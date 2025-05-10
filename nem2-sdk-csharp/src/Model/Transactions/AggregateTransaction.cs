@@ -139,12 +139,13 @@ namespace io.nem2.sdk.Model.Transactions
         /// or
         /// cosignatories
         /// </exception>
-        public SignedTransaction SignWithAggregateCosigners(KeyPair initiatorAccount, List<Account> cosignatories)
+        public SignedTransaction SignWithAggregateCosigners(SecretKeyPair initiatorAccount, List<Account> cosignatories, string networkGenHash)
         {
             if (initiatorAccount == null) throw new ArgumentNullException(nameof(initiatorAccount));
             if (cosignatories == null) throw new ArgumentNullException(nameof(cosignatories));
 
-            var signedTransaction = SignWith(initiatorAccount);
+            var signedTransaction = SignWith(initiatorAccount, networkGenHash.FromHex());
+
             var payload = signedTransaction.Payload.FromHex();
 
             foreach (var cosignatory in cosignatories)
@@ -160,7 +161,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             payload = BitConverter.GetBytes(payload.Length).Concat(payload.Take(4, payload.Length - 4).ToArray()).ToArray();
 
-            return SignedTransaction.Create(payload, signedTransaction.Hash.FromHex(), initiatorAccount.PublicKey, TransactionType);
+            return SignedTransaction.Create(payload, new byte[] { }, signedTransaction.Hash.FromHex(), initiatorAccount.PublicKey, new byte[] { }, TransactionType);
         }
 
         /// <summary>

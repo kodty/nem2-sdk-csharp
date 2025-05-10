@@ -5,8 +5,8 @@ using System.Text;
 using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.src.Infrastructure.Mapping;
 using Newtonsoft.Json.Linq;
 
 namespace io.nem2.sdk.Infrastructure.Listeners

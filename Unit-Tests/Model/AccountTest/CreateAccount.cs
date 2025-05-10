@@ -1,7 +1,7 @@
 ﻿using Integration_Tests;
 using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
-using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
 using System.Diagnostics;
 

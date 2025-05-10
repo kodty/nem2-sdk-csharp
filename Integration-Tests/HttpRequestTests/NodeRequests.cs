@@ -13,7 +13,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeHealth()
         {
-            var client = new NodeHttp(HttpSetUp.NodeTest, HttpSetUp.Port);
+            var client = new NodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var response = await client.GetNodeHealth();
 
@@ -25,7 +25,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodePeers()
         {
-            var client = new NodeHttp(HttpSetUp.NodeTest, HttpSetUp.Port);
+            var client = new NodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var response = await client.GetNodePeers();
 
@@ -43,7 +43,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeStorage()
         {
-            var client = new NodeHttp(HttpSetUp.NodeTest, HttpSetUp.Port);
+            var client = new NodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var response = await client.GetNodeStorageInfo();
 
@@ -55,7 +55,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeTime()
         {
-            var client = new NodeHttp(HttpSetUp.NodeTest, HttpSetUp.Port);
+            var client = new NodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var response = await client.GetNodeTime();
 
@@ -67,7 +67,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeRESTVersion()
         {
-            var client = new NodeHttp(HttpSetUp.NodeTest, HttpSetUp.Port);
+            var client = new NodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var response = await client.GetNodeRESTVersion();
 

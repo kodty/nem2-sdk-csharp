@@ -1,19 +1,4 @@
-﻿//
-// Copyright 2018 NEM
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-// http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// 
-
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
 using io.nem2.sdk.Model.Accounts;
@@ -23,6 +8,7 @@ using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.src.Model.Network;
 using Integration_Tests;
 using System.Diagnostics;
+using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
 
 
 namespace IntegrationTests.Infrastructure.Transactions
@@ -40,7 +26,7 @@ namespace IntegrationTests.Infrastructure.Transactions
 
         public async Task AnnounceTransaction(ulong amount = 10)
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+            var keyPair = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.TEST_NET,
@@ -48,7 +34,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 Address.CreateFromEncoded("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR"),
                 new List<Mosaic1> { Mosaic1.CreateFromIdentifierParts([ "symbol", "xym" ], amount) },
                 PlainMessage.Create("hello")
-                ).SignWith(keyPair);
+                ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
 
             await new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port).Announce(transaction);
         }
@@ -56,10 +42,10 @@ namespace IntegrationTests.Infrastructure.Transactions
         [Test, Timeout(20000)]
         public async Task AnnounceTransferTransactionWithMosaicWithMessage()
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+            var keyPair = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var account = new Account(HttpSetUp.TestSK, NetworkType.Types.TEST_NET);
-            var address = Address.CreateFromEncoded("");
+            var address = Address.CreateFromEncoded(HttpSetUp.TestAddress);
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.TEST_NET,
@@ -67,16 +53,16 @@ namespace IntegrationTests.Infrastructure.Transactions
                 address,
                 new List<Mosaic1> { Mosaic1.CreateFromHexIdentifier("72C0212E67A08BCE", 1000) },
                 PlainMessage.Create("hello")
-            ).SignWith(keyPair);
+            ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
 
-            listener.GetTransactionStatus(Address.CreateFromPublicKey(transaction.Signer, NetworkType.Types.TEST_NET))
+            var a = listener.GetTransactionStatus(Address.CreateFromPublicKey(transaction.Signer, NetworkType.Types.TEST_NET))
                 .Subscribe(e =>
                 {
                     Debug.WriteLine(e.Status);
                 });
 
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-      
+
             await client.Announce(transaction);
 
             var status = await client.GetTransactionStatus(transaction.Hash);
@@ -89,7 +75,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         [Test, Timeout(20000)]
         public async Task AnnounceTransferTransactionWithMosaicWithSecureMessage()
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+            var keyPair = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.TEST_NET,
@@ -97,7 +83,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 Address.CreateFromEncoded("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
                 new List<Mosaic1> { Mosaic1.CreateFromIdentifierParts(["symbol", "xym"], 10) },
                 SecureMessage.Create("hello2", HttpSetUp.TestSK, "5D8BEBBE80D7EA3B0088E59308D8671099781429B449A0BBCA6D950A709BA068")
-                ).SignWith(keyPair);
+                ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
 
             await new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port).Announce(transaction);
 
@@ -113,7 +99,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         public async Task AnnounceTransferTransactionWithMultipleMosaicsWithSecureMessage()
         {
             var keyPair =
-                KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+                SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.TEST_NET,
@@ -122,11 +108,11 @@ namespace IntegrationTests.Infrastructure.Transactions
                 new List<Mosaic1>()
                 {
                     Mosaic1.CreateFromIdentifierParts([ "symbol", "xym" ], 1000000000000),
-                    //Mosaic.CreateFromIdentifier("happy:test2", 10), YOU DID NOT BREAK THIS!
+                   
                 },
                 SecureMessage.Create("hello2", HttpSetUp.TestSK, "5D8BEBBE80D7EA3B0088E59308D8671099781429B449A0BBCA6D950A709BA068")
 
-            ).SignWith(keyPair);
+            ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
 
             await new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port).Announce(transaction);
 
@@ -139,7 +125,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         public async Task AnnounceTransferTransactionWithMultipleMosaicsWithoutMessage()
         {
             var keyPair =
-                KeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+                SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
@@ -152,7 +138,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     Mosaic1.CreateFromIdentifierParts([ "symbol", "xym" ], 10),
                 },
                 EmptyMessage.Create()
-            ).SignWith(keyPair);
+            ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
 
             await new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port).Announce(transaction);
 

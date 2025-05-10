@@ -1,41 +1,9 @@
-﻿// ***********************************************************************
-// Assembly         : nem2-sdk
-// Author           : kailin
-// Created          : 01-15-2018
-//
-// Last Modified By : kailin
-// Last Modified On : 01-30-2018
-// ***********************************************************************
-// <copyright file="Transaction.cs" company="Nem.io">
-// Copyright 2018 NEM
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-// http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// </copyright>
-// <summary></summary>
-// ***********************************************************************
-
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+﻿using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
 using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model.Network;
 using Org.BouncyCastle.Crypto.Digests;
-using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
-using System.Xml.Linq;
-using TweetNaclSharp;
-using TweetNaclSharp.Core;
 using TweetNaclSharp.Core.Extensions;
-using static io.nem2.sdk.Infrastructure.HttpRepositories.TransactionHttp;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -72,7 +40,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             Bytes = GenerateBytes();
 
-            byte[] signingBytes = Bytes.SubArray(4 + 64 + 32 + 8, Bytes.Length - 108);
+            byte[] signingBytes = Bytes.SubArray(8 + 64 + 32 + 4, Bytes.Length - 108);
 
             SignedBytes = networkGenHash.Concat(signingBytes).ToArray();
 
@@ -102,7 +70,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             for (int x = 8; x < 64 + 8; x++) Bytes[x] = Signature.FromHex()[x - 8];
 
-            var headlessTx = Bytes.SubArray(8 + 64 + 32 + 4, Bytes.Length - (8 + 64 + 32 + 4));
+            var headlessTx = Bytes.SubArray(8 + 64 + 32, Bytes.Length - (8 + 64 + 32));
             
             var hash = HashTransaction(Signature.FromHex(), keyPair.PublicKey, networkGenHash, headlessTx);
 
@@ -128,10 +96,6 @@ namespace io.nem2.sdk.Model.Transactions
             return this;
         }
 
-        /// <summary>
-        /// Generates the bytes.
-        /// </summary>
-        /// <returns>System.Byte[].</returns>
         internal abstract byte[] GenerateBytes();
     }
 }

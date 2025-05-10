@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.Core.Utils;
+using io.nem2.sdk.src.Export;
 
 namespace Unit_Tests.Encoding
 {

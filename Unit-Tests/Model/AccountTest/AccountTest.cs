@@ -25,7 +25,7 @@ namespace test.Model.AccountTest
         [Test]
         public void CreateNewTestNetAccount()
         {
-            var keyAcc = KeyPair.CreateFromPrivateKey("EBC3F2EA82AEDAE67E45258C6604706C7891F145655B6117670EBD5ECEE632CB");
+            var keyAcc = SecretKeyPair.CreateFromPrivateKey("EBC3F2EA82AEDAE67E45258C6604706C7891F145655B6117670EBD5ECEE632CB");
             Debug.WriteLine(keyAcc.PublicKeyString);
             var pubAccount = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
             Debug.WriteLine(pubAccount.PrivateKey);

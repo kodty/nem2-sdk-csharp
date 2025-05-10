@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using io.nem2.sdk.src.Infrastructure.Buffers.NativeBuffer;
+using io.nem2.sdk.src.Export;
 using Org.BouncyCastle.Crypto.Digests;
 
 

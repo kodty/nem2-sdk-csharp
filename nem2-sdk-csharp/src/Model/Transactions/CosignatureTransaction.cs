@@ -76,7 +76,7 @@ namespace io.nem2.sdk.Model.Transactions
         /// <param name="account">The account.</param>
         /// <returns>CosignatureSignedTransactionDTO.</returns>
         /// <exception cref="ArgumentNullException">account</exception>
-        public CosignatureSignedTransaction SignWith(KeyPair account)
+        public CosignatureSignedTransaction SignWith(SecretKeyPair account)
         {
             if (account == null) throw new ArgumentNullException(nameof(account));
             var bytes = Hash.FromHex();

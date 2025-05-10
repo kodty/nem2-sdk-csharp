@@ -4,10 +4,10 @@ using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.src.Infrastructure.Mapping;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using System.Text;
+using io.nem2.sdk.src.Export;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {

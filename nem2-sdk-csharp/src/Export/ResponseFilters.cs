@@ -2,13 +2,13 @@
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using Newtonsoft.Json.Linq;
 
-namespace io.nem2.sdk.src.Infrastructure.Mapping
+namespace io.nem2.sdk.src.Export
 {
     internal static class ResponseFilters<T> where T : class
     {
         internal static List<T> FilterEvents(string data, string path = null)
         {
-            var evs = path == null ?  JToken.Parse(data) : JToken.Parse(data)[path];
+            var evs = path == null ? JToken.Parse(data) : JToken.Parse(data)[path];
 
             List<T> events = new List<T>();
 
@@ -16,7 +16,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             {
                 events.Add((T)ObjectComposer.GenerateObject(typeof(T), e));
             }
-           
+
             return events;
         }
 
@@ -46,7 +46,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
 
         internal static TransactionTypes.Types GetTxType(JObject tx)
         {
-            return TransactionTypes.GetRawValue((ushort)tx["transaction"]["type"]);
+            return ((ushort)tx["transaction"]["type"]).GetRawValue();
         }
 
         internal static T FilterSingle(string data)
@@ -58,8 +58,8 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
             var type = GetTxType(tx);
 
             if (type == TransactionTypes.Types.TRANSFER)
-            { 
-                if(typeof(T) == typeof(TransactionData))
+            {
+                if (typeof(T) == typeof(TransactionData))
                     shell.Transaction = ObjectComposer.GenerateObject<SimpleTransfer>(GetSpecifiedTx(tx));
                 if (typeof(T) == typeof(EmbeddedTransactionData))
                     shell.Transaction = ObjectComposer.GenerateObject<EmbeddedSimpleTransfer>(GetSpecifiedTx(tx));
@@ -204,7 +204,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
                 if (typeof(T) == typeof(EmbeddedTransactionData))
                     shell.Transaction = ObjectComposer.GenerateObject<EmbeddedKeyLink>(GetSpecifiedTx(tx));
 
-                return shell;          
+                return shell;
             }
             if (type == TransactionTypes.Types.VOTING_KEY_LINK)
             {
@@ -213,7 +213,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
                 if (typeof(T) == typeof(EmbeddedTransactionData))
                     shell.Transaction = ObjectComposer.GenerateObject<EmbeddedVotingKeyLink>(GetSpecifiedTx(tx));
 
-                return shell;             
+                return shell;
             }
             if (type == TransactionTypes.Types.MOSAIC_METADATA)
             {
@@ -254,7 +254,7 @@ namespace io.nem2.sdk.src.Infrastructure.Mapping
 
                 return shell;
             }
-            else throw new NotImplementedException("TransactionTypes.Type not implemented");   
+            else throw new NotImplementedException("TransactionTypes.Type not implemented");
         }
     }
 }

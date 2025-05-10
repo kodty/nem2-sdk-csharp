@@ -1,7 +1,7 @@
-﻿using io.nem2.sdk.Core.Utils;
+﻿using System.Diagnostics;
 
-namespace io.nem2.sdk.src.Infrastructure.Buffers.NativeBuffer
-{ 
+namespace io.nem2.sdk.src.Export
+{
     public static class DataConverter
     {
         public static byte[] ConvertFromUInt64(this ulong value)
@@ -10,7 +10,7 @@ namespace io.nem2.sdk.src.Infrastructure.Buffers.NativeBuffer
 
             for (int i = 0; i < 8; i++)
             {
-                p[i] = (byte)(value >> (i * 8));
+                p[i] = (byte)(value >> i * 8);
             }
 
             return p;
@@ -22,7 +22,7 @@ namespace io.nem2.sdk.src.Infrastructure.Buffers.NativeBuffer
 
             for (int i = 0; i < 4; i++)
             {
-                p[i] = (byte)(value >> (i * 8));
+                p[i] = (byte)(value >> i * 8);
             }
 
             return p;
@@ -103,6 +103,8 @@ namespace io.nem2.sdk.src.Infrastructure.Buffers.NativeBuffer
 
         public void WriteBytes(byte[] data)
         {
+            Debug.WriteLine(data.Length);
+            Debug.WriteLine(_offset);
             for (var i = 0; i < data.Length; i++)
                 Bytes[_offset + i] = data[i];
 
@@ -125,13 +127,13 @@ namespace io.nem2.sdk.src.Infrastructure.Buffers.NativeBuffer
         }
 
         public void WriteBase32(string encodedAddress)
-        {        
+        {
             var decoded = AddressEncoder.DecodeAddress(encodedAddress);
 
             for (var i = 0; i < decoded.Length; i++)
             {
                 Bytes[_offset + i] = decoded[i];
-            }            
+            }
 
             _offset += decoded.Length;
         }

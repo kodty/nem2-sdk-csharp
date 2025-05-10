@@ -1,76 +1,20 @@
-﻿// ***********************************************************************
-// Assembly         : nem2-sdk
-// Author           : kailin
-// Created          : 01-15-2018
-//
-// Last Modified By : kailin
-// Last Modified On : 02-01-2018
-// ***********************************************************************
-// <copyright file="TransferTransaction.cs" company="Nem.io">
-// Copyright 2018 NEM
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-// http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// </copyright>
-// <summary></summary>
-// ***********************************************************************
-
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
-using io.nem2.sdk.Core.Utils;
+﻿using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions.Messages;
-using io.nem2.sdk.src.Infrastructure.Buffers.NativeBuffer;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
-using System.Diagnostics;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    /// <summary>
-    /// Class TransferTransaction.
-    /// </summary>
-    /// <seealso cref="Transaction" />
     public class TransferTransaction : Transaction
     {
-        /// <summary>
-        /// Gets or sets the address.
-        /// </summary>
-        /// <value>The address.</value>
         public Address Address { get; }
 
-        /// <summary>
-        /// Gets or sets the message.
-        /// </summary>
-        /// <value>The message.</value>
         public IMessage Message { get; private set; }
 
-        /// <summary>
-        /// Gets the mosaics.
-        /// </summary>
-        /// <value>The mosaics.</value>
         public List<Mosaic1> Mosaics { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TransferTransaction" /> class.
-        /// </summary>
-        /// <param name="networkType">Type of the network.</param>
-        /// <param name="version">The version.</param>
-        /// <param name="deadline">The deadline.</param>
-        /// <param name="fee">The fee.</param>
-        /// <param name="recipient">The recipient.</param>
-        /// <param name="mosaics">The mosaics.</param>
-        /// <param name="message">The message.</param>
-        /// <exception cref="ArgumentNullException">mosaics
-        /// or
-        /// recipient</exception>
         internal TransferTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, Address recipient, List<Mosaic1> mosaics, IMessage message)
         {
             if (mosaics == null) throw new ArgumentNullException(nameof(mosaics));
@@ -85,24 +29,6 @@ namespace io.nem2.sdk.Model.Transactions
             Fee = fee;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TransferTransaction"/> class.
-        /// </summary>
-        /// <param name="networkType">Type of the network.</param>
-        /// <param name="version">The version.</param>
-        /// <param name="deadline">The deadline.</param>
-        /// <param name="fee">The fee.</param>
-        /// <param name="recipient">The recipient.</param>
-        /// <param name="mosaics">The mosaics.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="signature">The signature.</param>
-        /// <param name="signer">The signer.</param>
-        /// <param name="transactionInfo">The transaction information.</param>
-        /// <exception cref="ArgumentNullException">
-        /// mosaics
-        /// or
-        /// recipient
-        /// </exception>
         internal TransferTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, Address recipient, List<Mosaic1> mosaics, IMessage message, string signature, PublicAccount signer, TransactionInfo transactionInfo)
         {
             if (mosaics == null) throw new ArgumentNullException(nameof(mosaics));
@@ -120,16 +46,6 @@ namespace io.nem2.sdk.Model.Transactions
             TransactionInfo = transactionInfo;
         }
 
-        /// <summary>
-        /// Statically creates an instance of <see cref="TransferTransaction" />.
-        /// </summary>
-        /// <param name="deadline">The deadline.</param>
-        /// <param name="address">The address.</param>
-        /// <param name="mosaics">The mosaics.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="netowrkType">Type of the netowrk.</param>
-        /// <param name="signer">The signer.</param>
-        /// <returns><see cref="TransferTransaction" />.</returns>
         public static TransferTransaction Create(NetworkType.Types netowrkType, Deadline deadline, Address address, List<Mosaic1> mosaics, IMessage message)
         {
             return new TransferTransaction(netowrkType, 1, deadline, 100, address, mosaics, message);
@@ -140,20 +56,16 @@ namespace io.nem2.sdk.Model.Transactions
             return new TransferTransaction(netowrkType, 1, deadline, fee, address, mosaics, message);
         }
 
-        /// <summary>
-        /// Generates the bytes.
-        /// </summary>
-        /// <returns>The transaction bytes.</returns>
         internal override byte[] GenerateBytes()
         {
             if (Message == null) Message = EmptyMessage.Create();
 
-            ushort size = (ushort)(155 + (16 * Mosaics.Count) + Message.GetLength());
+            ushort size = (ushort)(160 + (16 * Mosaics.Count) + Message.GetLength());
 
             var serializer = new DataSerializer(size);
 
-            serializer.WriteUInt(size);
-            serializer.Reserve(4);
+            serializer.WriteUlong(size);
+          
             serializer.Reserve(64);            
             serializer.WriteBytes(GetSigner());
             serializer.Reserve(4);
@@ -165,11 +77,11 @@ namespace io.nem2.sdk.Model.Transactions
             serializer.WriteBytes(AddressEncoder.DecodeAddress(Address.Plain));
             serializer.WriteUShort(Message.GetLength());
             serializer.WriteByte((byte)Mosaics.Count);
-                
-            
+            serializer.Reserve(4);
+            serializer.Reserve(1);
+
             for (var i= 0; i < Mosaics.Count; i++)
             {
-                Debug.WriteLine(Mosaics[i].MosaicId.HexId);
                 serializer.WriteBytes(Mosaics[i].MosaicId.HexId.FromHex()); 
                 serializer.WriteUlong(Mosaics[i].Amount);
             }
