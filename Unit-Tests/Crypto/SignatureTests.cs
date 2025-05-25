@@ -5,6 +5,7 @@ using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.src.Model.Network;
+using System.Diagnostics;
 
 
 namespace Unit_Tests.Crypto
@@ -26,7 +27,7 @@ namespace Unit_Tests.Crypto
                 new List<Mosaic1> { Mosaic1.CreateFromHexIdentifier("72C0212E67A08BCE", 1000) },
                 PlainMessage.Create("hello")
             ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
-
+            Debug.WriteLine(transaction.Payload);
             Assert.True(transaction.VerifySignature());
         } 
     }
