@@ -19,9 +19,9 @@ namespace io.nem2.sdk.Model.Transactions
         public NamespaceId ParentId { get; }
 
         public RegisterNamespaceTransaction(NetworkType.Types type, int version, Deadline deadline, ulong fee, byte namespaceType, ulong duration, NamespaceId parentId, NamespaceId namespaceName)
-           : this(type, version, deadline, fee, namespaceType, duration, parentId, namespaceName, null, null, null){}
+           : this(type, version, deadline, fee, namespaceType, duration, parentId, namespaceName, null, null){}
 
-        public RegisterNamespaceTransaction(NetworkType.Types type, int version, Deadline deadline, ulong fee, byte namespaceType, ulong duration, NamespaceId parentId, NamespaceId namespaceName, PublicAccount signer, string signature, TransactionInfo transactionInfo)
+        public RegisterNamespaceTransaction(NetworkType.Types type, int version, Deadline deadline, ulong fee, byte namespaceType, ulong duration, NamespaceId parentId, NamespaceId namespaceName, PublicAccount signer, string signature)
         {
             if (parentId == null && namespaceName == null) throw new ArgumentNullException(nameof(parentId) + " and " + nameof(namespaceName) + " cannot both be null");
             if (!Enum.IsDefined(typeof(NetworkType.Types), type)) throw new InvalidEnumArgumentException(nameof(type), (int)type, typeof(NetworkType.Types));
@@ -38,7 +38,7 @@ namespace io.nem2.sdk.Model.Transactions
             NamespaceId = namespaceName;
             Signer = signer;
             Signature = signature;
-            TransactionInfo = transactionInfo;
+            //TransactionInfo = transactionInfo;
         }
 
         public static RegisterNamespaceTransaction CreateRootNamespace(NetworkType.Types type, Deadline deadline, string namespaceName, ulong duration)

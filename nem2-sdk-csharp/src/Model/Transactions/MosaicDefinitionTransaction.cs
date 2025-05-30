@@ -25,9 +25,9 @@ namespace io.nem2.sdk.Model.Transactions
         public MosaicProperties Properties { get; }
 
         public MosaicDefinitionTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties)
-            : this(networkType, version, deadline, fee, mosaicName, namespaceId, mosaicId, properties, null, null, null){}
+            : this(networkType, version, deadline, fee, mosaicName, namespaceId, mosaicId, properties, null, null){}
 
-        public MosaicDefinitionTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties,  string signature, PublicAccount signer, TransactionInfo transactionInfo)
+        public MosaicDefinitionTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties,  string signature, PublicAccount signer)
         {
             Deadline = deadline;
             NetworkType = networkType;
@@ -40,7 +40,7 @@ namespace io.nem2.sdk.Model.Transactions
             TransactionType = TransactionTypes.Types.MOSAIC_DEFINITION;
             Signature = signature;
             Signer = signer;
-            TransactionInfo = transactionInfo;
+            //TransactionInfo = transactionInfo;
         }
 
         public static MosaicDefinitionTransaction Create(NetworkType.Types networkType, Deadline deadline, string namespaceId,  string mosaicName, MosaicProperties properties)

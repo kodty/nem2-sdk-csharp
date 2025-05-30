@@ -14,11 +14,11 @@ namespace io.nem2.sdk.Model.Transactions
         public List<AggregateTransactionCosignature> Cosignatures { get; }
 
         public AggregateTransaction(NetworkType.Types networkType, int version, TransactionTypes.Types transactionType, Deadline deadline, ulong fee,  List<Transaction> innerTransactions, List<AggregateTransactionCosignature> cosignatures)
-         : this(networkType, version, transactionType, deadline, fee,innerTransactions, cosignatures, null, null, null){
+         : this(networkType, version, transactionType, deadline, fee,innerTransactions, cosignatures, null, null){
 
         }
 
-        public AggregateTransaction(NetworkType.Types networkType, int version, TransactionTypes.Types transactionType, Deadline deadline, ulong fee, List<Transaction> innerTransactions, List<AggregateTransactionCosignature> cosignatures, string signature, PublicAccount signer, TransactionInfo transactionInfo)
+        public AggregateTransaction(NetworkType.Types networkType, int version, TransactionTypes.Types transactionType, Deadline deadline, ulong fee, List<Transaction> innerTransactions, List<AggregateTransactionCosignature> cosignatures, string signature, PublicAccount signer)
         {
             InnerTransactions = innerTransactions;
             Cosignatures = cosignatures;
@@ -29,7 +29,7 @@ namespace io.nem2.sdk.Model.Transactions
             Version = version;
             Signature = signature;
             Signer = signer;
-            TransactionInfo = transactionInfo;
+            //TransactionInfo = transactionInfo;
         }
 
         public static AggregateTransaction CreateComplete(NetworkType.Types networkType, Deadline deadline, List<Transaction> innerTransactions)

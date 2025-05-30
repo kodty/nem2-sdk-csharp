@@ -26,7 +26,7 @@ namespace test.Model.AccountTest
             Debug.WriteLine(account.PublicKey);
             Assert.AreEqual(64, account.PublicAccount.PublicKey.Length);
             Debug.WriteLine(AddressEncoder.DecodeAddress(account.Address.Plain).ToHexUpper());
-            Assert.That(AddressEncoder.DecodeAddress(account.Address.Plain).ToHexUpper(), Is.EqualTo(HttpSetUp.hexAddress));
+            Assert.That(AddressEncoder.DecodeAddress(account.Address.Plain).ToHexUpper(), Is.EqualTo(""));
             Debug.WriteLine(account.Address.Plain);      
             Assert.IsTrue(account.Address.Plain == HttpSetUp.TestAddress);         
         }

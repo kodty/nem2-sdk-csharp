@@ -24,9 +24,9 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         public LockFundsTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, Mosaic1 mosaic, ulong duration, SignedTransaction transaction )
-            : this(networkType, version, deadline, fee, mosaic, duration, transaction, null, null, null) {}
+            : this(networkType, version, deadline, fee, mosaic, duration, transaction, null, null) {}
 
-        public LockFundsTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee,  Mosaic1 mosaic, ulong duration, SignedTransaction transaction, string signature, PublicAccount signer, TransactionInfo transactionInfo)
+        public LockFundsTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee,  Mosaic1 mosaic, ulong duration, SignedTransaction transaction, string signature, PublicAccount signer)
         {
             if (transaction.TransactionType != TransactionTypes.Types.AGGREGATE_BONDED) throw new ArgumentException("Cannot lock non-aggregate-bonded transaction");
             Deadline = deadline;
@@ -38,7 +38,7 @@ namespace io.nem2.sdk.Model.Transactions
             TransactionType = TransactionTypes.Types.HASH_LOCK;
             Signer = signer;
             Signature = signature;
-            TransactionInfo = transactionInfo;
+            //TransactionInfo = transactionInfo;
             Fee = fee;
         }
 

@@ -9,6 +9,7 @@ using io.nem2.sdk.src.Model.Network;
 using Integration_Tests;
 using System.Diagnostics;
 using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+using Integration_Tests.HttpRequests;
 
 
 namespace IntegrationTests.Infrastructure.Transactions

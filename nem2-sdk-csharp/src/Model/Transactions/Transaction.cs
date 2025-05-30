@@ -9,21 +9,21 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public abstract class Transaction
     {
+        public string Signature { get; internal set; }
+
+        public PublicAccount Signer { get; internal set; }
+
+        public int Version { get; set; }
+
+        public NetworkType.Types NetworkType { get; internal set; }
+
+        public TransactionTypes.Types TransactionType { get; internal set; }
+
         public ulong Fee { get; internal set; }
 
         public Deadline Deadline { get; internal set; }
 
-        public NetworkType.Types NetworkType { get; internal set; }
-
-        public int Version { get; set; }
-
-        public TransactionTypes.Types TransactionType { get; internal set; }
-
-        public PublicAccount Signer { get; internal set; }
-
-        public string Signature { get; internal set; }
-
-        public TransactionInfo TransactionInfo { get; internal set; }
+        //public TransactionInfo TransactionInfo { get; internal set; }
 
         private byte[] Bytes { get; set; }
 
@@ -37,7 +37,7 @@ namespace io.nem2.sdk.Model.Transactions
         public byte[] PrepareSignature(SecretKeyPair keyPair, byte[] networkGenHash)
         {
             Signer = PublicAccount.CreateFromPublicKey(keyPair.PublicKeyString, NetworkType);
-
+           
             Bytes = GenerateBytes();
 
             byte[] signingBytes = Bytes.SubArray(8 + 64 + 32 + 4, Bytes.Length - 108);
@@ -64,6 +64,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             return hash;
         }
+
         public SignedTransaction SignWith(SecretKeyPair keyPair, byte[] networkGenHash)
         {
             PrepareSignature(keyPair, networkGenHash);

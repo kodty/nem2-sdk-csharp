@@ -29,7 +29,7 @@ namespace io.nem2.sdk.Model.Transactions
             Fee = fee;
         }
 
-        internal TransferTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, Address recipient, List<Mosaic1> mosaics, IMessage message, string signature, PublicAccount signer, TransactionInfo transactionInfo)
+        internal TransferTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, Address recipient, List<Mosaic1> mosaics, IMessage message, string signature, PublicAccount signer)
         {
             if (mosaics == null) throw new ArgumentNullException(nameof(mosaics));
             Address = recipient ?? throw new ArgumentNullException(nameof(recipient));
@@ -43,7 +43,7 @@ namespace io.nem2.sdk.Model.Transactions
             Fee = fee;
             Signature = signature;
             Signer = signer;
-            TransactionInfo = transactionInfo;
+            //TransactionInfo = transactionInfo;
         }
 
         public static TransferTransaction Create(NetworkType.Types netowrkType, Deadline deadline, Address address, List<Mosaic1> mosaics, IMessage message)
@@ -51,7 +51,7 @@ namespace io.nem2.sdk.Model.Transactions
             return new TransferTransaction(netowrkType, 1, deadline, 100, address, mosaics, message);
         }
 
-        public static TransferTransaction Create(NetworkType.Types netowrkType, Deadline deadline,ulong fee, Address address, List<Mosaic1> mosaics, IMessage message)
+        public static TransferTransaction Create(NetworkType.Types netowrkType, Deadline deadline, ulong fee, Address address, List<Mosaic1> mosaics, IMessage message)
         {
             return new TransferTransaction(netowrkType, 1, deadline, fee, address, mosaics, message);
         }
