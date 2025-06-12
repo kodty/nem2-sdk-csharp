@@ -1,4 +1,6 @@
 ﻿
+using System.Diagnostics;
+
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 {
     public class QueryModel
@@ -7,34 +9,22 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
         internal int[][] RequestParamMap =
         {
-            [18, 17, 13, 14, 15, 12], // search accounts
-            [25, 4, 18, 17, 13, 14, 15], // search blocks
-            [26, 27, 22, 28, 11, 18, 17, 13, 14], // search meta data
-            [16, 18, 17, 13, 14], // search mosaics
-            [16, 21, 10, 2, 18, 17, 13, 14], // search namespaces
-            [12, 6, 27, 18, 17, 13, 14], // search mosaic restrictions
-            [(int)DefinedParams.address, 18, 17, 13, 14], // search account restrictions
-            [9, 7, 29, 19, 20, 23, 27, 3, 18, 17, 13, 14],
-            [9, 18, 17, 13, 14],
-            [9, 18, 17, 13, 14],
+            [(int)DefinedParams.height, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
+            [(int)DefinedParams.height, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
+            [(int)DefinedParams.address, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order], // search account restrictions
+            [(int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order, (int)DefinedParams.orderBy, (int)DefinedParams.mosaicId], // search accounts
+            [(int)DefinedParams.signerPublicKey, (int)DefinedParams.beneficiaryAddress, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order, (int)DefinedParams.orderBy], // search blocks
+            [(int)DefinedParams.address, (int)DefinedParams.recipientAddress, (int)DefinedParams.signerPublicKey, (int)DefinedParams.height, (int)DefinedParams.fromHeight, (int)DefinedParams.toHeight, (int)DefinedParams.fromTransferAmount, (int)DefinedParams.toTransferAmount, (int)DefinedParams.type, (int)DefinedParams.embedded, (int)DefinedParams.transferMosaicId, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
+            [(int)DefinedParams.address, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
+            [(int)DefinedParams.sourceAddress, (int)DefinedParams.targetAddress, (int)DefinedParams.scopedMetadataKey, (int)DefinedParams.targetId, (int)DefinedParams.metadataType, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order], // search meta data
+            [(int)DefinedParams.mosaicId, (int)DefinedParams.entryType, (int)DefinedParams.targetAddress, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order], // search mosaic restrictions
+            [(int)DefinedParams.ownerAddress, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order], // search mosaics
+            [(int)DefinedParams.ownerAddress, (int)DefinedParams.registrationType, (int)DefinedParams.level0, (int)DefinedParams.aliasType, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order], // search namespaces
+            [(int)DefinedParams.address, (int)DefinedParams.recipientAddress, (int)DefinedParams.signerPublicKey, (int)DefinedParams.height, (int)DefinedParams.fromHeight, (int)DefinedParams.toHeight, (int)DefinedParams.fromTransferAmount, (int)DefinedParams.toTransferAmount, (int)DefinedParams.type, (int)DefinedParams.embedded, (int)DefinedParams.transferMosaicId, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
+            [(int)DefinedParams.address, (int)DefinedParams.secret, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
+            [(int)DefinedParams.height, (int)DefinedParams.fromHeight, (int)DefinedParams.toHeight, (int)DefinedParams.recieptType, (int)DefinedParams.recipientAddress, (int)DefinedParams.senderAddress, (int)DefinedParams.targetAddress, (int)DefinedParams.artifactId, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
+            [(int)DefinedParams.address, (int)DefinedParams.recipientAddress, (int)DefinedParams.signerPublicKey, (int)DefinedParams.height, (int)DefinedParams.fromHeight, (int)DefinedParams.toHeight, (int)DefinedParams.fromTransferAmount, (int)DefinedParams.toTransferAmount, (int)DefinedParams.type, (int)DefinedParams.embedded, (int)DefinedParams.transferMosaicId, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
 
-            //
-            [(int)DefinedParams.address, 
-             (int)DefinedParams.recipientAddress, 25, 9, 7, 29, 8, 30, 32, 5, 31, 18, 17, 13, 14],
-            
-            //
-            [(int)DefinedParams.address, 
-             (int)DefinedParams.recipientAddress, 25, 9, 7, 29, 8, 30, 32, 5, 31, 18, 17, 13, 14],
-           
-            //
-            [(int)DefinedParams.address, 
-             (int)DefinedParams.recipientAddress, 25, 9, 7, 29, 8, 30, 32, 5, 31, 18, 17, 13, 14],
-           
-            //
-            [(int)DefinedParams.address, 18, 17, 13, 14],
-
-            //
-            [(int)DefinedParams.address, 23, 18, 17, 13, 14]
         };
 
         private Dictionary<string, string> ParamMap = new Dictionary<string, string>();
@@ -49,6 +39,8 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         internal void ParamRequestCompatible(DefinedParams param)
         {
             var map = RequestParamMap[(int)Request].ToList();
+            Debug.WriteLine("request " + (int)Request);
+            Debug.WriteLine((int)param);
 
             if (!map.Contains((int)param))
             {
@@ -82,7 +74,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
             ParamMap.Clear();
         }
 
-        internal string ReturnPathParams()
+        public string ReturnPathParams()
         {
             if (ParamMap.Count == 1)
             {
@@ -98,21 +90,21 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
         public enum DefineRequest
         {
-            SearchAccounts = 0,
-            SearchBlocks = 1,
-            SearchMetaDataEntries = 2,
-            SearchMosaics = 3,
-            SearchNamespaces = 4,
-            SearchMosaicRestrictions = 5,
-            SearchAccountRestrictions = 6,
-            SearchTransactionStatements = 7,
-            GetRecieptsAddressResolutionStatements = 8,
-            GetRecieptsMosaicResolutionStatements = 9,
-            SearchConfirmedTransactions = 10,
-            SearchUnconfirmedTransactions = 11,
-            SearchPartialTransactions = 12,
-            SearchHashLockTransactions = 13,
-            SearchSecretLockTransactions = 14
+            GetRecieptsAddressResolutionStatements = 0,
+            GetRecieptsMosaicResolutionStatements = 1,
+            SearchAccountRestrictions = 2,
+            SearchAccounts = 3,
+            SearchBlocks = 4,
+            SearchConfirmedTransactions = 5,
+            SearchHashLockTransactions = 6,
+            SearchMetaDataEntries = 7,
+            SearchMosaicRestrictions = 8,
+            SearchMosaics = 9,
+            SearchNamespaces = 10,
+            SearchPartialTransactions = 11,
+            SearchSecretLockTransactions = 12,
+            SearchTransactionStatements = 13,
+            SearchUnconfirmedTransactions = 14,
         }
 
         public enum DefinedParams
@@ -120,13 +112,13 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
             address = 1,
             aliasType = 2,
             artifactId = 3,
-            beneficiaryAddress = 4,
+            beneficiaryAddress = 4, // must be Base32 encoded - contrary to hex beneficiary provided by /blocks
             embedded = 5,
             entryType = 6,
             fromHeight = 7,
             fromTransferAmount = 8,
             height = 9,
-            level0 = 10,
+            level0 = 10, // do level 1 & 2
             metadataType = 11,
             mosaicId = 12,
             offset = 13,
@@ -164,5 +156,16 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
             Id = 1
         }
+
+        internal bool PageSizeValid(int pageSize)
+        {
+            return pageSize < 0 || pageSize > 100;
+        }
+        internal bool PageNumbereValid(int pageNumber)
+        {
+            return pageNumber > 0;
+        }
+
+
     }
 }
