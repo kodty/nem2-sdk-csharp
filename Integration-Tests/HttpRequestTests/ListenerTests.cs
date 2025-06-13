@@ -10,7 +10,6 @@ using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests
 {
-    
     public class ListenerTests
     {
         [Test]
@@ -21,7 +20,7 @@ namespace Integration_Tests.HttpRequests
             await listener.Open();
 
             var block = await listener.NewBlock().Take(1);
-
+            Assert.That(block.Block.Height, Is.GreaterThan(100));
             Assert.AreEqual(1, block.Block.Version);
         }
 

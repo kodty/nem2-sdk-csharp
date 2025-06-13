@@ -1,7 +1,4 @@
-﻿
-using System.Diagnostics;
-
-namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
+﻿namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 {
     public class QueryModel
     {
@@ -38,8 +35,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         internal void ParamRequestCompatible(DefinedParams param)
         {
             var map = RequestParamMap[(int)Request].ToList();
-            Debug.WriteLine("request " + (int)Request);
-            Debug.WriteLine((int)param);
 
             if (!map.Contains((int)param))
             {
@@ -64,7 +59,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
         public void RemoveParam(DefinedParams param)
         {
-
             ParamMap.Remove("?" + param.ToString() + "=");
         }
 
@@ -154,16 +148,5 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
             Id = 1
         }
-
-        internal bool PageSizeValid(int pageSize)
-        {
-            return pageSize < 0 || pageSize > 100;
-        }
-        internal bool PageNumbereValid(int pageNumber)
-        {
-            return pageNumber > 0;
-        }
-
-
     }
 }
