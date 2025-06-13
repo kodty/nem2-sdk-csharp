@@ -10,9 +10,9 @@ namespace Unit_Tests.Encoding
         [Test]
         public void Base32EncodeAddress()
         {
-            var testString = "68258605CB5ABC592FE691190202CDFD6DDEE659A6BB30B8";
-            var hexString = "6861F18F6330A43595047D81B6E820BE0EBAB3A9D7A5007D";
-
+            var testString = "68D59ED4096C5CF366F65E554C7BC0FABEA0E60D4B28FB4A";
+            var hexString = "687CBC80535BCEB01042608CF7A207BCC3A7C4318DF1BBF6";
+            Debug.WriteLine(AddressEncoder.EncodeAddress(testString));
             Assert.That(AddressEncoder.EncodeAddress(testString), Is.EqualTo("NASYMBOLLK6FSL7GSEMQEAWN7VW55ZSZU25TBOA"));
             Assert.That(AddressEncoder.EncodeAddress(hexString), Is.EqualTo("NBQ7DD3DGCSDLFIEPWA3N2BAXYHLVM5J26SQA7I"));
         }
