@@ -22,7 +22,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         /*10*/[(int)DefinedParams.ownerAddress, (int)DefinedParams.registrationType, (int)DefinedParams.level0, (int)DefinedParams.aliasType, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order], // search namespaces
         /*11*/[(int)DefinedParams.address, (int)DefinedParams.recipientAddress, (int)DefinedParams.signerPublicKey, (int)DefinedParams.height, (int)DefinedParams.fromHeight, (int)DefinedParams.toHeight, (int)DefinedParams.fromTransferAmount, (int)DefinedParams.toTransferAmount, (int)DefinedParams.type, (int)DefinedParams.embedded, (int)DefinedParams.transferMosaicId, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
         /*12*/[(int)DefinedParams.address, (int)DefinedParams.secret, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
-        /*13*/[(int)DefinedParams.height, (int)DefinedParams.fromHeight, (int)DefinedParams.toHeight, (int)DefinedParams.recieptType, (int)DefinedParams.recipientAddress, (int)DefinedParams.senderAddress, (int)DefinedParams.targetAddress, (int)DefinedParams.artifactId, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
+        /*13*/[(int)DefinedParams.type, (int)DefinedParams.recipientAddress, (int)DefinedParams.senderAddress, (int)DefinedParams.targetAddress, (int)DefinedParams.height, (int)DefinedParams.fromHeight, (int)DefinedParams.toHeight, (int)DefinedParams.artifactId, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
         /*14*/[(int)DefinedParams.address, (int)DefinedParams.recipientAddress, (int)DefinedParams.signerPublicKey, (int)DefinedParams.height, (int)DefinedParams.fromHeight, (int)DefinedParams.toHeight, (int)DefinedParams.fromTransferAmount, (int)DefinedParams.toTransferAmount, (int)DefinedParams.type, (int)DefinedParams.embedded, (int)DefinedParams.transferMosaicId, (int)DefinedParams.pageSize, (int)DefinedParams.pageNumber, (int)DefinedParams.offset, (int)DefinedParams.order],
         };
 
@@ -103,7 +103,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
             SearchPartialTransactions = 11,
             SearchSecretLockTransactions = 12,
             SearchTransactionStatements = 13,
-            SearchUnconfirmedTransactions = 14,
+            SearchUnconfirmedTransactions = 14, // todo
         }
 
         public enum DefinedParams
@@ -126,7 +126,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
             ownerAddress = 16,
             pageNumber = 17,
             pageSize = 18,
-            recieptType = 19,
+            type = 19,
             recipientAddress = 20,
             registrationType = 21,
             scopedMetadataKey = 22,
@@ -138,8 +138,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
             targetId = 28,
             toHeight = 29,
             toTransferAmount = 30,
-            transferMosaicId = 31,
-            type = 32
+            transferMosaicId = 31
         }
 
         public enum Order
