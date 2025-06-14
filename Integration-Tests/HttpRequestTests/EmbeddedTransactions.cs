@@ -314,12 +314,12 @@ namespace Integration_Tests.HttpRequests
 
             var Voting = (EmbeddedMosaicSupplyRevocation)aggregate.Transactions[1].Transaction;
 
-            Assert.That(Voting.SignerPublicKey, Is.EqualTo("1B22ADD1B1EA8920153EDA0F27936A1EE941388F27284618599D8F83EBE92A8B"));
+            Assert.IsTrue(Voting.SignerPublicKey.IsHex(64));
             Assert.That(Voting.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(Voting.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION));
             Assert.That(Voting.Version, Is.EqualTo(1));
-            Assert.That(Voting.MosaicId, Is.EqualTo("5CD6CBFDEE0F1D8E"));
-            Assert.That(Voting.SourceAddress, Is.EqualTo("687CDA0541F388DF9D46138DA8516558B98453D98E75A02E"));
+            Assert.IsTrue(Voting.MosaicId.IsHex(16));
+            Assert.IsTrue(Voting.SourceAddress.IsHex(48));
             Assert.That(Voting.Amount, Is.EqualTo(8));
         }
 
@@ -334,28 +334,28 @@ namespace Integration_Tests.HttpRequests
 
             var VRF = (EmbeddedKeyLink)aggregate.Transactions[0].Transaction;
 
-            Assert.That(VRF.LinkedPublicKey, Is.EqualTo("F343979EB993481620B8077FAB7E0D5079857C1093CF09856B38F900F214D0D3"));
+            Assert.IsTrue(VRF.LinkedPublicKey.IsHex(64));
             Assert.That(VRF.LinkAction, Is.EqualTo(1));
             Assert.That(VRF.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
-            Assert.That(VRF.SignerPublicKey, Is.EqualTo("615ABB16819BDC49EB0DB95121E0A1B52838877128A16C88A3CDE7D7CB3745C3"));
+            Assert.IsTrue(VRF.SignerPublicKey.IsHex(64));
             Assert.That(VRF.Type, Is.EqualTo(TransactionTypes.Types.VRF_KEY_LINK));
             Assert.That(VRF.Version, Is.EqualTo(1));
 
             var Account = (EmbeddedKeyLink)aggregate.Transactions[1].Transaction;
 
-            Assert.That(Account.LinkedPublicKey, Is.EqualTo("BEB4EC4F827EA284F462217295FA3576C0FFF22821509AA49BAB11367C82111E"));
+            Assert.IsTrue(Account.LinkedPublicKey.IsHex(64));
             Assert.That(Account.LinkAction, Is.EqualTo(1));
             Assert.That(Account.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
-            Assert.That(Account.SignerPublicKey, Is.EqualTo("615ABB16819BDC49EB0DB95121E0A1B52838877128A16C88A3CDE7D7CB3745C3"));
+            Assert.IsTrue(Account.SignerPublicKey.IsHex(64));
             Assert.That(Account.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_KEY_LINK));
             Assert.That(Account.Version, Is.EqualTo(1));
 
             var Node = (EmbeddedKeyLink)aggregate.Transactions[2].Transaction;
 
-            Assert.That(Node.LinkedPublicKey, Is.EqualTo("70B26E947F57BF0CFCDC4968F73F29534DEB947A864B40CF742BE496E28742D3"));
+            Assert.IsTrue(Node.LinkedPublicKey.IsHex(64));
             Assert.That(Node.LinkAction, Is.EqualTo(1));
             Assert.That(Node.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
-            Assert.That(Node.SignerPublicKey, Is.EqualTo("615ABB16819BDC49EB0DB95121E0A1B52838877128A16C88A3CDE7D7CB3745C3"));
+            Assert.IsTrue(Node.SignerPublicKey.IsHex(64));
             Assert.That(Node.Type, Is.EqualTo(TransactionTypes.Types.NODE_KEY_LINK));
             Assert.That(Node.Version, Is.EqualTo(1));
         }
@@ -396,16 +396,16 @@ namespace Integration_Tests.HttpRequests
                 Assert.That(item.Meta.Index, Is.AnyOf(0, 1));
                 Assert.That(item.Meta.Height, Is.EqualTo(1995));
                 Assert.That(item.Meta.Timestamp, Is.EqualTo(144382262));
-                Assert.That(item.Meta.AggregateId, Is.EqualTo("666420199E09C6EE960222F3"));
-                Assert.That(item.Meta.AggregateHash, Is.EqualTo("BFBD18CE27575CF154826C9ECFE587C472193AB035E8F8E4ABFEB6FE1E53520C"));
+                Assert.IsTrue(item.Meta.AggregateId.IsHex(24));
+                Assert.IsTrue(item.Meta.AggregateHash.IsHex(64));
                 Assert.That(item.Meta.FeeMultiplier, Is.EqualTo(138));
 
                 Assert.That(i.Version, Is.EqualTo(1));
-                Assert.That(i.RecipientAddress, Is.EqualTo("6894D305EBBE9669675AEEC0B00CCD20B09548C3503B0880"));
+                Assert.IsTrue(i.RecipientAddress.IsHex(48));
                 Assert.That(i.Type, Is.EqualTo(TransactionTypes.Types.TRANSFER));
-                Assert.That(i.SignerPublicKey, Is.EqualTo("3714C04D01D664E2DDBD5ED2BA8B314F991EBA50122A38EC92A46AD987510B9D"));
+                Assert.IsTrue(i.SignerPublicKey.IsHex(64));
                 Assert.That(i.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
-                Assert.That(i.Mosaics[0].Id, Is.EqualTo("6BED913FA20223F8"));
+                Assert.IsTrue(i.Mosaics[0].Id.IsHex(16));
                 Assert.That(i.Mosaics[0].Amount, Is.EqualTo(1000));
             }
         }

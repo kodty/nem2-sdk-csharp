@@ -36,8 +36,7 @@ namespace Integration_Tests
             Assert.That(response[0].Roles, Is.GreaterThan(0));
             Assert.That(response[0].NetworkGenerationHashSeed, Is.EqualTo("57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6"));
             Assert.That(response[0].FriendlyName.Length, Is.GreaterThan(0));
-            Assert.That(response[0].PublicKey.Length, Is.EqualTo(64));
-            
+            Assert.That(response[0].PublicKey.Length, Is.EqualTo(64));           
         }
 
         [Test, Timeout(20000)]

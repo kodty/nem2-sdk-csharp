@@ -1,5 +1,4 @@
-﻿
-namespace io.nem2.sdk.Model.Transactions
+﻿namespace io.nem2.sdk.Model.Transactions
 {
     public class Deadline
     {

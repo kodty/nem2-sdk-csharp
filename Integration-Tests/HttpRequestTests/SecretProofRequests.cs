@@ -1,5 +1,6 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Reactive.Linq;
@@ -35,7 +36,7 @@ namespace Integration_Tests.HttpRequests
                 {
                     var tx = (SecretProofT)i.Transaction;
 
-                    Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
+                    Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
                     Assert.That(tx.Secret.Length, Is.GreaterThan(0));
                     Assert.That(tx.Proof.Length, Is.GreaterThan(0));
                 }

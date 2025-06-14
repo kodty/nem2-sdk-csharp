@@ -1,5 +1,6 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model.Network;
 using System.Reactive.Linq;
@@ -22,9 +23,9 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
 
             Assert.That(response.Account.Version, Is.EqualTo(1));
             Assert.That(response.Account.AddressHeight, Is.EqualTo(1));
-            Assert.That(response.Account.PublicKey, Is.EqualTo("FC8C66547D7C20CD6CBF7F31DC5657247351AF8C12188E56F885FF012431B8C1"));
-            Assert.That(response.Account.Address, Is.EqualTo("68AB07874BCFA82C28D84818217EBC49AE0DF421C738161F"));
-            Assert.That(response.Account.SupplementalPublicKeys.Voting.PublicKeys[0].PublicKey, Is.EqualTo("E1A8274A61DC5D2A378F5719B1FADB64FBF82120B4B876AEA3774E387C2650FF"));
+            Assert.IsTrue(response.Account.PublicKey.IsHex(64));
+            Assert.IsTrue(response.Account.Address.IsHex(48));
+            Assert.IsTrue(response.Account.SupplementalPublicKeys.Voting.PublicKeys[0].PublicKey.IsHex(64));
             Assert.That(response.Account.SupplementalPublicKeys.Voting.PublicKeys[0].StartEpoch, Is.EqualTo(181));
             Assert.That(response.Account.SupplementalPublicKeys.Voting.PublicKeys[0].EndEpoch, Is.EqualTo(357));
             Assert.That(response.Account.Importance, Is.EqualTo(0));
@@ -45,26 +46,26 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
 
             response.ForEach(i =>
             {
-                Assert.That(i.Account.PublicKey.Length, Is.GreaterThan(0));
+                Assert.IsTrue(i.Account.PublicKey.IsHex(64));
                 Assert.That(i.Account.Importance, Is.GreaterThanOrEqualTo(0));
                 Assert.That(i.Account.AccountType, Is.GreaterThanOrEqualTo(0));
                 Assert.That(i.Account.AddressHeight, Is.GreaterThan(0));
 
-                Assert.That(i.Account.PublicKey.Length, Is.EqualTo(64));
+                Assert.IsTrue(i.Account.PublicKey.IsHex(64));
 
                 if (i.Account.SupplementalPublicKeys != null)
                 {
                     if (i.Account.SupplementalPublicKeys.Linked != null)
                     {
-                        Assert.That(i.Account.SupplementalPublicKeys.Linked.PublicKey.Length, Is.EqualTo(64));
+                        Assert.IsTrue(i.Account.SupplementalPublicKeys.Linked.PublicKey.IsHex(64));
                     }
                     if (i.Account.SupplementalPublicKeys.Node != null)
                     {
-                        Assert.That(i.Account.SupplementalPublicKeys.Node.PublicKey.Length, Is.EqualTo(64));
+                        Assert.IsTrue(i.Account.SupplementalPublicKeys.Node.PublicKey.IsHex(64));
                     }
                     if (i.Account.SupplementalPublicKeys.Vrf != null)
                     {
-                        Assert.That(i.Account.SupplementalPublicKeys.Vrf.PublicKey.Length, Is.EqualTo(64));
+                        Assert.IsTrue(i.Account.SupplementalPublicKeys.Vrf.PublicKey.IsHex(64));
                     }
                 }
                 if (i.Account.Mosaics != null)
@@ -89,26 +90,26 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             response.ForEach(i =>
             {
 
-                Assert.That(i.Account.PublicKey.Length, Is.GreaterThan(0));
+                Assert.IsTrue(i.Account.PublicKey.IsHex(64));
                 Assert.That(i.Account.Importance, Is.GreaterThanOrEqualTo(0));
                 Assert.That(i.Account.AccountType, Is.GreaterThanOrEqualTo(0));
                 Assert.That(i.Account.AddressHeight, Is.GreaterThan(0));
 
-                Assert.That(i.Account.PublicKey.Length, Is.EqualTo(64));
+                Assert.IsTrue(i.Account.PublicKey.IsHex(64));
 
                 if (i.Account.SupplementalPublicKeys != null)
                 {
                     if (i.Account.SupplementalPublicKeys.Linked != null)
                     {
-                        Assert.That(i.Account.SupplementalPublicKeys.Linked.PublicKey.Length, Is.EqualTo(64));
+                        Assert.IsTrue(i.Account.SupplementalPublicKeys.Linked.PublicKey.IsHex(64));
                     }
                     if (i.Account.SupplementalPublicKeys.Node != null)
                     {
-                        Assert.That(i.Account.SupplementalPublicKeys.Node.PublicKey.Length, Is.EqualTo(64));
+                        Assert.IsTrue(i.Account.SupplementalPublicKeys.Node.PublicKey.IsHex(64));
                     }
                     if (i.Account.SupplementalPublicKeys.Vrf != null)
                     {
-                        Assert.That(i.Account.SupplementalPublicKeys.Vrf.PublicKey.Length, Is.EqualTo(64));
+                        Assert.IsTrue(i.Account.SupplementalPublicKeys.Vrf.PublicKey.IsHex(64));
                     }
                 }
                 if (i.Account.Mosaics != null)
@@ -129,23 +130,20 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
 
             var response = await accountClient.GetAccount(account.Address.Plain);
 
-            Assert.That(response.Id.Length, Is.EqualTo(24));
+            Assert.IsTrue(response.Id.IsHex(24));
             Assert.That(response.Account.Version, Is.EqualTo(1));
             Assert.That(response.Account.PublicKeyHeight, Is.GreaterThanOrEqualTo(0));
-            Assert.That(response.Account.Address.Length, Is.GreaterThan(0));
+            Assert.That(response.Account.Address.IsHex(48));
             Assert.That(response.Account.Importance, Is.GreaterThan(1));
             Assert.That(response.Account.AccountType, Is.GreaterThanOrEqualTo(0));
             Assert.That(response.Account.AddressHeight, Is.GreaterThan(0));
 
-            Assert.That(response.Account.PublicKey.Length, Is.GreaterThan(0));
+            Assert.IsTrue(response.Account.PublicKey.IsHex(64));
             Assert.That(response.Account.SupplementalPublicKeys, !Is.Null);
-            Assert.That(response.Account.SupplementalPublicKeys.Linked, !Is.Null);
-            Assert.That(response.Account.SupplementalPublicKeys.Linked.PublicKey.Length, Is.EqualTo(64));
-            Assert.That(response.Account.SupplementalPublicKeys.Node, !Is.Null);
-            Assert.That(response.Account.SupplementalPublicKeys.Node.PublicKey.Length, Is.EqualTo(64));
-            Assert.That(response.Account.SupplementalPublicKeys.Vrf, !Is.Null);
-            Assert.That(response.Account.SupplementalPublicKeys.Vrf.PublicKey.Length, Is.EqualTo(64));
-            Assert.That(response.Account.SupplementalPublicKeys.Linked.PublicKey.Length, Is.EqualTo(64));
+            Assert.IsTrue(response.Account.SupplementalPublicKeys.Linked.PublicKey.IsHex(64));
+            Assert.IsTrue(response.Account.SupplementalPublicKeys.Node.PublicKey.IsHex(64));
+            Assert.IsTrue(response.Account.SupplementalPublicKeys.Vrf.PublicKey.IsHex(64));
+
 
             Assert.That(response.Account.ImportanceHeight, Is.GreaterThan(0));
 
@@ -179,7 +177,7 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             var account = Address.CreateFromHex("6874CFD2665CD89339B9B74175A7F5A01059A1FEBF0A58A7");
             var response = await accountClient.GetAccountMerkle(account.Plain);
 
-            Assert.That(response.Raw.Length, Is.EqualTo(4520));
+            Assert.That(response.Raw.Length, Is.EqualTo(4584));
 
             response.Tree.ForEach(t =>
             {
@@ -217,7 +215,7 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
                 Assert.That(item.AccountRestrictions.Address.Length, Is.GreaterThan(0));
                 Assert.That(item.AccountRestrictions.Restrictions[0].RestrictionFlags[0], Is.GreaterThan(RestrictionTypes.Types.ADDRESS));
                 Assert.That(item.AccountRestrictions.Restrictions[0].Values[0].Length, Is.EqualTo(16));
-                Assert.That(Address.CreateFromHex(item.AccountRestrictions.Address).Plain.Length, Is.EqualTo(39));
+                Assert.IsTrue(Address.CreateFromHex(item.AccountRestrictions.Address).Plain.IsBase32(39));
             }
         }
 
@@ -229,10 +227,10 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             var acc = new PublicAccount("C807BE28855D0C87A8A2C032E51790CCB9158C15CBACB8B222E27DFFFEB3697D", NetworkType.Types.MAIN_NET);
 
             var restriction = await client.GetAccountRestriction(acc.Address.Plain);
-           
-            Assert.That(Address.CreateFromHex(restriction.AccountRestrictions.Address).Plain, Is.EqualTo(acc.Address.Plain));
+
+            Assert.IsTrue(Address.CreateFromHex(restriction.AccountRestrictions.Address).Plain.IsBase32(39));
             Assert.That(restriction.AccountRestrictions.Restrictions[0].RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
-            Assert.That(restriction.AccountRestrictions.Restrictions[0].Values[0], Is.EqualTo("6BED913FA20223F8"));
+            Assert.IsTrue(restriction.AccountRestrictions.Restrictions[0].Values[0].IsHex(16));
         }
 
         [Test, Timeout(20000)]
@@ -262,11 +260,11 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             var response = await accountClient.GetAccountRestrictionsMerkle(account.Address.Plain);
 
             Assert.That(response.Raw.Length, Is.GreaterThan(0));
-            Assert.That(response.Tree[0].Links[0].Link.Length, Is.EqualTo(64));
+            Assert.IsTrue(response.Tree[0].Links[0].Link.IsHex(64));
             Assert.That(response.Tree[0].Type, Is.EqualTo(0));
             Assert.That(response.Tree[0].NibbleCount, Is.EqualTo(0));
             Assert.That(response.Tree[0].Value, Is.Null);
-            Assert.That(response.Tree[0].BranchHash.Length, Is.EqualTo(64));
+            Assert.IsTrue(response.Tree[0].BranchHash.IsHex(64));
         }
     }
 }

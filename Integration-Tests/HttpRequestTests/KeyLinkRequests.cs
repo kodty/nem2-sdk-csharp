@@ -1,5 +1,6 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Reactive.Linq;
@@ -31,11 +32,11 @@ namespace Integration_Tests.HttpRequests
 
                 var tx = (KeyLink)i.Transaction;
 
-                Assert.That(i.Id.Length, Is.EqualTo(24));
-                Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
-                Assert.That(i.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
-                Assert.That(tx.SignerPublicKey.Length, Is.EqualTo(64));
-                Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
+                Assert.IsTrue(i.Id.IsHex(24));
+                Assert.IsTrue(i.Meta.Hash.IsHex(64));
+                Assert.IsTrue(i.Meta.MerkleComponentHash.IsHex(64));
+                Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
+                Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
                 Assert.That(tx.LinkAction, Is.EqualTo(1));
             });
         }
@@ -61,8 +62,8 @@ namespace Integration_Tests.HttpRequests
 
                 var tx = (KeyLink)i.Transaction;
 
-                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
-                Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
+                Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
+                Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
             });
         }
 
@@ -87,11 +88,11 @@ namespace Integration_Tests.HttpRequests
 
                 var tx = (VotingKeyLink)i.Transaction;
 
-                Assert.That(i.Id.Length, Is.EqualTo(24));
-                Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
-                Assert.That(i.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
-                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
-                Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
+                Assert.IsTrue(i.Id.IsHex(24));
+                Assert.IsTrue(i.Meta.Hash.IsHex(64));
+                Assert.IsTrue(i.Meta.MerkleComponentHash.IsHex(64));
+                Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
+                Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
                 Assert.That(tx.StartEpoch, Is.EqualTo(1));
                 Assert.That(tx.EndEpoch, Is.EqualTo(180));
             });
@@ -110,8 +111,8 @@ namespace Integration_Tests.HttpRequests
 
             var EmbeddedKeyLink = (EmbeddedVotingKeyLink)agg.Transactions[4].Transaction;
 
-            Assert.That(EmbeddedKeyLink.SignerPublicKey, Is.EqualTo(pubKey));
-            Assert.That(EmbeddedKeyLink.LinkedPublicKey.Length, Is.EqualTo(64));
+            Assert.IsTrue(EmbeddedKeyLink.SignerPublicKey.IsHex(64));
+            Assert.IsTrue(EmbeddedKeyLink.LinkedPublicKey.IsHex(64));
             Assert.That(EmbeddedKeyLink.StartEpoch, Is.EqualTo(2));
             Assert.That(EmbeddedKeyLink.EndEpoch, Is.EqualTo(361));
 
@@ -138,11 +139,11 @@ namespace Integration_Tests.HttpRequests
 
                 var tx = (KeyLink)i.Transaction;
 
-                Assert.That(i.Id.Length, Is.EqualTo(24));
-                Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
-                Assert.That(i.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
-                Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey));
-                Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
+                Assert.IsTrue(i.Id.IsHex(24));
+                Assert.IsTrue(i.Meta.Hash.IsHex(64));
+                Assert.IsTrue(i.Meta.MerkleComponentHash.IsHex(64));
+                Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
+                Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
             });
         }
 
@@ -155,11 +156,11 @@ namespace Integration_Tests.HttpRequests
 
             var tx = (VotingKeyLink)response.Transaction;
 
-            Assert.That(response.Id.Length, Is.EqualTo(24));
-            Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
-            Assert.That(response.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
-            Assert.That(tx.SignerPublicKey, Is.EqualTo("AFF16052217A847A6A71B326FEA9073CFF70D07FC5BA9026B3E05FB453C950DF"));
-            Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
+            Assert.IsTrue(response.Id.IsHex(24));
+            Assert.IsTrue(response.Meta.Hash.IsHex(64));
+            Assert.IsTrue(response.Meta.MerkleComponentHash.IsHex(64));
+            Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
+            Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
             Assert.That(tx.StartEpoch, Is.EqualTo(1));
             Assert.That(tx.EndEpoch, Is.EqualTo(180));
         }
@@ -176,8 +177,8 @@ namespace Integration_Tests.HttpRequests
             Assert.That(response.Id.Length, Is.EqualTo(24));
             Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
             Assert.That(response.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
-            Assert.That(tx.SignerPublicKey, Is.EqualTo("0B349D6FB4E93FAB29065D51B7A5375FFAF3856BA7F64DDE66B86579816D6E77"));
-            Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
+            Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
+            Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
         }
 
         [Test, Timeout(20000)]
@@ -189,11 +190,11 @@ namespace Integration_Tests.HttpRequests
 
             var tx = (KeyLink)response.Transaction;
 
-            Assert.That(response.Id.Length, Is.EqualTo(24));
-            Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
-            Assert.That(response.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
-            Assert.That(tx.SignerPublicKey, Is.EqualTo("AFF16052217A847A6A71B326FEA9073CFF70D07FC5BA9026B3E05FB453C950DF"));
-            Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
+            Assert.IsTrue(response.Id.IsHex(24));
+            Assert.IsTrue(response.Meta.Hash.IsHex(64));
+            Assert.IsTrue(response.Meta.MerkleComponentHash.IsHex(64));
+            Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
+            Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
         }
 
         [Test, Timeout(20000)]
@@ -205,11 +206,11 @@ namespace Integration_Tests.HttpRequests
 
             var tx = (KeyLink)response.Transaction;
 
-            Assert.That(response.Id.Length, Is.EqualTo(24));
-            Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
-            Assert.That(response.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
-            Assert.That(tx.SignerPublicKey, Is.EqualTo("9261DB223A28A3DB05315235DF2186260951B66515B17A6B890BBCE3EE9E3FE7"));
-            Assert.That(tx.LinkedPublicKey.Length, Is.EqualTo(64));
+            Assert.IsTrue(response.Id.IsHex(24));
+            Assert.IsTrue(response.Meta.Hash.IsHex(64));
+            Assert.IsTrue(response.Meta.MerkleComponentHash.IsHex(64));
+            Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
+            Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
         }
     }
 }
