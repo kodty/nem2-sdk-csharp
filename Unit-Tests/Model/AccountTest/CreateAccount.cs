@@ -13,7 +13,9 @@ namespace test.Model.AccountTest
         public void CreateNewAccount()
         {
             var acc = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
-
+            Debug.WriteLine(acc.PublicKey);
+            Debug.WriteLine(acc.PrivateKey);
+            Debug.WriteLine(acc.Address.Plain);
             Assert.AreEqual(64, acc.PublicAccount.PublicKey.Length);
         }
 
@@ -35,7 +37,7 @@ namespace test.Model.AccountTest
         public void TestPublicAccount1()
         {
             var pubAccount = new PublicAccount("87C45C6A2C87589786549BAD91568E56822507CA1D85D5B0E86B6F555231A4F8", NetworkType.Types.TEST_NET);
-
+            
             Assert.That(pubAccount.Address.Plain, Is.EqualTo("TCSJY245ZPSF5SSC4OBBKGOLQ3VEPSRIBTVXTTQ"));
             Debug.WriteLine(AddressEncoder.DecodeAddress(pubAccount.Address.Plain).ToHexLower());
             

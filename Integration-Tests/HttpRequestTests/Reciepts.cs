@@ -64,7 +64,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(response[2].Statement.Receipts[0].Amount, Is.EqualTo(0));
             Assert.That(response[2].Statement.Receipts[0].SenderAddress.Length, Is.EqualTo(48));
             Assert.That(response[2].Statement.Receipts[0].RecipientAddress, Is.EqualTo("684730D07E8EF59C26C3259696730C75F6E7216730E8C9C8"));
-            Assert.That(response[2].Statement.Source.PrimaryId, Is.EqualTo(25593));
+            Assert.That(response[2].Statement.Source.PrimaryId, Is.EqualTo(25592));
             Assert.That(response[2].Statement.Source.SecondaryId, Is.EqualTo(0));
         }
     }

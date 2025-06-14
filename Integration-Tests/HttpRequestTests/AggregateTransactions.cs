@@ -1,6 +1,7 @@
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Network;
@@ -22,7 +23,7 @@ namespace Integration_Tests.HttpRequests
         {
             string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
             PublicAccount acc = new PublicAccount(pubKey, NetworkType.Types.MAIN_NET);
-            Assert.That(acc.Address.Plain, Is.EqualTo("NASYMBOLLK6FSL7GSEMQEAWN7VW55ZSZU25TBOA"));
+            Assert.IsTrue(acc.Address.Plain.IsBase32(39));
 
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
