@@ -1,15 +1,8 @@
-﻿// ***********************************************************************
-// Assembly         : nem2-sdk
-using System.Text;
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
-using io.nem2.sdk.Core.Utils;
-using io.nem2.sdk.Infrastructure.Buffers;
-using io.nem2.sdk.Infrastructure.Buffers.Schema;
+﻿using System.Text;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Namespace;
 using io.nem2.sdk.src.Export;
-using io.nem2.sdk.src.Infrastructure.Buffers.FlatBuffers;
 using io.nem2.sdk.src.Model.Network;
 
 namespace io.nem2.sdk.Model.Transactions

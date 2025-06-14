@@ -23,7 +23,6 @@
 // <summary></summary>
 // ***********************************************************************
 
-using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
@@ -50,5 +49,16 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         IObservable<TransactionAnnounceResponse> Announce(SignedTransaction payload);
         IObservable<TransactionAnnounceResponse> AnnounceAggregateTransaction(SignedTransaction payload);
         IObservable<TransactionAnnounceResponse> AnnounceCosignatureTransaction(CosignatureSignedTransaction payload);  
+    }
+
+    public class CosignatureSignedTransaction
+    {
+        public string ParentHash { get; set; }
+
+        public string Signature { get; set; }
+
+        public string Signer { get; set; }
+
+        public int Version { get; set; }
     }
 }

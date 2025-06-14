@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
-using io.nem2.sdk.Infrastructure.Buffers.Model;
+using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Accounts;
 
 namespace io.nem2.sdk.Model.Transactions
