@@ -23,6 +23,7 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
 using TweetNaclSharp;

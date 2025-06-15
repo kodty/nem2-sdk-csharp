@@ -4,44 +4,36 @@
     {
         internal DateTime EpochDate { get; set; }
 
-        public ulong Ticks { get; }   
+        internal DateTime Date { get; set; }
+
+        public ulong Ticks { get; }  
+       
+        public DateTime GetDateTime()
+        {
+            return Date;
+        }
+
+        private TimeSpan GetTimeSinceEpoch()
+        {
+            EpochDate = new DateTime(2022, 10, 31, 21, 07, 47).ToUniversalTime();
+
+            return DateTime.Now.ToUniversalTime().Subtract(EpochDate);
+        }
 
         public Deadline(TimeSpan time)
-        { //2022-10-31 21:07:47
-            EpochDate = new DateTime(2022, 10, 31, 21, 07, 47).ToUniversalTime();
-
-            var now = DateTime.Now.ToUniversalTime();
-
-            var deadline = now - EpochDate;
-
-            Ticks = (ulong)deadline.Add(time).TotalMilliseconds;
-        }
-
-        public Deadline(ulong hours)
-        { //2022-10-31 21:07:47
-            EpochDate = new DateTime(2022, 10, 31, 21, 07, 47).ToUniversalTime();
-
-            var now = DateTime.Now.ToUniversalTime();
-
-            var deadline = now - EpochDate;
-
-            Ticks = (ulong)deadline.Add(TimeSpan.FromHours(hours)).TotalMilliseconds;
-        }
-
-        public Deadline(DateTime dateTime, TimeSpan time)
         {
-            EpochDate = dateTime.ToUniversalTime();
+            var deadline = GetTimeSinceEpoch().Add(time);
 
-            var now = DateTime.Now.ToUniversalTime();
+            Date = EpochDate.Add(deadline).ToUniversalTime();
 
-            var deadline = now - EpochDate;
-
-            Ticks = (ulong)deadline.Add(time).TotalMilliseconds;
+            Ticks = (ulong)Date.Subtract(EpochDate).TotalMilliseconds; 
         }
+
+        public Deadline(int hours) : this(TimeSpan.FromHours(hours)) { }
 
         public static Deadline AddHours(int hours)
         {
-            return new Deadline(TimeSpan.FromHours(hours));
+            return new Deadline(hours);
         }
 
         public static Deadline AddMinutes(int mins)

@@ -28,17 +28,18 @@ namespace Unit_Tests.Crypto
             byte[] signer = "A75027E4F32570A79B8A5A8641AB91ED48360074AE2AAE055CE3BD48D3BE2233".FromHex();
             byte[] genHash = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4".FromHex();
             byte[] txData = "B0000000000000002396B87D65DDDCF52F527CC4C8E2C413C52DA4E2D2D951E5EB1370941D86068688099761AD473A3D124650B823C39078B9326EC8CD050FE2EB6ABC9FE61C0212A75027E4F32570A79B8A5A8641AB91ED48360074AE2AAE055CE3BD48D3BE22330000000001985441E0FEEEEFFEEEEFFEE0711EE7711EE771989059321905F681BCF47EA33BBF5E6F8298B5440854FDED0000010000000000672B0000CE5600006400000000000000".FromHex();
+            
             string actualHash = "3F2BE873F569828C88CD0DE37BB31C998FA0AAEB3308A1FFBF3D01CE49E8E9F7";
 
             var headlessTx = txData.SubArray(8 + 64 + 32, txData.Length - (8 + 64 + 32));
 
+            var concatonatedTransaction = signature.Concat(signer).Concat(genHash).Concat(headlessTx).ToArray();
+
             var hash = new byte[32];
             var sha3Hasher = new Sha3Digest(256);
 
-            sha3Hasher.BlockUpdate(signature, 0, signature.Length);
-            sha3Hasher.BlockUpdate(signer, 0, signer.Length);
-            sha3Hasher.BlockUpdate(genHash, 0, genHash.Length);
-            sha3Hasher.BlockUpdate(headlessTx, 0, headlessTx.Length);
+            sha3Hasher.BlockUpdate(concatonatedTransaction, 0, concatonatedTransaction.Length);
+
             sha3Hasher.DoFinal(hash, 0);
 
             Assert.That(hash.ToHexUpper(), Is.EqualTo(actualHash));

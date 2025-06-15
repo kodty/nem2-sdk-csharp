@@ -25,6 +25,37 @@ namespace IntegrationTests.Infrastructure.Transactions
             listener.Open().Wait();
         }
 
+        [Test, Timeout(20000)]
+        public async Task Announce()
+        {
+            var keyPair = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+
+            var transaction = TransferTransaction.Create(
+                NetworkType.Types.TEST_NET,
+                Deadline.AddHours(10),
+                Address.CreateFromEncoded("TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA"),
+               new List<Mosaic1> { Mosaic1.CreateFromHexIdentifier("72C0212E67A08BCE", 1000) },
+                PlainMessage.Create("hello")
+                ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
+
+            Debug.WriteLine("deadline " + Deadline.AddHours(2).Ticks);
+            var a = listener.GetTransactionStatus(Address.CreateFromPublicKey(transaction.Signer, NetworkType.Types.TEST_NET))
+              .Subscribe(e =>
+              {
+                  Debug.WriteLine(e.Status);
+              });
+
+            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+
+            await client.Announce(transaction);
+
+            var status = await client.GetTransactionStatus(transaction.Hash);
+
+            var listenerStatus = await listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(transaction.Signer, NetworkType.Types.TEST_NET)).Take(1);
+
+            Assert.AreEqual(keyPair.PublicKeyString, listenerStatus.Transaction.SignerPublicKey);
+        }
+
         public async Task AnnounceTransaction(ulong amount = 10)
         {
             var keyPair = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);

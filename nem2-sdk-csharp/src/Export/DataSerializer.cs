@@ -103,8 +103,6 @@ namespace io.nem2.sdk.src.Export
 
         public void WriteBytes(byte[] data)
         {
-            Debug.WriteLine(data.Length);
-            Debug.WriteLine(_offset);
             for (var i = 0; i < data.Length; i++)
                 Bytes[_offset + i] = data[i];
 
