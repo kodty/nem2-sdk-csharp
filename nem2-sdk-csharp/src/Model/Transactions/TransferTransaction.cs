@@ -4,6 +4,7 @@ using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
+using System.Diagnostics;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -64,21 +65,21 @@ namespace io.nem2.sdk.Model.Transactions
 
             var serializer = new DataSerializer(size);
 
-            serializer.WriteUlong(size);
-          
-            serializer.Reserve(64);            
+            serializer.WriteUInt(size);
+            serializer.Reserve(4); // padding to align
+            serializer.Reserve(64); // signature         
             serializer.WriteBytes(GetSigner());
-            serializer.Reserve(4);
+            serializer.Reserve(4); // padding to align
             serializer.WriteByte((byte)Version);
             serializer.WriteByte(NetworkType.GetNetworkByte()); 
             serializer.WriteUShort(TransactionType.GetValue()); 
             serializer.WriteUlong(Fee); 
-            serializer.WriteUlong(Deadline.Ticks);
+            serializer.WriteUlong(Deadline.Ticks);  
             serializer.WriteBytes(AddressEncoder.DecodeAddress(Address.Plain));
             serializer.WriteUShort(Message.GetLength());
             serializer.WriteByte((byte)Mosaics.Count);
-            serializer.Reserve(4);
-            serializer.Reserve(1);
+            serializer.Reserve(4); // padding to align
+            serializer.Reserve(1); // padding to align
 
             for (var i= 0; i < Mosaics.Count; i++)
             {

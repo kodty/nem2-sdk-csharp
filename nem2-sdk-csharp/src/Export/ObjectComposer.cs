@@ -4,6 +4,7 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model.Network;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
 namespace io.nem2.sdk.src.Export
 {
@@ -11,6 +12,7 @@ namespace io.nem2.sdk.src.Export
     {
         internal static T GenerateObject<T>(string data)
         {
+            Debug.WriteLine(data);
             return (T)GenerateObject(typeof(T), JToken.Parse(data));
         }
 

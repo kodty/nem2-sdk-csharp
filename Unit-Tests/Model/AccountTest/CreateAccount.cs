@@ -13,9 +13,7 @@ namespace test.Model.AccountTest
         public void CreateNewAccount()
         {
             var acc = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
-            Debug.WriteLine(acc.PublicKey);
-            Debug.WriteLine(acc.PrivateKey);
-            Debug.WriteLine(acc.Address.Plain);
+
             Assert.AreEqual(64, acc.PublicAccount.PublicKey.Length);
         }
 
