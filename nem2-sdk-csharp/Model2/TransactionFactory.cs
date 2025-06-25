@@ -1,11 +1,15 @@
-﻿using io.nem2.sdk.Model.Mosaics;
+﻿using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Namespace;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model2.Transactions;
+using io.nem2.sdk.Model2.Transactions.AccountRestrictions;
 using io.nem2.sdk.Model2.Transactions.CrossChainTransactions;
 using io.nem2.sdk.Model2.Transactions.KeyLinkTransactions;
 using io.nem2.sdk.Model2.Transactions.MetadataTransactions;
 using io.nem2.sdk.Model2.Transactions.MosaicPropertiesTransactions;
+using io.nem2.sdk.Model2.Transactions.MosaicRestrictions;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Network;
 
 namespace io.nem2.sdk.Model2
@@ -178,9 +182,9 @@ namespace io.nem2.sdk.Model2
             };
         }
 
-        public KeyLinkTransaction1 CreateVRFKeyLinkTransaction(string linkedPublicKey, int linkAction)
+        public KeyLinkTransaction1 CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, int linkAction, byte linkType)
         {
-            return new KeyLinkTransaction1(linkedPublicKey, linkAction)
+            return new VotingKeyLinkTransaction1(startEpoch, endEpoch, linkedPublicKey, linkAction)
             {
                 EntityBody = new EntityBody()
                 {
@@ -189,13 +193,13 @@ namespace io.nem2.sdk.Model2
                     Version = 0x01,
                     Network = Type
                 },
-                Type = TransactionTypes.Types.VRF_KEY_LINK,
+                Type = TransactionTypes.Types.VOTING_KEY_LINK,
                 Deadline = Deadline.AutoDeadline(Node, Port),
                 Fee = 100
             };
         }
 
-        public KeyLinkTransaction1 CreateNodeKeyLinkTransaction(string linkedPublicKey, int linkAction)
+        public KeyLinkTransaction1 CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, int linkAction, byte linkType)
         {
             return new KeyLinkTransaction1(linkedPublicKey, linkAction)
             {
@@ -206,24 +210,7 @@ namespace io.nem2.sdk.Model2
                     Version = 0x01,
                     Network = Type
                 },
-                Type = TransactionTypes.Types.NODE_KEY_LINK,
-                Deadline = Deadline.AutoDeadline(Node, Port),
-                Fee = 100
-            };
-        }
-
-        public KeyLinkTransaction1 CreateAccountKeyLinkTransaction(string linkedPublicKey, int linkAction)
-        {
-            return new KeyLinkTransaction1(linkedPublicKey, linkAction)
-            {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Version = 0x01,
-                    Network = Type
-                },
-                Type = TransactionTypes.Types.ACCOUNT_KEY_LINK,
+                Type = type,
                 Deadline = Deadline.AutoDeadline(Node, Port),
                 Fee = 100
             };
@@ -241,6 +228,91 @@ namespace io.nem2.sdk.Model2
                     Network = Type
                 },
                 Type = TransactionTypes.Types.TRANSFER,
+                Deadline = Deadline.AutoDeadline(Node, Port),
+                Fee = 100
+            };
+        }
+
+        public AccountRestrictionsTransaction1 CreateAccountRestrictionTransaction(TransactionTypes.Types type, int restrictionFlags, string[] additions, string[] deletions)
+        {
+            return new AccountRestrictionsTransaction1(type, restrictionFlags, additions, deletions)
+            {
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Version = 0x01,
+                    Network = Type
+                },
+                Type = type,
+                Deadline = Deadline.AutoDeadline(Node, Port),
+                Fee = 100
+            };
+        }
+
+        public MosaicAddressRestrictionTransaction CreateMosaicAddressRestrictionTransaction(string targetAddress, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue)
+        {
+            return new MosaicAddressRestrictionTransaction(targetAddress, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue)
+            {
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Version = 0x01,
+                    Network = Type
+                },
+                Type = TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION,
+                Deadline = Deadline.AutoDeadline(Node, Port),
+                Fee = 100
+            };
+        }
+
+        public MosaicGlobalRestrictionTransaction CreateMosaicGlobalRestrictionTransaction(string referenceMosaicId, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue)
+        {
+            return new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue)
+            {
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Version = 0x01,
+                    Network = Type
+                },
+                Type = TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION,
+                Deadline = Deadline.AutoDeadline(Node, Port),
+                Fee = 100
+            };
+        }
+
+        public AddressAliasTransaction1 CreateAddressAliasTransaction(string address, string namepaceId, byte aliasAction)
+        {
+            return new AddressAliasTransaction1(address, namepaceId, aliasAction)
+            {
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Version = 0x01,
+                    Network = Type
+                },
+                Type = TransactionTypes.Types.ADDRESS_ALIAS,
+                Deadline = Deadline.AutoDeadline(Node, Port),
+                Fee = 100
+            };
+        }
+
+        public MosaicAliasTransaction1 CreateMosaicAliasTransaction(string mosaicId, string namepaceId, byte aliasAction)
+        {
+            return new MosaicAliasTransaction1(mosaicId, namepaceId, aliasAction)
+            {
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Version = 0x01,
+                    Network = Type
+                },
+                Type = TransactionTypes.Types.MOSAIC_ALIAS,
                 Deadline = Deadline.AutoDeadline(Node, Port),
                 Fee = 100
             };
