@@ -317,5 +317,22 @@ namespace io.nem2.sdk.Model2
                 Fee = 100
             };
         }
+
+        public MultisigAccountModificationTransaction1 CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions)
+        {
+            return new MultisigAccountModificationTransaction1(minApproval, minRemoval, addressAdditions, addressDeletions)
+            {
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Version = 0x01,
+                    Network = Type
+                },
+                Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION,
+                Deadline = Deadline.AutoDeadline(Node, Port),
+                Fee = 100
+            };
+        }
     }  
 }

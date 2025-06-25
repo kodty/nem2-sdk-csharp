@@ -7,11 +7,11 @@ namespace io.nem2.sdk.Model.Transactions
     {       
         public enum Types
         {
-            ACCOUNT_KEY_LINK = 0x414C, //
-            NODE_KEY_LINK = 0x424C, //
-            AGGREGATE_COMPLETE = 0x4141, //
-            AGGREGATE_BONDED = 0x4241, //
-            VOTING_KEY_LINK = 0x4143, //
+            ACCOUNT_KEY_LINK = 0x414C, 
+            NODE_KEY_LINK = 0x424C, 
+            AGGREGATE_COMPLETE = 0x4141, 
+            AGGREGATE_BONDED = 0x4241,
+            VOTING_KEY_LINK = 0x4143, 
             VRF_KEY_LINK = 0x4243,
             HASH_LOCK = 0x4148, 
             SECRET_LOCK = 0x4152, 
@@ -21,10 +21,10 @@ namespace io.nem2.sdk.Model.Transactions
             NAMESPACE_METADATA = 0x4344, 
             MOSAIC_DEFINITION = 0x414D, 
             MOSAIC_SUPPLY_CHANGE = 0x424D,
-            MOSAIC_SUPPLY_REVOCATION = 0x434D, //
+            MOSAIC_SUPPLY_REVOCATION = 0x434D, 
             MULTISIG_ACCOUNT_MODIFICATION = 0x4155, //-
-            ADDRESS_ALIAS = 0x424E, //
-            MOSAIC_ALIAS = 0x434E,  //
+            ADDRESS_ALIAS = 0x424E, 
+            MOSAIC_ALIAS = 0x434E,  
             NAMESPACE_REGISTRATION = 0x414E, 
             ACCOUNT_ADDRESS_RESTRICTION = 0x4150, 
             ACCOUNT_MOSAIC_RESTRICTION = 0x4250, 
