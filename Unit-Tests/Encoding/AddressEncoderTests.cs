@@ -20,10 +20,10 @@ namespace Unit_Tests.Encoding
         [Test]
         public void HexDecodeBase32Address()
         {
-            Debug.WriteLine(AddressEncoder.DecodeAddress("TCIFSMQZAX3IDPHUP2RTXP26N6BJRNKEBBKP33I").ToHexLower());
-            var hexString = "NBQ7DD3DGCSDLFIEPWA3N2BAXYHLVM5J26SQA7I";
+            Debug.WriteLine(AddressEncoder.DecodeAddress("TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA").Length);
+            var hexString = "TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA";
 
-            Assert.That(AddressEncoder.DecodeAddress(hexString).EncodeHexString(), Is.EqualTo("6861F18F6330A43595047D81B6E820BE0EBAB3A9D7A5007D"));
+            Assert.That(AddressEncoder.DecodeAddress(hexString).ToHexUpper(), Is.EqualTo("98D9807AC250198EA57D689A7239DFA3B52E1506A3F71FDC"));
         }
     }
 }

@@ -89,7 +89,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             ushort size = (ushort)(120 + 4 + transactionsBytes.Length);
 
-            var serializer = new DataSerializer(size);
+            var serializer = new DataSerializer();
 
             serializer.WriteUlong(size);
 

@@ -20,9 +20,9 @@ namespace Unit_Tests.Model.Mosaics
         [Test]
         public static void Test32bitDataConverter()
         {
-            var bytes = DataConverter.ConvertFromUInt32(812613930);
-            Assert.That(bytes.ToHexUpper(), Is.EqualTo("2A816F30"));
-            Assert.That(bytes.ConvertToUInt32(), Is.EqualTo(812613930)); 
+            var bytes = DataConverter.ConvertFromUInt32(16961);
+            Assert.That(bytes.ToHexUpper(), Is.EqualTo("4142"));
+            Assert.That(bytes.ConvertToUInt32(), Is.EqualTo(16961)); 
         }
 
         [Test]

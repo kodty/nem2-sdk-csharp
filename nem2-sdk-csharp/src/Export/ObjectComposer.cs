@@ -12,7 +12,6 @@ namespace io.nem2.sdk.src.Export
     {
         internal static T GenerateObject<T>(string data)
         {
-            Debug.WriteLine(data);
             return (T)GenerateObject(typeof(T), JToken.Parse(data));
         }
 

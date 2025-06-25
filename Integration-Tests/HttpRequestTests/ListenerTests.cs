@@ -124,7 +124,7 @@ namespace Integration_Tests.HttpRequests
 
             var result = await tx;
 
-            Assert.AreEqual("Failure_Core_Insufficient_Balance", result.Status);
+            Assert.AreEqual("Failure_Core_Insufficient_Balance", result.Data.Code);
         }
     }
 }

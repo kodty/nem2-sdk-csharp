@@ -57,7 +57,6 @@ namespace io.nem2.sdk.src.Export
 
         private static void DecodeCharBlock(byte[] input, int inputOffset, byte[] output, int outputOffset)
         {
-
             output[outputOffset + 0] = (byte)(input[inputOffset + 0] << 3 | input[inputOffset + 1] >> 2);
             output[outputOffset + 1] = (byte)((input[inputOffset + 1] & 0x03) << 6 | input[inputOffset + 2] << 1 | input[inputOffset + 3] >> 4);
             output[outputOffset + 2] = (byte)((input[inputOffset + 3] & 0x0F) << 4 | input[inputOffset + 4] >> 1);

@@ -1,4 +1,8 @@
-﻿namespace io.nem2.sdk.Model.Transactions
+﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using System.Diagnostics;
+using System.Reactive.Linq;
+
+namespace io.nem2.sdk.Model.Transactions
 {
     public class Deadline
     {
@@ -15,25 +19,31 @@
 
         private TimeSpan GetTimeSinceEpoch()
         {
-            EpochDate = new DateTime(2022, 10, 31, 21, 07, 47).ToUniversalTime();
-
-            return DateTime.Now.ToUniversalTime().Subtract(EpochDate);
+            EpochDate = new DateTime(2022, 10, 31, 22, 07, 47).ToUniversalTime();
+            
+            return DateTime.UtcNow.Subtract(EpochDate);
         }
 
         public Deadline(TimeSpan time)
         {
             var deadline = GetTimeSinceEpoch().Add(time);
 
-            Date = EpochDate.Add(deadline).ToUniversalTime();
+            Date = EpochDate.Add(deadline);
 
-            Ticks = (ulong)Date.Subtract(EpochDate).TotalMilliseconds; 
+            Ticks = (ulong)Date.Millisecond;
+        }
+
+        // use with NodeHttp.GetNodeTime() to get timestamp
+        public Deadline(ulong timestamp, TimeSpan time)
+        {
+            Ticks = (ulong)(timestamp + time.TotalMilliseconds);
         }
 
         public Deadline(int hours) : this(TimeSpan.FromHours(hours)) { }
 
         public static Deadline AddHours(int hours)
         {
-            return new Deadline(hours);
+            return new Deadline(TimeSpan.FromHours(hours));
         }
 
         public static Deadline AddMinutes(int mins)
@@ -44,6 +54,15 @@
         public static Deadline AddSeconds(int seconds)
         {
             return new Deadline(TimeSpan.FromSeconds(seconds));
+        }
+
+        public static Deadline AutoDeadline(string node, int port)
+        {
+            var client = new NodeHttp(node, port);
+
+            var timeStamp = client.GetNodeTime().Wait();
+
+            return new Deadline(timeStamp.CommunicationTimestamps.SendTimestamp, TimeSpan.FromHours(23));
         }
     }
 }

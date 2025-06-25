@@ -12,16 +12,10 @@ namespace io.nem2.sdk.src.Export
     {
         public static bool IsHex(this string value, int len)
         {
-            Debug.WriteLine(value);
-            Debug.WriteLine(value.Length);
-
             return Regex.Match(value, @"[0-9a-fA-F]{" + len + "}").Success;
         }
         public static bool IsBase32(this string value, int len)
         {
-            Debug.WriteLine(value);
-            Debug.WriteLine(value.Length);
-
             return Regex.Match(value, @"[2-7a-zA-Z]{" + len + "}").Success;
         }
     }

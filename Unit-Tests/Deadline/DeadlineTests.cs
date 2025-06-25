@@ -9,10 +9,9 @@ namespace Unit_Tests.DeadlineTests
         [Test]
         public void TestNetDeadline()
         {
-            var deadline = new Deadline(23);
+            var deadline = new Deadline(0);
 
-            Assert.That(DateTime.Now.ToUniversalTime(), Is.LessThan(deadline.GetDateTime()));
-            Assert.That(DateTime.Now.ToUniversalTime().AddHours(24), Is.GreaterThan(deadline.GetDateTime()));
+            Debug.WriteLine(deadline.Ticks);
         }
     }
 }

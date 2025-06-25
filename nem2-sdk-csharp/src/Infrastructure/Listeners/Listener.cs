@@ -1,4 +1,5 @@
-﻿using System.Net.WebSockets;
+﻿using System.Diagnostics;
+using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
@@ -29,6 +30,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         public class SocketTopic
         {
             public string Topic { get; set; }
+            public ExtendedBroadcastStatus Data { get; set; }
         }
 
         public class WebsocketUID
@@ -162,12 +164,12 @@ namespace io.nem2.sdk.Infrastructure.Listeners
             return ResponseFilters<TransactionData>.FilterSingle(JObject.Parse(data)["data"].ToString());
         }
 
-        public IObservable<BroadcastStatus> GetTransactionStatus(Address address)
+        public IObservable<SocketTopic> GetTransactionStatus(Address address)
         {
             SubscribeToChannel(string.Concat("status/", address.Plain));
 
-            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "status")         
-                .Select(ObjectComposer.GenerateObject<BroadcastStatus>);
+            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "status/" + address.Plain)         
+                .Select(ObjectComposer.GenerateObject<SocketTopic>);
         }
 
         public IObservable<CosignatureSignedTransaction> CosignatureAdded(Address address)

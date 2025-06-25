@@ -43,7 +43,7 @@ namespace io.nem2.sdk.Model.Transactions
         {
             ushort size = 176;
 
-            var serializer = new DataSerializer(size);
+            var serializer = new DataSerializer();
 
             serializer.WriteUlong(size);
 

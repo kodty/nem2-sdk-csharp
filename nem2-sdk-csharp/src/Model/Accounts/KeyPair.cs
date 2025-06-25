@@ -25,6 +25,8 @@
 
 using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
 using io.nem2.sdk.Core.Crypto.Chaso.NaCl.Internal.Ed25519ref10;
+using io.nem2.sdk.Model2;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Security.Cryptography;
 using TweetNaclSharp;
 
@@ -117,7 +119,7 @@ namespace io.nem2.sdk.Model.Accounts
         /// <param name="data">The data.</param>
         /// <returns>System.Byte[].</returns>
         /// <exception cref="ArgumentNullException">data</exception>
-        public byte[] Sign(byte[] data)
+        internal byte[] Sign(byte[] data)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
 

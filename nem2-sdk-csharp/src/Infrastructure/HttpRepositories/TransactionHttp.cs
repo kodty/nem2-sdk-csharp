@@ -8,6 +8,8 @@ using System.Text.Json;
 using System.Text;
 using io.nem2.sdk.src.Export;
 using System.Diagnostics;
+using io.nem2.sdk.Model2;
+using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -87,10 +89,15 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         }
 
         public IObservable<TransactionAnnounceResponse> Announce(SignedTransaction signedTransaction)
-        {
-            Debug.WriteLine(signedTransaction.Payload);
+        { 
             return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new _Payload() { payload = signedTransaction.Payload }), Encoding.UTF8, "application/json")))
                 .Select(i =>  new TransactionAnnounceResponse() { Message = JObject.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
+        }
+
+        public IObservable<TransactionAnnounceResponse> Announce(Payload payload)
+        {
+            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new _Payload() { payload = payload.payload.ToHexLower() }), Encoding.UTF8, "application/json")))
+                .Select(i => new TransactionAnnounceResponse() { Message = JObject.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
         }
 
         public IObservable<TransactionAnnounceResponse> AnnounceAggregateTransaction(SignedTransaction signedTransaction)
