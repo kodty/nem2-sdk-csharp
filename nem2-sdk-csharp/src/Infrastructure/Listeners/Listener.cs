@@ -3,6 +3,7 @@ using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
+using System.Text.Json.Nodes;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions;
@@ -156,12 +157,12 @@ namespace io.nem2.sdk.Infrastructure.Listeners
 
         private BlockInfo ReturnSocketBlockResponse(string data)
         {
-            return ObjectComposer.GenerateObject<BlockInfo>(JObject.Parse(data)["data"].ToString()); 
+            return ObjectComposer.GenerateObject<BlockInfo>(JsonObject.Parse(data)["data"].ToString()); 
         }
 
         private TransactionData ReturnSocketTransactionResponse(string data)
         {
-            return ResponseFilters<TransactionData>.FilterSingle(JObject.Parse(data)["data"].ToString());
+            return ResponseFilters<TransactionData>.FilterSingle(JsonObject.Parse(data)["data"].ToString());
         }
 
         public IObservable<SocketTopic> GetTransactionStatus(Address address)

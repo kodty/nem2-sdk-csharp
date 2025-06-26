@@ -1,6 +1,6 @@
 ﻿using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.src.Export
 {
@@ -8,13 +8,13 @@ namespace io.nem2.sdk.src.Export
     {
         internal static List<T> FilterEvents(string data, string path = null)
         {
-            var evs = path == null ? JToken.Parse(data) : JToken.Parse(data)[path];
+            var evs = path == null ? JsonNode.Parse(data) : JsonNode.Parse(data)[path];
 
             List<T> events = new List<T>();
 
-            foreach (var e in evs)
+            foreach (var e in evs.AsArray())
             {
-                events.Add((T)ObjectComposer.GenerateObject(typeof(T), e));
+                events.Add((T)ObjectComposer.GenerateObject(typeof(T), e.AsObject()));
             }
 
             return events;
@@ -22,7 +22,7 @@ namespace io.nem2.sdk.src.Export
 
         internal static List<T> FilterTransactions(string data, string path = null)
         {
-            var tx = path == null ? JToken.Parse(data).ToList() : JToken.Parse(data)[path].ToList();
+            var tx = path == null ? JsonNode.Parse(data).AsArray() : JsonNode.Parse(data)[path].AsArray();
 
             List<T> txs = new List<T>();
 
@@ -34,28 +34,28 @@ namespace io.nem2.sdk.src.Export
             return txs;
         }
 
-        internal static T GetBaseTransaction(JObject ob)
+        internal static T GetBaseTransaction(JsonObject ob)
         {
             return ObjectComposer.GenerateObject<T>(ob.ToString());
         }
 
-        internal static string GetSpecifiedTx(JObject ob)
+        internal static string GetSpecifiedTx(JsonObject ob)
         {
             return ob["transaction"].ToString();
         }
 
-        internal static TransactionTypes.Types GetTxType(JObject tx)
+        internal static TransactionTypes.Types GetTxType(JsonObject tx)
         {
             return ((ushort)tx["transaction"]["type"]).GetRawValue();
         }
 
         internal static T FilterSingle(string data)
         {
-            var tx = JObject.Parse(data);
+            var tx = JsonObject.Parse(data).AsObject();
 
-            dynamic shell = GetBaseTransaction(tx);
+            dynamic shell = GetBaseTransaction(tx.AsObject());
 
-            var type = GetTxType(tx);
+            var type = GetTxType(tx.AsObject());
 
             if (type == TransactionTypes.Types.TRANSFER)
             {

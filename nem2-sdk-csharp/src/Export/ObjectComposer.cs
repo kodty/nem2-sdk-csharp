@@ -3,8 +3,10 @@ using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model.Network;
-using Newtonsoft.Json.Linq;
+
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.src.Export
 {
@@ -12,10 +14,10 @@ namespace io.nem2.sdk.src.Export
     {
         internal static T GenerateObject<T>(string data)
         {
-            return (T)GenerateObject(typeof(T), JToken.Parse(data));
+            return (T)GenerateObject(typeof(T), JsonObject.Parse(data));
         }
 
-        internal static object GenerateObject(Type type, JToken jObject)
+        internal static object GenerateObject(Type type, JsonNode jObject)
         {
             var actualObject = Activator.CreateInstance(type);
 
@@ -24,7 +26,7 @@ namespace io.nem2.sdk.src.Export
             return ValueMapToObject(nameToValueMap, actualObject, type);
         }
 
-        private static Dictionary<string, object> GetPropNamesValues(Type type, JToken objList)
+        private static Dictionary<string, object> GetPropNamesValues(Type type, JsonNode objList)
         {
             Dictionary<string, object> nameToValueMap = new Dictionary<string, object>();
 
@@ -42,11 +44,12 @@ namespace io.nem2.sdk.src.Export
                     }
                     else
                     {
-                        foreach (var obj in objList.Children().Children())
+                        
+                        foreach (var obj in objList.AsObject())
                         {
-                            if (obj.Path.Contains(lwrCase))
+                            if (obj.Key.Contains(lwrCase))
                             {
-                                nameToValueMap.Add(op.Name, GenerateObject(op.PropertyType, obj));
+                                nameToValueMap.Add(op.Name, GenerateObject(op.PropertyType, obj.Value));
                                 break;
                             }
                         }
@@ -72,7 +75,7 @@ namespace io.nem2.sdk.src.Export
             return Convert.ChangeType(actualObject, type);
         }
 
-        private static List<RestrictionTypes.Types> ExtractRestrictionFlags(JToken ob, string path)
+        private static List<RestrictionTypes.Types> ExtractRestrictionFlags(JsonNode ob, string path)
         {
             var values = new List<RestrictionTypes.Types>();
 
@@ -93,37 +96,37 @@ namespace io.nem2.sdk.src.Export
             return values;
         }
 
-        private static List<EmbeddedTransactionData> GetEmbeddedListType(JToken ob, string path)
+        private static List<EmbeddedTransactionData> GetEmbeddedListType(JsonNode ob, string path)
         {
             List<EmbeddedTransactionData> embeddedTransactions = new List<EmbeddedTransactionData>();
 
-            if (ob[path] != null) foreach (var e in ob[path])
+            if (ob[path] != null) foreach (var e in ob[path].AsArray())
                     embeddedTransactions.Add(ResponseFilters<EmbeddedTransactionData>.FilterSingle(e.ToString()));
 
             return embeddedTransactions;
         }
 
-        private static List<T> GetListTypeValue<T>(JToken ob, string path)
+        private static List<T> GetListTypeValue<T>(JsonNode ob, string path)
         {
             if (typeof(T) == typeof(string) || typeof(T) == typeof(int))
-                return ob[path].Values<T>().ToList();
+                return ob[path].AsArray().GetValues<T>().ToList();
 
             else
             {
                 List<T> events = new List<T>();
 
-                if (ob[path] != null) foreach (var e in ob[path])
-                        events.Add((T)GenerateObject(typeof(T), e));
+                if (ob[path] != null) foreach (var e in ob[path].AsArray())
+                        events.Add((T)GenerateObject(typeof(T), e.AsObject()));
 
                 return events;
             }
         }
 
-        private static List<TransactionTypes.Types> ExtractTransactionTypes(JToken ob, string path)
+        private static List<TransactionTypes.Types> ExtractTransactionTypes(JsonNode ob, string path)
         {
             List<TransactionTypes.Types> types = new List<TransactionTypes.Types>();
 
-            if (ob[path] != null) foreach (var e in ob[path])
+            if (ob[path] != null) foreach (var e in ob[path].AsArray())
                     types.Add(((ushort)e).GetRawValue());
 
             return types;
@@ -169,7 +172,7 @@ namespace io.nem2.sdk.src.Export
             else return false;
         }
 
-        private static dynamic? GetTypedValue(Type type, JToken ob, string path = null)
+        private static dynamic? GetTypedValue(Type type, JsonNode ob, string path = null)
         {
             if (type == typeof(int))
                 return (int)ob[path];
@@ -178,7 +181,13 @@ namespace io.nem2.sdk.src.Export
                 return (ushort)ob[path];
 
             if (type == typeof(ulong))
-                return (ulong)ob[path];
+            {
+                Debug.WriteLine(ob);
+                Debug.WriteLine(path);
+                Debug.WriteLine(ob[path]);
+                return UInt64.Parse(ob[path].ToString());
+            }
+                
 
             if (type == typeof(string))
                 return (string)ob[path];
