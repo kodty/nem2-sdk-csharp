@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Model2;
 using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
@@ -19,13 +20,13 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<SecretLockEvent> GetSecretLock(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "secret", hash])))
-              .Select(r => { return ObjectComposer.GenerateObject<SecretLockEvent>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<SecretLockEvent>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<MerkleRoot> GetSecretLockMerkle(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "secret", hash, "merkle"])))
-              .Select(r => { return ObjectComposer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
         }
     }
 }

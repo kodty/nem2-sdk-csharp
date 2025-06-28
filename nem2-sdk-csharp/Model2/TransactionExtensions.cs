@@ -1,9 +1,10 @@
-﻿using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
-using io.nem2.sdk.Model.Accounts;
+﻿using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model2.Transactions;
 using io.nem2.sdk.src.Export;
 using Org.BouncyCastle.Crypto.Digests;
+using System.Diagnostics;
 using TweetNaclSharp.Core.Extensions;
+using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 
 namespace io.nem2.sdk.Model2
 {
@@ -37,7 +38,7 @@ namespace io.nem2.sdk.Model2
         public static Payload PrepareTransaction<T>(Transaction1 transaction, SecretKeyPair keyPair)
         {
             transaction.EntityBody.Signer = keyPair.PublicKeyString;
-
+            Debug.WriteLine("key " + keyPair.PublicKeyString);
             var body = Serialize<T>(transaction);
 
             var genHashBytes = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4".FromHex();
@@ -63,17 +64,23 @@ namespace io.nem2.sdk.Model2
 
         public static string HashTransaction(this Payload payload)
         {
+            Debug.WriteLine("payload " + payload.payload.ToHexLower());
             var signature = payload.payload.SubArray(4 + 4, 64);
+
+            Debug.WriteLine(signature.ToHexLower());
             var signer = payload.payload.SubArray(4 + 4 + 64, 32);
+
+            Debug.WriteLine(signer.ToHexLower());
             var genHash = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4".FromHex();
-            var transactionData = payload.payload.SubArray(4 + 4 + 64 + 32 + 4, payload.payload.Length - (4 + 4 + 64 + 32 + 4));
+            var transactionData = payload.payload.SubArray(4 + 4 + 64 + 32, payload.payload.Length - (4 + 4 + 64 + 32));
+            Debug.WriteLine(transactionData.ToHexLower());
 
             var final = signature.Concat(signer).Concat(genHash).Concat(transactionData).ToArray();
-
+            Debug.WriteLine(final.ToHexLower());
             var hash = new byte[32];
 
             var sha3Hasher = new Sha3Digest(256);
-
+            
             sha3Hasher.BlockUpdate(final, 0, final.Length);
 
             sha3Hasher.DoFinal(hash, 0);

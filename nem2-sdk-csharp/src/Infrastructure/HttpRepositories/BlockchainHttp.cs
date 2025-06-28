@@ -1,5 +1,6 @@
 ﻿
 using System.Reactive.Linq;
+using io.nem2.sdk.Model2;
 using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
@@ -23,7 +24,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<ExtendedBlockInfo> GetBlock(ulong height)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height])))
-                .Select(r => { return ObjectComposer.GenerateObject<ExtendedBlockInfo>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<ExtendedBlockInfo>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<MerklePath>> GetBlockTransactionMerkle(ulong height, string hash)
@@ -41,7 +42,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<BlockchainInfo> GetBlockchainInfo()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["chain", "info"])))
-                .Select(r => { return ObjectComposer.GenerateObject<BlockchainInfo>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<BlockchainInfo>(OverrideEnsureSuccessStatusCode(r)); });
         }
     }
 }

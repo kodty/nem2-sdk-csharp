@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.Model.Accounts
 {
@@ -38,6 +39,27 @@ namespace io.nem2.sdk.Model.Accounts
                 default:
                     throw new ArgumentException("invalid transaction type.");
             }
+        }
+
+        public static List<RestrictionTypes.Types> ExtractRestrictionFlags(JsonNode ob, string path)
+        {
+            var values = new List<RestrictionTypes.Types>();
+
+            int actualInt = (int)ob[path];
+
+            char[] actualBitwise = Convert.ToString(actualInt, 2).PadLeft(16, '0').ToCharArray(0, 16);
+
+            for (var x = 0; x < actualBitwise.Length; x++)
+            {
+                if (actualBitwise[x] == '1')
+                {
+                    string bitwiseType = new string('0', x) + '1' + new string('0', actualBitwise.Length - (1 + x));
+
+                    values.Add(Convert.ToInt32(bitwiseType, 2).GetRawValue());
+                }
+            }
+
+            return values;
         }
     }
 }

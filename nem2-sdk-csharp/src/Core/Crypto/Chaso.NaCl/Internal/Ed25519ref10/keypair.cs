@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl.Internal.Ed25519ref10
+namespace io.nem2.sdk.Core.Crypto.Chaos.NaCl.Internal.Ed25519ref10
 {
     internal static partial class Ed25519Operations
     {

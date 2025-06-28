@@ -1,5 +1,5 @@
 ﻿using io.nem2.sdk.Core.Utils;
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.src.Export;
 
 namespace Unit_Tests.Model.Mosaics
@@ -21,7 +21,7 @@ namespace Unit_Tests.Model.Mosaics
         public static void Test32bitDataConverter()
         {
             var bytes = DataConverter.ConvertFromUInt32(16961);
-            Assert.That(bytes.ToHexUpper(), Is.EqualTo("4142"));
+            Assert.That(bytes.ToHexUpper(), Is.EqualTo("41420000")); // little endian
             Assert.That(bytes.ConvertToUInt32(), Is.EqualTo(16961)); 
         }
 

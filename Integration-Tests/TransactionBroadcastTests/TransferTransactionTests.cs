@@ -1,6 +1,6 @@
 ﻿using Integration_Tests;
 using Integration_Tests.HttpRequests;
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
 using io.nem2.sdk.Model.Accounts;
@@ -28,6 +28,24 @@ namespace IntegrationTests.Infrastructure.Transactions
             listener = new Listener(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             listener.Open().Wait();
+        }
+
+        //[Test, Timeout(2000)]
+        public async Task CreateAggregateTransaction()
+        {
+            var keys = SecretKeyPair.CreateFromPrivateKey("98AA70CA43E5D3B95CD303A57892D0BA953C204A4D937AF4386ED658A8FA555D");
+
+            var publicAcc = new PublicAccount(keys.PublicKeyString, NetworkType.Types.TEST_NET);
+
+            var factory = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
+
+            var transfer = factory.CreateTransferTransaction(
+                    "TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA",
+                    "",
+                    new Tuple<string, ulong>("72C0212E67A08BCE", 100)
+                );
+
+            var payload = TransactionExtensions2.PrepareEmbeddedTransaction<TransferTransaction_V1>(transfer, publicAcc);
         }
 
         [Test, Timeout(2000)]
@@ -60,13 +78,12 @@ namespace IntegrationTests.Infrastructure.Transactions
             var a = await client.Announce(payload);
            
             Debug.WriteLine("msg " + a.Message);
-            Thread.Sleep(30000);
-            s.Dispose();
            
             var status = await client.GetTransactionStatus(hash);
            
             var listenerStatus = await listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(transfer.EntityBody.Signer, NetworkType.Types.TEST_NET)).Take(1);
-           
+
+            Thread.Sleep(10000);
             Assert.AreEqual(keys.PublicKeyString, listenerStatus.Transaction.SignerPublicKey);
 
         }

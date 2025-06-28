@@ -118,7 +118,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetNamespaceMerkle("A95F1F8A96159516");
 
-            Assert.That(response.Raw.Length, Is.EqualTo(1682));
+            Assert.That(response.Raw.Length, Is.EqualTo(1618));
             Assert.That(response.Tree[1].Type, Is.EqualTo(0));
             Assert.That(response.Tree[1].Links[0].Link.IsHex(64));
         }
@@ -151,9 +151,9 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetMosaicNames()
         {
-            var client = new NamespaceHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            var client = new NamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
-            var response = await client.GetMosaicNames(new List<string> { "72C0212E67A08BCE" });
+            var response = await client.GetMosaicNames(new List<string> { "6BED913FA20223F8" });
 
             Assert.That(response[0].Names[0], Is.EqualTo( "symbol.xym"));
             Assert.That(response[0].MosaicId.IsHex(16));

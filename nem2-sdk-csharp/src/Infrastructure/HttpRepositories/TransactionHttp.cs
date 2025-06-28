@@ -3,13 +3,11 @@ using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-
 using System.Text.Json;
 using System.Text;
 using io.nem2.sdk.src.Export;
-using System.Diagnostics;
 using io.nem2.sdk.Model2;
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
@@ -57,7 +55,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<ExtendedBroadcastStatus> GetTransactionStatus(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactionStatus", hash])))
-               .Select(r => { return ObjectComposer.GenerateObject<ExtendedBroadcastStatus>(OverrideEnsureSuccessStatusCode(r)); });
+               .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<ExtendedBroadcastStatus>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<TransactionData>> GetConfirmedTransactions(string[] transactionIds)
@@ -92,25 +90,25 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<TransactionAnnounceResponse> Announce(SignedTransaction signedTransaction)
         { 
             return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new _Payload() { payload = signedTransaction.Payload }), Encoding.UTF8, "application/json")))
-                .Select(i =>  new TransactionAnnounceResponse() { Message = JsonObject.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
+                .Select(i =>  new TransactionAnnounceResponse() { Message = JsonNode.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
         }
 
         public IObservable<TransactionAnnounceResponse> Announce(Payload payload)
         {
             return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new _Payload() { payload = payload.payload.ToHexLower() }), Encoding.UTF8, "application/json")))
-                .Select(i => new TransactionAnnounceResponse() { Message = JsonObject.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
+                .Select(i => new TransactionAnnounceResponse() { Message = JsonNode.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
         }
 
         public IObservable<TransactionAnnounceResponse> AnnounceAggregateTransaction(SignedTransaction signedTransaction)
         {
-            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions", "partial"]), new StringContent(JsonObject.Parse(signedTransaction.Payload).ToString(), Encoding.UTF8, "application/json")))
-                .Select(i => new TransactionAnnounceResponse() { Message = JsonObject.Parse(i.Content.ToString())["message"].ToString() });
+            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions", "partial"]), new StringContent(JsonNode.Parse(signedTransaction.Payload).ToString(), Encoding.UTF8, "application/json")))
+                .Select(i => new TransactionAnnounceResponse() { Message = JsonNode.Parse(i.Content.ToString())["message"].ToString() });
         }
 
         public IObservable<TransactionAnnounceResponse> AnnounceCosignatureTransaction(CosignatureSignedTransaction signedTransaction)
         {
             return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions", "cosignature"]), new StringContent(JsonSerializer.Serialize(signedTransaction))))
-                .Select(i => new TransactionAnnounceResponse() { Message = JsonObject.Parse(i.Content.ToString())["message"].ToString() });
+                .Select(i => new TransactionAnnounceResponse() { Message = JsonNode.Parse(i.Content.ToString())["message"].ToString() });
         }
     }
 }

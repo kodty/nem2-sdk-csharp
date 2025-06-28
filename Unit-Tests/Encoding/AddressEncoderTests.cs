@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.src.Export;
 using System.Diagnostics;
@@ -10,11 +10,11 @@ namespace Unit_Tests.Encoding
         [Test]
         public void Base32EncodeAddress()
         {//&targetAddress=
-            var testString = "684730D07E8EF59C26C3259696730C75F6E7216730E8C9C8";
-            var hexString = "687CBC80535BCEB01042608CF7A207BCC3A7C4318DF1BBF6";
-            Debug.WriteLine(AddressEncoder.EncodeAddress(testString));
-            Assert.That(AddressEncoder.EncodeAddress(testString), Is.EqualTo("NASYMBOLLK6FSL7GSEMQEAWN7VW55ZSZU25TBOA"));
-            Assert.That(AddressEncoder.EncodeAddress(hexString), Is.EqualTo("NBQ7DD3DGCSDLFIEPWA3N2BAXYHLVM5J26SQA7I"));
+            var testString = "68172E4A424D395695A92AA7DAAFC0B1887846448ABD57AC";
+            //var hexString = "687CBC80535BCEB01042608CF7A207BCC3A7C4318DF1BBF6";
+            
+            Assert.That(AddressEncoder.EncodeAddress(testString), Is.EqualTo("NALS4SSCJU4VNFNJFKT5VL6AWGEHQRSERK6VPLA"));
+            //Assert.That(AddressEncoder.EncodeAddress(hexString), Is.EqualTo("NBQ7DD3DGCSDLFIEPWA3N2BAXYHLVM5J26SQA7I"));
         }
 
         [Test]

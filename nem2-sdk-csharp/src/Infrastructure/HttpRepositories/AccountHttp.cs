@@ -5,6 +5,7 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Text;
 using System.Text.Json;
 using io.nem2.sdk.src.Export;
+using io.nem2.sdk.Model2;
 
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
@@ -23,7 +24,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<AccountData> GetAccount(string pubkOrAddress)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts",pubkOrAddress])))
-                 .Select(r => { return ObjectComposer.GenerateObject<AccountData>(OverrideEnsureSuccessStatusCode(r)); });
+                 .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<AccountData>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<AccountData>> GetAccounts(List<string> accounts) // flag
@@ -36,7 +37,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<MerkleRoot> GetAccountMerkle(string pubkOrAddress)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts", pubkOrAddress, "merkle"])))
-                 .Select(r => { return ObjectComposer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+                 .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<RestrictionData>> SearchAccountRestrictions(QueryModel queryModel)
@@ -48,13 +49,13 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<RestrictionData> GetAccountRestriction(string address)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account", address])))
-                .Select(r => { return ObjectComposer.GenerateObject<RestrictionData>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<RestrictionData>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<MerkleRoot> GetAccountRestrictionsMerkle(string address)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account", address, "merkle" ])))
-                .Select(r => { return ObjectComposer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
         }
     }
 }

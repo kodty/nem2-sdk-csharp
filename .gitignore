@@ -262,3 +262,4 @@ __pycache__/
 nis2-sdk-csharp/ConsoleApp1/
 Integration-Tests/TestConfig.cs
 /Integration-Tests/HttpRequestTests/HttpSetup.cs
+/CopperCurve/CopperCurve.csproj

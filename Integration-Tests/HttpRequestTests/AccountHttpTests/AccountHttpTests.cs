@@ -3,6 +3,7 @@ using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model.Network;
+using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests.AccountHttpTests
@@ -157,6 +158,8 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             }
             if (response.Account.ActivityBuckets != null)
             {
+                Debug.WriteLine("not null");
+
                 foreach (var item in response.Account.ActivityBuckets)
                 {
                     Assert.That(item.TotalFeesPaid, Is.GreaterThanOrEqualTo(0));

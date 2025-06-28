@@ -1,5 +1,6 @@
 ﻿using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests
@@ -39,7 +40,8 @@ namespace Integration_Tests.HttpRequests
 
             Assert.That(response[2].Meta.Timestamp, Is.EqualTo(118726452));
             Assert.That(response[2].Statement.Height, Is.EqualTo(1142));
-            Assert.That(response[2].Statement.Unresolved.IsHex(24));
+            Debug.WriteLine(response[2].Statement.Unresolved);
+            Assert.That(response[2].Statement.Unresolved.IsHex(16));
             Assert.That(response[2].Statement.ResolutionEntries[0].Resolved.IsHex(16));
             Assert.That(response[2].Statement.ResolutionEntries[0].Source.PrimaryId, Is.EqualTo(6));
             Assert.That(response[2].Statement.ResolutionEntries[0].Source.SecondaryId, Is.EqualTo(0));

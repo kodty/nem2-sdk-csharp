@@ -61,7 +61,6 @@
         {
             ParamMap.Remove("?" + param.ToString() + "=");
         }
-
         public void Flush()
         {
             ParamMap.Clear();
@@ -75,7 +74,7 @@
                     return p.Key.ToString() + p.Value.ToString();
                 }).Single();
             }
-            else return String.Join("&", ParamMap.Select(p => {
+            else return string.Join("&", ParamMap.Select(p => {
 
                     return (p.Key.ToString().Substring(1) + p.Value.ToString());
                 }));

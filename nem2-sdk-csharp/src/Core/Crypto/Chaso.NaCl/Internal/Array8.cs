@@ -1,4 +1,4 @@
-﻿namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl.Internal
+﻿namespace io.nem2.sdk.Core.Crypto.Chaos.NaCl.Internal
 {
     // Array8<UInt32> Poly1305 key
     // Array8<UInt64> SHA-512 state/output

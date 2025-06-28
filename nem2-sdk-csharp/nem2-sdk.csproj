@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\Export\**" />
+    <EmbeddedResource Remove="src\Export\**" />
+    <None Remove="src\Export\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BouncyCastle.NetCore" Version="1.8.5" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
     <PackageReference Include="TweetNaclSharp.Fast" Version="1.1.0" />

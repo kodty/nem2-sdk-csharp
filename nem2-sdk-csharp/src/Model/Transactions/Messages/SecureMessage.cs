@@ -1,5 +1,5 @@
 ﻿using io.nem2.sdk.Core.Crypto;
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 
 namespace io.nem2.sdk.Model.Transactions.Messages
 {

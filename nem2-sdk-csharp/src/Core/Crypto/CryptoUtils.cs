@@ -1,8 +1,10 @@
 ﻿using System.Security.Cryptography;
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Core.Utils;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Security;
+using TweetNaclSharp;
+using TweetNaclSharp.Core.Extensions;
 
 namespace io.nem2.sdk.Core.Crypto
 {
@@ -180,11 +182,11 @@ namespace io.nem2.sdk.Core.Crypto
         /// <returns>System.String.</returns>
         internal static string _Decode(byte[] privateKey, byte[] publicKey, byte[] data)
         {
-            var salt = data.Take(0, 32).ToArray();
-            var iv = data.Take(32, 16);
-            var payload = data.Take(48, data.Length - 48);
+            var salt = data.SubArray(0, 32).ToArray();
+            var iv = data.SubArray(32, 16);
+            var payload = data.SubArray(48, data.Length - 48);
             var shared = new byte[32];
-
+           
             Ed25519.key_derive(
                 shared,
                 salt,

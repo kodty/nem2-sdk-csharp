@@ -1,4 +1,4 @@
-﻿namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl.Internal
+﻿namespace io.nem2.sdk.Core.Crypto.Chaos.NaCl.Internal
 {
     internal static class InternalAssert
     {

@@ -182,7 +182,7 @@ namespace Integration_Tests.HttpRequests
 
             var aggregate = (Aggregate)tx.Transaction;
 
-            var restriction = (EmbeddedAccountMosaicRestriction)aggregate.Transactions[1].Transaction;
+            var restriction = (EmbeddedAccountRestriction)aggregate.Transactions[1].Transaction;
 
             Assert.That(restriction.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_MOSAIC_RESTRICTION));
             Assert.That(restriction.SignerPublicKey, Is.EqualTo("B26D01FC006EAC09B740A3C8F12C1055AE24AFD3268F0364C92D51800FC07361"));
@@ -369,7 +369,7 @@ namespace Integration_Tests.HttpRequests
 
             var transaction = await client.GetConfirmedTransaction("30FA71E6D1E34DF1E430A07E1B0817BED9A4ED6B0245B7471B0557380A700E1B");
 
-            var restriction = (EmbeddedAccountMosaicRestriction)((Aggregate)transaction.Transaction).Transactions[1].Transaction;
+            var restriction = (EmbeddedAccountRestriction)((Aggregate)transaction.Transaction).Transactions[1].Transaction;
 
             Assert.That(restriction.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
             Assert.That(restriction.RestrictionAdditions[0].IsHex(16));

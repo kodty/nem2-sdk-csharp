@@ -2,7 +2,7 @@
 
 [assembly: InternalsVisibleTo("integration-test")]
 [assembly: InternalsVisibleTo("Test")]
-namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl
+namespace io.nem2.sdk.Core.Crypto.Chaos.NaCl
 {
     public static class CryptoBytes
     {

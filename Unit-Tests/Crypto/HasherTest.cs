@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using NuGet.Frameworks;
 using Org.BouncyCastle.Crypto.Digests;
 using System.Diagnostics;

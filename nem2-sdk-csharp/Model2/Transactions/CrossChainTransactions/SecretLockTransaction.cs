@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Model.Transactions;
 
 namespace io.nem2.sdk.Model2.Transactions.CrossChainTransactions

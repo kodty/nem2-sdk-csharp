@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
+using TweetNaclSharp.Core.Extensions;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -69,7 +70,7 @@ namespace io.nem2.sdk.Model.Transactions
                 Cosignatures.Add(new AggregateTransactionCosignature(signatureBytes.ToHexLower(), new PublicAccount(cosignatory.KeyPair.PublicKey.ToHexLower(), src.Model.Network.NetworkType.Types.MIJIN_TEST)));  
             }
 
-            payload = BitConverter.GetBytes(payload.Length).Concat(payload.Take(4, payload.Length - 4).ToArray()).ToArray();
+            payload = BitConverter.GetBytes(payload.Length).Concat(payload.SubArray(4, payload.Length - 4).ToArray()).ToArray();
 
             return SignedTransaction.Create(payload, new byte[] { }, signedTransaction.Hash.FromHex(), initiatorAccount.PublicKey, new byte[] { }, TransactionType);
         }

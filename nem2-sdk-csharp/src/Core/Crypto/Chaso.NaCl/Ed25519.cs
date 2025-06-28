@@ -1,8 +1,8 @@
-﻿using io.nem2.sdk.Core.Crypto.Chaso.NaCl.Internal.Ed25519ref10;
+﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl.Internal.Ed25519ref10;
 using Org.BouncyCastle.Crypto.Digests;
 using System.Security.Cryptography;
 
-namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl
+namespace io.nem2.sdk.Core.Crypto.Chaos.NaCl
 {
     public static class Ed25519
     {

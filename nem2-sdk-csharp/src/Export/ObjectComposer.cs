@@ -3,21 +3,24 @@ using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model.Network;
-
-using System.Diagnostics;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace io.nem2.sdk.src.Export
+namespace io.nem2.sdk.src.ExportNull
 {
-    internal static class ObjectComposer
+    internal class ObjectComposer
     {
-        internal static T GenerateObject<T>(string data)
+        internal Type[] TypeArgs { get; set; }
+
+        internal ObjectComposer(Type[] args)
+        {
+            TypeArgs = args;
+        }
+        internal T GenerateObject<T>(string data)
         {
             return (T)GenerateObject(typeof(T), JsonObject.Parse(data));
         }
 
-        internal static object GenerateObject(Type type, JsonNode jObject)
+        internal object GenerateObject(Type type, JsonNode jObject)
         {
             var actualObject = Activator.CreateInstance(type);
 
@@ -26,7 +29,7 @@ namespace io.nem2.sdk.src.Export
             return ValueMapToObject(nameToValueMap, actualObject, type);
         }
 
-        private static Dictionary<string, object> GetPropNamesValues(Type type, JsonNode objList)
+        private Dictionary<string, object> GetPropNamesValues(Type type, JsonNode objList)
         {
             Dictionary<string, object> nameToValueMap = new Dictionary<string, object>();
 
@@ -36,15 +39,13 @@ namespace io.nem2.sdk.src.Export
 
                 if (!nameToValueMap.ContainsKey(op.Name))
                 {
-
                     if (IsNativeProperty(op))
                     {
                         nameToValueMap.Add(op.Name, GetTypedValue(op.PropertyType, objList, lwrCase));
                         return;
                     }
                     else
-                    {
-                        
+                    {                       
                         foreach (var obj in objList.AsObject())
                         {
                             if (obj.Key.Contains(lwrCase))
@@ -59,7 +60,7 @@ namespace io.nem2.sdk.src.Export
 
             return nameToValueMap;
         }
-        internal static object ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)
+        internal object ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)
         {
             foreach (var prop in nameToValueMap)
             {
@@ -75,7 +76,7 @@ namespace io.nem2.sdk.src.Export
             return Convert.ChangeType(actualObject, type);
         }
 
-        private static List<RestrictionTypes.Types> ExtractRestrictionFlags(JsonNode ob, string path)
+        private List<RestrictionTypes.Types> ExtractRestrictionFlags(JsonNode ob, string path)
         {
             var values = new List<RestrictionTypes.Types>();
 
@@ -96,7 +97,7 @@ namespace io.nem2.sdk.src.Export
             return values;
         }
 
-        private static List<EmbeddedTransactionData> GetEmbeddedListType(JsonNode ob, string path)
+        private List<EmbeddedTransactionData> GetEmbeddedListType(JsonNode ob, string path)
         {
             List<EmbeddedTransactionData> embeddedTransactions = new List<EmbeddedTransactionData>();
 
@@ -106,7 +107,7 @@ namespace io.nem2.sdk.src.Export
             return embeddedTransactions;
         }
 
-        private static List<T> GetListTypeValue<T>(JsonNode ob, string path)
+        private List<T> GetListTypeValue<T>(JsonNode ob, string path)
         {
             if (typeof(T) == typeof(string) || typeof(T) == typeof(int))
                 return ob[path].AsArray().GetValues<T>().ToList();
@@ -122,7 +123,7 @@ namespace io.nem2.sdk.src.Export
             }
         }
 
-        private static List<TransactionTypes.Types> ExtractTransactionTypes(JsonNode ob, string path)
+        private List<TransactionTypes.Types> ExtractTransactionTypes(JsonNode ob, string path)
         {
             List<TransactionTypes.Types> types = new List<TransactionTypes.Types>();
 
@@ -132,62 +133,71 @@ namespace io.nem2.sdk.src.Export
             return types;
         }
 
-        private static bool IsNativeProperty(System.Reflection.PropertyInfo op)
+        private bool IsNativeProperty(System.Reflection.PropertyInfo op)
         {
-            if (op.PropertyType == typeof(ushort)
-             || op.PropertyType == typeof(bool)
-             || op.PropertyType == typeof(int)
-             || op.PropertyType == typeof(ulong)
-             || op.PropertyType == typeof(string)
-             || op.PropertyType == typeof(List<string>)
-             || op.PropertyType == typeof(List<int>)
-             || op.PropertyType == typeof(List<ActivityBucket>)
-             || op.PropertyType == typeof(List<VotingKeys>)
-             || op.PropertyType == typeof(List<MosaicTransfer>)
-             || op.PropertyType == typeof(List<MessageGroup>)
-             || op.PropertyType == typeof(List<Signature>)
-             || op.PropertyType == typeof(List<Tree>)
-             || op.PropertyType == typeof(List<LinkBit>)
-             || op.PropertyType == typeof(List<RestrictionData>)
-             || op.PropertyType == typeof(List<Restrictions>)
-             || op.PropertyType == typeof(List<MosaicEvent>)
-             || op.PropertyType == typeof(List<MosaicName>)
-             || op.PropertyType == typeof(List<AccountName>)
-             || op.PropertyType == typeof(List<ReceiptDatum>)
-             || op.PropertyType == typeof(List<AddressDatum>)
-             || op.PropertyType == typeof(List<MosaicDatum>)
-             || op.PropertyType == typeof(List<Receipt>)
-             || op.PropertyType == typeof(List<ResolutionEntry>)
-             || op.PropertyType == typeof(List<MosaicRestrictionData>)
-             || op.PropertyType == typeof(List<Cosignature>)
-             || op.PropertyType == typeof(List<EmbeddedTransactionData>)
-             || op.PropertyType == typeof(List<MosaicRestriction>)
-             || op.PropertyType == typeof(List<RestrictionTypes.Types>)
-             || op.PropertyType == typeof(List<TransactionTypes.Types>)
-             || op.PropertyType == typeof(TransactionTypes.Types)
-             || op.PropertyType == typeof(NetworkType.Types))
+            if (TypeArgs.Contains(op.PropertyType)) return true;
+
+            foreach(var arg in TypeArgs)
             {
-                return true;
+                if (op.PropertyType.GetGenericArguments().Contains(arg))
+                {
+                    return true;
+                }
             }
-            else return false;
+
+            return false;
+
+            //if (op.PropertyType == typeof(ushort)
+            // || op.PropertyType == typeof(bool)
+            // || op.PropertyType == typeof(int)
+            // || op.PropertyType == typeof(ulong)
+            // || op.PropertyType == typeof(string)
+            // || op.PropertyType == typeof(List<string>)
+            // || op.PropertyType == typeof(List<int>)
+            //|| op.PropertyType == typeof(List<ActivityBucket>)
+            //|| op.PropertyType == typeof(List<VotingKeys>)
+            //|| op.PropertyType == typeof(List<MosaicTransfer>)
+            //|| op.PropertyType == typeof(List<MessageGroup>)
+            //|| op.PropertyType == typeof(List<Signature>)
+            //|| op.PropertyType == typeof(List<Tree>)
+            //|| op.PropertyType == typeof(List<LinkBit>)
+            //|| op.PropertyType == typeof(List<RestrictionData>)
+            //|| op.PropertyType == typeof(List<Restrictions>)
+            //|| op.PropertyType == typeof(List<MosaicEvent>)
+            //|| op.PropertyType == typeof(List<MosaicName>)
+            //|| op.PropertyType == typeof(List<AccountName>)
+            //|| op.PropertyType == typeof(List<ReceiptDatum>)
+            //|| op.PropertyType == typeof(List<AddressDatum>)
+            //|| op.PropertyType == typeof(List<MosaicDatum>)
+            //|| op.PropertyType == typeof(List<Receipt>)
+            //|| op.PropertyType == typeof(List<ResolutionEntry>)
+            //|| op.PropertyType == typeof(List<MosaicRestrictionData>)
+            //|| op.PropertyType == typeof(List<Cosignature>)
+            //|| op.PropertyType == typeof(List<EmbeddedTransactionData>)
+            //|| op.PropertyType == typeof(List<MosaicRestriction>)
+            //|| op.PropertyType == typeof(List<RestrictionTypes.Types>)
+            //|| op.PropertyType == typeof(List<TransactionTypes.Types>)
+            // || op.PropertyType == typeof(TransactionTypes.Types)
+            //|| op.PropertyType == typeof(NetworkType.Types))
+            //{
+            //    return true;
+            //}
+
         }
 
-        private static dynamic? GetTypedValue(Type type, JsonNode ob, string path = null)
+        private dynamic? GetTypedValue(Type type, JsonNode ob, string path = null)
         {
-            if (type == typeof(int))
-                return (int)ob[path];
-
             if (type == typeof(ushort))
-                return (ushort)ob[path];
+                return UInt16.Parse(ob[path].ToString());
+
+            if (type == typeof(int))
+                return Int32.Parse(ob[path].ToString());
+
+            if ( type == typeof(uint))
+                return UInt32.Parse(ob[path].ToString());
 
             if (type == typeof(ulong))
-            {
-                Debug.WriteLine(ob);
-                Debug.WriteLine(path);
-                Debug.WriteLine(ob[path]);
                 return UInt64.Parse(ob[path].ToString());
-            }
-                
 
             if (type == typeof(string))
                 return (string)ob[path];

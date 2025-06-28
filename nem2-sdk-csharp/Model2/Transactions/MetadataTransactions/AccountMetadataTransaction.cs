@@ -1,4 +1,5 @@
-﻿using io.nem2.sdk.src.Export;
+﻿
+using io.nem2.sdk.src.Export;
 using System;
 using System.Collections.Generic;
 using System.Linq;

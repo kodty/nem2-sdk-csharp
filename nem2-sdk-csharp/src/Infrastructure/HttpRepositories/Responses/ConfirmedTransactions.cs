@@ -404,7 +404,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public List<RestrictionTypes.Types> RestrictionFlags { get; set; }
     }
 
-    public class EmbeddedAccountMosaicRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
+    public class EmbeddedAccountRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
     {
         public List<string> RestrictionAdditions { get; set; }
 
@@ -422,7 +422,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public List<RestrictionTypes.Types> RestrictionFlags { get; set; }
     }
 
-    public class EmbeddedAccountOpperationRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedAccountOperationRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
         public List<int> RestrictionAdditions { get; set; }
 

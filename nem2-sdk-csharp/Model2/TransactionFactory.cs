@@ -334,5 +334,22 @@ namespace io.nem2.sdk.Model2
                 Fee = 100
             };
         }
+
+        public AggregateTransaction1 CreateAggregateComplete(string txsHash, byte[] embeddedTransactions, byte[] cosignatures)
+        {
+            return new AggregateTransaction1(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE)
+            {
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Version = 0x01,
+                    Network = Type
+                },
+                Type = TransactionTypes.Types.AGGREGATE_COMPLETE,
+                Deadline = Deadline.AutoDeadline(Node, Port),
+                Fee = 100
+            };
+        }
     }  
 }

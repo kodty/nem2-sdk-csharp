@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
@@ -37,7 +37,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal byte[] GetSigner()
         {
-            return Signer == null ? new byte[32] : Signer.PublicKey.DecodeHexString();
+            return Signer == null ? new byte[32] : Signer.PublicKey.FromHex();
         }
 
         public SignedTransaction SignWith(SecretKeyPair keyPair, byte[] networkGenHash)
@@ -47,7 +47,7 @@ namespace io.nem2.sdk.Model.Transactions
             for (int x = 8; x < 64 + 8; x++) Bytes[x] = Signature.FromHex()[x - 8];
 
             var hash = HashTransaction(Signature.FromHex(), networkGenHash);
-            Debug.WriteLine(Bytes.ToHexLower());
+
             return SignedTransaction.Create(Bytes, SignedBytes, hash, keyPair.PublicKey, Signature.FromHex(), TransactionType);
         }
 
@@ -83,9 +83,9 @@ namespace io.nem2.sdk.Model.Transactions
         {
             var bytes = GenerateBytes();
 
-            var aggregate = bytes.Take(4 + 64, 32 + 2 + 2)
+            var aggregate = bytes.SubArray(4 + 64, 32 + 2 + 2)
                                  .Concat( 
-                                        bytes.Take(4 + 64 + 32 + 2 + 2 + 8 + 8, bytes.Length - (4 + 64 + 32 + 2 + 2 + 8 + 8))
+                                        bytes.SubArray(4 + 64 + 32 + 2 + 2 + 8 + 8, bytes.Length - (4 + 64 + 32 + 2 + 2 + 8 + 8))
                                  ).ToArray();
 
             return BitConverter.GetBytes(aggregate.Length + 4).Concat(aggregate).ToArray();
