@@ -1,4 +1,6 @@
-﻿namespace io.nem2.sdk.src.Model.Network
+﻿using System.Diagnostics;
+
+namespace io.nem2.sdk.src.Model.Network
 {
     public static class NetworkType
     {
@@ -33,9 +35,9 @@
                     throw new ArgumentException("invalid network name.");
             }
         }
-        public static Types GetRawValue(ushort value)
+        public static Types GetNetworkValue(this byte value)
         {
-            switch (value)
+            switch ((int)value)
             {
                 case 144:
                     return Types.MIJIN_TEST;

@@ -38,7 +38,7 @@ namespace Integration_Tests.HttpRequests
             {
 
 
-                if (i.Transaction.Type.GetValue() == 16722)
+                if (i.Transaction.Type == 16722)
                 {
                     var tx = (SecretLockT)i.Transaction;
 
@@ -50,7 +50,7 @@ namespace Integration_Tests.HttpRequests
                     Assert.That(tx.SignerPublicKey, Is.EqualTo(pubKey1));
                     Assert.That(tx.Secret.Length, Is.GreaterThan(0));
                 }
-                if (i.Transaction.Type.GetValue() == 16712)
+                if (i.Transaction.Type == 16712)
                 {
                     var tx = (HashLockT)i.Transaction;
 

@@ -161,7 +161,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
 
         private TransactionData ReturnSocketTransactionResponse(string data)
         {
-            return ResponseFilters<TransactionData>.FilterSingle(JsonObject.Parse(data)["data"].ToString());
+            return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterSingle(JsonObject.Parse(data)["data"].ToString());
         }
 
         public IObservable<SocketTopic> GetTransactionStatus(Address address)

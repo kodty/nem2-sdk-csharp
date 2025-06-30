@@ -1,4 +1,5 @@
 ﻿
+using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using Org.BouncyCastle.Asn1.X509.Qualified;
 using System.ComponentModel;
@@ -7,6 +8,18 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public static class TransactionTypes
     {       
+        internal static List<TransactionTypes.Types> SetTypes(this List<ushort> types)
+        {
+            var txTypes = new List<TransactionTypes.Types>();   
+
+            foreach(var t in types)
+            {
+                txTypes.Add(t.GetRawValue());
+            }
+
+            return txTypes;
+            
+        }
         public enum Types
         {
             ACCOUNT_KEY_LINK = 0x414C, 

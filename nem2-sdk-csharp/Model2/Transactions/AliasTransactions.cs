@@ -9,7 +9,6 @@
         }
 
         public string NamespaceId { get; set; }
-        public string Address { get; set; }
 
         public byte AliasAction { get; set; }
     }

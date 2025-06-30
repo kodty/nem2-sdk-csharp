@@ -25,7 +25,7 @@ namespace Integration_Tests.HttpRequests
            
             Assert.IsTrue(tx.RestrictionAdditions[0].IsHex(48));
             Assert.That(tx.RestrictionDeletions.Count, Is.EqualTo(0));
-            Assert.That(tx.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.ADDRESS));
+            Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.ADDRESS));
         }
 
         [Test, Timeout(20000)]
@@ -49,16 +49,16 @@ namespace Integration_Tests.HttpRequests
 
                 var tx = (AccountOperationRestriction)i.Transaction;
 
-                Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_OPERATION_RESTRICTION));
+                Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.ACCOUNT_OPERATION_RESTRICTION));
                 Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
                 Assert.That(i.Meta, !Is.EqualTo(null));
                 Assert.IsTrue(i.Meta.Hash.IsHex(64));
                 Assert.IsTrue(i.Id.IsHex(24));
                 Assert.That(tx.Version, Is.EqualTo(1));
-                Assert.That(tx.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
-                Assert.That(tx.RestrictionFlags[1], Is.EqualTo(RestrictionTypes.Types.OUTGOING));
-                Assert.That(tx.RestrictionFlags[2], Is.EqualTo(RestrictionTypes.Types.TRANSACTION_TYPE));
-                Assert.That(tx.RestrictionAdditions[0], Is.EqualTo(TransactionTypes.Types.AGGREGATE_BONDED));
+                Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
+                Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[1], Is.EqualTo(RestrictionTypes.Types.OUTGOING));
+                Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[2], Is.EqualTo(RestrictionTypes.Types.TRANSACTION_TYPE));
+                Assert.That(tx.RestrictionAdditions[0].GetRawValue(), Is.EqualTo(TransactionTypes.Types.AGGREGATE_BONDED));
                 Assert.That(tx.RestrictionDeletions.Count, Is.EqualTo(0));
             });
         }
@@ -86,7 +86,7 @@ namespace Integration_Tests.HttpRequests
 
             Assert.IsTrue(tx1.SignerPublicKey.IsHex(64));
             Assert.That(tx1.Version, Is.EqualTo(1));
-            Assert.That(tx1.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
+            Assert.That(tx1.RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
             Assert.IsTrue(tx1.RestrictionAdditions[0].IsHex(16));
             Assert.That(tx1.RestrictionDeletions.Count, Is.EqualTo(0));
 
@@ -95,8 +95,8 @@ namespace Integration_Tests.HttpRequests
             Assert.IsTrue(tx2.SignerPublicKey.IsHex(64));
          
             Assert.That(tx2.Version, Is.EqualTo(1));
-            Assert.That(tx2.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
-            Assert.That(tx2.RestrictionFlags[1], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
+            Assert.That(tx2.RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
+            Assert.That(tx2.RestrictionFlags.ExtractRestrictionFlags()[1], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
             Assert.IsTrue(tx2.RestrictionDeletions[0].IsHex(16));
             Assert.That(tx2.RestrictionAdditions.Count, Is.EqualTo(0));
         }

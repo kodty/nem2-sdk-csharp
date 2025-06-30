@@ -27,7 +27,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
         public int Version { get; set; }
 
-        public NetworkType.Types Network { get; set; }
+        public byte Network { get; set; }
 
         public int Type { get; set; }
      

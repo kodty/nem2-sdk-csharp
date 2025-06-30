@@ -158,8 +158,6 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             }
             if (response.Account.ActivityBuckets != null)
             {
-                Debug.WriteLine("not null");
-
                 foreach (var item in response.Account.ActivityBuckets)
                 {
                     Assert.That(item.TotalFeesPaid, Is.GreaterThanOrEqualTo(0));

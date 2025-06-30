@@ -46,7 +46,7 @@ namespace Integration_Tests.HttpRequests
                     Assert.That(t.Duration, Is.EqualTo(0));
                     Assert.That(t.Id, Is.EqualTo("A95F1F8A96159516"));
 
-                    Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+                    Assert.That(tx.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
                 }
                 if (tx.RegistrationType == 1)
                 {
@@ -55,7 +55,7 @@ namespace Integration_Tests.HttpRequests
                     Assert.That(t.Name, Is.EqualTo("xym"));
                     Assert.That(t.Id, Is.EqualTo("E74B99BA41F4AFEE"));
                     Assert.That(t.ParentId, Is.EqualTo("A95F1F8A96159516"));
-                    Assert.That(t.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+                    Assert.That(t.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
                 }
             });
         }

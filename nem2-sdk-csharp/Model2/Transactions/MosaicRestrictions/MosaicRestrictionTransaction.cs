@@ -31,6 +31,5 @@
         public string RestrictionKey { get; set; }
         public string PreviousRestrictionValue { get; set; }
         public string NewRestrictionValue { get; set; }
-        public string TargetAddress { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace Integration_Tests.HttpRequests
             response.ForEach(i =>
             {
 
-                if (i.Transaction.Type == TransactionTypes.Types.SECRET_PROOF)
+                if (i.Transaction.Type.GetRawValue() == TransactionTypes.Types.SECRET_PROOF)
                 {
                     var tx = (SecretProofT)i.Transaction;
 

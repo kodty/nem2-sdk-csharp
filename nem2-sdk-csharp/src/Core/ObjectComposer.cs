@@ -1,17 +1,19 @@
-﻿using io.nem2.sdk.Model.Transactions;
+﻿using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.Model2;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model.Network;
+using System.Diagnostics;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.src.Export
 {
     internal class ObjectComposer
     {
-        internal Type[] TypeArgs { get; set; }
+        internal object[] TypeArgs { get; set; }
 
-        internal ObjectComposer(Type[] args)
+        internal ObjectComposer(object[] args)
         {
             TypeArgs = args;
         }
@@ -90,7 +92,7 @@ namespace io.nem2.sdk.src.Export
                 {
                     string bitwiseType = new string('0', x) + '1' + new string('0', actualBitwise.Length - (1 + x));
 
-                    values.Add(Convert.ToInt32(bitwiseType, 2).GetRawValue());
+                    values.Add(Convert.ToInt32(bitwiseType, 2).GetRestrictionValue());
                 }
             }
 
@@ -102,14 +104,14 @@ namespace io.nem2.sdk.src.Export
             List<EmbeddedTransactionData> embeddedTransactions = new List<EmbeddedTransactionData>();
 
             if (ob[path] != null) foreach (var e in ob[path].AsArray())
-                    embeddedTransactions.Add(ResponseFilters<EmbeddedTransactionData>.FilterSingle(e.ToString()));
+                    embeddedTransactions.Add(new ResponseFilters<EmbeddedTransactionData>(TypeArgs).FilterSingle(e.ToString()));
 
             return embeddedTransactions;
         }
 
         private List<T> GetListTypeValue<T>(JsonNode ob, string path)
         {
-            if (typeof(T) == typeof(string) || typeof(T) == typeof(int))
+            if (typeof(T) == typeof(string) || typeof(T) == typeof(int) || typeof(T) == typeof(ushort))
                 return ob[path].AsArray().GetValues<T>().ToList();
 
             else
@@ -123,15 +125,15 @@ namespace io.nem2.sdk.src.Export
             }
         }
 
-        private List<TransactionTypes.Types> ExtractTransactionTypes(JsonNode ob, string path)
-        {
-            List<TransactionTypes.Types> types = new List<TransactionTypes.Types>();
-
-            if (ob[path] != null) foreach (var e in ob[path].AsArray())
-                    types.Add(((ushort)e).GetRawValue());
-
-            return types;
-        }
+     // private List<TransactionTypes.Types> ExtractTransactionTypes(JsonNode ob, string path)
+     // {
+     //     List<TransactionTypes.Types> types = new List<TransactionTypes.Types>();
+     //
+     //     if (ob[path] != null) foreach (var e in ob[path].AsArray())
+     //             types.Add(((ushort)e).GetRawValue());
+     //
+     //     return types;
+     // }
 
         private bool IsNativeProperty(System.Reflection.PropertyInfo op)
         {
@@ -150,6 +152,7 @@ namespace io.nem2.sdk.src.Export
 
         private dynamic? GetTypedValue(Type type, JsonNode ob, string path = null)
         {
+            
             if (type == typeof(ushort))
                 return UInt16.Parse(ob[path].ToString());
 
@@ -168,11 +171,17 @@ namespace io.nem2.sdk.src.Export
             if (type == typeof(bool))
                 return (bool)ob[path];
 
+            if (type == typeof(byte))
+                return (byte)ob[path];
+
             if (type == typeof(List<string>))
                 return GetListTypeValue<string>(ob, path);
 
             if (type == typeof(List<int>))
                 return GetListTypeValue<int>(ob, path);
+
+            if (type == typeof(List<ushort>))
+                return GetListTypeValue<ushort>(ob, path);
 
             if (type == typeof(List<ActivityBucket>))
                 return GetListTypeValue<ActivityBucket>(ob, path);
@@ -236,18 +245,6 @@ namespace io.nem2.sdk.src.Export
 
             if (type == typeof(List<EmbeddedTransactionData>))
                 return GetEmbeddedListType(ob, path);
-
-            if (type == typeof(NetworkType.Types))
-                return NetworkType.GetRawValue((ushort)ob[path]);
-
-            if (type == typeof(List<RestrictionTypes.Types>))
-                return ExtractRestrictionFlags(ob, path);
-
-            if (type == typeof(List<TransactionTypes.Types>))
-                return ExtractTransactionTypes(ob, path);
-
-            if (type == typeof(TransactionTypes.Types))
-                return ((ushort)ob[path]).GetRawValue();
 
             else throw new NotImplementedException(type.ToString());
         }

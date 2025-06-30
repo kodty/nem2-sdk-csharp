@@ -22,7 +22,7 @@ namespace io.nem2.sdk.Model.Accounts
             return (ushort)type;
         }
 
-        public static Types GetRawValue(this int type)
+        public static Types GetRestrictionValue(this int type)
         {
             switch (type)
             {
@@ -41,13 +41,11 @@ namespace io.nem2.sdk.Model.Accounts
             }
         }
 
-        public static List<RestrictionTypes.Types> ExtractRestrictionFlags(JsonNode ob, string path)
+        public static List<Types> ExtractRestrictionFlags(this int value)
         {
-            var values = new List<RestrictionTypes.Types>();
+            var values = new List<Types>();
 
-            int actualInt = (int)ob[path];
-
-            char[] actualBitwise = Convert.ToString(actualInt, 2).PadLeft(16, '0').ToCharArray(0, 16);
+            char[] actualBitwise = Convert.ToString(value, 2).PadLeft(16, '0').ToCharArray(0, 16);
 
             for (var x = 0; x < actualBitwise.Length; x++)
             {
@@ -55,7 +53,7 @@ namespace io.nem2.sdk.Model.Accounts
                 {
                     string bitwiseType = new string('0', x) + '1' + new string('0', actualBitwise.Length - (1 + x));
 
-                    values.Add(Convert.ToInt32(bitwiseType, 2).GetRawValue());
+                    values.Add(Convert.ToInt32(bitwiseType, 2).GetRestrictionValue());
                 }
             }
 

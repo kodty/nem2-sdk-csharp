@@ -15,14 +15,20 @@ namespace io.nem2.sdk.Model2
     {
         public static object[] objects = [new string[] { }, typeof(TransactionData), typeof(SimpleTransfer)];
 
-        public static Type[] CustomTypes = [
+        public static object[] BaseTransactionTypes = [
+            typeof(TransactionData),
+            typeof(EmbeddedTransactionData)
+            ];
+
+        public static object[] CustomTypes = [
 
             typeof(ushort),
             typeof(bool),
+            typeof(byte),
             typeof(int),
             typeof(ulong),
             typeof(string),
-            typeof(int),
+            typeof(uint),
             typeof(ActivityBucket),
             typeof(VotingKeys),
             typeof(MosaicTransfer),
@@ -43,10 +49,7 @@ namespace io.nem2.sdk.Model2
             typeof(MosaicRestrictionData),
             typeof(Cosignature),
             typeof(EmbeddedTransactionData),
-            typeof(MosaicRestriction),
-            typeof(RestrictionTypes.Types),
-            typeof(TransactionTypes.Types),
-            typeof(NetworkType.Types)
+            typeof(MosaicRestriction)
             ];
     }
 }

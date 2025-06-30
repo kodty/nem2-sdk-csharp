@@ -32,7 +32,7 @@ namespace Integration_Tests.HttpRequests
             {
 
                 Assert.That(i.Block.Height, Is.GreaterThan(0));
-                Assert.That(i.Block.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+                Assert.That(i.Block.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
                 Assert.That(i.Block.Type, Is.GreaterThan(1));
                 Assert.IsTrue(i.Block.SignerPublicKey.IsHex(64));
                 Assert.That(i.Block.Version, Is.EqualTo(1));
@@ -67,7 +67,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetBlock(1);
 
-            Assert.That(response.Block.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(response.Block.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.IsTrue(response.Meta.Hash.IsHex(64));
             Assert.That(response.Meta.StatementsCount, Is.EqualTo(259));
             Assert.That(response.Meta.TotalFee, Is.EqualTo(0));

@@ -8,9 +8,7 @@
             EndEpoch = endEpoch;
         }
 
-        public string LinkedPublicKey { get; set; }
         public ulong StartEpoch { get; set; }
         public ulong EndEpoch { get; set; }
-        public int LinkAction { get; set; }
     }
 }

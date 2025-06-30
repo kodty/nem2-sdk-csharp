@@ -93,7 +93,6 @@ namespace Integration_Tests.HttpRequests
 
             Assert.That(response.Tree[0].Links[0].Link.IsHex(64));
             Assert.IsTrue(response.Raw.IsHex(1490));
-            Debug.WriteLine(response.Raw.Length);
             Assert.That(response.Tree[0].Type, Is.EqualTo(0));
             Assert.That(response.Tree[0].NibbleCount, Is.EqualTo(0));
             Assert.That(response.Tree[0].Value, Is.Null);

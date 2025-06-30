@@ -6,6 +6,7 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model.Network;
 using System.Reactive.Linq;
 using io.nem2.sdk.src.Export;
+using System.Diagnostics;
 
 namespace Integration_Tests.HttpRequests
 {
@@ -124,7 +125,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(tx.Duration, Is.EqualTo(0));
             Assert.That(tx.Divisibility, Is.EqualTo(6));
             Assert.That(tx.Flags, Is.EqualTo(2));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_DEFINITION));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.MOSAIC_DEFINITION));
             Assert.IsTrue(tx.Id.IsHex(16));
             Assert.That(tx.MaxFee, Is.EqualTo(0));
 
@@ -142,11 +143,11 @@ namespace Integration_Tests.HttpRequests
 
             Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
             Assert.That(tx.LinkAction, Is.EqualTo(1));
-            Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(tx.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
             Assert.That(tx.Deadline, Is.EqualTo(1));
             Assert.That(tx.MaxFee, Is.EqualTo(0));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_KEY_LINK));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.ACCOUNT_KEY_LINK));
         }
 
         [Test, Timeout(20000)]
@@ -160,11 +161,11 @@ namespace Integration_Tests.HttpRequests
 
             Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
             Assert.That(tx.LinkAction, Is.EqualTo(1));
-            Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(tx.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
             Assert.That(tx.Deadline, Is.EqualTo(104802319));
             Assert.That(tx.MaxFee, Is.EqualTo(1000000));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.NODE_KEY_LINK));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.NODE_KEY_LINK));
         }
 
         [Test, Timeout(20000)]
@@ -178,11 +179,11 @@ namespace Integration_Tests.HttpRequests
 
             Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
             Assert.That(tx.LinkAction, Is.EqualTo(1));
-            Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(tx.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
             Assert.That(tx.Deadline, Is.EqualTo(1));
             Assert.That(tx.MaxFee, Is.EqualTo(0));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.VRF_KEY_LINK));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.VRF_KEY_LINK));
         }
 
         [Test, Timeout(20000)]
@@ -198,11 +199,11 @@ namespace Integration_Tests.HttpRequests
             Assert.That(tx.LinkAction, Is.EqualTo(1));
             Assert.That(tx.StartEpoch, Is.EqualTo(1));
             Assert.That(tx.EndEpoch, Is.EqualTo(180));
-            Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(tx.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(tx.SignerPublicKey.IsHex(64));
             Assert.That(tx.Deadline, Is.EqualTo(1));
             Assert.That(tx.MaxFee, Is.EqualTo(0));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.VOTING_KEY_LINK));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.VOTING_KEY_LINK));
         }
 
         [Test, Timeout(20000)]
@@ -214,11 +215,11 @@ namespace Integration_Tests.HttpRequests
 
             var tx = (HashLockT)response.Transaction;
 
-            Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(tx.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
             Assert.That(tx.Deadline, Is.EqualTo(97529473));
             Assert.That(tx.MaxFee, Is.EqualTo(18400));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.HASH_LOCK));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.HASH_LOCK));
             Assert.That(tx.Amount, Is.EqualTo(10000000));
             Assert.That(tx.Duration, Is.EqualTo(1000));
             Assert.That(tx.MosaicId, Is.EqualTo("6BED913FA20223F8"));
@@ -234,11 +235,11 @@ namespace Integration_Tests.HttpRequests
 
             var tx = (SecretLockT)response.Transaction;
 
-            Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(tx.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
             Assert.That(tx.Deadline, Is.EqualTo(8765036218));
             Assert.That(tx.MaxFee, Is.EqualTo(5225));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.SECRET_LOCK));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.SECRET_LOCK));
             Assert.That(tx.Amount, Is.EqualTo(1));
             Assert.That(tx.Duration, Is.EqualTo(20160));
             Assert.IsTrue(tx.MosaicId.IsHex(16));
@@ -255,11 +256,11 @@ namespace Integration_Tests.HttpRequests
 
             var tx = (SecretProofT)response.Transaction;
 
-            Assert.That(tx.Network, Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.That(tx.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
             Assert.That(tx.Deadline, Is.EqualTo(8765210999));
             Assert.That(tx.MaxFee, Is.EqualTo(5175));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.SECRET_PROOF));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.SECRET_PROOF));
             Assert.That(tx.HashAlgorithm, Is.EqualTo(0));
             Assert.That(tx.Proof, Is.EqualTo("614B1FCE6279B5A0EE68BCB0417F8FECB3AF9092"));
             Assert.IsTrue(tx.Secret.IsHex(64));
@@ -293,7 +294,7 @@ namespace Integration_Tests.HttpRequests
                 Assert.IsTrue(tx.Mosaics[0].Id.IsHex(16));
                 Assert.IsTrue(i.Meta.Hash.IsHex(64));
                 Assert.IsTrue(i.Id.IsHex(24));
-                Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.TRANSFER));
+                Assert.That(TransactionTypes.Types.TRANSFER, Is.EqualTo(tx.Type.GetRawValue()));
             });
         }
 
@@ -311,7 +312,7 @@ namespace Integration_Tests.HttpRequests
             Assert.IsTrue(tx.SourceAddress.IsHex(48));
             Assert.That(tx.Size, Is.EqualTo(168));
             Assert.IsTrue(tx.MosaicId.IsHex(16));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
         }
 
@@ -330,7 +331,7 @@ namespace Integration_Tests.HttpRequests
             Assert.IsTrue(tx.NamespaceId.IsHex(16));
             Assert.IsTrue(tx.Address.IsHex(48));
             Assert.That(tx.Size, Is.EqualTo(161));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ADDRESS_ALIAS));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.ADDRESS_ALIAS));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
         }
 
@@ -348,7 +349,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(tx.AliasAction, Is.EqualTo(1));
             Assert.IsTrue(tx.NamespaceId.IsHex(16));
             Assert.IsTrue(tx.MosaicId.IsHex(16));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_ALIAS));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.MOSAIC_ALIAS));
             Assert.That(tx.SignerPublicKey.IsHex(64));
         }
 
@@ -365,7 +366,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(tx.RegistrationType, Is.EqualTo(0));
             Assert.That(tx.Duration, Is.EqualTo(0));
             Assert.That(tx.Id.IsHex(16));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.NAMESPACE_REGISTRATION));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.NAMESPACE_REGISTRATION));
             Assert.That(tx.Size, Is.EqualTo(152));
 
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
@@ -381,10 +382,10 @@ namespace Integration_Tests.HttpRequests
 
             var tx = (AccountRestriction)response.Transaction;
 
-            Assert.That(tx.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.ADDRESS));
+            Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.ADDRESS));
             Assert.IsTrue(tx.RestrictionAdditions[0].IsHex(48));
             Assert.That(tx.RestrictionDeletions.Count, Is.EqualTo(0));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_ADDRESS_RESTRICTION));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.ACCOUNT_ADDRESS_RESTRICTION));
             Assert.That(tx.Size, Is.EqualTo(160));
 
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
@@ -400,11 +401,11 @@ namespace Integration_Tests.HttpRequests
 
             var tx = (AccountRestriction)response.Transaction;
 
-            Assert.That(tx.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
-            Assert.That(tx.RestrictionFlags[1], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
+            Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
+            Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[1], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
             Assert.That(tx.RestrictionAdditions[0].IsHex(16));
             Assert.That(tx.RestrictionDeletions.Count, Is.EqualTo(0));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_MOSAIC_RESTRICTION));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.ACCOUNT_MOSAIC_RESTRICTION));
             Assert.That(tx.Size, Is.EqualTo(144));
 
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
@@ -420,11 +421,11 @@ namespace Integration_Tests.HttpRequests
 
             var tx = (AccountOperationRestriction)response.Transaction;
 
-            Assert.That(tx.RestrictionFlags[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
-            Assert.That(tx.RestrictionFlags[1], Is.EqualTo(RestrictionTypes.Types.OUTGOING));
-            Assert.That(tx.RestrictionAdditions[0], Is.EqualTo(TransactionTypes.Types.ACCOUNT_ADDRESS_RESTRICTION));
+            Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
+            Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[1], Is.EqualTo(RestrictionTypes.Types.OUTGOING));
+            Assert.That(tx.RestrictionAdditions[0].GetRawValue(), Is.EqualTo(TransactionTypes.Types.ACCOUNT_ADDRESS_RESTRICTION));
             Assert.That(tx.RestrictionDeletions.Count, Is.EqualTo(0));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.ACCOUNT_OPERATION_RESTRICTION));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.ACCOUNT_OPERATION_RESTRICTION));
             Assert.That(tx.Size, Is.EqualTo(138));
 
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
@@ -445,7 +446,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(tx.RestrictionKey.IsHex(16));
             Assert.That(tx.TargetAddress.IsHex(48)); 
             Assert.That(tx.MosaicId.IsHex(16));
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION));
             Assert.That(tx.Size, Is.EqualTo(184));
             Assert.That(tx.SignerPublicKey.IsHex(64));
         }
@@ -466,7 +467,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(tx.RecipientAddress.IsHex(48));
             Assert.That(tx.SignerPublicKey.IsHex(64));
             Assert.That(tx.Mosaics, Is.Empty);
-            Assert.That(tx.Type, Is.EqualTo(TransactionTypes.Types.TRANSFER));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.TRANSFER));
             Assert.That(response.Meta.Hash.IsHex(64));
             Assert.That(response.Id.IsHex(24));
         }

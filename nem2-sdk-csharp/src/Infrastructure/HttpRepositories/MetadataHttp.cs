@@ -14,7 +14,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<List<Metadata>> SearchMetadataEntries(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["metadata"], queryModel)))
-               .Select(r => { return ResponseFilters<Metadata>.FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
+               .Select(r => { return new ResponseFilters<Metadata>(TypeSerializationCatalog.CustomTypes).FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<Metadata> GetMetadata(string compositeHash)
