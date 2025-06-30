@@ -25,7 +25,7 @@ namespace io.nem2.sdk.src.Export
             return events;
         }
 
-        internal List<T> FilterTransactions(string data, string path = null)
+        internal List<T> FilterTransactions(Func<string, Type> GetTransactionType, string data, string path = null)
         {
             var tx = path == null ? JsonNode.Parse(data).AsArray() : JsonNode.Parse(data)[path];
 
@@ -33,7 +33,7 @@ namespace io.nem2.sdk.src.Export
 
             foreach (var t in tx.AsArray())
             {
-                txs.Add(FilterSingle(t.ToString()));
+                txs.Add(FilterSingle2(GetTransactionType(t.ToString()), t.ToString()));
             }
 
             return txs;
@@ -79,8 +79,7 @@ namespace io.nem2.sdk.src.Export
             var tx = JsonObject.Parse(data).AsObject();
 
             dynamic shell = GetBaseTransaction(tx.AsObject());
-
-            
+         
             shell.Transaction = new ObjectComposer(Args).GenerateObject(type, GetSpecifiedTx(tx));
 
             return shell;         

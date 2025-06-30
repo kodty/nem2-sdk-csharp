@@ -129,7 +129,7 @@ namespace io.nem2.sdk.Model.Transactions
             switch (type)
             {
                 case 0x4154:
-                    return Types.TRANSFER;
+                    return Types.TRANSFER; 
                 case 0x414e:
                     return Types.NAMESPACE_REGISTRATION;
                 case 0x414d:
@@ -191,8 +191,52 @@ namespace io.nem2.sdk.Model.Transactions
                     return typeof(SimpleTransfer);
                 case 0x414e:
                     return typeof(NamespaceRegistration);
+                case 0x414d:
+                    return typeof(MosaicDefinition);
+                case 0x424d:
+                    return typeof(MosaicSupplyChange);
+                case 0x434D:
+                    return typeof(MosaicSupplyRevocation);
+                case 0x4155:
+                    return typeof(EmbeddedMultisigModification);
+                case 0x4141:
+                    return typeof(Aggregate);
+                case 0x4241:
+                    return typeof(Aggregate);
+                case 0x4148:
+                    return typeof(HashLockT);
+                case 0x4152:
+                    return typeof(SecretLockT);
+                case 0x4252:
+                    return typeof(SecretProofT);
                 case 0x4150:
                     return typeof(AccountRestriction);
+                case 0x4250:
+                    return typeof(AccountRestriction);
+                case 0x4350:
+                    return typeof(AccountOperationRestriction);
+                case 0x4251:
+                    return typeof(MosaicAddressRestriction);
+               // case 0x4151:
+               //     return typeof(AccountRestriction); // Mosaic global restriction - need to implement
+                case 0x414C:
+                    return typeof(KeyLink);
+                case 0x424C:
+                    return typeof(KeyLink);
+                case 0x4243:
+                    return typeof(KeyLink);
+                case 0x4143:
+                    return typeof(VotingKeyLink);             
+                case 0x424E:
+                    return typeof(AddressAlias);
+                case 0x434E:
+                    return typeof(MosaicAlias);
+                case 0x4144:
+                    return typeof(AccountMetadata);
+                case 0x4244:
+                    return typeof(MosaicMetadata);
+                case 0x4344:
+                    return typeof(NamespaceMetadata);
                 default:
                     throw new ArgumentException("invalid transaction type.");
             }
