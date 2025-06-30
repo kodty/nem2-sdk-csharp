@@ -9,7 +9,6 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -18,11 +17,17 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public TransactionHttp(string host, int port) 
             : base(host, port) {}
 
-        public Type GetTransactionType(string t)
+        public static Type GetTransactionType(string t)
         {
-            return ((ushort)JsonObject.Parse(t)
-                                      .AsObject()["transaction"]["type"])
-                                      .GetTypeValue();
+            var type = ((ushort)JsonObject.Parse(t)
+                                      .AsObject()["transaction"]["type"]);
+
+            if (type == 16718) { 
+                type += ((ushort)JsonObject.Parse(t)
+                                      .AsObject()["transaction"]["registrationType"]); 
+            }
+
+            return type.GetTypeValue();
         }
 
         public IObservable<List<TransactionData>> SearchConfirmedTransactions(QueryModel queryModel)
@@ -60,8 +65,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                 
                 });
         }
-        
-        
+              
         public IObservable<TransactionData> GetConfirmedTransaction(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "confirmed", hash])))
@@ -110,7 +114,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                  {
                      var t = OverrideEnsureSuccessStatusCode(r);
 
-                     return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterTransactions(GetTransactionType, t, "data");
+                     return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterTransactions(GetTransactionType, t);
 
                  });
         }

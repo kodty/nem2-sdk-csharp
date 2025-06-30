@@ -1,7 +1,5 @@
-﻿using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.src.Infrastructure.Buffers.Model;
+﻿using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Diagnostics;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.src.Export
@@ -110,16 +108,6 @@ namespace io.nem2.sdk.src.Export
             }
         }
 
-     // private List<TransactionTypes.Types> ExtractTransactionTypes(JsonNode ob, string path)
-     // {
-     //     List<TransactionTypes.Types> types = new List<TransactionTypes.Types>();
-     //
-     //     if (ob[path] != null) foreach (var e in ob[path].AsArray())
-     //             types.Add(((ushort)e).GetRawValue());
-     //
-     //     return types;
-     // }
-
         private bool IsNativeProperty(System.Reflection.PropertyInfo op)
         {
             if (TypeArgs.Contains(op.PropertyType)) return true;
@@ -151,12 +139,7 @@ namespace io.nem2.sdk.src.Export
                 return UInt64.Parse(ob[path].ToString());
 
             if (type == typeof(string))
-            {
-                Debug.WriteLine(ob);
-                Debug.WriteLine(path);
                 return (string)ob[path];
-            }
-              
 
             if (type == typeof(bool))
                 return (bool)ob[path];

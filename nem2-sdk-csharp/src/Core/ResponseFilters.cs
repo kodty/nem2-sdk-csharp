@@ -1,5 +1,4 @@
 ﻿using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.Model2;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Text.Json.Nodes;
 

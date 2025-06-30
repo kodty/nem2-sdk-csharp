@@ -190,7 +190,9 @@ namespace io.nem2.sdk.Model.Transactions
                 case 0x4154:
                     return typeof(SimpleTransfer);
                 case 0x414e:
-                    return typeof(NamespaceRegistration);
+                    return typeof(RootNamespaceRegistration);
+                case 0x414f:
+                    return typeof(ChildNamespaceRegistration);
                 case 0x414d:
                     return typeof(MosaicDefinition);
                 case 0x424d:
