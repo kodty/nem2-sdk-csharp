@@ -373,6 +373,21 @@ namespace Integration_Tests.HttpRequests
         }
 
         [Test, Timeout(20000)]
+        public async Task GetTransferTransaction()
+        {
+            //2AC16BC578E3A1C7BF731A3040465C320786987E2C782D4FA709C8E5992247AB
+
+            var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetConfirmedTransaction("2AC16BC578E3A1C7BF731A3040465C320786987E2C782D4FA709C8E5992247AB");
+
+            var tx = (SimpleTransfer)response.Transaction;
+
+            Assert.That(tx.SignerPublicKey, Is.EqualTo("BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F"));
+            Assert.That(tx.RecipientAddress, Is.EqualTo("68FD492EE69DD21970DA18521D2B6EE22F09E4B0E11D1044"));
+
+        }
+        [Test, Timeout(20000)]
         public async Task GetAccountAddressRestrictionTransaction()
         {
 

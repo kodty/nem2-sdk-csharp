@@ -1,6 +1,8 @@
-﻿using System.Diagnostics;
+﻿using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model.Network;
+using System.Diagnostics;
+using System.Text.Json.Nodes;
 
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
@@ -50,6 +52,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             return uri.Uri;
         }
+
 
         public string OverrideEnsureSuccessStatusCode(HttpResponseMessage r)
         {

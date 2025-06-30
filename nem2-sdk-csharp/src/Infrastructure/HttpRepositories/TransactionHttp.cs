@@ -1,14 +1,15 @@
-﻿using System.Reactive.Linq;
+﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.Model2;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Text.Json;
+using System.Reactive.Linq;
 using System.Text;
-using io.nem2.sdk.src.Export;
-using io.nem2.sdk.Model2;
-using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -34,12 +35,20 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "partial"], queryModel)))
                 .Select(r => { return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterTransactions(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
-
+        
         public IObservable<TransactionData> GetConfirmedTransaction(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "confirmed", hash])))
-               .Select(r => { return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterSingle(OverrideEnsureSuccessStatusCode(r)); });
+               .Select(r =>
+               {
+                   var a = OverrideEnsureSuccessStatusCode(r);
+                   var t = JsonObject.Parse(a).AsObject();
+                   var b = ((ushort)t["transaction"]["type"]).GetTypeValue();
+
+                   return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterSingle2(b, a);
+               });
         }
+
         public IObservable<TransactionData> GetUnconfirmedTransaction(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "unconfirmed", hash])))

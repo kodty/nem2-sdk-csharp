@@ -182,5 +182,20 @@ namespace io.nem2.sdk.Model.Transactions
                     throw new ArgumentException("invalid transaction type.");
             }
         }
+
+        public static Type GetTypeValue(this ushort type)
+        {
+            switch (type)
+            {
+                case 0x4154:
+                    return typeof(SimpleTransfer);
+                case 0x414e:
+                    return typeof(NamespaceRegistration);
+                case 0x4150:
+                    return typeof(AccountRestriction);
+                default:
+                    throw new ArgumentException("invalid transaction type.");
+            }
+        }
     }
 }

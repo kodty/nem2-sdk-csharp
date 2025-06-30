@@ -1,9 +1,6 @@
 ﻿using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.Model2;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.src.Model.Network;
 using System.Diagnostics;
 using System.Text.Json.Nodes;
 
@@ -20,6 +17,15 @@ namespace io.nem2.sdk.src.Export
         internal T GenerateObject<T>(string data)
         {
             return (T)GenerateObject(typeof(T), JsonObject.Parse(data));
+        }
+
+        internal dynamic GenerateObject(Type type, string data)
+        {
+            var actualObject = Activator.CreateInstance(type);
+
+            var nameToValueMap = GetPropNamesValues(type, JsonObject.Parse(data));
+
+            return ValueMapToObject(nameToValueMap, actualObject, type);
         }
 
         internal object GenerateObject(Type type, JsonNode jObject)
@@ -62,7 +68,7 @@ namespace io.nem2.sdk.src.Export
 
             return nameToValueMap;
         }
-        internal object ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)
+        internal dynamic ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)
         {
             foreach (var prop in nameToValueMap)
             {
@@ -76,27 +82,6 @@ namespace io.nem2.sdk.src.Export
             }
 
             return Convert.ChangeType(actualObject, type);
-        }
-
-        private List<RestrictionTypes.Types> ExtractRestrictionFlags(JsonNode ob, string path)
-        {
-            var values = new List<RestrictionTypes.Types>();
-
-            int actualInt = (int)ob[path];
-
-            char[] actualBitwise = Convert.ToString(actualInt, 2).PadLeft(16, '0').ToCharArray(0, 16);
-
-            for (var x = 0; x < actualBitwise.Length; x++)
-            {
-                if (actualBitwise[x] == '1')
-                {
-                    string bitwiseType = new string('0', x) + '1' + new string('0', actualBitwise.Length - (1 + x));
-
-                    values.Add(Convert.ToInt32(bitwiseType, 2).GetRestrictionValue());
-                }
-            }
-
-            return values;
         }
 
         private List<EmbeddedTransactionData> GetEmbeddedListType(JsonNode ob, string path)
@@ -113,7 +98,7 @@ namespace io.nem2.sdk.src.Export
         {
             if (typeof(T) == typeof(string) || typeof(T) == typeof(int) || typeof(T) == typeof(ushort))
                 return ob[path].AsArray().GetValues<T>().ToList();
-
+            
             else
             {
                 List<T> events = new List<T>();
@@ -166,7 +151,12 @@ namespace io.nem2.sdk.src.Export
                 return UInt64.Parse(ob[path].ToString());
 
             if (type == typeof(string))
+            {
+                Debug.WriteLine(ob);
+                Debug.WriteLine(path);
                 return (string)ob[path];
+            }
+              
 
             if (type == typeof(bool))
                 return (bool)ob[path];
