@@ -7,9 +7,11 @@ namespace io.nem2.sdk.src.Export
     internal class ResponseFilters<T> where T : class
     {
         internal object[] Args { get; set; }
+
         public ResponseFilters(object[] args) {
             Args = args;
         }
+
         internal List<T> FilterEvents(string data, string path = null)
         {
             var evs = path == null ? JsonNode.Parse(data) : JsonNode.Parse(data)[path];
@@ -38,60 +40,29 @@ namespace io.nem2.sdk.src.Export
             return txs;
         }
 
-        internal T GetBaseTransaction(JsonObject ob)
-        {
-            return new ObjectComposer(Args).GenerateObject<T>(ob.ToString());
-        }
-
         internal string GetSpecifiedTx(JsonObject ob)
         {
             return ob["transaction"].ToString();
         }
 
-        internal Type GetAssocations(JsonObject tx)
-        {
-            return ((ushort)tx["transaction"]["type"]).GetObjectTypeAssocations();
-        }
-        internal TransactionTypes.Types GetTxType(JsonObject tx)
-        {
-            return ((ushort)tx["transaction"]["type"]).GetRawValue();
-        }
-
-        internal T FilterSingle1(string data)
-        {
-            var tx = JsonObject.Parse(data).AsObject();
-
-            dynamic shell = GetBaseTransaction(tx.AsObject());
-
-            var type = GetTxType(tx.AsObject());
-
-            var associations = (Tuple<Type, Type>)Activator.CreateInstance(GetAssocations(tx.AsObject()));
-
-            shell.Transaction = new ObjectComposer(Args).GenerateObject(typeof(T), GetSpecifiedTx(tx));
-
-            return shell;
-        }
-
-
         internal T FilterSingle2(Type type, string data)
         {
             var tx = JsonObject.Parse(data).AsObject();
 
-            dynamic shell = GetBaseTransaction(tx.AsObject());
+            dynamic shell = new ObjectComposer(Args).GenerateObject<T>(tx.ToString());
          
             shell.Transaction = new ObjectComposer(Args).GenerateObject(type, GetSpecifiedTx(tx));
 
             return shell;         
         }
 
-
         internal T FilterSingle(string data)
         {
             var tx = JsonObject.Parse(data).AsObject();
 
-            dynamic shell = GetBaseTransaction(tx.AsObject());
+            dynamic shell = new ObjectComposer(Args).GenerateObject<T>(tx.ToString());
 
-            var type = GetTxType(tx.AsObject());
+            var type = ((ushort)tx["transaction"]["type"]).GetRawValue();
 
             if (type == TransactionTypes.Types.TRANSFER)
             {
