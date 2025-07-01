@@ -13,6 +13,7 @@ namespace io.nem2.sdk.src.Export
         {
             TypeArgs = args;
         }
+
         internal T GenerateObject<T>(string data)
         {
             return (T)GenerateObject(typeof(T), JsonObject.Parse(data));
@@ -84,14 +85,14 @@ namespace io.nem2.sdk.src.Export
             return embeddedTransactions;
         }
 
-        private List<T> GetListTypeValue<T>(JsonNode ob, string path)
+        private IList GetListTypeValue1(Type type, JsonNode ob, string path)
         {
-            List<T> events = new List<T>();
+            var a = (IList)Activator.CreateInstance(type);
 
             if (ob[path] != null) foreach (var e in ob[path].AsArray())
-                    events.Add((T)GenerateObject(typeof(T), e.AsObject()));
+                    a.Add(GenerateObject(type.GetGenericArguments().SingleOrDefault(), e.AsObject()));
 
-            return events;
+            return a;
         }
 
         private IList GetListTypeValue(Type type, JsonNode ob, string path)
@@ -150,68 +151,11 @@ namespace io.nem2.sdk.src.Export
                 || type == typeof(List<ushort>))
                 return GetListTypeValue(type, ob, path);
 
-            if (type == typeof(List<ActivityBucket>))
-                return GetListTypeValue<ActivityBucket>(ob, path);
-
-            if (type == typeof(List<MosaicTransfer>))
-                return GetListTypeValue<MosaicTransfer>(ob, path);
-
-            if (type == typeof(List<MosaicEvent>))
-                return GetListTypeValue<MosaicEvent>( ob, path);
-
-            if (type == typeof(List<MessageGroup>))
-                return GetListTypeValue<MessageGroup>(ob, path);
-
-            if (type == typeof(List<Signature>))
-                return GetListTypeValue<Signature>(ob, path);
-
-            if (type == typeof(List<Tree>))
-                return GetListTypeValue<Tree>(ob, path);
-
-            if (type == typeof(List<LinkBit>))
-                return GetListTypeValue<LinkBit>(ob, path);
-
-            if (type == typeof(List<RestrictionData>))
-                return GetListTypeValue<RestrictionData>(ob, path);
-
-            if (type == typeof(List<Restrictions>))
-                return GetListTypeValue<Restrictions>(ob, path);
-
-            if (type == typeof(List<MosaicName>))
-                return GetListTypeValue<MosaicName>(ob, path);
-
-            if (type == typeof(List<AccountName>))
-                return GetListTypeValue<AccountName>(ob, path);
-
-            if (type == typeof(List<ReceiptDatum>))
-                return GetListTypeValue<ReceiptDatum>(ob, path);
-
-            if (type == typeof(List<Receipt>))
-                return GetListTypeValue<Receipt>(ob, path);
-
-            if (type == typeof(List<AddressDatum>))
-                return GetListTypeValue<AddressDatum>(ob, path);
-
-            if (type == typeof(List<ResolutionEntry>))
-                return GetListTypeValue<ResolutionEntry>(ob, path);
-
-            if (type == typeof(List<MosaicDatum>))
-                return GetListTypeValue<MosaicDatum>(ob, path);
-
-            if (type == typeof(List<MosaicRestrictionData>))
-                return GetListTypeValue<MosaicRestrictionData>(ob, path);
-
-            if (type == typeof(List<MosaicRestriction>))
-                return GetListTypeValue<MosaicRestriction>(ob, path);
-
-            if (type == typeof(List<Cosignature>))
-                return GetListTypeValue<Cosignature>(ob, path);
-
-            if (type == typeof(List<VotingKeys>))
-                return GetListTypeValue<VotingKeys>(ob, path);
-
             if (type == typeof(List<EmbeddedTransactionData>))
                 return GetEmbeddedListType(ob, path);
+
+            if (TypeArgs.Contains(type.GetGenericArguments().SingleOrDefault()))
+                return GetListTypeValue1(type, ob, path);
 
             else throw new NotImplementedException(type.ToString());
         }
