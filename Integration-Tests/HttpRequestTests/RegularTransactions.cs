@@ -409,7 +409,6 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetAccountMosaicRestrictionTransaction()
         {
-
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetConfirmedTransaction("B8A9E72ADC49D2A880C49D6D4A8F88D3B64137DC0EC0A399CD9A1A8FB4C16FC0");

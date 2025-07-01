@@ -1,5 +1,6 @@
 ﻿using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using System.Collections;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.src.Export
@@ -17,16 +18,7 @@ namespace io.nem2.sdk.src.Export
             return (T)GenerateObject(typeof(T), JsonObject.Parse(data));
         }
 
-        internal dynamic GenerateObject(Type type, string data)
-        {
-            var actualObject = Activator.CreateInstance(type);
-
-            var nameToValueMap = GetPropNamesValues(type, JsonObject.Parse(data));
-
-            return ValueMapToObject(nameToValueMap, actualObject, type);
-        }
-
-        internal object GenerateObject(Type type, JsonNode jObject)
+        internal dynamic GenerateObject(Type type, JsonNode jObject)
         {
             var actualObject = Activator.CreateInstance(type);
 
@@ -94,18 +86,24 @@ namespace io.nem2.sdk.src.Export
 
         private List<T> GetListTypeValue<T>(JsonNode ob, string path)
         {
-            if (typeof(T) == typeof(string) || typeof(T) == typeof(int) || typeof(T) == typeof(ushort))
-                return ob[path].AsArray().GetValues<T>().ToList();
-            
-            else
+            List<T> events = new List<T>();
+
+            if (ob[path] != null) foreach (var e in ob[path].AsArray())
+                    events.Add((T)GenerateObject(typeof(T), e.AsObject()));
+
+            return events;
+        }
+
+        private IList GetListTypeValue(Type type, JsonNode ob, string path)
+        {     
+            var a = (IList)Activator.CreateInstance(type);
+
+            foreach (var item in ob[path].AsArray())
             {
-                List<T> events = new List<T>();
-
-                if (ob[path] != null) foreach (var e in ob[path].AsArray())
-                        events.Add((T)GenerateObject(typeof(T), e.AsObject()));
-
-                return events;
+                a.Add(Convert.ChangeType(item.ToString(), type.GetGenericArguments().SingleOrDefault()));
             }
+
+            return a;
         }
 
         private bool IsNativeProperty(System.Reflection.PropertyInfo op)
@@ -147,14 +145,10 @@ namespace io.nem2.sdk.src.Export
             if (type == typeof(byte))
                 return (byte)ob[path];
 
-            if (type == typeof(List<string>))
-                return GetListTypeValue<string>(ob, path);
-
-            if (type == typeof(List<int>))
-                return GetListTypeValue<int>(ob, path);
-
-            if (type == typeof(List<ushort>))
-                return GetListTypeValue<ushort>(ob, path);
+            if (   type == typeof(List<string>)
+                || type == typeof(List<int>)
+                || type == typeof(List<ushort>))
+                return GetListTypeValue(type, ob, path);
 
             if (type == typeof(List<ActivityBucket>))
                 return GetListTypeValue<ActivityBucket>(ob, path);
@@ -163,7 +157,7 @@ namespace io.nem2.sdk.src.Export
                 return GetListTypeValue<MosaicTransfer>(ob, path);
 
             if (type == typeof(List<MosaicEvent>))
-                return GetListTypeValue<MosaicEvent>(ob, path);
+                return GetListTypeValue<MosaicEvent>( ob, path);
 
             if (type == typeof(List<MessageGroup>))
                 return GetListTypeValue<MessageGroup>(ob, path);

@@ -51,7 +51,7 @@ namespace io.nem2.sdk.src.Export
 
             dynamic shell = new ObjectComposer(Args).GenerateObject<T>(tx.ToString());
          
-            shell.Transaction = new ObjectComposer(Args).GenerateObject(type, GetSpecifiedTx(tx));
+            shell.Transaction = new ObjectComposer(Args).GenerateObject(type, JsonObject.Parse(data)["transaction"]);
 
             return shell;         
         }
