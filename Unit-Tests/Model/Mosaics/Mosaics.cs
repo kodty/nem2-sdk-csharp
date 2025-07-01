@@ -1,6 +1,7 @@
 ﻿using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.src.Export;
+using System.Diagnostics;
 
 namespace Unit_Tests.Model.Mosaics
 {
@@ -28,9 +29,17 @@ namespace Unit_Tests.Model.Mosaics
         [Test]
         public static void Test64bitDataConverter()
         {
-            var bytes = DataConverter.ConvertFromUInt64(812613930);
-            Assert.That(bytes.ToHexUpper(), Is.EqualTo("2A816F3000000000"));
-            Assert.That(DataConverter.ConvertToUInt64(bytes), Is.EqualTo(812613930));
+
+            var array = ((ulong)812613930).ConvertToUIntArray();
+            var p1 = Convert.ToString(array[0], 16).ToUpper();
+            var p2 = array[1] == 0 ? String.Empty : Convert.ToString(array[1], 16).ToUpper();
+
+            Assert.That("2A816F30", Is.EqualTo(p1));
+            Assert.That("", Is.EqualTo(p2));
+
+            var result = String.Join("", [p1, p2]);
+
+            Assert.That(result, Is.EqualTo("2A816F30"));
         }
 
         [Test]

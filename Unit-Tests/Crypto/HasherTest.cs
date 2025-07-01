@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
+using io.nem2.sdk.src.Export;
 using NuGet.Frameworks;
 using Org.BouncyCastle.Crypto.Digests;
 using System.Diagnostics;
@@ -12,15 +13,16 @@ namespace Unit_Tests.Crypto
         [Test] 
         public void TestHash()
         {
+           
             byte[] payload = "A6151D4904E18EC288243028CEDA30556E6C42096AF7150D6A7232CA5DBA52BD2192E23DAA5FA2BEA3D4BD95EFA2389CD193FCD3376E70A5C097B32C1C62C80AF9D710211545F7CDDDF63747420281D64529477C61E721273CFD78F8890ABB4070E97BAA52AC8FF61C26D195FC54C077DEF7A3F6F79B36E046C1A83CE9674BA1983EC2FB58947DE616DD797D6499B0385D5E8A213DB9AD5078A8E0C940FF0CB6BF92357EA5609F778C3D1FB1E7E36C35DB873361E2BE5C125EA7148EFF4A035B0CCE880A41190B2E22924AD9D1B82433D9C023924F2311315F07B88BFD42850047BF3BE785C4CE11C09D7E02065D30F6324365F93C5E7E423A07D754EB314B5FE9DB4614275BE4BE26AF017ABDC9C338D01368226FE9AF1FB1F815E7317BDBB30A0F36DC69".FromHex();
-
+    
             var hash = new byte[32];
             
             var sha3Hasher = new Sha3Digest(256);
             sha3Hasher.BlockUpdate(payload, 0, payload.Length);
             sha3Hasher.DoFinal(hash, 0);
-            
-            Assert.That(hash.ToHexUpper(), Is.EqualTo("85FEF4EEC0B798E6F4CF29EB5B8D3F3096885EB88865DD62D5D0BD63ADE67384"));
+
+            Assert.That(hash.ToHex(), Is.EqualTo("85FEF4EEC0B798E6F4CF29EB5B8D3F3096885EB88865DD62D5D0BD63ADE67384"));
         }
 
         [Test] 
@@ -42,7 +44,7 @@ namespace Unit_Tests.Crypto
 
             sha3Hasher.DoFinal(hash, 0);
 
-            Assert.That(hash.ToHexUpper(), Is.EqualTo(actualHash));
+            Assert.That(hash.ToHex(), Is.EqualTo(actualHash));
 
         }
     }

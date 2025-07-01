@@ -5,18 +5,88 @@ using io.nem2.sdk.src.Model.Network;
 using System.Diagnostics;
 using io.nem2.sdk.src.Export;
 using System.Reflection;
+using TweetNaclSharp.Core.Extensions;
 
 namespace io.nem2.sdk.src.Export
 {
     public static class DataConverter
     {
+        public static string ToHex(this ulong value)
+        {
+            var array = ConvertToUIntArray(value);
+
+            var p1 = Convert.ToString(array[0], 16).ToUpper();
+
+            var p2 = array[1] == 0 ? String.Empty : Convert.ToString(array[1], 16).ToUpper();
+
+            return String.Join("", [p1, p2]);
+        }
+
+        public static uint[] ConvertToUIntArray(this ulong value)
+        {
+            byte[] p = new byte[8];
+
+            for (int i = 0; i < 8; i++)
+            {
+                p[i] = (byte)(value >> (/*8 - 1 - */ i) * 8);
+            }
+
+            uint result1 = 0;
+
+            for (int i = 0; i < p.Length / 2; i++)
+            {
+                result1 <<= 8;
+                result1 += p[i];
+            }
+
+            uint result2 = 0;
+
+            for (int i = 4; i < p.Length / 2; i++)
+            {
+                result2 <<= 8;
+                result2 += p[i];
+            }
+            Debug.WriteLine(result1);
+            Debug.WriteLine(result2);
+
+            return [result1, result2];
+        }
+
+        public static string ToHex(this byte[] value)
+        {
+            uint[] result = new uint[8];
+
+            int offset = 0;
+
+            for (uint i = 0; i < value.Length / 8; i++)
+            {
+                for(int e = 0; e < 4; e++)
+                {
+                    result[i] <<= 8;
+                    result[i] += value[e + offset++];
+                }             
+            }
+
+            string[] hexResult = new string[8];
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                Debug.WriteLine(result[i]);
+                Debug.WriteLine(Convert.ToString(result[i], 16));
+                hexResult[i] = result[i] == 0 ? String.Empty : Convert.ToString(result[i], 16);
+            }
+           
+
+            return String.Concat(hexResult);
+        }
+
         public static byte[] ConvertFromUInt64(this ulong value)
         {
             byte[] p = new byte[8];
 
             for (int i = 0; i < 8; i++)
             {
-                p[i] = (byte)(value >> i * 8);
+                p[i] = (byte)(value >> (/*8 - 1 - */ i) * 8);
             }
 
             return p;
