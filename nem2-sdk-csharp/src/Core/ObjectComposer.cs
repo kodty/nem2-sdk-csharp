@@ -85,23 +85,19 @@ namespace io.nem2.sdk.src.Export
             return embeddedTransactions;
         }
 
-        private IList GetListTypeValue1(Type type, JsonNode ob, string path)
-        {
-            var a = (IList)Activator.CreateInstance(type);
-
-            if (ob[path] != null) foreach (var e in ob[path].AsArray())
-                    a.Add(GenerateObject(type.GetGenericArguments().SingleOrDefault(), e.AsObject()));
-
-            return a;
-        }
-
         private IList GetListTypeValue(Type type, JsonNode ob, string path)
         {     
             var a = (IList)Activator.CreateInstance(type);
 
             foreach (var item in ob[path].AsArray())
             {
-                a.Add(Convert.ChangeType(item.ToString(), type.GetGenericArguments().SingleOrDefault()));
+                var t = type.GetGenericArguments().SingleOrDefault();
+                
+                if (t == typeof(ushort) || t == typeof(bool) || t == typeof(byte) || t == typeof(int) || t == typeof(ulong) || t == typeof(string) || t == typeof(uint))
+                {
+                    a.Add(Convert.ChangeType(item.ToString(), type.GetGenericArguments().SingleOrDefault())); 
+                }
+                else a.Add(GenerateObject(type.GetGenericArguments().SingleOrDefault(), item.AsObject()));
             }
 
             return a;
@@ -122,9 +118,8 @@ namespace io.nem2.sdk.src.Export
             return false;
         }
 
-        private dynamic? GetTypedValue(Type type, JsonNode ob, string path = null)
-        {
-            
+        private dynamic? GetTypedValue(Type type, JsonNode ob, string path)
+        {            
             if (type == typeof(ushort))
                 return UInt16.Parse(ob[path].ToString());
 
@@ -151,11 +146,14 @@ namespace io.nem2.sdk.src.Export
                 || type == typeof(List<ushort>))
                 return GetListTypeValue(type, ob, path);
 
-            if (type == typeof(List<EmbeddedTransactionData>))
+           if (type == typeof(List<EmbeddedTransactionData>))
                 return GetEmbeddedListType(ob, path);
 
             if (TypeArgs.Contains(type.GetGenericArguments().SingleOrDefault()))
-                return GetListTypeValue1(type, ob, path);
+            {
+                return GetListTypeValue(type, ob, path);
+            }
+               
 
             else throw new NotImplementedException(type.ToString());
         }

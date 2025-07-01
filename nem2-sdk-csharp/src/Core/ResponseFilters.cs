@@ -40,11 +40,6 @@ namespace io.nem2.sdk.src.Export
             return txs;
         }
 
-        internal string GetSpecifiedTx(JsonObject ob)
-        {
-            return ob["transaction"].ToString();
-        }
-
         internal T FilterSingle2(Type type, string data)
         {
             var tx = JsonObject.Parse(data).AsObject();
