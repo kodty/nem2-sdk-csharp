@@ -243,5 +243,62 @@ namespace io.nem2.sdk.Model.Transactions
                     throw new ArgumentException("invalid transaction type.");
             }
         }
+
+        public static Type GetEmbeddedTypeValue(this ushort type)
+        {
+            switch (type)
+            {
+                case 0x4154:
+                    return typeof(EmbeddedSimpleTransfer);
+                case 0x414e:
+                    return typeof(EmbeddedRootNamespaceRegistration);
+                case 0x414f:
+                    return typeof(EmbeddedChildNamespaceRegistration);
+                case 0x414d:
+                    return typeof(EmbeddedMosaicDefinition);
+                case 0x424d:
+                    return typeof(EmbeddedMosaicSupplyChange);
+                case 0x434D:
+                    return typeof(EmbeddedMosaicSupplyRevocation);
+                case 0x4155:
+                    return typeof(EmbeddedMultisigModification);
+                case 0x4148:
+                    return typeof(EmbeddedHashLockT);
+                case 0x4152:
+                    return typeof(EmbeddedSecretLockT);
+                case 0x4252:
+                    return typeof(EmbeddedSecretProofT);
+                case 0x4150:
+                    return typeof(EmbeddedAccountRestriction);
+                case 0x4250:
+                    return typeof(EmbeddedAccountRestriction);
+                case 0x4350:
+                    return typeof(EmbeddedAccountOperationRestriction);
+                case 0x4251:
+                    return typeof(EmbeddedMosaicAddressRestriction);
+                // case 0x4151:
+                //     return typeof(AccountRestriction); // Mosaic global restriction - need to implement
+                case 0x414C:
+                    return typeof(EmbeddedKeyLink);
+                case 0x424C:
+                    return typeof(EmbeddedKeyLink);
+                case 0x4243:
+                    return typeof(EmbeddedKeyLink);
+                case 0x4143:
+                    return typeof(EmbeddedVotingKeyLink);
+                case 0x424E:
+                    return typeof(EmbeddedAddressAlias);
+                case 0x434E:
+                    return typeof(EmbeddedMosaicAlias);
+                case 0x4144:
+                    return typeof(EmbeddedAccountMetadata);
+                case 0x4244:
+                    return typeof(EmbeddedMosaicMetadata);
+                case 0x4344:
+                    return typeof(EmbeddedNamespaceMetadata);
+                default:
+                    throw new ArgumentException("invalid transaction type.");
+            }
+        }
     }
 }
