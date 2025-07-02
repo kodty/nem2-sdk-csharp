@@ -1,4 +1,5 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+﻿using io.nem2.sdk.src;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests

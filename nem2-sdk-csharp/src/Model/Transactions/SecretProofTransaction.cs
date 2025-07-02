@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
@@ -18,9 +18,9 @@ namespace io.nem2.sdk.Model.Transactions
         public HashType.Types HashAlgo { get; }
 
         public SecretProofTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, HashType.Types hashAlgo, string secret, string proof)
-        : this(networkType, 3,deadline, fee, hashAlgo, secret, proof, null, null, null) {}
+        : this(networkType, 3,deadline, fee, hashAlgo, secret, proof, null, null) {}
 
-        public SecretProofTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, HashType.Types hashAlgo, string secret, string proof, string signature, PublicAccount signer, TransactionInfo transactionInfo)
+        public SecretProofTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, HashType.Types hashAlgo, string secret, string proof, string signature, PublicAccount signer)
         {
             Deadline = deadline;
             Version = version;
@@ -32,7 +32,7 @@ namespace io.nem2.sdk.Model.Transactions
             TransactionType = TransactionTypes.Types.SECRET_PROOF;
             Signer = signer;
             Signature = signature;
-            TransactionInfo = transactionInfo;
+            //TransactionInfo = transactionInfo;
         }
 
         public static SecretProofTransaction Create(NetworkType.Types netowrkType, Deadline deadline, ulong fee, HashType.Types hashAlgo, string secret, string proof)
@@ -44,7 +44,7 @@ namespace io.nem2.sdk.Model.Transactions
         {
             ushort size = (ushort)(187 + Proof.Length);
 
-            var serializer = new DataSerializer(size);
+            var serializer = new DataSerializer();
 
             serializer.WriteUlong(size);
 

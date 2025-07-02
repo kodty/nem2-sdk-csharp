@@ -80,5 +80,27 @@ namespace io.nem2.sdk.Model.Mosaics
             Divisibility = divisibility;
             Duration = duration;
         }
+
+        internal byte GetFlags()
+        {
+            byte flags = 0;
+
+            if (IsSupplyMutable)
+            {
+                flags += 1;
+            }
+
+            if (IsTransferable)
+            {
+                flags += 2;
+            }
+
+            if (IsLevyMutable)
+            {
+                flags += 4;
+            }
+
+            return flags;
+        }
     }
 }

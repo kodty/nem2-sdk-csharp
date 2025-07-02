@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.Model.Accounts
 {
@@ -21,7 +22,7 @@ namespace io.nem2.sdk.Model.Accounts
             return (ushort)type;
         }
 
-        public static Types GetRawValue(this int type)
+        public static Types GetRestrictionValue(this int type)
         {
             switch (type)
             {
@@ -38,6 +39,25 @@ namespace io.nem2.sdk.Model.Accounts
                 default:
                     throw new ArgumentException("invalid transaction type.");
             }
+        }
+
+        public static List<Types> ExtractRestrictionFlags(this int value)
+        {
+            var values = new List<Types>();
+
+            char[] actualBitwise = Convert.ToString(value, 2).PadLeft(16, '0').ToCharArray(0, 16);
+
+            for (var x = 0; x < actualBitwise.Length; x++)
+            {
+                if (actualBitwise[x] == '1')
+                {
+                    string bitwiseType = new string('0', x) + '1' + new string('0', actualBitwise.Length - (1 + x));
+
+                    values.Add(Convert.ToInt32(bitwiseType, 2).GetRestrictionValue());
+                }
+            }
+
+            return values;
         }
     }
 }

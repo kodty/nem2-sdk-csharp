@@ -1,5 +1,5 @@
 ﻿using IntegrationTests.Infrastructure.Transactions;
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
 using io.nem2.sdk.Model.Accounts;
@@ -10,7 +10,6 @@ using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests
 {
-    
     public class ListenerTests
     {
         [Test]
@@ -21,7 +20,7 @@ namespace Integration_Tests.HttpRequests
             await listener.Open();
 
             var block = await listener.NewBlock().Take(1);
-
+            Assert.That(block.Block.Height, Is.GreaterThan(100));
             Assert.AreEqual(1, block.Block.Version);
         }
 
@@ -125,7 +124,7 @@ namespace Integration_Tests.HttpRequests
 
             var result = await tx;
 
-            Assert.AreEqual("Failure_Core_Insufficient_Balance", result.Status);
+            Assert.AreEqual("Failure_Core_Insufficient_Balance", result.Data.Code);
         }
     }
 }

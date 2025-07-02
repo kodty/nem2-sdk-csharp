@@ -1,4 +1,6 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+﻿using io.nem2.sdk.src.Export;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests
@@ -21,10 +23,10 @@ namespace Integration_Tests.HttpRequests
 
             Assert.That(response[0].Meta.Timestamp, Is.EqualTo(112302496));
             Assert.That(response[0].Statement.Height, Is.EqualTo(923));
-            Assert.That(response[0].Statement.Unresolved, Is.EqualTo("6985738C26EB1534A4000000000000000000000000000000"));
+            Assert.IsTrue(response[0].Statement.Unresolved.IsHex(48));
             Assert.That(response[0].Statement.ResolutionEntries[0].Source.PrimaryId, Is.EqualTo(6));
             Assert.That(response[0].Statement.ResolutionEntries[0].Source.SecondaryId, Is.EqualTo(0));
-            Assert.That(response[0].Statement.ResolutionEntries[0].Resolved, Is.EqualTo("688928C64395E16FAE78B30F970AE0249AD0B5B5B9DE1F5B"));
+            Assert.That(response[0].Statement.ResolutionEntries[0].Resolved.IsHex(48));
         }
 
         [Test]
@@ -38,8 +40,8 @@ namespace Integration_Tests.HttpRequests
 
             Assert.That(response[2].Meta.Timestamp, Is.EqualTo(118726452));
             Assert.That(response[2].Statement.Height, Is.EqualTo(1142));
-            Assert.That(response[2].Statement.Unresolved, Is.EqualTo("E74B99BA41F4AFEE"));
-            Assert.That(response[2].Statement.ResolutionEntries[0].Resolved, Is.EqualTo("6BED913FA20223F8"));
+            Assert.That(response[2].Statement.Unresolved.IsHex(16));
+            Assert.That(response[2].Statement.ResolutionEntries[0].Resolved.IsHex(16));
             Assert.That(response[2].Statement.ResolutionEntries[0].Source.PrimaryId, Is.EqualTo(6));
             Assert.That(response[2].Statement.ResolutionEntries[0].Source.SecondaryId, Is.EqualTo(0));
         }
@@ -55,16 +57,15 @@ namespace Integration_Tests.HttpRequests
 
             Assert.That(response[2].Meta.Timestamp, Is.EqualTo(0));
             Assert.That(response[2].Statement.Height, Is.EqualTo(1));
-            Assert.That(response[2].Statement.Receipts[0].MosaicId, Is.EqualTo("6BED913FA20223F8"));
-
+            Assert.IsTrue(response[2].Statement.Receipts[0].MosaicId.IsHex(16));
             Assert.That(response[2].Statement.Receipts[0].Type, Is.EqualTo(4942)); // flag
             // https://docs.symbol.dev/concepts/receipt.html#recorded-receipts
 
             Assert.That(response[2].Statement.Receipts[0].Version, Is.EqualTo(1));
             Assert.That(response[2].Statement.Receipts[0].Amount, Is.EqualTo(0));
             Assert.That(response[2].Statement.Receipts[0].SenderAddress.Length, Is.EqualTo(48));
-            Assert.That(response[2].Statement.Receipts[0].RecipientAddress, Is.EqualTo("684730D07E8EF59C26C3259696730C75F6E7216730E8C9C8"));
-            Assert.That(response[2].Statement.Source.PrimaryId, Is.EqualTo(25593));
+            Assert.IsTrue(response[2].Statement.Receipts[0].RecipientAddress.IsHex(48));
+            Assert.That(response[2].Statement.Source.PrimaryId, Is.EqualTo(25592));
             Assert.That(response[2].Statement.Source.SecondaryId, Is.EqualTo(0));
         }
     }

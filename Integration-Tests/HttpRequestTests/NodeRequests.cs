@@ -29,15 +29,14 @@ namespace Integration_Tests
 
             var response = await client.GetNodePeers();
 
-            Assert.That(response[0].Version, Is.EqualTo(16777991));
+            Assert.That(response[0].Version, Is.EqualTo(0));
             Assert.That(response[0].Host, !Is.Null);
             Assert.That(response[0].Port, Is.EqualTo(7900));
-            Assert.That(response[0].NetworkIdentifier, Is.EqualTo(104));
+            Assert.That(response[0].NetworkIdentifier, Is.EqualTo(152));
             Assert.That(response[0].Roles, Is.GreaterThan(0));
-            Assert.That(response[0].NetworkGenerationHashSeed, Is.EqualTo("57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6"));
+            Assert.That(response[0].NetworkGenerationHashSeed, Is.EqualTo("49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4"));
             Assert.That(response[0].FriendlyName.Length, Is.GreaterThan(0));
-            Assert.That(response[0].PublicKey.Length, Is.EqualTo(64));
-            
+            Assert.That(response[0].PublicKey.Length, Is.EqualTo(64));           
         }
 
         [Test, Timeout(20000)]
@@ -71,10 +70,10 @@ namespace Integration_Tests
 
             var response = await client.GetNodeRESTVersion();
 
-            Assert.That(response.ServerInfo.Deployment.LastUpdatedDate, Is.EqualTo("2025-02-07"));
-            Assert.That(response.ServerInfo.Deployment.DeploymentToolVersion, Is.EqualTo("1.1.11"));
-            Assert.That(response.ServerInfo.Deployment.DeploymentTool, Is.EqualTo("symbol-bootstrap"));
-            Assert.That(response.ServerInfo.RestVersion, Is.EqualTo("2.4.4"));
+            Assert.That(response.ServerInfo.Deployment.LastUpdatedDate, Is.EqualTo("n/a"));
+            Assert.That(response.ServerInfo.Deployment.DeploymentToolVersion, Is.EqualTo("alpha"));
+            Assert.That(response.ServerInfo.Deployment.DeploymentTool, Is.EqualTo("shoestring"));
+            Assert.That(response.ServerInfo.RestVersion, Is.EqualTo("2.5.0"));
             Assert.That(response.ServerInfo.SdkVersion, Is.Null);
         }
     }

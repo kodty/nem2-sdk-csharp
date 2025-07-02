@@ -20,9 +20,9 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         public MosaicSupplyChangeTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, MosaicId mosaicId, MosaicSupplyType.Type direction, ulong delta) 
-            : this(networkType, version, deadline, fee, mosaicId, direction, delta, null, null, null) {}
+            : this(networkType, version, deadline, fee, mosaicId, direction, delta, null, null) {}
 
-        public MosaicSupplyChangeTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, MosaicId mosaicId, MosaicSupplyType.Type direction, ulong delta, string signature, PublicAccount signer, TransactionInfo transactionInfo)
+        public MosaicSupplyChangeTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, MosaicId mosaicId, MosaicSupplyType.Type direction, ulong delta, string signature, PublicAccount signer)
         {
             if (direction.GetValue() >= 2) throw new ArgumentOutOfRangeException(nameof(direction));
             if (!Enum.IsDefined(typeof(NetworkType.Types), networkType))
@@ -39,7 +39,7 @@ namespace io.nem2.sdk.Model.Transactions
             TransactionType = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE;
             Signer = signer;
             Signature = signature;
-            TransactionInfo = transactionInfo;
+            //TransactionInfo = transactionInfo;
         }
 
         internal override byte[] GenerateBytes()
@@ -47,7 +47,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             ushort size = 137;
 
-            var serializer = new DataSerializer(size);
+            var serializer = new DataSerializer();
 
             serializer.WriteUlong(size);
 

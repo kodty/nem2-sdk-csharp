@@ -2,7 +2,7 @@
 
 [assembly: InternalsVisibleTo("integration-test")]
 [assembly: InternalsVisibleTo("Test")]
-namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl
+namespace io.nem2.sdk.Core.Crypto.Chaos.NaCl
 {
     public static class CryptoBytes
     {
@@ -67,7 +67,7 @@ namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl
 
         // Explanation is similar to ToHexStringUpper
         // constant 55 -> 87 and -7 -> -39 to compensate for the offset 32 between lowercase and uppercase letters
-        internal static string ToHexLower(this byte[] data)
+        public static string ToHexLower(this byte[] data)
         {
             if (data == null)
                 return null;

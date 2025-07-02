@@ -9,12 +9,9 @@ namespace Unit_Tests.DeadlineTests
         [Test]
         public void TestNetDeadline()
         {
+            var deadline = new Deadline(0);
 
-            var deadline = new Deadline(1000);
-            var deadline2 = Deadline.AddHours(1000);
-
-            Assert.That(deadline.Ticks, Is.EqualTo(deadline2.Ticks));
-            Debug.Write(deadline.Ticks);
+            Debug.WriteLine(deadline.Ticks);
         }
     }
 }

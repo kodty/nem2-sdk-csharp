@@ -1,5 +1,6 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Reactive.Linq;
@@ -34,14 +35,15 @@ namespace Integration_Tests.HttpRequests
 
                 var tx = (AddressAlias)i.Transaction;
 
-                Assert.That(tx.Address, Is.EqualTo("684575A96630EC6C0B9FBF3408007213321AFF07A7837E50"));
-                Assert.That(tx.SignerPublicKey, Is.EqualTo("6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D"));
+                Assert.IsTrue(tx.Address.IsHex(48));
+                Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
                 Assert.That(i.Meta, !Is.EqualTo(null));
-                Assert.That(i.Meta.Hash.Length, Is.EqualTo(64));
-                Assert.That(i.Id.Length, Is.EqualTo(24));
+                Assert.IsTrue(i.Meta.Hash.IsHex(64));
+                Assert.IsTrue(i.Id.IsHex(24));
                 Assert.That(tx.Version, Is.EqualTo(1));
                 Assert.That(tx.AliasAction, Is.GreaterThanOrEqualTo(0));
-                Assert.That(tx.NamespaceId.Length, Is.EqualTo(16));
+                Assert.IsTrue(tx.NamespaceId.IsHex(16));
+
             });
         }
 

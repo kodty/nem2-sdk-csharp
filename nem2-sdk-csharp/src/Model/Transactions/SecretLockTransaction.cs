@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.src.Export;
@@ -22,13 +22,13 @@ namespace io.nem2.sdk.Model.Transactions
 
         public static SecretLockTransaction Create(NetworkType.Types netowrkType, int version, Deadline deadline, ulong fee, Mosaic1 mosaic, ulong duration, HashType.Types hashAlgo, string secret, Address recipient)
         {
-            return new SecretLockTransaction(netowrkType, version, deadline,fee, mosaic, duration, hashAlgo, secret, recipient, null, null, null);
+            return new SecretLockTransaction(netowrkType, version, deadline,fee, mosaic, duration, hashAlgo, secret, recipient, null, null);
         }
 
         public SecretLockTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, Mosaic1 mosaic, ulong duration, HashType.Types hashAlgo, string secret, Address recipient)
-            : this(networkType, version, deadline, fee, mosaic, duration, hashAlgo, secret, recipient, null, null, null) {}
+            : this(networkType, version, deadline, fee, mosaic, duration, hashAlgo, secret, recipient, null, null) {}
 
-        public SecretLockTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, Mosaic1 mosaic, ulong duration, HashType.Types hashAlgo, string secret, Address recipient, string signature, PublicAccount signer, TransactionInfo transactionInfo)
+        public SecretLockTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, Mosaic1 mosaic, ulong duration, HashType.Types hashAlgo, string secret, Address recipient, string signature, PublicAccount signer)
         {
             if (hashAlgo.GetHashTypeValue() == 0 && secret.Length != 128) throw new ArgumentException("invalid secret");
 
@@ -44,14 +44,14 @@ namespace io.nem2.sdk.Model.Transactions
             TransactionType = TransactionTypes.Types.SECRET_LOCK;
             Signer = signer;
             Signature = signature;
-            TransactionInfo = transactionInfo;
+            //TransactionInfo = transactionInfo;
         }
 
         internal override byte[] GenerateBytes()
         {
             ushort size = 234;
 
-            var serializer = new DataSerializer(size);
+            var serializer = new DataSerializer();
 
             serializer.WriteUlong(size);
 

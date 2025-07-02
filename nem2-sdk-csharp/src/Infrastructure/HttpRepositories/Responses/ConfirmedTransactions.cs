@@ -62,11 +62,11 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         {
             public string SignerPublicKey { get; set; }
 
-            public ushort Version { get; set; }
+            public byte Version { get; set; }
 
-            public NetworkType.Types Network { get; set; }
+            public byte Network { get; set; }
 
-            public TransactionTypes.Types Type { get; set; }
+            public ushort Type { get; set; }
         }
     }
 
@@ -97,11 +97,11 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         {
             public string SignerPublicKey { get; set; }
 
-            public int Version { get; set; }
+            public byte Version { get; set; }
 
-            public NetworkType.Types Network { get; set; }
+            public byte Network { get; set; }
 
-            public TransactionTypes.Types Type { get; set; }
+            public ushort Type { get; set; }
 
             public int Size { get; set; }
 
@@ -401,32 +401,32 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
         public List<string> RestrictionDeletions { get; set; }
 
-        public List<RestrictionTypes.Types> RestrictionFlags { get; set; }
+        public int RestrictionFlags { get; set; }
     }
 
-    public class EmbeddedAccountMosaicRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
+    public class EmbeddedAccountRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
     {
         public List<string> RestrictionAdditions { get; set; }
 
         public List<string> RestrictionDeletions { get; set; }
 
-        public List<RestrictionTypes.Types> RestrictionFlags { get; set; }
+        public int RestrictionFlags { get; set; }
     }
 
     public class AccountOperationRestriction : TransactionData.BaseTransaction
     {
-        public List<TransactionTypes.Types> RestrictionAdditions { get; set; }
+        public List<ushort> RestrictionAdditions { get; set; }
 
-        public List<TransactionTypes.Types> RestrictionDeletions { get; set; }
+        public List<ushort> RestrictionDeletions { get; set; }
 
-        public List<RestrictionTypes.Types> RestrictionFlags { get; set; }
+        public int RestrictionFlags { get; set; }
     }
 
-    public class EmbeddedAccountOpperationRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedAccountOperationRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction
     {
-        public List<int> RestrictionAdditions { get; set; }
+        public List<ushort> RestrictionAdditions { get; set; }
 
-        public List<int> RestrictionDeletions { get; set; }
+        public List<ushort> RestrictionDeletions { get; set; }
 
         public int RestrictionFlags { get; set; }
     }

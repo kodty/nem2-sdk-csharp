@@ -1,13 +1,14 @@
-﻿using System.Net.WebSockets;
+﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.Model2;
+using io.nem2.sdk.src.Export;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
-using io.nem2.sdk.Infrastructure.Buffers.Model;
-using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Export;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.Infrastructure.Listeners
 {
@@ -29,6 +30,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         public class SocketTopic
         {
             public string Topic { get; set; }
+            public ExtendedBroadcastStatus Data { get; set; }
         }
 
         public class WebsocketUID
@@ -53,7 +55,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
                     .GetAwaiter()
                     .GetResult();
 
-                Uid = ObjectComposer.GenerateObject<WebsocketUID>(ReadSocket().Result);
+                Uid = new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<WebsocketUID>(ReadSocket().Result);
 
                 LoopReads = Task.Run(() => LoopRead());
 
@@ -107,7 +109,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         {
             SubscribeToChannel("block");
 
-            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "block")  
+            return _subject.Where(e => new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<SocketTopic>(e).Topic == "block")  
                .Select(ReturnSocketBlockResponse);         
         }
 
@@ -115,7 +117,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         {
             SubscribeToChannel(string.Concat("confirmedAdded/", address.Plain));
 
-            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic ==  "confirmedAdded")
+            return _subject.Where(e => new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<SocketTopic>(e).Topic ==  "confirmedAdded")
                .Select(ReturnSocketTransactionResponse);         
             
         }
@@ -124,7 +126,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         {
             SubscribeToChannel(string.Concat("unconfirmedAdded/", address.Plain));
 
-            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "unconfirmedAdded")
+            return _subject.Where(e => new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<SocketTopic>(e).Topic == "unconfirmedAdded")
                  .Select(ReturnSocketTransactionResponse);
         }
 
@@ -132,7 +134,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         {
             SubscribeToChannel(string.Concat("unconfirmedRemoved/", address.Plain));
 
-            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "unconfirmedRemoved")
+            return _subject.Where(e => new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<SocketTopic>(e).Topic == "unconfirmedRemoved")
                  .Select(ReturnSocketTransactionResponse);
         }
 
@@ -140,7 +142,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         {
             SubscribeToChannel(string.Concat("partialAdded/", address.Plain));
 
-            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "partialAdded")
+            return _subject.Where(e => new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<SocketTopic>(e).Topic == "partialAdded")
                 .Select(ReturnSocketTransactionResponse);
         }
 
@@ -148,34 +150,36 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         {
             SubscribeToChannel(string.Concat("partialRemoved/", address.Plain));
 
-            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "partialRemoved")
+            return _subject.Where(e => new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<SocketTopic>(e).Topic == "partialRemoved")
                  .Select(ReturnSocketTransactionResponse);
         }
 
         private BlockInfo ReturnSocketBlockResponse(string data)
         {
-            return ObjectComposer.GenerateObject<BlockInfo>(JObject.Parse(data)["data"].ToString()); 
+            return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<BlockInfo>(JsonObject.Parse(data)["data"].ToString()); 
         }
 
         private TransactionData ReturnSocketTransactionResponse(string data)
         {
-            return ResponseFilters<TransactionData>.FilterSingle(JObject.Parse(data)["data"].ToString());
+            var t = JsonObject.Parse(data)["data"].ToString();
+
+            return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterSingle2(TransactionHttp.GetTransactionType(t), t);
         }
 
-        public IObservable<BroadcastStatus> GetTransactionStatus(Address address)
+        public IObservable<SocketTopic> GetTransactionStatus(Address address)
         {
             SubscribeToChannel(string.Concat("status/", address.Plain));
 
-            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "status")         
-                .Select(ObjectComposer.GenerateObject<BroadcastStatus>);
+            return _subject.Where(e => new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<SocketTopic>(e).Topic == "status/" + address.Plain)         
+                .Select(new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<SocketTopic>);
         }
 
         public IObservable<CosignatureSignedTransaction> CosignatureAdded(Address address)
         {
             SubscribeToChannel(string.Concat("cosignature/", address.Plain));
 
-            return _subject.Where(e => ObjectComposer.GenerateObject<SocketTopic>(e).Topic == "cosignature")
-                .Select(ObjectComposer.GenerateObject<CosignatureSignedTransaction>);
+            return _subject.Where(e => new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<SocketTopic>(e).Topic == "cosignature")
+                .Select(new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<CosignatureSignedTransaction>);
         }
 
         private bool TransactionHasSignerOrReceptor(Transaction transaction, Address address)

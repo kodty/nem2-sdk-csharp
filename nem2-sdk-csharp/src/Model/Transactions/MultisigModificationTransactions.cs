@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
@@ -16,9 +16,9 @@ namespace io.nem2.sdk.Model.Transactions
 
 
         public ModifyMultisigAccountTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, int minApprovalDelta, int minRemovalDelta, List<MultisigCosignatoryModification> modifications)
-            : this (networkType, version, deadline, fee, minApprovalDelta, minRemovalDelta, modifications, null, null, null){}
+            : this (networkType, version, deadline, fee, minApprovalDelta, minRemovalDelta, modifications, null, null){}
 
-        public ModifyMultisigAccountTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, int minApprovalDelta, int minRemovalDelta, List<MultisigCosignatoryModification> modifications, string signature, PublicAccount signer, TransactionInfo transactionInfo)
+        public ModifyMultisigAccountTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, int minApprovalDelta, int minRemovalDelta, List<MultisigCosignatoryModification> modifications, string signature, PublicAccount signer)
         {
             if (modifications == null) throw new ArgumentNullException(nameof(modifications));
             if (!Enum.IsDefined(typeof(NetworkType.Types), networkType))
@@ -35,7 +35,7 @@ namespace io.nem2.sdk.Model.Transactions
             TransactionType = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION;
             Signer = signer;
             Signature = signature;
-            TransactionInfo = transactionInfo;
+            //TransactionInfo = transactionInfo;
         }
 
         public static ModifyMultisigAccountTransaction Create(NetworkType.Types networkType, Deadline deadline, int minApprovalDelta, int minRemovalDelta, List<MultisigCosignatoryModification> modifications)
@@ -47,7 +47,7 @@ namespace io.nem2.sdk.Model.Transactions
         {
             ushort size = (ushort)(123 + 33 * Modifications.Length);
 
-            var serializer = new DataSerializer(size);
+            var serializer = new DataSerializer();
 
             serializer.WriteUlong(size);
 

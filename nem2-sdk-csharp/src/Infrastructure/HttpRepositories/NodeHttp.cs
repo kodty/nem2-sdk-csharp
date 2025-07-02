@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Model2;
 using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
@@ -13,43 +14,43 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<NodeHealth> GetNodeHealth()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "health"])))
-              .Select(r => { return ObjectComposer.GenerateObject<NodeHealth>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<NodeHealth>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<NodeInfo> GetNodeInformation()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "info"])))
-              .Select(r => { return ObjectComposer.GenerateObject<NodeInfo>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<NodeInfo>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<NodePeer>> GetNodePeers()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "peers"])))
-              .Select(r => { return ResponseFilters<NodePeer>.FilterEvents(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return new ResponseFilters<NodePeer>(TypeSerializationCatalog.CustomTypes).FilterEvents(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<NodeStorage> GetNodeStorageInfo()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "storage"])))
-              .Select(r => { return ObjectComposer.GenerateObject<NodeStorage>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<NodeStorage>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<NodeTime> GetNodeTime()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "time"])))
-              .Select(r => { return ObjectComposer.GenerateObject<NodeTime>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<NodeTime>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<NodeRESTVersion> GetNodeRESTVersion()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "server"])))
-              .Select(r => { return ObjectComposer.GenerateObject<NodeRESTVersion>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<NodeRESTVersion>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<NodeUnlockedAccounts> GetNodeHArvestingAccountInfo()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "unlocked"])))
-              .Select(r => { return ObjectComposer.GenerateObject<NodeUnlockedAccounts>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<NodeUnlockedAccounts>(OverrideEnsureSuccessStatusCode(r)); });
         }
     }
 }
