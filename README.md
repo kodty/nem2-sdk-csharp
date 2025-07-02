@@ -1,5 +1,3 @@
-
-
 ### Nem2 (Catapult) CSharp SDK
 
 :warning: this sdk is in alpha state. Use at own risk.
