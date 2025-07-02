@@ -84,7 +84,7 @@ namespace CopperCurve
                 {
                     string bitwiseType = new string('0', x) + '1' + new string('0', actualBitwise.Length - (1 + x));
 
-                    values.Add(Convert.ToInt32(bitwiseType, 2).GetRawValue());
+                    values.Add(Convert.ToInt32(bitwiseType, 2).GetRestrictionValue());
                 }
             }
 
@@ -256,8 +256,8 @@ namespace CopperCurve
             if (type == typeof(List<EmbeddedTransactionData>))
                 return GetEmbeddedListType(ob, path);
 
-            if (type == typeof(NetworkType.Types))
-                return NetworkType.GetRawValue((ushort)ob[path]);
+            //if (type == typeof(NetworkType.Types))
+            //    return NetworkType.GetRawValue((ushort)ob[path]);
 
             if (type == typeof(List<RestrictionTypes.Types>))
                 return ExtractRestrictionFlags(ob, path);
