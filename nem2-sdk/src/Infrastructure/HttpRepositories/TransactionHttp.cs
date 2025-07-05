@@ -17,7 +17,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public TransactionHttp(string host, int port) 
             : base(host, port) {}
 
-        public static Type GetTransactionType(string t)
+        public static Type GetTransactionType(string t, bool embedded = false)
         {
             var type = ((ushort)JsonObject.Parse(t)
                                       .AsObject()["transaction"]["type"]);
@@ -27,7 +27,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                                       .AsObject()["transaction"]["registrationType"]); 
             }
 
-            return type.GetTypeValue();
+            return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
         }
 
         public IObservable<List<TransactionData>> SearchConfirmedTransactions(QueryModel queryModel)
@@ -73,7 +73,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                {
                    var t = OverrideEnsureSuccessStatusCode(r);
 
-                   return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterSingle2(GetTransactionType(t), t);
+                   return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterSingle(GetTransactionType, t);
                });
         }
 
@@ -84,7 +84,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                {
                    var t = OverrideEnsureSuccessStatusCode(r);
 
-                   return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterSingle2(GetTransactionType(t), t);
+                   return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterSingle(GetTransactionType, t);
                });
         }
 
@@ -95,7 +95,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
               {
                   var t = OverrideEnsureSuccessStatusCode(r);
 
-                  return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterSingle2(GetTransactionType(t), t);
+                  return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterSingle(GetTransactionType, t);
               });
         }
 

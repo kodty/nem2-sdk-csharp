@@ -1,5 +1,4 @@
-﻿using io.nem2.sdk.src.Infrastructure.Buffers.Model;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Collections;
 using System.Text.Json.Nodes;
 
@@ -9,9 +8,17 @@ namespace io.nem2.sdk.src.Export
     {
         internal object[] TypeArgs { get; set; }
 
+        Func<string, bool, Type> GetTransactionType { get; set; }
+
         internal ObjectComposer(object[] args)
         {
             TypeArgs = args;
+        }
+
+        internal ObjectComposer(object[] args, Func<string, bool, Type> getTransactionType)
+        {
+            TypeArgs = args;
+            GetTransactionType = getTransactionType;
         }
 
         internal T GenerateObject<T>(string data)
@@ -40,7 +47,8 @@ namespace io.nem2.sdk.src.Export
                 {
                     if (IsNativeProperty(op))
                     {
-                        nameToValueMap.Add(op.Name, GetTypedValue(op.PropertyType, objList, lwrCase));
+                        
+                        nameToValueMap.Add(op.Name, GetTypedValue(op.PropertyType, objList.AsObject(), lwrCase));
                         return;
                     }
                     else
@@ -77,12 +85,7 @@ namespace io.nem2.sdk.src.Export
 
         private List<EmbeddedTransactionData> GetEmbeddedListType(JsonNode ob, string path)
         {
-            List<EmbeddedTransactionData> embeddedTransactions = new List<EmbeddedTransactionData>();
-
-            if (ob[path] != null) foreach (var e in ob[path].AsArray())
-                    embeddedTransactions.Add(new ResponseFilters<EmbeddedTransactionData>(TypeArgs).FilterSingle(e.ToString()));
-
-            return embeddedTransactions;
+            return new ResponseFilters<EmbeddedTransactionData>(TypeArgs).FilterTransactions(GetTransactionType, ob.ToString(), path, true);
         }
 
         private IList GetListTypeValue(Type type, JsonNode ob, string path)
@@ -118,7 +121,7 @@ namespace io.nem2.sdk.src.Export
             return false;
         }
 
-        private dynamic? GetTypedValue(Type type, JsonNode ob, string path)
+        private dynamic? GetTypedValue(Type type, JsonObject ob, string path)
         {            
             if (type == typeof(ushort))
                 return UInt16.Parse(ob[path].ToString());
@@ -133,7 +136,7 @@ namespace io.nem2.sdk.src.Export
                 return UInt64.Parse(ob[path].ToString());
 
             if (type == typeof(string))
-                return (string)ob[path];
+                return (string)ob[path];   
 
             if (type == typeof(bool))
                 return (bool)ob[path];
@@ -148,12 +151,11 @@ namespace io.nem2.sdk.src.Export
 
            if (type == typeof(List<EmbeddedTransactionData>))
                 return GetEmbeddedListType(ob, path);
+               
 
             if (TypeArgs.Contains(type.GetGenericArguments().SingleOrDefault()))
-            {
+
                 return GetListTypeValue(type, ob, path);
-            }
-               
 
             else throw new NotImplementedException(type.ToString());
         }

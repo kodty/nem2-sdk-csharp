@@ -26,7 +26,7 @@ namespace io.nem2.sdk.src.Export
             return events;
         }
 
-        internal List<T> FilterTransactions(Func<string, Type> GetTransactionType, string data, string path = null)
+        internal List<T> FilterTransactions(Func<string, bool, Type> GetTransactionType, string data, string path = null, bool embedded = false)
         {
             var tx = path == null ? JsonNode.Parse(data).AsArray() : JsonNode.Parse(data)[path];
 
@@ -34,32 +34,25 @@ namespace io.nem2.sdk.src.Export
 
             foreach (var t in tx.AsArray())
             {
-                txs.Add(FilterSingle2(GetTransactionType(t.ToString()), t.ToString()));
+                txs.Add(FilterSingle(GetTransactionType, t.ToString(), embedded));
             }
 
             return txs;
         }
 
-        internal T FilterSingle2(Type type, string data)
+        internal T FilterSingle(Func<string, bool, Type> GetTransactionType, string data, bool embedded = false)
         {
             var tx = JsonObject.Parse(data).AsObject();
 
-            dynamic shell = new ObjectComposer(Args).GenerateObject<T>(tx.ToString());
+            var composer = new ObjectComposer(Args, GetTransactionType);
+
+            var type = GetTransactionType(data, embedded);
+
+            dynamic shell = composer.GenerateObject<T>(tx.ToString());
          
-            shell.Transaction = new ObjectComposer(Args).GenerateObject(type, JsonObject.Parse(data)["transaction"]);
+            shell.Transaction = composer.GenerateObject(type, tx["transaction"].AsObject());
 
             return shell;         
-        }
-
-        internal T FilterSingle(string data)
-        {
-            var tx = JsonObject.Parse(data).AsObject();
-
-            dynamic shell = new ObjectComposer(Args).GenerateObject<T>(tx.ToString());
-
-            var type = ((ushort)tx["transaction"]["type"]).GetEmbeddedTypeValue();
-
-            return FilterSingle2(type, data);
         }
     } 
 }

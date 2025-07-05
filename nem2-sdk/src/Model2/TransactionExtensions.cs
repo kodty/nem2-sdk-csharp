@@ -1,10 +1,11 @@
 ﻿using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model2.Transactions;
 using io.nem2.sdk.src.Export;
 using Org.BouncyCastle.Crypto.Digests;
 using System.Diagnostics;
 using TweetNaclSharp.Core.Extensions;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
+using io.nem2.sdk.src.Model2;
+using io.nem2.sdk.src.Model2.Transactions;
 
 namespace io.nem2.sdk.Model2
 {

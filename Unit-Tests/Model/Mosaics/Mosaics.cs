@@ -12,6 +12,10 @@ namespace Unit_Tests.Model.Mosaics
         {
             var symbolId = IdGenerator.GenerateId(0, "symbol");
 
+            var symbolId1 = IdGenerator.GenerateId(0, "");
+
+            Assert.That(DataConverter.ConvertFromUInt64(symbolId1).ToHexUpper(), Is.EqualTo(""));
+
             Assert.That(DataConverter.ConvertFromUInt64(symbolId).ToHexUpper(), Is.EqualTo("A95F1F8A96159516"));
 
             var xymId = IdGenerator.GenerateId(symbolId, "xym");
