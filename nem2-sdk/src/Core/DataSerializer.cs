@@ -2,9 +2,7 @@
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Model.Network;
 using System.Diagnostics;
-using io.nem2.sdk.src.Export;
 using System.Reflection;
-using TweetNaclSharp.Core.Extensions;
 using io.nem2.sdk.src.Model2;
 
 namespace io.nem2.sdk.src.Export

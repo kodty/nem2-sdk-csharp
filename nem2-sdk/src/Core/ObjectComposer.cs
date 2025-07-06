@@ -83,7 +83,7 @@ namespace io.nem2.sdk.src.Export
             return Convert.ChangeType(actualObject, type);
         }
 
-        private List<EmbeddedTransactionData> GetEmbeddedListType(JsonNode ob, string path)
+        private dynamic GetEmbeddedListType(JsonNode ob, string path)
         {
             return new ResponseFilters<EmbeddedTransactionData>(TypeArgs).FilterTransactions(GetTransactionType, ob.ToString(), path, true);
         }
@@ -144,17 +144,10 @@ namespace io.nem2.sdk.src.Export
             if (type == typeof(byte))
                 return (byte)ob[path];
 
-            if (   type == typeof(List<string>)
-                || type == typeof(List<int>)
-                || type == typeof(List<ushort>))
-                return GetListTypeValue(type, ob, path);
-
-           if (type == typeof(List<EmbeddedTransactionData>))
+           if (type.GetGenericArguments().SingleOrDefault().Name == "EmbeddedTransactionData")
                 return GetEmbeddedListType(ob, path);
                
-
             if (TypeArgs.Contains(type.GetGenericArguments().SingleOrDefault()))
-
                 return GetListTypeValue(type, ob, path);
 
             else throw new NotImplementedException(type.ToString());

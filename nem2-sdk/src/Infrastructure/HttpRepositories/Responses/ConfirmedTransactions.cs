@@ -95,6 +95,10 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
         public class BaseTransaction
         {
+            public int Size { get; set; }
+
+            public string Signature { get; set; }
+
             public string SignerPublicKey { get; set; }
 
             public byte Version { get; set; }
@@ -102,11 +106,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
             public byte Network { get; set; }
 
             public ushort Type { get; set; }
-
-            public int Size { get; set; }
-
-            public string Signature { get; set; }
-
+          
             public ulong MaxFee { get; set; }
 
             public ulong Deadline { get; set; }
