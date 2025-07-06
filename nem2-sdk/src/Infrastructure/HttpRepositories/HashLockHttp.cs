@@ -13,8 +13,8 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
         public IObservable<List<HashLockEvent>> SearchHashLocks(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "hash"])))
-              .Select(r => { return new ResponseFilters<HashLockEvent>(TypeSerializationCatalog.CustomTypes).FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "hash"], queryModel)))
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<HashLockEvent>(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
         public IObservable<HashLockEvent> GetHashLockInfo(string hash)
         {

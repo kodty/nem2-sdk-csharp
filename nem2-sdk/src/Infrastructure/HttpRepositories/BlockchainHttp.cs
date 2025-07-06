@@ -18,7 +18,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<List<ExtendedBlockInfo>> SearchBlocks(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks"], queryModel)))
-                 .Select(r => { return new ResponseFilters<ExtendedBlockInfo>(TypeSerializationCatalog.CustomTypes).FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
+                 .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<ExtendedBlockInfo>(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<ExtendedBlockInfo> GetBlock(ulong height)
@@ -30,13 +30,13 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<List<MerklePath>> GetBlockTransactionMerkle(ulong height, string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height, "transactions", hash, "merkle"])))
-                .Select(r => { return new ResponseFilters<MerklePath>(TypeSerializationCatalog.CustomTypes).FilterEvents(OverrideEnsureSuccessStatusCode(r), "merklePath"); });
+                 .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<MerklePath>(OverrideEnsureSuccessStatusCode(r), "merklePath"); });
         }
 
         public IObservable<List<MerklePath>> GetBlockRecieptMerkle(ulong height, string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height, "reciepts", hash, "merkle"])))
-              .Select(r => { return new ResponseFilters<MerklePath>(TypeSerializationCatalog.CustomTypes).FilterEvents(OverrideEnsureSuccessStatusCode(r), "merklePath"); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<MerklePath>(OverrideEnsureSuccessStatusCode(r), "merklePath"); });
         }
  
         public IObservable<BlockchainInfo> GetBlockchainInfo()

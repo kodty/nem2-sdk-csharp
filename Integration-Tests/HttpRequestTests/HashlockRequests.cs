@@ -14,6 +14,30 @@ namespace Integration_Tests.HttpRequests
         }
 
         [Test, Timeout(20000)]
+        public async Task GetHashLock()
+        {
+            string hash = "526262DEBE21A5A37CBFAF39907AB1C30D34BDD959148181B7EFCA8E67D4CBBF";
+
+            var client = new HashLockHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var result = await client.GetHashLockInfo(hash);
+
+            Assert.That(result.Lock.MosaicId, Is.EqualTo("6BED913FA20223F8"));
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetHashLockMerkle()
+        {
+            string hash = "526262DEBE21A5A37CBFAF39907AB1C30D34BDD959148181B7EFCA8E67D4CBBF";
+
+            var client = new HashLockHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var result = await client.GetHashLockMerkleInfo(hash);
+
+            Assert.That(result.Tree[0].BranchHash, Is.EqualTo("6BED913FA20223F8"));
+        }
+
+        [Test, Timeout(20000)]
         public async Task SearchHashLockTransaction()
         {
             string pubKey = "1799A50301C17D0BA45D2599193B49C4A5377640B3D6695B84F6320466958B5C";

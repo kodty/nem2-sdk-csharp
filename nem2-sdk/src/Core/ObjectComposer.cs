@@ -102,17 +102,18 @@ namespace io.nem2.sdk.src.Export
 
             var genType = type.GetGenericArguments().SingleOrDefault();
 
-            if (genType.Name == "EmbeddedTransactionData")
+            if (ob.AsObject().ContainsKey(path))
             {
-                var tx = path == null ? ob.AsArray() : ob[path];
+                if (genType.Name == "EmbeddedTransactionData")
+                {
+                    var tx = path == null ? ob.AsArray() : ob[path];
+                    Debug.WriteLine(ob);
+                    foreach (var t in tx.AsArray())
+                        values.Add(FilterSingle(genType, t.ToString(), true));
 
-                foreach (var t in tx.AsArray())
-                    values.Add(FilterSingle(genType, t.ToString(), true));
+                    return values;
+                }
 
-                return values;
-            }
-
-            if(ob.AsObject().ContainsKey(path))
                 foreach (var item in ob[path].AsArray())
                 {
                     if (genType.IsPrimitive)
@@ -128,6 +129,7 @@ namespace io.nem2.sdk.src.Export
                         values.Add(GenerateObject(genType, item.AsObject()));
                     }
                 }
+            }
 
             return values;
         }

@@ -549,7 +549,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public string CompositeHash { get; set; }
     }
 
-    public class HashLockEvent
+    public class HashLock
     {
         public string Id { get; set; }
 
@@ -566,5 +566,12 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public int Status { get; set; }
 
         public string Hash { get; set; }
+    }
+
+    public class HashLockEvent
+    {
+        public string Id { get; set; }
+
+        public HashLock Lock { get; set; }
     }
 }
