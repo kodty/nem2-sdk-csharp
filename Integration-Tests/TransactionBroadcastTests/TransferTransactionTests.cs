@@ -8,6 +8,7 @@ using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Model2;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model.Network;
 using io.nem2.sdk.src.Model2;
@@ -93,7 +94,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         public async Task Announce()
         {
             var keyPair = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
-            var Signer = PublicAccount.CreateFromPublicKey(keyPair.PublicKey.ToHexLower(), NetworkType.Types.TEST_NET);
+            var Signer = PublicAccount.CreateFromPublicKey(keyPair.PublicKey.ToHex(), NetworkType.Types.TEST_NET);
 
             var transaction = TransferTransaction.Create(
                 Signer,

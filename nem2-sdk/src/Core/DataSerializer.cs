@@ -9,24 +9,35 @@ namespace io.nem2.sdk.src.Export
 {
     public static class DataConverter
     {
-        public static string ToHex(this ulong value)
+        public static byte[] FromHex(this string hexString)
         {
-            var array = ConvertToUIntArray(value);
+            if (!hexString.IsHex()) throw new Exception("invalid input");
 
-            var p1 = Convert.ToString(array[0], 16).ToUpper();
+            var result = new byte[hexString.Length / 2];
 
-            var p2 = array[1] == 0 ? String.Empty : Convert.ToString(array[1], 16).ToUpper();
+            for (int i = 0; i < result.Length; i++)
+                result[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
 
-            return String.Join("", [p1, p2]);
+            return result;
         }
 
+        public static string ToHex(this byte[] data)
+        {
+            string result = "";
+
+            for (int i = 0; i < data.Length; i++)
+                result = result + Convert.ToString((ushort)data[i], 16);
+            return result;
+        }
+
+        /*
         public static uint[] ConvertToUIntArray(this ulong value)
         {
             byte[] p = new byte[8];
 
             for (int i = 0; i < 8; i++)
             {
-                p[i] = (byte)(value >> (/*8 - 1 - */ i) * 8);
+                p[i] = (byte)(value >> (/*8 - 1 -  i) * 8);
             }
 
             uint result1 = 0;
@@ -77,6 +88,8 @@ namespace io.nem2.sdk.src.Export
 
             return String.Concat(hexResult);
         }
+        */
+
 
         public static byte[] ConvertFromUInt64(this ulong value)
         {

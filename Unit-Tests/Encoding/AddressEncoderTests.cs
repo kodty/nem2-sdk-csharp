@@ -23,7 +23,7 @@ namespace Unit_Tests.Encoding
             Debug.WriteLine(AddressEncoder.DecodeAddress("TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA").Length);
             var hexString = "TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA";
 
-            Assert.That(AddressEncoder.DecodeAddress(hexString).ToHexUpper(), Is.EqualTo("98D9807AC250198EA57D689A7239DFA3B52E1506A3F71FDC"));
+            Assert.That(AddressEncoder.DecodeAddress(hexString).ToHex(), Is.EqualTo("98D9807AC250198EA57D689A7239DFA3B52E1506A3F71FDC"));
         }
     }
 }

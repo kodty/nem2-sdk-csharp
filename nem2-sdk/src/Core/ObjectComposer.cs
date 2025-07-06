@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Diagnostics;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.src.Export
@@ -9,11 +8,6 @@ namespace io.nem2.sdk.src.Export
         private object[] TypeArgs { get; set; }
 
         internal Func<string, bool, Type> GetTransactionType { get; set; }
-
-        internal ObjectComposer(object[] args)
-        {
-            TypeArgs = args;
-        }
 
         internal ObjectComposer(object[] args, Func<string, bool, Type> getTransactionType)
         {

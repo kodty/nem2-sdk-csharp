@@ -2,6 +2,7 @@
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
 using Org.BouncyCastle.Crypto.Digests;
 
@@ -123,7 +124,7 @@ namespace io.nem2.sdk.Model.Accounts
                 digestSha3.BlockUpdate(bytes, 0, 32);
                 digestSha3.DoFinal(stepOne, 0);
 
-                var keyPair = SecretKeyPair.CreateFromPrivateKey(stepOne.ToHexLower());
+                var keyPair = SecretKeyPair.CreateFromPrivateKey(stepOne.ToHex());
 
                 return new Account(Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType), keyPair);
             }         

@@ -14,19 +14,19 @@ namespace Unit_Tests.Model.Mosaics
 
             var symbolId1 = IdGenerator.GenerateId(0, "");
 
-            Assert.That(DataConverter.ConvertFromUInt64(symbolId1).ToHexUpper(), Is.EqualTo(""));
+            Assert.That(DataConverter.ConvertFromUInt64(symbolId1).ToHex(), Is.EqualTo(""));
 
-            Assert.That(DataConverter.ConvertFromUInt64(symbolId).ToHexUpper(), Is.EqualTo("A95F1F8A96159516"));
+            Assert.That(DataConverter.ConvertFromUInt64(symbolId).ToHex(), Is.EqualTo("A95F1F8A96159516"));
 
             var xymId = IdGenerator.GenerateId(symbolId, "xym");
-            Assert.That(DataConverter.ConvertFromUInt64(xymId).ToHexUpper(), Is.EqualTo("E74B99BA41F4AFEE"));
+            Assert.That(DataConverter.ConvertFromUInt64(xymId).ToHex(), Is.EqualTo("E74B99BA41F4AFEE"));
         }
 
         [Test]
         public static void Test32bitDataConverter()
         {
             var bytes = DataConverter.ConvertFromUInt32(16961);
-            Assert.That(bytes.ToHexUpper(), Is.EqualTo("41420000")); // little endian
+            Assert.That(bytes.ToHex(), Is.EqualTo("41420000")); // little endian
             Assert.That(bytes.ConvertToUInt32(), Is.EqualTo(16961)); 
         }
 
@@ -34,7 +34,7 @@ namespace Unit_Tests.Model.Mosaics
         public static void Test64bitDataConverter()
         {
 
-            var array = ((ulong)812613930).ConvertToUIntArray();
+            var array = ((ulong)812613930).ConvertFromUInt64();
             var p1 = Convert.ToString(array[0], 16).ToUpper();
             var p2 = array[1] == 0 ? String.Empty : Convert.ToString(array[1], 16).ToUpper();
 
@@ -54,8 +54,8 @@ namespace Unit_Tests.Model.Mosaics
             var id = IdGenerator.GenerateId(decoded, 713125680);
             var id2 = IdGenerator.GenerateId(decoded, 729902896);
 
-            Assert.That(DataConverter.ConvertFromUInt64(id).ToHexUpper(), Is.EqualTo("570FB3ED9379624C"));
-            Assert.That(DataConverter.ConvertFromUInt64(id2).ToHexUpper(), !Is.EqualTo("570FB3ED9379624C"));
+            Assert.That(DataConverter.ConvertFromUInt64(id).ToHex(), Is.EqualTo("570FB3ED9379624C"));
+            Assert.That(DataConverter.ConvertFromUInt64(id2).ToHex(), !Is.EqualTo("570FB3ED9379624C"));
         }  
     }
 }

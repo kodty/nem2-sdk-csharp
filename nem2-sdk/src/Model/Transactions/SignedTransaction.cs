@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
+using io.nem2.sdk.src.Export;
 using TweetNaclSharp;
 
 namespace io.nem2.sdk.Model.Transactions
@@ -42,7 +43,7 @@ namespace io.nem2.sdk.Model.Transactions
             if (signer == null) throw new ArgumentNullException(nameof(signer));
             if (signer.Length != 32) throw new ArgumentException("invalid signer length");
 
-            return new SignedTransaction(payload.ToHexLower(), signedBytes, hash.ToHexLower(), signer.ToHexLower(), signature.ToHexLower(), transactionType);
+            return new SignedTransaction(payload.ToHex(), signedBytes, hash.ToHex(), signer.ToHex(), signature.ToHex(), transactionType);
         }
     }
 }

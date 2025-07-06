@@ -52,7 +52,7 @@ namespace io.nem2.sdk.Model.Mosaics
         {
             Id = id;
 
-            HexId = DataConverter.ConvertFromUInt64(id).ToHexLower();
+            HexId = DataConverter.ConvertFromUInt64(id).ToHex();
         }
 
         public MosaicId(string hexId)

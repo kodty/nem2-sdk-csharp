@@ -1,5 +1,4 @@
-﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
-using io.nem2.sdk.src.Export;
+﻿using io.nem2.sdk.src.Export;
 using NuGet.Frameworks;
 using Org.BouncyCastle.Crypto.Digests;
 using System.Diagnostics;
@@ -22,7 +21,7 @@ namespace Unit_Tests.Crypto
             sha3Hasher.BlockUpdate(payload, 0, payload.Length);
             sha3Hasher.DoFinal(hash, 0);
 
-            Assert.That(hash.ToHex(), Is.EqualTo("85FEF4EEC0B798E6F4CF29EB5B8D3F3096885EB88865DD62D5D0BD63ADE67384"));
+            Assert.That(hash.ToHex().ToUpper(), Is.EqualTo("85FEF4EEC0B798E6F4CF29EB5B8D3F3096885EB88865DD62D5D0BD63ADE67384"));
         }
 
         [Test] 

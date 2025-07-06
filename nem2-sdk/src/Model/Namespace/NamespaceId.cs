@@ -1,5 +1,6 @@
 ﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Core.Utils;
+using io.nem2.sdk.src.Export;
 
 namespace io.nem2.sdk.Model.Namespace
 {
@@ -18,13 +19,13 @@ namespace io.nem2.sdk.Model.Namespace
             Id = IdGenerator.GenerateId(0, id);
             Name = id;
 
-            HexId = BitConverter.GetBytes(Id).ToHexUpper();
+            HexId = BitConverter.GetBytes(Id).ToHex();
         }
 
         public NamespaceId(ulong id)
         {
             Id = id;
-            HexId = BitConverter.GetBytes(id).ToHexUpper();
+            HexId = BitConverter.GetBytes(id).ToHex();
         }
         
         public static NamespaceId Create(string id)

@@ -2,6 +2,7 @@
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.src.Export;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -28,7 +29,7 @@ namespace io.nem2.sdk.Model.Transactions
             var bytes = Hash.FromHex();
             var signatureBytes = TransactionExtensions.SignHash(account, bytes);
 
-            return new CosignatureSignedTransaction{ ParentHash = Hash, Signature = signatureBytes.ToHexLower(), Signer = account.PublicKeyString};
+            return new CosignatureSignedTransaction{ ParentHash = Hash, Signature = signatureBytes.ToHex(), Signer = account.PublicKeyString};
         }      
     }
 }

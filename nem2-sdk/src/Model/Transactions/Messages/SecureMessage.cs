@@ -1,5 +1,6 @@
 ﻿using io.nem2.sdk.Core.Crypto;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
+using io.nem2.sdk.src.Export;
 
 namespace io.nem2.sdk.Model.Transactions.Messages
 {
@@ -21,7 +22,7 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
         public string GetDecodedPayload(string privateKey, string publicKey)
         {
-            return CryptoUtils.Decode(Payload.ToHexLower(), privateKey, publicKey);
+            return CryptoUtils.Decode(Payload.ToHex(), privateKey, publicKey);
         }
         internal override byte GetMessageType()
         {

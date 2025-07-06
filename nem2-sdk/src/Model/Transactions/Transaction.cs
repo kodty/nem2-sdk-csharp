@@ -1,6 +1,7 @@
 ﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Network;
 using Org.BouncyCastle.Crypto.Digests;
@@ -59,7 +60,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             SignedBytes = networkGenHash.Concat(Headless).ToArray();
 
-            Signature = keyPair.Sign(SignedBytes).ToHexLower();
+            Signature = keyPair.Sign(SignedBytes).ToHex();
             
             return Signature.FromHex();
         }

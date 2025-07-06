@@ -3,7 +3,6 @@ using io.nem2.sdk.src.Export;
 using Org.BouncyCastle.Crypto.Digests;
 using System.Diagnostics;
 using TweetNaclSharp.Core.Extensions;
-using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.src.Model2;
 using io.nem2.sdk.src.Model2.Transactions;
 using System.Text.Json.Nodes;
@@ -81,19 +80,19 @@ namespace io.nem2.sdk.Model2
 
         public static string HashTransaction(this Payload payload)
         {
-            Debug.WriteLine("payload " + payload.payload.ToHexLower());
+            Debug.WriteLine("payload " + payload.payload.ToHex());
             var signature = payload.payload.SubArray(4 + 4, 64);
 
-            Debug.WriteLine(signature.ToHexLower());
+            Debug.WriteLine(signature.ToHex());
             var signer = payload.payload.SubArray(4 + 4 + 64, 32);
 
-            Debug.WriteLine(signer.ToHexLower());
+            Debug.WriteLine(signer.ToHex());
             var genHash = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4".FromHex();
             var transactionData = payload.payload.SubArray(4 + 4 + 64 + 32, payload.payload.Length - (4 + 4 + 64 + 32));
-            Debug.WriteLine(transactionData.ToHexLower());
+            Debug.WriteLine(transactionData.ToHex());
 
             var final = signature.Concat(signer).Concat(genHash).Concat(transactionData).ToArray();
-            Debug.WriteLine(final.ToHexLower());
+            Debug.WriteLine(final.ToHex());
             var hash = new byte[32];
 
             var sha3Hasher = new Sha3Digest(256);
@@ -102,7 +101,7 @@ namespace io.nem2.sdk.Model2
 
             sha3Hasher.DoFinal(hash, 0);
 
-            return hash.ToHexLower();
+            return hash.ToHex();
         }
     }
 }

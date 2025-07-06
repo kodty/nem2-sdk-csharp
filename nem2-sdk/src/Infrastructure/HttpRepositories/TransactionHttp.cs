@@ -1,5 +1,6 @@
 ﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
@@ -97,7 +98,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         public IObservable<TransactionAnnounceResponse> Announce(Payload payload)
         {
-            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new _Payload() { payload = payload.payload.ToHexLower() }), Encoding.UTF8, "application/json")))
+            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new _Payload() { payload = payload.payload.ToHex() }), Encoding.UTF8, "application/json")))
                 .Select(i => new TransactionAnnounceResponse() { Message = JsonNode.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
         }
 

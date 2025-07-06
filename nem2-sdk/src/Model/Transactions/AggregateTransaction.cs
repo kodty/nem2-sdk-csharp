@@ -67,7 +67,7 @@ namespace io.nem2.sdk.Model.Transactions
 
                 payload = payload.Concat(cosignatory.KeyPair.PublicKey.Concat(signatureBytes)).ToArray();
 
-                Cosignatures.Add(new AggregateTransactionCosignature(signatureBytes.ToHexLower(), new PublicAccount(cosignatory.KeyPair.PublicKey.ToHexLower(), src.Model.Network.NetworkType.Types.MIJIN_TEST)));  
+                Cosignatures.Add(new AggregateTransactionCosignature(signatureBytes.ToHex(), new PublicAccount(cosignatory.KeyPair.PublicKey.ToHex(), src.Model.Network.NetworkType.Types.MIJIN_TEST)));  
             }
 
             payload = BitConverter.GetBytes(payload.Length).Concat(payload.SubArray(4, payload.Length - 4).ToArray()).ToArray();

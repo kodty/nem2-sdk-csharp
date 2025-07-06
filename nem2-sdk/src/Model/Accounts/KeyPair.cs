@@ -1,5 +1,6 @@
 ﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl.Internal.Ed25519ref10;
+using io.nem2.sdk.src.Export;
 using System.Security.Cryptography;
 using TweetNaclSharp;
 
@@ -11,9 +12,9 @@ namespace io.nem2.sdk.Model.Accounts
 
         public byte[] PublicKey { get; }
 
-        public string PrivateKeyString => PrivateKey.ToHexLower().ToUpper();
+        public string PrivateKeyString => PrivateKey.ToHex().ToUpper();
 
-        public string PublicKeyString => PublicKey.ToHexLower().ToUpper();
+        public string PublicKeyString => PublicKey.ToHex().ToUpper();
 
         internal SecretKeyPair(string privateKey, string publicKey)
         {
@@ -46,7 +47,7 @@ namespace io.nem2.sdk.Model.Accounts
 
             Array.Clear(h, 0, h.Length);
 
-            return new SecretKeyPair(privateKey, pk.ToHexLower());
+            return new SecretKeyPair(privateKey, pk.ToHex());
         }
         internal byte[] Sign(byte[] data)
         {

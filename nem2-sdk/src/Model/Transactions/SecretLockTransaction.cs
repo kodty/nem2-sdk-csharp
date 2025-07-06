@@ -1,5 +1,4 @@
-﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
-using io.nem2.sdk.Model.Accounts;
+﻿using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
@@ -14,7 +13,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal byte[] Secret { get; }
 
-        public string SecretString() => Secret.ToHexUpper();
+        public string SecretString() => Secret.ToHex();
 
         public HashType.Types HashAlgo { get; }
 

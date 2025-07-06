@@ -1,10 +1,8 @@
-﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
-using io.nem2.sdk.Model.Accounts;
+﻿using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
-using System.Diagnostics;
 
 namespace io.nem2.sdk.Model.Transactions
 {

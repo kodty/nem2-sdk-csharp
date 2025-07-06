@@ -98,7 +98,7 @@ namespace test.Model.AccountTest
             var pubAccount = new PublicAccount("87C45C6A2C87589786549BAD91568E56822507CA1D85D5B0E86B6F555231A4F8", NetworkType.Types.TEST_NET);
             
             Assert.That(pubAccount.Address.Plain, Is.EqualTo("TCSJY245ZPSF5SSC4OBBKGOLQ3VEPSRIBTVXTTQ"));
-            Debug.WriteLine(AddressEncoder.DecodeAddress(pubAccount.Address.Plain).ToHexLower());
+            Debug.WriteLine(AddressEncoder.DecodeAddress(pubAccount.Address.Plain).ToHex().ToUpper());
             
         }
 

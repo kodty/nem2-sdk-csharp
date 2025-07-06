@@ -1,9 +1,8 @@
 ﻿using System.Security.Cryptography;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
-using io.nem2.sdk.Core.Utils;
+using io.nem2.sdk.src.Export;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Security;
-using TweetNaclSharp;
 using TweetNaclSharp.Core.Extensions;
 
 namespace io.nem2.sdk.Core.Crypto
@@ -148,7 +147,7 @@ namespace io.nem2.sdk.Core.Crypto
                 sha3Hasher.DoFinal(hash, 0);
             }
 
-            return hash.ToHexUpper();
+            return hash.ToHex();
         }
 
         /// <summary>
@@ -170,7 +169,7 @@ namespace io.nem2.sdk.Core.Crypto
                 privateKey,
                 publicKey);
 
-            return salt.ToHexLower() + AesEncryptor(shared, iv, msg);        
+            return salt.ToHex() + AesEncryptor(shared, iv, msg);        
         }
 
         /// <summary>
@@ -217,7 +216,7 @@ namespace io.nem2.sdk.Core.Crypto
                             swEncrypt.Write(msg);
                         }
 
-                        return iv.ToHexLower() + msEncrypt.ToArray().ToHexLower();
+                        return iv.ToHex() + msEncrypt.ToArray().ToHex();
                     }
                 }
             }
