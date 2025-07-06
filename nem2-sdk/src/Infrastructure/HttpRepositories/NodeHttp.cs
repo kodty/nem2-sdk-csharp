@@ -26,7 +26,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<List<NodePeer>> GetNodePeers()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "peers"])))
-              .Select(r => { return new ResponseFilters<NodePeer>(TypeSerializationCatalog.CustomTypes).FilterEvents(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<NodePeer>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<NodeStorage> GetNodeStorageInfo()

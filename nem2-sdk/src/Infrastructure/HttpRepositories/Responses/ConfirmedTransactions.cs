@@ -571,7 +571,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
     public class HashLockEvent
     {
         public string Id { get; set; }
-
+        
         public HashLock Lock { get; set; }
     }
 }

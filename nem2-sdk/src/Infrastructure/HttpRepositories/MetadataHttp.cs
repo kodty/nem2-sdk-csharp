@@ -14,7 +14,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<List<Metadata>> SearchMetadataEntries(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["metadata"], queryModel)))
-               .Select(r => { return new ResponseFilters<Metadata>(TypeSerializationCatalog.CustomTypes).FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
+               .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<Metadata>(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<Metadata> GetMetadata(string compositeHash)
@@ -25,12 +25,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 
         public IObservable<MerkleRoot> GetMetadataMerkle(string compositeHash) 
         {
-            var uriBuilder = new UriBuilder(Host)
-            {
-                Port = Port,
-                Path = "/metadata/" + compositeHash + "/merkle"
-            };
-
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["metadata", compositeHash, "merkle"])))
                .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
         }

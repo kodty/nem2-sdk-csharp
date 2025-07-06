@@ -14,19 +14,19 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<List<ReceiptDatum>> SearchTransactionStatements(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["statements", "transaction"])))
-              .Select(r => { return new ResponseFilters<ReceiptDatum>(TypeSerializationCatalog.CustomTypes).FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<ReceiptDatum>(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<List<AddressDatum>> GetAddressStatements(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["statements", "resolutions", "address"])))
-              .Select(r => { return new ResponseFilters<AddressDatum>(TypeSerializationCatalog.CustomTypes).FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<AddressDatum>(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<List<MosaicDatum>> GetMosaicStatements(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["statements", "resolutions", "mosaic"])))
-              .Select(r => { return new ResponseFilters<MosaicDatum>(TypeSerializationCatalog.CustomTypes).FilterEvents(OverrideEnsureSuccessStatusCode(r), "data"); });
+              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<MosaicDatum>(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
     }
 }

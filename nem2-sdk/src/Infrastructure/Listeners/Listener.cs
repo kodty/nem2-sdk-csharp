@@ -163,7 +163,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         {
             var t = JsonObject.Parse(data)["data"].ToString();
 
-            return new ResponseFilters<TransactionData>(TypeSerializationCatalog.CustomTypes).FilterSingle(TransactionHttp.GetTransactionType, t);
+            return new ObjectComposer(TypeSerializationCatalog.CustomTypes, TransactionHttp.GetTransactionType).FilterSingle<TransactionData>(t);
         }
 
         public IObservable<SocketTopic> GetTransactionStatus(Address address)

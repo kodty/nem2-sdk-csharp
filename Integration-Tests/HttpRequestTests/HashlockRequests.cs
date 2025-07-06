@@ -34,7 +34,7 @@ namespace Integration_Tests.HttpRequests
 
             var result = await client.GetHashLockMerkleInfo(hash);
 
-            Assert.That(result.Tree[0].BranchHash, Is.EqualTo("6BED913FA20223F8"));
+            Assert.That(result.Tree[0].LeafHash, Is.EqualTo("C1B3FB7531222664A33F5199D2E0328F22F6C04C1717AF47C633E835E9EC90F4"));
         }
 
         [Test, Timeout(20000)]

@@ -96,6 +96,11 @@ namespace io.nem2.sdk.src.Export
             return shell;
         }
 
+        internal T FilterSingle<T>(string data, bool embedded = false)
+        {
+            return FilterSingle(typeof(T), data, embedded);
+        }
+
         private IList GetListTypeValue(Type type, JsonNode ob, string path)
         {
             var values = (IList)Activator.CreateInstance(type);
@@ -107,7 +112,7 @@ namespace io.nem2.sdk.src.Export
                 if (genType.Name == "EmbeddedTransactionData")
                 {
                     var tx = path == null ? ob.AsArray() : ob[path];
-                    Debug.WriteLine(ob);
+
                     foreach (var t in tx.AsArray())
                         values.Add(FilterSingle(genType, t.ToString(), true));
 
@@ -168,6 +173,21 @@ namespace io.nem2.sdk.src.Export
             }
 
             return events;
+        }
+
+
+        internal List<T> FilterTransactions<T>(string data, string path = null, bool embedded = false)
+        {
+            var tx = path == null ? JsonNode.Parse(data).AsArray() : JsonNode.Parse(data)[path];
+
+            List<T> txs = new List<T>();
+
+            foreach (var t in tx.AsArray())
+            {
+                txs.Add(FilterSingle(typeof(T), t.ToString(), embedded));
+            }
+
+            return txs;
         }
     }
 }
