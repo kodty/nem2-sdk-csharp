@@ -14,25 +14,25 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<NetworkInfo> GetNetwork()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network"])))
-              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<NetworkInfo>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return Composer.GenerateObject<NetworkInfo>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<NetworkRentalFees> GetRentalFees()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network", "fees", "rental"])))
-              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<NetworkRentalFees>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return Composer.GenerateObject<NetworkRentalFees>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<NetworkTransactionFees> GetTransactionFees()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network", "fees", "transaction"])))
-              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<NetworkTransactionFees>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return Composer.GenerateObject<NetworkTransactionFees>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<NetworkProperties> GetNetworkProperties()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network", "properties"])))
-             .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<NetworkProperties>(OverrideEnsureSuccessStatusCode(r)); });
+             .Select(r => { return Composer.GenerateObject<NetworkProperties>(OverrideEnsureSuccessStatusCode(r)); });
         }
     }
 }

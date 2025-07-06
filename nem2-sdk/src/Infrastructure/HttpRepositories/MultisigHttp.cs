@@ -14,7 +14,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<MerkleRoot> GetMultisigMerkleInfo(string pubkOrAddress)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(Host + ":" + Port + "/accounts/" + pubkOrAddress + "/multisig/merkle"))
-                 .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+                 .Select(r => { return Composer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         /*

@@ -18,31 +18,31 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<List<ExtendedBlockInfo>> SearchBlocks(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks"], queryModel)))
-                 .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<ExtendedBlockInfo>(OverrideEnsureSuccessStatusCode(r), "data"); });
+                 .Select(r => { return Composer.FilterEvents<ExtendedBlockInfo>(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<ExtendedBlockInfo> GetBlock(ulong height)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height])))
-                .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<ExtendedBlockInfo>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(r => { return Composer.GenerateObject<ExtendedBlockInfo>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<MerklePath>> GetBlockTransactionMerkle(ulong height, string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height, "transactions", hash, "merkle"])))
-                 .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<MerklePath>(OverrideEnsureSuccessStatusCode(r), "merklePath"); });
+                 .Select(r => { return Composer.FilterEvents<MerklePath>(OverrideEnsureSuccessStatusCode(r), "merklePath"); });
         }
 
         public IObservable<List<MerklePath>> GetBlockRecieptMerkle(ulong height, string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height, "reciepts", hash, "merkle"])))
-              .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<MerklePath>(OverrideEnsureSuccessStatusCode(r), "merklePath"); });
+              .Select(r => { return Composer.FilterEvents<MerklePath>(OverrideEnsureSuccessStatusCode(r), "merklePath"); });
         }
  
         public IObservable<BlockchainInfo> GetBlockchainInfo()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["chain", "info"])))
-                .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<BlockchainInfo>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(r => { return Composer.GenerateObject<BlockchainInfo>(OverrideEnsureSuccessStatusCode(r)); });
         }
     }
 }

@@ -6,9 +6,9 @@ namespace io.nem2.sdk.src.Export
 {
     internal class ObjectComposer
     {
-        internal object[] TypeArgs { get; set; }
+        private object[] TypeArgs { get; set; }
 
-        Func<string, bool, Type> GetTransactionType { get; set; }
+        internal Func<string, bool, Type> GetTransactionType { get; set; }
 
         internal ObjectComposer(object[] args)
         {
@@ -21,12 +21,45 @@ namespace io.nem2.sdk.src.Export
             GetTransactionType = getTransactionType;
         }
 
+        internal List<T> FilterEvents<T>(string data, string path = null)
+        {
+            var evs = path == null ? JsonNode.Parse(data) : JsonNode.Parse(data)[path];
+
+            List<T> events = new List<T>();
+
+            foreach (var e in evs.AsArray())
+            {
+                events.Add(GenerateObject(typeof(T), e.AsObject()));
+            }
+
+            return events;
+        }
+
+        internal List<T> FilterTransactions<T>(string data, string path = null, bool embedded = false)
+        {
+            var tx = path == null ? JsonNode.Parse(data) : JsonNode.Parse(data)[path];
+
+            List<T> txs = new List<T>();
+
+            foreach (var t in tx.AsArray())
+            {
+                txs.Add(FilterSingle(typeof(T), t.ToString(), embedded));
+            }
+
+            return txs;
+        }
+
+        internal T FilterSingle<T>(string data, bool embedded = false)
+        {
+            return FilterSingle(typeof(T), data, embedded);
+        }
+
         internal T GenerateObject<T>(string data)
         {
             return (T)GenerateObject(typeof(T), JsonObject.Parse(data));
         }
 
-        internal dynamic GenerateObject(Type type, JsonNode jObject)
+        private dynamic GenerateObject(Type type, JsonNode jObject)
         {
             var actualObject = Activator.CreateInstance(type);
 
@@ -67,7 +100,7 @@ namespace io.nem2.sdk.src.Export
             return nameToValueMap;
         }
 
-        internal dynamic ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)
+        private dynamic ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)
         {
             foreach (var prop in nameToValueMap)
             {
@@ -83,7 +116,7 @@ namespace io.nem2.sdk.src.Export
             return Convert.ChangeType(actualObject, type);
         }
 
-        internal dynamic FilterSingle(Type genType, string data, bool embedded = false)
+        private dynamic FilterSingle(Type genType, string data, bool embedded = false)
         {
             var tx = JsonObject.Parse(data).AsObject();
 
@@ -94,11 +127,6 @@ namespace io.nem2.sdk.src.Export
             shell.Transaction = GenerateObject(type, tx["transaction"].AsObject());
 
             return shell;
-        }
-
-        internal T FilterSingle<T>(string data, bool embedded = false)
-        {
-            return FilterSingle(typeof(T), data, embedded);
         }
 
         private IList GetListTypeValue(Type type, JsonNode ob, string path)
@@ -159,35 +187,6 @@ namespace io.nem2.sdk.src.Export
                 return GetListTypeValue(type, ob, path);
 
             else throw new NotImplementedException(type.ToString());
-        }
-
-        internal List<T> FilterEvents<T>(string data, string path = null)
-        {
-            var evs = path == null ? JsonNode.Parse(data) : JsonNode.Parse(data)[path];
-
-            List<T> events = new List<T>();
-
-            foreach (var e in evs.AsArray())
-            {
-                events.Add(GenerateObject(typeof(T), e.AsObject()));
-            }
-
-            return events;
-        }
-
-
-        internal List<T> FilterTransactions<T>(string data, string path = null, bool embedded = false)
-        {
-            var tx = path == null ? JsonNode.Parse(data).AsArray() : JsonNode.Parse(data)[path];
-
-            List<T> txs = new List<T>();
-
-            foreach (var t in tx.AsArray())
-            {
-                txs.Add(FilterSingle(typeof(T), t.ToString(), embedded));
-            }
-
-            return txs;
         }
     }
 }

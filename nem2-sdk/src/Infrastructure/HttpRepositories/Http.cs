@@ -1,9 +1,9 @@
-﻿using io.nem2.sdk.Model.Transactions;
+﻿using io.nem2.sdk.Model2;
+using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model.Network;
+using io.nem2.sdk.src.Model2;
 using System.Diagnostics;
-using System.Text.Json.Nodes;
-
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -17,14 +17,18 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         private NetworkType.Types _NetworkType { get; set; }
 
+        internal ObjectComposer Composer { get; set; }
+
         protected HttpRouter(string host, int port)
         {
             if (string.IsNullOrEmpty(host)) throw new ArgumentException("Value cannot be null or empty.", nameof(host));
 
             Host = host;
             Port = port;
-            Client = new HttpClient();                    
+            Client = new HttpClient();  
+            Composer = new ObjectComposer(TypeSerializationCatalog.CustomTypes, TransactionExtensions2.GetTransactionType);
         }
+
 
         internal Uri GetUri(object[] segs)
         {

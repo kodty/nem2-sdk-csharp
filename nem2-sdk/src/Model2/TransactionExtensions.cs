@@ -6,11 +6,27 @@ using TweetNaclSharp.Core.Extensions;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.src.Model2;
 using io.nem2.sdk.src.Model2.Transactions;
+using System.Text.Json.Nodes;
+using io.nem2.sdk.Model.Transactions;
 
 namespace io.nem2.sdk.Model2
 {
     public static class TransactionExtensions2
     {
+        public static Type GetTransactionType(string t, bool embedded = false)
+        {
+            var type = ((ushort)JsonObject.Parse(t)
+                                      .AsObject()["transaction"]["type"]);
+
+            if (type == 16718)
+            {
+                type += ((ushort)JsonObject.Parse(t)
+                                      .AsObject()["transaction"]["registrationType"]);
+            }
+
+            return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
+        }
+
         public static byte[] Serialize<T>(object obj)
         {
             DataSerializer serializer = new DataSerializer();

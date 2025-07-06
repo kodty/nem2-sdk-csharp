@@ -12,50 +12,52 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
     public class AccountHttp : HttpRouter, IAccountRepository
     {
-        public AccountHttp(string host, int port) 
-            : base(host, port){ }
+        public AccountHttp(string host, int port) : base(host, port)
+        {
+            
+        }
 
         public IObservable<List<AccountData>> SearchAccounts(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts"], queryModel)))
-                 .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<AccountData>(OverrideEnsureSuccessStatusCode(r), "data"); });
+                 .Select(r => { return Composer.FilterEvents<AccountData>(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<AccountData> GetAccount(string pubkOrAddress)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts",pubkOrAddress])))
-                 .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<AccountData>(OverrideEnsureSuccessStatusCode(r)); });
+                 .Select(r => { return Composer.GenerateObject<AccountData>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<AccountData>> GetAccounts(List<string> accounts) // flag
         {
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["accounts"]), new StringContent(JsonSerializer.Serialize(new Public_Keys() { publicKeys = accounts }), Encoding.UTF8, "application/json")))
-                  .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<AccountData>(OverrideEnsureSuccessStatusCode(r)); });
+                  .Select(r => { return Composer.FilterEvents<AccountData>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
 
         public IObservable<MerkleRoot> GetAccountMerkle(string pubkOrAddress)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts", pubkOrAddress, "merkle"])))
-                 .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+                 .Select(r => { return Composer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<List<RestrictionData>> SearchAccountRestrictions(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account"], queryModel)))
-                .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).FilterEvents<RestrictionData>(OverrideEnsureSuccessStatusCode(r), "data"); });
+                .Select(r => { return Composer.FilterEvents<RestrictionData>(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<RestrictionData> GetAccountRestriction(string address)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account", address])))
-                .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<RestrictionData>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(r => { return Composer.GenerateObject<RestrictionData>(OverrideEnsureSuccessStatusCode(r)); });
         }
 
         public IObservable<MerkleRoot> GetAccountRestrictionsMerkle(string address)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account", address, "merkle" ])))
-                .Select(r => { return new ObjectComposer(TypeSerializationCatalog.CustomTypes).GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(r => { return Composer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
         }
     }
 }
