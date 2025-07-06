@@ -1,5 +1,7 @@
 ﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Collections;
+using System.IO;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.src.Export
@@ -90,20 +92,22 @@ namespace io.nem2.sdk.src.Export
 
         private IList GetListTypeValue(Type type, JsonNode ob, string path)
         {     
-            var a = (IList)Activator.CreateInstance(type);
+            var values = (IList)Activator.CreateInstance(type);
 
             foreach (var item in ob[path].AsArray())
             {
                 var t = type.GetGenericArguments().SingleOrDefault();
-                
-                if (t == typeof(ushort) || t == typeof(bool) || t == typeof(byte) || t == typeof(int) || t == typeof(ulong) || t == typeof(string) || t == typeof(uint))
-                {
-                    a.Add(Convert.ChangeType(item.ToString(), type.GetGenericArguments().SingleOrDefault())); 
-                }
-                else a.Add(GenerateObject(type.GetGenericArguments().SingleOrDefault(), item.AsObject()));
+
+                if (type.IsPrimitive)
+                    values.Add(Convert.ChangeType(item.ToString(), t));
+
+                if (t == typeof(string))
+                    values.Add((string)item);
+
+                else values.Add(GenerateObject(type.GetGenericArguments().SingleOrDefault(), item.AsObject()));
             }
 
-            return a;
+            return values;
         }
 
         private bool IsNativeProperty(System.Reflection.PropertyInfo op)
@@ -122,29 +126,14 @@ namespace io.nem2.sdk.src.Export
         }
 
         private dynamic? GetTypedValue(Type type, JsonObject ob, string path)
-        {            
-            if (type == typeof(ushort))
-                return UInt16.Parse(ob[path].ToString());
-
-            if (type == typeof(int))
-                return Int32.Parse(ob[path].ToString());
-
-            if ( type == typeof(uint))
-                return UInt32.Parse(ob[path].ToString());
-
-            if (type == typeof(ulong))
-                return UInt64.Parse(ob[path].ToString());
+        {
+            if (type.IsPrimitive)
+                return Convert.ChangeType(ob[path].ToString(), type);
 
             if (type == typeof(string))
-                return (string)ob[path];   
+                return (string)ob[path];
 
-            if (type == typeof(bool))
-                return (bool)ob[path];
-
-            if (type == typeof(byte))
-                return (byte)ob[path];
-
-           if (type.GetGenericArguments().SingleOrDefault().Name == "EmbeddedTransactionData")
+            if (type.GetGenericArguments().SingleOrDefault().Name == "EmbeddedTransactionData")
                 return GetEmbeddedListType(ob, path);
                
             if (TypeArgs.Contains(type.GetGenericArguments().SingleOrDefault()))
