@@ -1,7 +1,5 @@
 ﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Collections;
-using System.IO;
-using System.Reflection.Metadata.Ecma335;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.src.Export
