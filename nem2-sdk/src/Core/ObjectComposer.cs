@@ -1,5 +1,5 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Collections;
+﻿using System.Collections;
+using System.Diagnostics;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.src.Export
@@ -47,7 +47,6 @@ namespace io.nem2.sdk.src.Export
                 {
                     if (IsNativeProperty(op))
                     {
-                        
                         nameToValueMap.Add(op.Name, GetTypedValue(op.PropertyType, objList.AsObject(), lwrCase));
                         return;
                     }
@@ -67,6 +66,7 @@ namespace io.nem2.sdk.src.Export
 
             return nameToValueMap;
         }
+
         internal dynamic ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)
         {
             foreach (var prop in nameToValueMap)
@@ -83,61 +83,89 @@ namespace io.nem2.sdk.src.Export
             return Convert.ChangeType(actualObject, type);
         }
 
-        private dynamic GetEmbeddedListType(JsonNode ob, string path)
+        internal dynamic FilterSingle(Type genType, string data, bool embedded = false)
         {
-            return new ResponseFilters<EmbeddedTransactionData>(TypeArgs).FilterTransactions(GetTransactionType, ob.ToString(), path, true);
+            var tx = JsonObject.Parse(data).AsObject();
+
+            var type = GetTransactionType(data, embedded);
+
+            dynamic shell = GenerateObject(genType, tx.AsObject());
+
+            shell.Transaction = GenerateObject(type, tx["transaction"].AsObject());
+
+            return shell;
         }
 
         private IList GetListTypeValue(Type type, JsonNode ob, string path)
-        {     
+        {
             var values = (IList)Activator.CreateInstance(type);
 
-            foreach (var item in ob[path].AsArray())
+            var genType = type.GetGenericArguments().SingleOrDefault();
+
+            if (genType.Name == "EmbeddedTransactionData")
             {
-                var t = type.GetGenericArguments().SingleOrDefault();
+                var tx = path == null ? ob.AsArray() : ob[path];
 
-                if (type.IsPrimitive)
-                    values.Add(Convert.ChangeType(item.ToString(), t));
+                foreach (var t in tx.AsArray())
+                    values.Add(FilterSingle(genType, t.ToString(), true));
 
-                if (t == typeof(string))
-                    values.Add((string)item);
-
-                else values.Add(GenerateObject(type.GetGenericArguments().SingleOrDefault(), item.AsObject()));
+                return values;
             }
+
+            if(ob.AsObject().ContainsKey(path))
+                foreach (var item in ob[path].AsArray())
+                {
+                    if (genType.IsPrimitive)
+                    {
+                        values.Add(Convert.ChangeType(item.ToString(), genType));
+                    }
+                    if (genType == typeof(string))
+                    {
+                        values.Add((string)item);
+                    }
+                    else if (!genType.IsPrimitive && genType != typeof(string))
+                    {
+                        values.Add(GenerateObject(genType, item.AsObject()));
+                    }
+                }
 
             return values;
         }
 
         private bool IsNativeProperty(System.Reflection.PropertyInfo op)
         {
-            if (TypeArgs.Contains(op.PropertyType)) return true;
+            if (TypeArgs.Contains(op.PropertyType) || TypeArgs.Contains(op.PropertyType.GetGenericArguments().SingleOrDefault()))
+                return true;
 
-            foreach(var arg in TypeArgs)
-            {
-                if (op.PropertyType.GetGenericArguments().Contains(arg))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            else return false;
         }
 
         private dynamic? GetTypedValue(Type type, JsonObject ob, string path)
         {
             if (type.IsPrimitive)
-                return Convert.ChangeType(ob[path].ToString(), type);
+                return Convert.ChangeType(ob[path].ToString(), type);              
 
             if (type == typeof(string))
                 return (string)ob[path];
 
-            if (type.GetGenericArguments().SingleOrDefault().Name == "EmbeddedTransactionData")
-                return GetEmbeddedListType(ob, path);
-               
             if (TypeArgs.Contains(type.GetGenericArguments().SingleOrDefault()))
                 return GetListTypeValue(type, ob, path);
 
             else throw new NotImplementedException(type.ToString());
+        }
+
+        internal List<T> FilterEvents<T>(string data, string path = null)
+        {
+            var evs = path == null ? JsonNode.Parse(data) : JsonNode.Parse(data)[path];
+
+            List<T> events = new List<T>();
+
+            foreach (var e in evs.AsArray())
+            {
+                events.Add(GenerateObject(typeof(T), e.AsObject()));
+            }
+
+            return events;
         }
     }
 }

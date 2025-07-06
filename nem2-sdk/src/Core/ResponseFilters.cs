@@ -44,13 +44,7 @@ namespace io.nem2.sdk.src.Export
 
             var composer = new ObjectComposer(Args, GetTransactionType);
 
-            var type = GetTransactionType(data, embedded);
-
-            dynamic shell = composer.GenerateObject<T>(tx.ToString());
-         
-            shell.Transaction = composer.GenerateObject(type, tx["transaction"].AsObject());
-
-            return shell;         
+            return composer.FilterSingle(typeof(T), tx.ToString(), embedded);        
         }
     } 
 }
