@@ -1,5 +1,4 @@
 ﻿using io.nem2.sdk.Core.Utils;
-using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.src.Export;
 using System.Diagnostics;
 
@@ -12,9 +11,9 @@ namespace Unit_Tests.Model.Mosaics
         {
             var symbolId = IdGenerator.GenerateId(0, "symbol");
 
-            var symbolId1 = IdGenerator.GenerateId(0, "");
+           // var symbolId1 = IdGenerator.GenerateId(0, "");
 
-            Assert.That(DataConverter.ConvertFromUInt64(symbolId1).ToHex(), Is.EqualTo(""));
+           // Assert.That(DataConverter.ConvertFromUInt64(symbolId1).ToHex(), Is.EqualTo(""));
 
             Assert.That(DataConverter.ConvertFromUInt64(symbolId).ToHex(), Is.EqualTo("A95F1F8A96159516"));
 
@@ -23,9 +22,19 @@ namespace Unit_Tests.Model.Mosaics
         }
 
         [Test]
+        public static void Test16bitDataConverter()
+        {
+            var bytes = DataConverter.ConvertFromUInt16(16961);
+
+            Assert.That(bytes.ToHex(), Is.EqualTo("4142")); // little endian
+            Assert.That(bytes.ConvertToUInt32(), Is.EqualTo(16961));
+        }
+
+        [Test]
         public static void Test32bitDataConverter()
         {
             var bytes = DataConverter.ConvertFromUInt32(16961);
+
             Assert.That(bytes.ToHex(), Is.EqualTo("41420000")); // little endian
             Assert.That(bytes.ConvertToUInt32(), Is.EqualTo(16961)); 
         }
@@ -33,17 +42,9 @@ namespace Unit_Tests.Model.Mosaics
         [Test]
         public static void Test64bitDataConverter()
         {
-
             var array = ((ulong)812613930).ConvertFromUInt64();
-            var p1 = Convert.ToString(array[0], 16).ToUpper();
-            var p2 = array[1] == 0 ? String.Empty : Convert.ToString(array[1], 16).ToUpper();
 
-            Assert.That("2A816F30", Is.EqualTo(p1));
-            Assert.That("", Is.EqualTo(p2));
-
-            var result = String.Join("", [p1, p2]);
-
-            Assert.That(result, Is.EqualTo("2A816F30"));
+            Assert.That("2A816F3000000000", Is.EqualTo(array.ToHex())); // little endian
         }
 
         [Test]
