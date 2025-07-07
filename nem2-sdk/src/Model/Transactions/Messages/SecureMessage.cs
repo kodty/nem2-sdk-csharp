@@ -22,8 +22,9 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
         public string GetDecodedPayload(string privateKey, string publicKey)
         {
-            return CryptoUtils.Decode(Payload.ToHex(), privateKey, publicKey);
+            return CryptoUtils.Decode(Payload, privateKey, publicKey);
         }
+
         internal override byte GetMessageType()
         {
             return Type;

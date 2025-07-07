@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.src.Export;
 using Org.BouncyCastle.Crypto.Digests;
@@ -112,12 +114,12 @@ namespace io.nem2.sdk.Core.Crypto
         /// <param name="secretKey">The secret key.</param>
         /// <param name="publicKey">The public key.</param>
         /// <returns>System.String.</returns>
-        public static string Decode(string text, string secretKey, string publicKey)
+        public static string Decode(byte[] text, string secretKey, string publicKey)
         {
             return _Decode(
                 secretKey.FromHex(),
                 publicKey.FromHex(),
-                text.FromHex());
+                text);
         }
 
         /// <summary>
@@ -199,11 +201,17 @@ namespace io.nem2.sdk.Core.Crypto
         {
             using (var aesAlg = Aes.Create())
             {
+                aesAlg.BlockSize = 128;
+
+                aesAlg.KeySize = 256;
+
                 aesAlg.Key = key;
 
                 aesAlg.IV = iv;
 
                 aesAlg.Mode = CipherMode.CBC;
+
+                aesAlg.Padding = PaddingMode.PKCS7;
                 
                 var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
@@ -211,8 +219,8 @@ namespace io.nem2.sdk.Core.Crypto
                 {
                     using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                     {
-                        using (var swEncrypt = new StreamWriter(csEncrypt))
-                        {
+                        using (var swEncrypt = new StreamWriter(csEncrypt, Encoding.UTF8))
+                        {                        
                             swEncrypt.Write(msg);
                         }
 
@@ -239,9 +247,9 @@ namespace io.nem2.sdk.Core.Crypto
                 using (var msDecrypt = new MemoryStream(payload))
                 {
                     using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (var srDecrypt = new StreamReader(csDecrypt))
-                        {
+                    {              
+                        using (var srDecrypt = new StreamReader(csDecrypt, Encoding.UTF8))
+                        {                          
                             var a = srDecrypt.ReadToEnd();
 
                             return a;
