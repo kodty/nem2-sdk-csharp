@@ -1,13 +1,5 @@
-﻿using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Infrastructure.Buffers.Model;
+﻿using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.src.Model.Network;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace io.nem2.sdk.src.Model2
 {

@@ -1,11 +1,5 @@
 ﻿using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Namespace;
-using io.nem2.sdk.src.Model2.Transactions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace io.nem2.sdk.src.Model2.Transactions.MosaicPropertiesTransactions
 {

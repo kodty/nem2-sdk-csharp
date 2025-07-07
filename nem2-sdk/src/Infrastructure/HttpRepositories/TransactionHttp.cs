@@ -5,7 +5,6 @@ using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model2;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using System.Text.Json;

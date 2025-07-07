@@ -1,5 +1,4 @@
 ﻿using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Model2;
 
 namespace io.nem2.sdk.src.Model2.Transactions
 {

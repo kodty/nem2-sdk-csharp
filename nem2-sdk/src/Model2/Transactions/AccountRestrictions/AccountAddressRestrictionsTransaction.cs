@@ -1,10 +1,4 @@
 ﻿using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Model2.Transactions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace io.nem2.sdk.src.Model2.Transactions.AccountRestrictions
 {

@@ -6,8 +6,6 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Text.Json;
-using io.nem2.sdk.src.Export;
-using io.nem2.sdk.src.Model2;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {

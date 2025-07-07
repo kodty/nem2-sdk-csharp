@@ -1,7 +1,4 @@
-﻿
-using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using Org.BouncyCastle.Asn1.X509.Qualified;
+﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.ComponentModel;
 
 namespace io.nem2.sdk.Model.Transactions

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace io.nem2.sdk.src.Model.Network
+﻿namespace io.nem2.sdk.src.Model.Network
 {
     public static class NetworkType
     {

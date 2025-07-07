@@ -1,6 +1,4 @@
-﻿using io.nem2.sdk.src.Model2.Transactions;
-
-namespace io.nem2.sdk.src.Model2.Transactions.KeyLinkTransactions
+﻿namespace io.nem2.sdk.src.Model2.Transactions.KeyLinkTransactions
 {
     public class KeyLinkTransaction1 : Transaction1
     {

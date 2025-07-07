@@ -1,5 +1,4 @@
-﻿using io.nem2.sdk.Core.Utils;
-using Org.BouncyCastle.Security;
+﻿using Org.BouncyCastle.Security;
 
 namespace io.nem2.sdk.src.Export
 {

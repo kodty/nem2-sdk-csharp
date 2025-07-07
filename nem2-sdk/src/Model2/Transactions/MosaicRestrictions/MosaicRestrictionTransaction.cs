@@ -1,6 +1,4 @@
-﻿using io.nem2.sdk.src.Model2.Transactions;
-
-namespace io.nem2.sdk.src.Model2.Transactions.MosaicRestrictions
+﻿namespace io.nem2.sdk.src.Model2.Transactions.MosaicRestrictions
 {
     public class MosaicAddressRestrictionTransaction : MosaicRestrictionTransaction1
     {

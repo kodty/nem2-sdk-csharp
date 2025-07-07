@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace io.nem2.sdk.src.Model2.Transactions
+﻿namespace io.nem2.sdk.src.Model2.Transactions
 {
     public class MultisigAccountModificationTransaction1 : Transaction1
     {

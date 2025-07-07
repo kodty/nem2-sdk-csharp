@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.Model.Accounts
 {

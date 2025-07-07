@@ -1,7 +1,6 @@
 ﻿
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Model.Network;
-using System.Diagnostics;
 using System.Reflection;
 using io.nem2.sdk.src.Model2;
 
