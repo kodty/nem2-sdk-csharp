@@ -1,6 +1,6 @@
-﻿using io.nem2.sdk.Model.Accounts;
+﻿using CopperCurve;
+using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Mosaics;
-using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
 
 namespace io.nem2.sdk.Model.Transactions

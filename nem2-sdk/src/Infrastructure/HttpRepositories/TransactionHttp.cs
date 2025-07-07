@@ -1,6 +1,6 @@
 ﻿
+using CopperCurve;
 using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;

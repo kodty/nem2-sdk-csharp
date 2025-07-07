@@ -1,6 +1,7 @@
 ﻿
+using CopperCurve;
 using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Export;
+
 
 namespace io.nem2.sdk.src.Model2.Transactions.CrossChainTransactions
 {

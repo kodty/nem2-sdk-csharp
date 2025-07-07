@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.src.Export;
+﻿using CopperCurve;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace Unit_Tests.Crypto

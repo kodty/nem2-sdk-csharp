@@ -1,21 +1,21 @@
 ﻿using System.Collections;
 using System.Text.Json.Nodes;
 
-namespace io.nem2.sdk.src.Export
+namespace CopperCurve
 {
-    internal class ObjectComposer
+    public class ObjectComposer
     {
         private object[] TypeArgs { get; set; }
 
         internal Func<string, bool, Type> GetTransactionType { get; set; }
 
-        internal ObjectComposer(object[] args, Func<string, bool, Type> getTransactionType)
+        public ObjectComposer(object[] args, Func<string, bool, Type> getTransactionType)
         {
             TypeArgs = args;
             GetTransactionType = getTransactionType;
         }
 
-        internal List<T> FilterEvents<T>(string data, string path = null)
+        public List<T> FilterEvents<T>(string data, string path = null)
         {
             var evs = path == null ? JsonNode.Parse(data) : JsonNode.Parse(data)[path];
 
@@ -29,7 +29,7 @@ namespace io.nem2.sdk.src.Export
             return events;
         }
 
-        internal List<T> FilterTransactions<T>(string data, string path = null, bool embedded = false)
+        public List<T> FilterTransactions<T>(string data, string path = null, bool embedded = false)
         {
             var tx = path == null ? JsonNode.Parse(data) : JsonNode.Parse(data)[path];
 
@@ -43,12 +43,12 @@ namespace io.nem2.sdk.src.Export
             return txs;
         }
 
-        internal T FilterSingle<T>(string data, bool embedded = false)
+        public T FilterSingle<T>(string data, bool embedded = false)
         {
             return FilterSingle(typeof(T), data, embedded);
         }
 
-        internal T GenerateObject<T>(string data)
+        public T GenerateObject<T>(string data)
         {
             return (T)GenerateObject(typeof(T), JsonObject.Parse(data));
         }

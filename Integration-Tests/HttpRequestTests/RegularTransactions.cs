@@ -5,7 +5,7 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model.Network;
 using System.Reactive.Linq;
-using io.nem2.sdk.src.Export;
+using CopperCurve;
 using System.Diagnostics;
 
 namespace Integration_Tests.HttpRequests

@@ -1,9 +1,8 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.src.Export;
+using CopperCurve;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model.Network;
-using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests.AccountHttpTests

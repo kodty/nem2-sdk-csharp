@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace io.nem2.sdk.src.Export
+namespace CopperCurve
 {
     public class DataSerializer
     {

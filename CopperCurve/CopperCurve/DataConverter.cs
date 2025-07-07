@@ -1,4 +1,4 @@
-﻿namespace io.nem2.sdk.src.Core
+﻿namespace CopperCurve
 {
     public static class DataConverter
     {

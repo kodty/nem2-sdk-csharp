@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-
-using io.nem2.sdk.src.Export;
+using CopperCurve;
 using io.nem2.sdk.src.Model.Network;
 using Org.BouncyCastle.Crypto.Digests;
 

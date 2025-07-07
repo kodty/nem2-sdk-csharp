@@ -1,5 +1,5 @@
 ﻿using io.nem2.sdk.Core.Utils;
-using io.nem2.sdk.src.Export;
+using CopperCurve;
 using System.Diagnostics;
 
 namespace Unit_Tests.Model.Mosaics

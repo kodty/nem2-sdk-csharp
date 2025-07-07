@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Text;
+using CopperCurve;
 using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Namespace;
-using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
 
 namespace io.nem2.sdk.Model.Transactions

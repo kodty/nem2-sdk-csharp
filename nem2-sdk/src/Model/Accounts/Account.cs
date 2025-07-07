@@ -1,7 +1,7 @@
-﻿using System.Security.Cryptography;
+﻿using CopperCurve;
+using System.Security.Cryptography;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
 using Org.BouncyCastle.Crypto.Digests;
 

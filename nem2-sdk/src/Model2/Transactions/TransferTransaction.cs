@@ -1,4 +1,5 @@
-﻿using io.nem2.sdk.src.Export;
+﻿
+using CopperCurve;
 using System.Text;
 
 namespace io.nem2.sdk.src.Model2.Transactions

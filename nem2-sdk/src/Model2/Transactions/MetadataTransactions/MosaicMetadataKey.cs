@@ -1,10 +1,10 @@
-﻿using io.nem2.sdk.src.Export;
+﻿
+using CopperCurve;
 
 namespace io.nem2.sdk.src.Model2.Transactions.MetadataTransactions
 {
     public class MosaicMetadataTransaction1 : Transaction1
     {
-
         public MosaicMetadataTransaction1(string targetAddress, string targetMosaicId, string scopedKey, short valueSizeDelta, short valueSize, byte[] value)
         {
             TargetAddress = AddressEncoder.DecodeAddress(targetAddress);

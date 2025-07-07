@@ -2,10 +2,10 @@
 using System.Security.Cryptography;
 using System.Text;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
-using io.nem2.sdk.src.Export;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Security;
 using TweetNaclSharp.Core.Extensions;
+using CopperCurve;
 
 namespace io.nem2.sdk.Core.Crypto
 {

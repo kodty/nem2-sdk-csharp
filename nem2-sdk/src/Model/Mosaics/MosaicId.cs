@@ -24,7 +24,9 @@
 // ***********************************************************************
 
 
-using io.nem2.sdk.src.Export;
+
+
+using CopperCurve;
 
 namespace io.nem2.sdk.Model.Mosaics
 {

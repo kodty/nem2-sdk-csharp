@@ -1,6 +1,7 @@
 ﻿
+using CopperCurve;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl.Internal.Ed25519ref10;
-using io.nem2.sdk.src.Export;
+
 using System.Security.Cryptography;
 using TweetNaclSharp;
 

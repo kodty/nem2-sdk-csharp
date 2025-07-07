@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.src.Export;
+﻿using CopperCurve;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
 

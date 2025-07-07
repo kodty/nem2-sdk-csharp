@@ -1,6 +1,5 @@
-﻿using io.nem2.sdk.Core.Crypto;
-
-using io.nem2.sdk.src.Export;
+﻿using CopperCurve;
+using io.nem2.sdk.Core.Crypto;
 
 namespace io.nem2.sdk.Model.Transactions.Messages
 {

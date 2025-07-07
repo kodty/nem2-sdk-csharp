@@ -1,5 +1,5 @@
-﻿using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.src.Export;
+﻿using CopperCurve;
+using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model.Network;
 using Org.BouncyCastle.Crypto.Digests;
 using TweetNaclSharp.Core.Extensions;

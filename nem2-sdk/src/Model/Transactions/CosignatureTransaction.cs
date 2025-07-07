@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-
+using CopperCurve;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.src.Export;
+
 
 namespace io.nem2.sdk.Model.Transactions
 {

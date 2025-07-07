@@ -1,4 +1,5 @@
-﻿using Integration_Tests;
+﻿using CopperCurve;
+using Integration_Tests;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
 using io.nem2.sdk.Model.Accounts;
@@ -6,7 +7,6 @@ using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Model2;
-using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Model.Network;
 using io.nem2.sdk.src.Model2;
 using io.nem2.sdk.src.Model2.Transactions;

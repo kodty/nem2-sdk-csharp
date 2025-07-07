@@ -1,6 +1,4 @@
-﻿using Org.BouncyCastle.Security;
-
-namespace io.nem2.sdk.src.Export
+﻿namespace CopperCurve
 {
     public static class AddressEncoder
     {
@@ -9,7 +7,7 @@ namespace io.nem2.sdk.src.Export
         public static string EncodeAddress(byte[] input)
         {
             if (input.Length != 25)
-                throw new InvalidParameterException("padding missing");
+                throw new Exception("padding missing");
 
             char[] chunks = new char[input.Length / 5 * 8];
 
@@ -22,7 +20,7 @@ namespace io.nem2.sdk.src.Export
         public static string EncodeAddress(string hexString)
         {
             if (hexString.Length != 48 && hexString.Length != 50)
-                throw new InvalidParameterException("decoded address is invalid length, must be 48 or 50 with padding.");
+                throw new Exception("decoded address is invalid length, must be 48 or 50 with padding.");
 
             byte[] input = FromHex(hexString);
 

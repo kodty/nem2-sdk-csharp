@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using io.nem2.sdk.src.Export;
+using CopperCurve;
 using Org.BouncyCastle.Crypto.Digests;
 
 
