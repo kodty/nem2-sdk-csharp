@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
+﻿
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Export;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;

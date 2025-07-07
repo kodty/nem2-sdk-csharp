@@ -1,5 +1,5 @@
 ﻿using io.nem2.sdk.Core.Crypto;
-using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
+
 using io.nem2.sdk.src.Export;
 
 namespace io.nem2.sdk.Model.Transactions.Messages

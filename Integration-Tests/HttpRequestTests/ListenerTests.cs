@@ -1,5 +1,5 @@
 ﻿using IntegrationTests.Infrastructure.Transactions;
-using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
+
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
 using io.nem2.sdk.Model.Accounts;

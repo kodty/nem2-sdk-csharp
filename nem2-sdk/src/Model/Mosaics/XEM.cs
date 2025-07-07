@@ -23,7 +23,7 @@
 // <summary></summary>
 // ***********************************************************************
 
-using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
+
 using io.nem2.sdk.Model.Namespace;
 using io.nem2.sdk.src.Export;
 

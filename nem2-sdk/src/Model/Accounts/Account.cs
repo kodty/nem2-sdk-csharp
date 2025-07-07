@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Export;

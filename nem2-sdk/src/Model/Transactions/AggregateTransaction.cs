@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
+
 using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Export;

@@ -1,9 +1,5 @@
 ﻿using io.nem2.sdk.src.Export;
-using NuGet.Frameworks;
 using Org.BouncyCastle.Crypto.Digests;
-using System.Diagnostics;
-using TweetNaclSharp;
-using TweetNaclSharp.Core.Extensions;
 
 namespace Unit_Tests.Crypto
 {

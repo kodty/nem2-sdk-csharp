@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
+
 using io.nem2.sdk.src.Export;
 using TweetNaclSharp;
 
