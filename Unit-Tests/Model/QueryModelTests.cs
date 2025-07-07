@@ -1,10 +1,5 @@
 ﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Unit_Tests.Model
 {

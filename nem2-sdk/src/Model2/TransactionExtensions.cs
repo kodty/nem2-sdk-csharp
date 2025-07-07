@@ -30,7 +30,7 @@ namespace io.nem2.sdk.Model2
         {
             DataSerializer serializer = new DataSerializer();
 
-            serializer.Serialize<T>(obj);
+            serializer.Serialize(typeof(T), obj);
 
             return serializer.Bytes;
         }

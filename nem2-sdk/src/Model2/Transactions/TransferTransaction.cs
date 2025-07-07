@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using io.nem2.sdk.src.Export;
+using System.Text;
 
 namespace io.nem2.sdk.src.Model2.Transactions
 {
@@ -6,16 +7,20 @@ namespace io.nem2.sdk.src.Model2.Transactions
     {
         public TransferTransaction_V1(string address, string messege, Tuple<string, ulong> mosaic)
         {
-            Address = address;
+            if (address.IsBase32(address.Length))
+                Address = AddressEncoder.DecodeAddress(address);
+
+            if(mosaic.Item1.IsHex(16))
+                Mosaics = new Tuple<byte[], ulong>(mosaic.Item1.FromHex(), mosaic.Item2);
             MosaicsCount = 1;
-            Mosaics = mosaic;
+
             Message = Encoding.UTF8.GetBytes(messege);
             MessegeSize = (ushort)Message.Length;
             Reserved_1 = 0;
             Reserved_2 = 0;
         }
 
-        public string Address { get; }
+        public byte[] Address { get; set; }
 
         public ushort MessegeSize { get; set; }
 
@@ -25,7 +30,7 @@ namespace io.nem2.sdk.src.Model2.Transactions
 
         public byte Reserved_2 { get; set; }
 
-        public Tuple<string, ulong> Mosaics { get; set; }
+        public Tuple<byte[], ulong> Mosaics { get; set; }
 
         public byte[] Message { get; set; }
     }
