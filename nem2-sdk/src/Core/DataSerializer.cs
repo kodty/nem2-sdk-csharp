@@ -115,6 +115,18 @@ namespace io.nem2.sdk.src.Export
             return p;
         }
 
+        public static byte[] ConvertFromUInt16(this ushort value)
+        {
+            byte[] p = new byte[2];
+
+            for (int i = 0; i < 2; i++)
+            {
+                p[i] = (byte)(value >> i * 8);
+            }
+
+            return p;
+        }
+
         public static ulong ConvertToUInt64(this byte[] value)
         {
             ulong result = 0;
@@ -274,10 +286,7 @@ namespace io.nem2.sdk.src.Export
              || op.PropertyType == typeof(string)
              || op.PropertyType == typeof(bool)
              || op.PropertyType == typeof(byte[])
-             || op.PropertyType == typeof(Tuple<string, ulong>)
-             || op.PropertyType == typeof(NetworkType.Types)
-             || op.PropertyType == typeof(TransactionTypes.Types)
-             || op.PropertyType == typeof(Deadline))
+             || op.PropertyType == typeof(Tuple<string, ulong>))
             { return true; }
             else return false;
         }
@@ -328,21 +337,6 @@ namespace io.nem2.sdk.src.Export
             {
                 this.WriteBytes(((Tuple<string, ulong>)ob).Item1.FromHex());
                 this.WriteUlong(((Tuple<string, ulong>)ob).Item2);
-                return;
-            }
-            if (type == typeof(NetworkType.Types))
-            {
-                this.WriteByte(((byte)ob));
-                return;
-            }              
-            if (type == typeof(TransactionTypes.Types))
-            {
-                this.WriteUShort(((ushort)ob));
-                return;
-            }
-            if (type == typeof(Deadline))
-            {
-                this.WriteUlong(((Deadline)ob).Ticks);
                 return;
             }
             else throw new NotImplementedException("type " + type.ToString());
