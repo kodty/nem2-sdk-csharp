@@ -11,7 +11,7 @@ namespace io.nem2.sdk.src.Model2
 
         public byte Version { get; set; }
 
-        public NetworkType.Types Network { get; set; }
+        public byte Network { get; set; }
 
         public EntityBody()
         {

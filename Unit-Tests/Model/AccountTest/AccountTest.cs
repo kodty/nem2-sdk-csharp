@@ -30,6 +30,10 @@ namespace test.Model.AccountTest
             var pubAccount = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
             Debug.WriteLine(pubAccount.PrivateKey);
             Debug.WriteLine(pubAccount.Address.Pretty);
+
+            var newAcc = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
+
+            Assert.That(newAcc.PublicKey.Length, Is.EqualTo(64));
         }
     }
 }

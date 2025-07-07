@@ -12,9 +12,9 @@ namespace io.nem2.sdk.Model.Accounts
 
         public byte[] PublicKey { get; }
 
-        public string PrivateKeyString => PrivateKey.ToHex().ToUpper();
+        public string PrivateKeyString => PrivateKey.ToHex();
 
-        public string PublicKeyString => PublicKey.ToHex().ToUpper();
+        public string PublicKeyString => PublicKey.ToHex();
 
         internal SecretKeyPair(string privateKey, string publicKey)
         {

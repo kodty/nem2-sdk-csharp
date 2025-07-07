@@ -10,15 +10,15 @@ namespace io.nem2.sdk.src.Model2.Transactions
         }
         public Transaction1(TransactionTypes.Types type)
         {
-            Type = type;
+            Type = type.GetValue();
         }
 
         public EntityBody EntityBody { get; set; }
 
-        public TransactionTypes.Types Type { get; set; }
+        public ushort Type { get; set; }
 
         public ulong Fee { get; set; }
 
-        public Deadline Deadline { get; set; }
+        public ulong Deadline { get; set; }
     }
 }

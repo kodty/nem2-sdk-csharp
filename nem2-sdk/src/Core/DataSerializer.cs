@@ -3,6 +3,7 @@ using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Model.Network;
 using System.Reflection;
 using io.nem2.sdk.src.Model2;
+using System.Diagnostics;
 
 namespace io.nem2.sdk.src.Export
 {
@@ -10,6 +11,7 @@ namespace io.nem2.sdk.src.Export
     {
         public static byte[] FromHex(this string hexString)
         {
+            /*
             if (!hexString.IsHex()) throw new Exception("invalid input");
 
             var result = new byte[hexString.Length / 2];
@@ -18,15 +20,14 @@ namespace io.nem2.sdk.src.Export
                 result[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
 
             return result;
+            */
+
+            return Convert.FromHexString(hexString);
         }
 
         public static string ToHex(this byte[] data)
         {
-            string result = "";
-
-            for (int i = 0; i < data.Length; i++)
-                result = result + Convert.ToString((ushort)data[i], 16);
-            return result;
+            return Convert.ToHexString(data);
         }
 
         /*
@@ -251,6 +252,7 @@ namespace io.nem2.sdk.src.Export
                 Serialize<EntityBody>(op.GetValue(obj));
             }
         }
+
         public void Serialize<T>(object obj)
         {
             foreach (var item in typeof(T).BaseType.GetProperties())
@@ -330,12 +332,12 @@ namespace io.nem2.sdk.src.Export
             }
             if (type == typeof(NetworkType.Types))
             {
-                this.WriteByte(((NetworkType.Types)ob).GetNetworkByte());
+                this.WriteByte(((byte)ob));
                 return;
             }              
             if (type == typeof(TransactionTypes.Types))
             {
-                this.WriteUShort(((TransactionTypes.Types)ob).GetValue());
+                this.WriteUShort(((ushort)ob));
                 return;
             }
             if (type == typeof(Deadline))

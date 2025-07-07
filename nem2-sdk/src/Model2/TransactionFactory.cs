@@ -34,6 +34,14 @@ namespace io.nem2.sdk.src.Model2
             NetworkType = type;
             Node = node;
             Port = port;
+
+            DefaultEntityBody = new EntityBody()
+            {
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Version = 0x01,
+                Network = NetworkType.GetNetworkByte()
+            };
         }
 
         public TransactionFactory(NetworkType.Types networkType, TransactionTypes.Types transactionType, byte version, ulong deadline, ulong fee, string node, int port)
@@ -43,7 +51,7 @@ namespace io.nem2.sdk.src.Model2
                 Signer = null,
                 Entity_body_reserved_1 = 0,
                 Version = 0x01,
-                Network = NetworkType
+                Network = NetworkType.GetNetworkByte()
             };
 
             NetworkType = networkType;
@@ -59,8 +67,8 @@ namespace io.nem2.sdk.src.Model2
             return new MosaicSupplyChangeTransaction1(delta, mosaic, supplyType)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -70,8 +78,8 @@ namespace io.nem2.sdk.src.Model2
             return new NamespaceMetadataTransaction1(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_METADATA,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -81,8 +89,8 @@ namespace io.nem2.sdk.src.Model2
             return new AccountMetadataTransaction1(targetAddress, scopedKey, valueSizeDelta, valueSize, value)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_METADATA,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -92,8 +100,8 @@ namespace io.nem2.sdk.src.Model2
             return new MosaicMetadataTransaction1(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_METADATA,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -103,8 +111,8 @@ namespace io.nem2.sdk.src.Model2
             return new MosaicDefinitionTransaction1(mosaicName, namespaceId, mosaicId, properties)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_DEFINITION,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.MOSAIC_DEFINITION.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -114,8 +122,8 @@ namespace io.nem2.sdk.src.Model2
             return new LockFundsTransaction1(mosaic, duration, transactionHash)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.HASH_LOCK,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.HASH_LOCK.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -125,8 +133,8 @@ namespace io.nem2.sdk.src.Model2
             return new SecretLockTransaction1(mosaic, duration, secret, hashAlgo, recipient)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.SECRET_LOCK,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.SECRET_LOCK.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
 
@@ -137,8 +145,8 @@ namespace io.nem2.sdk.src.Model2
             return new SecretProofTransaction1(recipientAddress, secret, hashAlgo, proof)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.SECRET_PROOF,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.SECRET_PROOF.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100           
             };
         }
@@ -148,9 +156,9 @@ namespace io.nem2.sdk.src.Model2
             return new RegisterNamespace(duration, parentId, id, type, name)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.NAMESPACE_REGISTRATION,
+                Type = TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue(),
                 RegistrationType = parentId == null ? NamespaceTypes.Types.RootNamespace : NamespaceTypes.Types.SubNamespace,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -160,8 +168,8 @@ namespace io.nem2.sdk.src.Model2
             return new VotingKeyLinkTransaction1(startEpoch, endEpoch, linkedPublicKey, linkAction)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.VOTING_KEY_LINK,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.VOTING_KEY_LINK.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -171,8 +179,8 @@ namespace io.nem2.sdk.src.Model2
             return new KeyLinkTransaction1(linkedPublicKey, linkAction)
             {
                 EntityBody = DefaultEntityBody,
-                Type = type,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = type.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -182,8 +190,8 @@ namespace io.nem2.sdk.src.Model2
             return new TransferTransaction_V1(address, messege, mosaic)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.TRANSFER,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.TRANSFER.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -193,8 +201,8 @@ namespace io.nem2.sdk.src.Model2
             return new AccountRestrictionsTransaction1(type, restrictionFlags, additions, deletions)
             {
                 EntityBody = DefaultEntityBody,
-                Type = type,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = type.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -204,8 +212,8 @@ namespace io.nem2.sdk.src.Model2
             return new MosaicAddressRestrictionTransaction(targetAddress, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -215,8 +223,8 @@ namespace io.nem2.sdk.src.Model2
             return new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -226,8 +234,8 @@ namespace io.nem2.sdk.src.Model2
             return new AddressAliasTransaction1(address, namepaceId, aliasAction)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.ADDRESS_ALIAS,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.ADDRESS_ALIAS.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -237,8 +245,8 @@ namespace io.nem2.sdk.src.Model2
             return new MosaicAliasTransaction1(mosaicId, namepaceId, aliasAction)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_ALIAS,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.MOSAIC_ALIAS.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -248,8 +256,8 @@ namespace io.nem2.sdk.src.Model2
             return new MultisigAccountModificationTransaction1(minApproval, minRemoval, addressAdditions, addressDeletions)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
@@ -259,8 +267,8 @@ namespace io.nem2.sdk.src.Model2
             return new AggregateTransaction1(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE)
             {
                 EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.AGGREGATE_COMPLETE,
-                Deadline = Deadline.AutoDeadline(Node, Port),
+                Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };
         }
