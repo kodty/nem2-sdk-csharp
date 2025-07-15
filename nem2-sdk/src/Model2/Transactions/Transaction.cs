@@ -1,6 +1,4 @@
-﻿using io.nem2.sdk.Model.Transactions;
-
-namespace io.nem2.sdk.src.Model2.Transactions
+﻿namespace io.nem2.sdk.src.Model2.Transactions
 {
     public class Transaction1
     {

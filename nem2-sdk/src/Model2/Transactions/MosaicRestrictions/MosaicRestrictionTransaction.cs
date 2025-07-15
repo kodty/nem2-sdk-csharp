@@ -16,6 +16,7 @@
             ReferenceMosaicId = referenceMosaicId;
         }
     }
+
     public class MosaicRestrictionTransaction1 : Transaction1
     {
         public MosaicRestrictionTransaction1(string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue) 

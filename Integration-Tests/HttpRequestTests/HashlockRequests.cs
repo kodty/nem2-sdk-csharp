@@ -2,6 +2,7 @@
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using io.nem2.sdk.src.Model2;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests

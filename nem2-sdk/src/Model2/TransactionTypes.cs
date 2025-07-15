@@ -1,13 +1,13 @@
 ﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.ComponentModel;
 
-namespace io.nem2.sdk.Model.Transactions
+namespace io.nem2.sdk.src.Model2
 {
     public static class TransactionTypes
     {       
-        internal static List<TransactionTypes.Types> SetTypes(this List<ushort> types)
+        internal static List<Types> SetTypes(this List<ushort> types)
         {
-            var txTypes = new List<TransactionTypes.Types>();   
+            var txTypes = new List<Types>();   
 
             foreach(var t in types)
             {
@@ -52,73 +52,6 @@ namespace io.nem2.sdk.Model.Transactions
                 throw new InvalidEnumArgumentException(nameof(type), (ushort)type, typeof(Types));
 
             return (ushort) type;
-        }
-
-        public static Type GetObjectTypeAssocations(this ushort type, int designation = 0)
-        {
-            switch (type)
-            {
-                case 0x4154:
-                    return typeof(Tuple<SimpleTransfer, EmbeddedSimpleTransfer>);
-                case 0x414e:
-                    if (designation == 0)
-                    {
-                        return typeof(Tuple<RootNamespaceRegistration, EmbeddedNamespaceRegistration>);
-                    }
-                    if (designation == 1)
-                    {
-                        return typeof(Tuple<ChildNamespaceRegistration, EmbeddedChildNamespaceRegistration>);
-                    }
-                    else throw new InvalidEnumArgumentException("unsupported");
-                case 0x414d:
-                    return typeof(Tuple<MosaicDefinition, EmbeddedMosaicDefinition>);
-                case 0x424d:
-                    return typeof(Tuple<MosaicSupplyChange, EmbeddedMosaicSupplyChange>);
-                case 0x434D:
-                    return typeof(Tuple<MosaicSupplyRevocation, EmbeddedMosaicSupplyRevocation>);
-                case 0x4155:
-                    return typeof(EmbeddedMultisigModification);
-                case 0x4141:
-                    return typeof(Aggregate);
-                case 0x4241:
-                    return typeof(Aggregate);
-                case 0x4148:
-                    return typeof(Tuple<HashLockT, EmbeddedHashLockT>);
-                case 0x4152:
-                    return typeof(Tuple<SecretLockT, EmbeddedSecretLockT>);
-                case 0x4252:
-                    return typeof(Tuple<SecretProofT, EmbeddedSecretProofT>);
-                case 0x4150:
-                    return typeof(Tuple<AccountOperationRestriction, EmbeddedAccountOperationRestriction>);
-                case 0x4250:
-                    return typeof(Tuple<AccountRestriction, EmbeddedAccountRestriction>);
-                case 0x4350:
-                    return typeof(Tuple<AccountOperationRestriction, EmbeddedAccountOperationRestriction>);
-                case 0x4251:
-                    return typeof(Tuple<MosaicAddressRestriction, EmbeddedMosaicAddressRestriction>);
-                // case 0x4151:
-                //             return Types.MOSAIC_GLOBAL_RESTRICTION; implement
-                case 0x414C:
-                    return typeof(Tuple<KeyLink, EmbeddedKeyLink>);
-                case 0x424C:
-                    return typeof(Tuple<KeyLink, EmbeddedKeyLink>);
-                case 0x4243:
-                    return typeof(Tuple<KeyLink, EmbeddedKeyLink>);
-                case 0x4143:
-                    return typeof(Tuple<VotingKeyLink, EmbeddedVotingKeyLink>);
-                case 0x424E:
-                    return typeof(Tuple<AddressAlias, EmbeddedAddressAlias>);
-                case 0x434E:
-                    return typeof(Tuple<MosaicAlias, EmbeddedMosaicAlias>);
-                case 0x4144:
-                    return typeof(Tuple<AccountMetadata, EmbeddedAccountMetadata>);
-                case 0x4244:
-                    return typeof(Tuple<MosaicMetadata, EmbeddedMosaicMetadata>);
-                case 0x4344:
-                    return typeof(Tuple<NamespaceMetadata, EmbeddedNamespaceMetadata>);
-                default:
-                    throw new ArgumentException("invalid transaction type.");
-            }
         }
 
         public static Types GetRawValue(this ushort type)
@@ -196,8 +129,6 @@ namespace io.nem2.sdk.Model.Transactions
                     return typeof(MosaicSupplyChange);
                 case 0x434D:
                     return typeof(MosaicSupplyRevocation);
-                case 0x4155:
-                    return typeof(EmbeddedMultisigModification);
                 case 0x4141:
                     return typeof(Aggregate);
                 case 0x4241:

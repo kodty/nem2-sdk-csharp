@@ -14,7 +14,7 @@
 // 
 
 using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.src.Model.Network;
+using io.nem2.sdk.src.Model2;
 
 
 namespace test.Model.AccountTest

@@ -23,7 +23,7 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace io.nem2.sdk.Model.Accounts
+namespace io.nem2.sdk.src.Model2
 {
     /// <summary>
     /// Interface IKeyPair

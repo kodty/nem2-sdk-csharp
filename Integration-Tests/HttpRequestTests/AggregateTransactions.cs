@@ -4,9 +4,9 @@ using io.nem2.sdk.Model.Transactions;
 using CopperCurve;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.src.Model.Network;
 using System.Diagnostics;
 using System.Reactive.Linq;
+using io.nem2.sdk.src.Model2;
 
 namespace Integration_Tests.HttpRequests
 {

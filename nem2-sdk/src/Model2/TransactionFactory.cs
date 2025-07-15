@@ -1,7 +1,5 @@
 ﻿using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Namespace;
-using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Model.Network;
 using io.nem2.sdk.src.Model2.Transactions;
 using io.nem2.sdk.src.Model2.Transactions.AccountRestrictions;
 using io.nem2.sdk.src.Model2.Transactions.CrossChainTransactions;
@@ -157,7 +155,7 @@ namespace io.nem2.sdk.src.Model2
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue(),
-                RegistrationType = parentId == null ? NamespaceTypes.Types.RootNamespace : NamespaceTypes.Types.SubNamespace,
+                RegistrationType = type,
                 Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
                 Fee = 100
             };

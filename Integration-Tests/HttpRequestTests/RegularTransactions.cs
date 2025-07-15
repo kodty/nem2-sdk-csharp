@@ -3,10 +3,10 @@ using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Model.Network;
 using System.Reactive.Linq;
 using CopperCurve;
 using System.Diagnostics;
+using io.nem2.sdk.src.Model2;
 
 namespace Integration_Tests.HttpRequests
 {

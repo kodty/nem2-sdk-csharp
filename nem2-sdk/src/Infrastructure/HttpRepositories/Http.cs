@@ -1,6 +1,5 @@
 ﻿using io.nem2.sdk.Model2;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Model.Network;
 using io.nem2.sdk.src.Model2;
 using System.Diagnostics;
 using CopperCurve;
@@ -26,7 +25,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             Host = host;
             Port = port;
             Client = new HttpClient();  
-            Composer = new ObjectComposer(TypeSerializationCatalog.CustomTypes, TransactionExtensions2.GetTransactionType);
+            Composer = new ObjectComposer(TypeSerializationCatalog.CustomTypes, TransactionExtensions.GetTransactionType);
         }
 
         internal Uri GetUri(object[] segs)

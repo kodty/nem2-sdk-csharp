@@ -2,11 +2,11 @@
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.Model.Transactions.Messages;
 using CopperCurve;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Model.Network;
 using System.Reactive.Linq;
+using io.nem2.sdk.src.Model2.Transactions.Messages;
+using io.nem2.sdk.src.Model2;
 
 namespace Unit_Tests.Crypto
 {
@@ -30,7 +30,7 @@ namespace Unit_Tests.Crypto
                 new Deadline(ts.CommunicationTimestamps.SendTimestamp, TimeSpan.FromMinutes(10)),
                 100,
                 address,
-                new List<Mosaic1> { Mosaic1.CreateFromHexIdentifier("72C0212E67A08BCE", 1000) },
+                new List<Mosaic> { Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000) },
                 PlainMessage.Create("hello")
             ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
 

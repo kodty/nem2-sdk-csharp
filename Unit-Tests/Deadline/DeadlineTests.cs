@@ -1,5 +1,6 @@
-﻿using System.Diagnostics;
-using io.nem2.sdk.Model.Transactions;
+﻿using io.nem2.sdk.src.Model2;
+using System.Diagnostics;
+
 
 namespace Unit_Tests.DeadlineTests
 {

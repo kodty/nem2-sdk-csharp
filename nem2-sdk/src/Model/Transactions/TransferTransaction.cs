@@ -1,8 +1,8 @@
 ﻿using CopperCurve;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Mosaics;
-using io.nem2.sdk.Model.Transactions.Messages;
-using io.nem2.sdk.src.Model.Network;
+using io.nem2.sdk.src.Model2;
+using io.nem2.sdk.src.Model2.Transactions.Messages;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -12,9 +12,9 @@ namespace io.nem2.sdk.Model.Transactions
 
         public IMessage Message { get; private set; }
 
-        public List<Mosaic1> Mosaics { get; }
+        public List<Mosaic> Mosaics { get; }
 
-        internal TransferTransaction(PublicAccount signer, NetworkType.Types networkType, int version, Deadline deadline, ulong fee, Address recipient, List<Mosaic1> mosaics, IMessage message)
+        internal TransferTransaction(PublicAccount signer, NetworkType.Types networkType, int version, Deadline deadline, ulong fee, Address recipient, List<Mosaic> mosaics, IMessage message)
         {
             if (mosaics == null) throw new ArgumentNullException(nameof(mosaics));
             Address = recipient ?? throw new ArgumentNullException(nameof(recipient));
@@ -29,7 +29,7 @@ namespace io.nem2.sdk.Model.Transactions
             Fee = fee;
         }
 
-        internal TransferTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, Address recipient, List<Mosaic1> mosaics, IMessage message)
+        internal TransferTransaction(NetworkType.Types networkType, int version, Deadline deadline, ulong fee, Address recipient, List<Mosaic> mosaics, IMessage message)
         {
             if (mosaics == null) throw new ArgumentNullException(nameof(mosaics));
             Address = recipient ?? throw new ArgumentNullException(nameof(recipient));
@@ -44,12 +44,12 @@ namespace io.nem2.sdk.Model.Transactions
             //TransactionInfo = transactionInfo;
         }
 
-        public static TransferTransaction Create(PublicAccount signer, NetworkType.Types netowrkType, Deadline deadline, ulong fee, Address recipientAddress, List<Mosaic1> mosaics, IMessage message)
+        public static TransferTransaction Create(PublicAccount signer, NetworkType.Types netowrkType, Deadline deadline, ulong fee, Address recipientAddress, List<Mosaic> mosaics, IMessage message)
         {
             return new TransferTransaction(signer, netowrkType, 1, deadline, fee, recipientAddress, mosaics, message);
         }
 
-        public static TransferTransaction Create(NetworkType.Types netowrkType, Deadline deadline, Address recipientAddress, List<Mosaic1> mosaics, IMessage message)
+        public static TransferTransaction Create(NetworkType.Types netowrkType, Deadline deadline, Address recipientAddress, List<Mosaic> mosaics, IMessage message)
         {
             return new TransferTransaction(netowrkType, 1, deadline, 100, recipientAddress, mosaics, message);
         }

@@ -1,5 +1,4 @@
-﻿using io.nem2.sdk.Model.Transactions;
-using CopperCurve;
+﻿using CopperCurve;
 
 namespace io.nem2.sdk.src.Model2.Transactions.CrossChainTransactions
 {

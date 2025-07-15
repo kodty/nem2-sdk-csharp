@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel;
 using CopperCurve;
 using io.nem2.sdk.Model.Accounts;
-
-using io.nem2.sdk.src.Model.Network;
+using io.nem2.sdk.src.Model2;
 using TweetNaclSharp.Core.Extensions;
 
 namespace io.nem2.sdk.Model.Transactions
@@ -62,11 +61,11 @@ namespace io.nem2.sdk.Model.Transactions
             {
                 var bytes = signedTransaction.Hash.FromHex();
 
-                var signatureBytes = TransactionExtensions.SignHash(cosignatory.KeyPair, bytes);
+                var signatureBytes = cosignatory.KeyPair.Sign(bytes); 
 
                 payload = payload.Concat(cosignatory.KeyPair.PublicKey.Concat(signatureBytes)).ToArray();
 
-                Cosignatures.Add(new AggregateTransactionCosignature(signatureBytes.ToHex(), new PublicAccount(cosignatory.KeyPair.PublicKey.ToHex(), src.Model.Network.NetworkType.Types.MIJIN_TEST)));  
+                Cosignatures.Add(new AggregateTransactionCosignature(signatureBytes.ToHex(), new PublicAccount(cosignatory.KeyPair.PublicKey.ToHex(), src.Model2.NetworkType.Types.MIJIN_TEST)));  
             }
 
             payload = BitConverter.GetBytes(payload.Length).Concat(payload.SubArray(4, payload.Length - 4).ToArray()).ToArray();

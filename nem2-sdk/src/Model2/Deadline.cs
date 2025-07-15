@@ -1,7 +1,7 @@
 ﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
 
-namespace io.nem2.sdk.Model.Transactions
+namespace io.nem2.sdk.src.Model2
 {
     public class Deadline
     {

@@ -1,6 +1,4 @@
-﻿using io.nem2.sdk.Model.Transactions;
-
-namespace io.nem2.sdk.src.Model2.Transactions.AccountRestrictions
+﻿namespace io.nem2.sdk.src.Model2.Transactions.AccountRestrictions
 {
     //AccountMosaic, AccountAddress, AccountOperation
     public class AccountRestrictionsTransaction1 : Transaction1

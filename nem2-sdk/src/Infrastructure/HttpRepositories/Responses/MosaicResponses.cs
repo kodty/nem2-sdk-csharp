@@ -14,12 +14,12 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 
     public class MosaicEvent
     {
-        public Mosaic Mosaic { get; set; }
+        public MosaicArtifact Mosaic { get; set; }
 
         public string Id { get; set; }
     }
 
-    public class Mosaic
+    public class MosaicArtifact
     {
         public int Version { get; set; }
 

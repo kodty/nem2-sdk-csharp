@@ -1,4 +1,4 @@
-﻿namespace io.nem2.sdk.src.Model.Network
+﻿namespace io.nem2.sdk.src.Model2
 {
     public static class NetworkType
     {

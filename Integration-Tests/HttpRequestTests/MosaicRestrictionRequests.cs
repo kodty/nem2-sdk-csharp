@@ -5,6 +5,7 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Diagnostics;
 using System.Reactive.Linq;
+using io.nem2.sdk.src.Model2;
 
 namespace Integration_Tests.HttpRequests
 {

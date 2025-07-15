@@ -1,7 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using CopperCurve;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
-using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.src.Model2;
+using io.nem2.sdk.src.Model2.Transactions;
 
 
 namespace io.nem2.sdk.Model.Transactions
@@ -25,9 +26,7 @@ namespace io.nem2.sdk.Model.Transactions
         }
         public CosignatureSignedTransaction SignWith(SecretKeyPair account)
         {
-            if (account == null) throw new ArgumentNullException(nameof(account));
-            var bytes = Hash.FromHex();
-            var signatureBytes = TransactionExtensions.SignHash(account, bytes);
+            var signatureBytes = account.Sign(Hash.FromHex());
 
             return new CosignatureSignedTransaction{ ParentHash = Hash, Signature = signatureBytes.ToHex(), Signer = account.PublicKeyString};
         }      

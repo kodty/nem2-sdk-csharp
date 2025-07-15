@@ -1,7 +1,4 @@
-﻿using io.nem2.sdk.src.Model.Network;
-
-
-namespace io.nem2.sdk.src.Model2
+﻿namespace io.nem2.sdk.src.Model2
 {
     public class EntityBody
     {

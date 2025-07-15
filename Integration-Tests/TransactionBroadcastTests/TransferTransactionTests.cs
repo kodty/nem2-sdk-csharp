@@ -5,11 +5,10 @@ using io.nem2.sdk.Infrastructure.Listeners;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Model2;
-using io.nem2.sdk.src.Model.Network;
 using io.nem2.sdk.src.Model2;
 using io.nem2.sdk.src.Model2.Transactions;
+using io.nem2.sdk.src.Model2.Transactions.Messages;
 using System.Diagnostics;
 using System.Reactive.Linq;
 
@@ -42,7 +41,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     new Tuple<string, ulong>("72C0212E67A08BCE", 100)
                 );
 
-            var payload = TransactionExtensions2.PrepareEmbeddedTransaction<TransferTransaction_V1>(transfer, publicAcc);
+            var payload = TransactionExtensions.PrepareEmbeddedTransaction<TransferTransaction_V1>(transfer, publicAcc);
         }
 
         [Test, Timeout(2000)]
@@ -57,9 +56,9 @@ namespace IntegrationTests.Infrastructure.Transactions
                     new Tuple<string, ulong>("72C0212E67A08BCE", 100)
                 );
            
-            var payload = TransactionExtensions2.PrepareTransaction<TransferTransaction_V1>(transfer, keys);
+            var payload = TransactionExtensions.PrepareTransaction<TransferTransaction_V1>(transfer, keys);
 
-            var hash = TransactionExtensions2.HashTransaction(payload);
+            var hash = TransactionExtensions.HashTransaction(payload);
            
             var s = listener.GetTransactionStatus(Address.CreateFromPublicKey(transfer.EntityBody.Signer, NetworkType.Types.TEST_NET))
              .Subscribe(e =>
@@ -97,7 +96,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 Deadline.AutoDeadline(HttpSetUp.TestnetNode, HttpSetUp.Port),
                 100,
                 Address.CreateFromEncoded("TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA"),
-                new List<Mosaic1> { Mosaic1.CreateFromHexIdentifier("72C0212E67A08BCE", 1000) },
+                new List<Mosaic> { Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000) },
                 PlainMessage.Create("hello")
                 ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
 
@@ -136,7 +135,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 Deadline.AddHours(2),
                 100,
                 Address.CreateFromEncoded("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR"),
-                new List<Mosaic1> { Mosaic1.CreateFromIdentifierParts([ "symbol", "xym" ], amount) },
+                new List<Mosaic> { Mosaic.CreateFromIdentifierParts([ "symbol", "xym" ], amount) },
                 PlainMessage.Create("hello")
                 ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
 
@@ -158,7 +157,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 new Deadline(1),
                 100,
                 address,
-                new List<Mosaic1> { Mosaic1.CreateFromHexIdentifier("72C0212E67A08BCE", 1000) },
+                new List<Mosaic> { Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000) },
                 PlainMessage.Create("hello")
             ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
 
@@ -192,7 +191,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 Deadline.AddHours(2),
                 100,
                 Address.CreateFromEncoded("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
-                new List<Mosaic1> { Mosaic1.CreateFromIdentifierParts(["symbol", "xym"], 10) },
+                new List<Mosaic> { Mosaic.CreateFromIdentifierParts(["symbol", "xym"], 10) },
                 SecureMessage.Create("hello2", HttpSetUp.TestSK, "5D8BEBBE80D7EA3B0088E59308D8671099781429B449A0BBCA6D950A709BA068")
                 ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
 
@@ -219,9 +218,9 @@ namespace IntegrationTests.Infrastructure.Transactions
                 Deadline.AddHours(2),
                 100,
                 Address.CreateFromEncoded("SAOV4Y5W627UXLIYS5O43SVU23DD6VNRCFP222P2"),
-                new List<Mosaic1>()
+                new List<Mosaic>()
                 {
-                    Mosaic1.CreateFromIdentifierParts([ "symbol", "xym" ], 1000000000000),
+                    Mosaic.CreateFromIdentifierParts([ "symbol", "xym" ], 1000000000000),
                    
                 },
                 SecureMessage.Create("hello2", HttpSetUp.TestSK, "5D8BEBBE80D7EA3B0088E59308D8671099781429B449A0BBCA6D950A709BA068")
@@ -248,11 +247,11 @@ namespace IntegrationTests.Infrastructure.Transactions
                 Deadline.AddHours(2),
                 100,
                 Address.CreateFromEncoded("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
-                new List<Mosaic1>()
+                new List<Mosaic>()
                 {
 
-                    Mosaic1.CreateFromIdentifierParts([ "happy", "test2" ], 10),
-                    Mosaic1.CreateFromIdentifierParts([ "symbol", "xym" ], 10),
+                    Mosaic.CreateFromIdentifierParts([ "happy", "test2" ], 10),
+                    Mosaic.CreateFromIdentifierParts([ "symbol", "xym" ], 10),
                 },
                 EmptyMessage.Create()
             ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
@@ -273,7 +272,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                         NetworkType.Types.TEST_NET,
                         Deadline.AddHours(2),
                         Address.CreateFromEncoded("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
-                        new List<Mosaic1> { Mosaic1.CreateFromIdentifierParts(mosaic, amount) },
+                        new List<Mosaic> { Mosaic.CreateFromIdentifierParts(mosaic, amount) },
                         PlainMessage.Create("hey")
 
                     );

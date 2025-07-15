@@ -1,4 +1,5 @@
 ﻿using CopperCurve;
+using io.nem2.sdk.src.Model2;
 using System.Text.RegularExpressions;
 using TweetNaclSharp;
 

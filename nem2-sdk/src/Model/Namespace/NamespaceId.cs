@@ -1,7 +1,6 @@
 ﻿
 using CopperCurve;
-using io.nem2.sdk.Core.Utils;
-
+using io.nem2.sdk.src.Core.Utils;
 
 namespace io.nem2.sdk.Model.Namespace
 {

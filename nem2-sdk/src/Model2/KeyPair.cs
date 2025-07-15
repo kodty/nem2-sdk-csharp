@@ -1,11 +1,10 @@
 ﻿
 using CopperCurve;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl.Internal.Ed25519ref10;
-
 using System.Security.Cryptography;
 using TweetNaclSharp;
 
-namespace io.nem2.sdk.Model.Accounts
+namespace io.nem2.sdk.src.Model2
 {
     public class SecretKeyPair : IKeyPair
     {       
@@ -50,6 +49,7 @@ namespace io.nem2.sdk.Model.Accounts
 
             return new SecretKeyPair(privateKey, pk.ToHex());
         }
+
         internal byte[] Sign(byte[] data)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));

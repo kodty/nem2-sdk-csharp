@@ -25,7 +25,7 @@
 
 using System.ComponentModel;
 
-namespace io.nem2.sdk.Model.Transactions
+namespace io.nem2.sdk.src.Model2
 {
     /// <summary>
     /// Class TransactionTypes.

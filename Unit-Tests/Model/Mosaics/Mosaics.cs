@@ -1,6 +1,6 @@
-﻿using io.nem2.sdk.Core.Utils;
-using CopperCurve;
+﻿using CopperCurve;
 using System.Diagnostics;
+using io.nem2.sdk.src.Core.Utils;
 
 namespace Unit_Tests.Model.Mosaics
 {
@@ -9,14 +9,14 @@ namespace Unit_Tests.Model.Mosaics
         [Test]
         public static void NamespaceCreate()
         {
-            var symbolId = IdGenerator.GenerateId(0, "symbol");
+            var symbolId = IdGenerator.GenerateId(0, "");
 
-           // var symbolId1 = IdGenerator.GenerateId(0, "");
+            var symbolId1 = IdGenerator.GenerateId(0, "");
 
-           // Assert.That(DataConverter.ConvertFromUInt64(symbolId1).ToHex(), Is.EqualTo(""));
-
+            Assert.That(DataConverter.ConvertFromUInt64(symbolId1).ToHex(), Is.EqualTo(""));
+            
             Assert.That(DataConverter.ConvertFromUInt64(symbolId).ToHex(), Is.EqualTo("A95F1F8A96159516"));
-
+            
             var xymId = IdGenerator.GenerateId(symbolId, "xym");
             Assert.That(DataConverter.ConvertFromUInt64(xymId).ToHex(), Is.EqualTo("E74B99BA41F4AFEE"));
         }

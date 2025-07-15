@@ -2,8 +2,8 @@
 using System.Security.Cryptography;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.src.Model.Network;
 using Org.BouncyCastle.Crypto.Digests;
+using io.nem2.sdk.src.Model2;
 
 namespace io.nem2.sdk.Model.Accounts
 {
