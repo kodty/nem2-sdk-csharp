@@ -1,6 +1,6 @@
-﻿using io.nem2.sdk.Model2;
+﻿using io.nem2.sdk.Model;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Model2;
+using io.nem2.sdk.src.Model;
 using System.Diagnostics;
 using CopperCurve;
 
@@ -13,8 +13,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         internal string Host { get; set; }
 
         internal int Port { get; set; }
-
-        private NetworkType.Types _NetworkType { get; set; }
 
         internal ObjectComposer Composer { get; set; }
 
@@ -54,7 +52,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             return uri.Uri;
         }
-
 
         public string OverrideEnsureSuccessStatusCode(HttpResponseMessage r)
         {

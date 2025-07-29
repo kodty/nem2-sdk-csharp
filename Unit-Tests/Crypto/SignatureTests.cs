@@ -3,12 +3,12 @@
 using CopperCurve;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
-using io.nem2.sdk.src.Model2.Transactions.Messages;
-using io.nem2.sdk.src.Model2;
-using io.nem2.sdk.src.Model2.Articles;
-using io.nem2.sdk.src.Model2.Accounts;
-using io.nem2.sdk.Model2;
-using io.nem2.sdk.src.Model2.Transactions;
+using io.nem2.sdk.src.Model.Transactions.Messages;
+using io.nem2.sdk.src.Model;
+using io.nem2.sdk.src.Model.Articles;
+using io.nem2.sdk.src.Model.Accounts;
+using io.nem2.sdk.Model;
+using io.nem2.sdk.src.Model.Transactions;
 
 namespace Unit_Tests.Crypto
 {

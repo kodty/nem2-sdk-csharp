@@ -1,10 +1,11 @@
 ﻿
 using CopperCurve;
-using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.src.Model2;
+using io.nem2.sdk.src.Model;
+using io.nem2.sdk.src.Model.Transactions;
+using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Text;
 using System.Text.Json;
@@ -90,7 +91,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         }
 
         public IObservable<TransactionAnnounceResponse> Announce(SignedTransaction signedTransaction)
-        { 
+        {
+            Debug.WriteLine(signedTransaction.Payload.ToHex());
+
             return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new _Payload() { payload = signedTransaction.Payload.ToHex() }), Encoding.UTF8, "application/json")))
                 .Select(i =>  new TransactionAnnounceResponse() { Message = JsonNode.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
         }

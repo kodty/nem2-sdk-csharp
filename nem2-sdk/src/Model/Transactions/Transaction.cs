@@ -1,98 +1,25 @@
-﻿using CopperCurve;
-using io.nem2.sdk.src.Model2;
-using io.nem2.sdk.src.Model2.Accounts;
-using Org.BouncyCastle.Crypto.Digests;
-using TweetNaclSharp.Core.Extensions;
+﻿using TweetNaclSharp;
 
-namespace io.nem2.sdk.Model.Transactions
+namespace io.nem2.sdk.src.Model.Transactions
 {
-    public abstract class Transaction
+    public class Transaction
     {
-        public string Signature { get; internal set; }
-
-        public PublicAccount Signer { get; internal set; }
-
-        public int Version { get; set; }
-
-        public NetworkType.Types NetworkType { get; internal set; }
-
-        public TransactionTypes.Types TransactionType { get; internal set; }
-
-        public ulong Fee { get; internal set; }
-
-        public Deadline Deadline { get; internal set; }
-
-        //public TransactionInfo TransactionInfo { get; internal set; }
-
-        private byte[] Bytes { get; set; }
-
-        private byte[] Headless { get; set; }
-
-        private byte[] SignedBytes { get; set; }
-
-        internal byte[] GetSigner()
+        public Transaction()
         {
-            return Signer == null ? new byte[32] : Signer.PublicKey;
+
+        }
+        public Transaction(TransactionTypes.Types type)
+        {
+            Type = type.GetValue();
         }
 
-        public SignedTransaction SignWith(SecretKeyPair keyPair, byte[] networkGenHash)
-        {
-            PrepareSignature(keyPair, networkGenHash);
+        public EntityBody EntityBody { get; set; }
 
-            for (int x = 8; x < 64 + 8; x++) Bytes[x] = Signature.FromHex()[x - 8];
+        public ushort Type { get; set; }
 
-            var hash = HashTransaction(Signature.FromHex(), networkGenHash);
+        public ulong Fee { get; set; }
 
-            return SignedTransaction.Create(Bytes, SignedBytes, hash, keyPair.PublicKey, Signature.FromHex(), TransactionType);
-        }
+        public ulong Deadline { get; set; }
 
-        public byte[] PrepareSignature(SecretKeyPair keyPair, byte[] networkGenHash)
-        {
-            Bytes = GenerateBytes();
-
-            Headless = Bytes.SubArray(8 + 64 + 32 + 4, Bytes.Length - 108); 
-
-            SignedBytes = networkGenHash.Concat(Headless).ToArray();
-
-            Signature = keyPair.Sign(SignedBytes).ToHex();
-            
-            return Signature.FromHex();
-        }
-
-        public byte[] HashTransaction(byte[] signature, byte[] genHash)
-        {
-            var hashBytes = signature.Concat(Signer.PublicKey).Concat(genHash).Concat(Headless.SubArray(32, Headless.Length - 32)).ToArray();
-
-            var hash = new byte[32];
-
-            var sha3Hasher = new Sha3Digest(256);
-    
-            sha3Hasher.BlockUpdate(hashBytes, 0, hashBytes.Length);
-
-            sha3Hasher.DoFinal(hash, 0);
-
-            return hash;
-        }
-
-        internal byte[] ToAggregate()
-        {
-            var bytes = GenerateBytes();
-
-            var aggregate = bytes.SubArray(4 + 64, 32 + 2 + 2)
-                                 .Concat( 
-                                        bytes.SubArray(4 + 64 + 32 + 2 + 2 + 8 + 8, bytes.Length - (4 + 64 + 32 + 2 + 2 + 8 + 8))
-                                 ).ToArray();
-
-            return BitConverter.GetBytes(aggregate.Length + 4).Concat(aggregate).ToArray();
-        }
-
-        public Transaction ToAggregate(PublicAccount signer)
-        {
-            Signer = PublicAccount.CreateFromPublicKey(signer.PublicKeyString, NetworkType);
-
-            return this;
-        }
-
-        internal abstract byte[] GenerateBytes();
     }
 }

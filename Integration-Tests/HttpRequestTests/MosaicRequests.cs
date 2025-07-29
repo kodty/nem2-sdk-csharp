@@ -2,7 +2,7 @@
 using CopperCurve;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
-using io.nem2.sdk.src.Model2.Accounts;
+using io.nem2.sdk.src.Model.Accounts;
 
 namespace Integration_Tests.HttpRequests
 {

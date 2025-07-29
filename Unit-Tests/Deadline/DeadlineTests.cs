@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.src.Model2;
+﻿using io.nem2.sdk.src.Model;
 using System.Diagnostics;
 
 

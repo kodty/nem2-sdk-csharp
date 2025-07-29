@@ -1,10 +1,9 @@
 ﻿using CopperCurve;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
-using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.src.Model2;
-using io.nem2.sdk.src.Model2.Accounts;
-using io.nem2.sdk.src.Model2.Transactions;
+using io.nem2.sdk.src.Model;
+using io.nem2.sdk.src.Model.Accounts;
+using io.nem2.sdk.src.Model.Transactions;
 using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -183,7 +182,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
                 .Select(Composer.GenerateObject<CosignatureSignedTransaction>);
         }
 
-        private bool TransactionHasSignerOrReceptor(Transaction1 transaction, Address address)
+        private bool TransactionHasSignerOrReceptor(Transaction transaction, Address address)
         {
             var isReceptor = false;
 

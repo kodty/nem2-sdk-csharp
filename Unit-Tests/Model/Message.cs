@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.src.Model2.Transactions.Messages;
+﻿using io.nem2.sdk.src.Model.Transactions.Messages;
 using Assert = NUnit.Framework.Assert;
 
 namespace Unit_Tests.Model

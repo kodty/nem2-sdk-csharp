@@ -1,5 +1,5 @@
-﻿using io.nem2.sdk.src.Model2;
-using io.nem2.sdk.src.Model2.Accounts;
+﻿using io.nem2.sdk.src.Model;
+using io.nem2.sdk.src.Model.Accounts;
 
 namespace test.Model.AccountTest
 {

@@ -1,13 +1,10 @@
 ﻿using IntegrationTests.Infrastructure.Transactions;
-
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
-
-using io.nem2.sdk.Model.Transactions;
 using CopperCurve;
 using System.Reactive.Linq;
-using io.nem2.sdk.src.Model2;
-using io.nem2.sdk.src.Model2.Accounts;
+using io.nem2.sdk.src.Model;
+using io.nem2.sdk.src.Model.Accounts;
 
 namespace Integration_Tests.HttpRequests
 {

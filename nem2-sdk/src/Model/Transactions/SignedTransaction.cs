@@ -1,9 +1,9 @@
 ﻿using CopperCurve;
-using io.nem2.sdk.src.Model2;
+using io.nem2.sdk.src.Model;
 using System.Text.RegularExpressions;
 using TweetNaclSharp;
 
-namespace io.nem2.sdk.Model.Transactions
+namespace io.nem2.sdk.src.Model.Transactions
 {
     public class SignedTransaction
     {

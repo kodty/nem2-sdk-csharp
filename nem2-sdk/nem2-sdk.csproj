@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="src\Model2\Articles\Distinct\Symbol\" />
+    <Folder Include="src\Model\Articles\Distinct\Symbol\" />
   </ItemGroup>
 
 </Project>

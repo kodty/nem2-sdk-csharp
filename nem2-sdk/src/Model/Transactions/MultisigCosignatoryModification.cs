@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
-using io.nem2.sdk.src.Model2.Accounts;
+using io.nem2.sdk.src.Model.Accounts;
 
-namespace io.nem2.sdk.Model.Transactions
+namespace io.nem2.sdk.src.Model.Transactions
 {
     public class MultisigCosignatoryModification
     {

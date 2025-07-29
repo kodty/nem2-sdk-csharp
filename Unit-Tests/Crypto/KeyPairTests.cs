@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.src.Model2;
+﻿using io.nem2.sdk.src.Model;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Text.Json.Nodes;

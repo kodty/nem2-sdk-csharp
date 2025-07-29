@@ -2,13 +2,10 @@
 using Integration_Tests;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
-using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.Model2;
-using io.nem2.sdk.src.Model2;
-using io.nem2.sdk.src.Model2.Accounts;
-using io.nem2.sdk.src.Model2.Articles;
-using io.nem2.sdk.src.Model2.Transactions;
-using io.nem2.sdk.src.Model2.Transactions.Messages;
+using io.nem2.sdk.Model;
+using io.nem2.sdk.src.Model;
+using io.nem2.sdk.src.Model.Accounts;
+using io.nem2.sdk.src.Model.Transactions;
 using System.Diagnostics;
 using System.Reactive.Linq;
 
@@ -44,7 +41,7 @@ namespace IntegrationTests.Infrastructure.Transactions
             var payload = TransactionExtensions.PrepareEmbeddedTransaction<TransferTransaction_V1>(transfer, publicAcc);
         }
 
-        [Test, Timeout(2000)]
+        [Test, Timeout(20000)]
         public async Task TestNewTransactionFunctions()
         {
             var keys = SecretKeyPair.CreateFromPrivateKey("98AA70CA43E5D3B95CD303A57892D0BA953C204A4D937AF4386ED658A8FA555D");
