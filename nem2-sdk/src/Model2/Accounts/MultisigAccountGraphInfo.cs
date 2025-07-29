@@ -6,7 +6,7 @@
 // Last Modified By : kailin
 // Last Modified On : 01-29-2018
 // ***********************************************************************
-// <copyright file="MosainName.cs" company="Nem.io">   
+// <copyright file="MultisigAccountGraphInfo.cs" company="Nem.io">   
 // Copyright 2018 NEM
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,44 +23,35 @@
 // <summary></summary>
 // ***********************************************************************
 
-using io.nem2.sdk.Model.Namespace;
-
-namespace io.nem2.sdk.Model.Mosaics
+namespace io.nem2.sdk.src.Model2.Accounts
 {
     /// <summary>
-    /// The mosaic name info structure describes basic information of a mosaic and name.
+    /// Class MultisigAccountGraphInfo.
     /// </summary>
-    public class MosaicName1
+    public class MultisigAccountGraphInfo
     {
         /// <summary>
-        /// The mosaic id.
+        /// Returns multisig accounts.
         /// </summary>
-        /// <value>The mosaic identifier.</value>
-        public MosaicId MosaicId { get; }
+        /// <value>The multisig accounts.</value>
+        public Dictionary<int, List<MultisigAccountInfo>> MultisigAccounts { get; }
 
         /// <summary>
-        /// The mosaic name.
+        /// Initializes a new instance of the <see cref="MultisigAccountGraphInfo"/> class.
         /// </summary>
-        /// <value>The name.</value>
-        public string Name { get; }
-
-        /// <summary>
-        /// The parent id.
-        /// </summary>
-        /// <value>The parent identifier.</value>
-        public NamespaceId ParentId { get; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="mosaicId">The mosaic id.</param>
-        /// <param name="name">The mosaic name.</param>
-        /// <param name="parentId">The parent id.</param>
-        public MosaicName1(MosaicId mosaicId, string name, NamespaceId parentId)
+        /// <param name="multisigAccounts">The multisig accounts.</param>
+        public MultisigAccountGraphInfo(Dictionary<int, List<MultisigAccountInfo>> multisigAccounts)
         {
-            MosaicId = mosaicId;
-            Name = name;
-            ParentId = parentId;
+            MultisigAccounts = multisigAccounts;
+        }
+
+        /// <summary>
+        /// Returns multisig accounts levels number.
+        /// </summary>
+        /// <returns>Dictionary`2.KeyCollection.</returns>
+        public Dictionary<int, List<MultisigAccountInfo>>.KeyCollection GetLevelsNumber()
+        {
+            return MultisigAccounts.Keys;
         }
     }
 }

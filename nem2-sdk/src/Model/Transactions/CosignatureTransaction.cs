@@ -2,8 +2,6 @@
 using CopperCurve;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model2;
-using io.nem2.sdk.src.Model2.Transactions;
-
 
 namespace io.nem2.sdk.Model.Transactions
 {

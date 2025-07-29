@@ -1,4 +1,6 @@
-﻿namespace io.nem2.sdk.src.Model2.Transactions
+﻿using TweetNaclSharp;
+
+namespace io.nem2.sdk.src.Model2.Transactions
 {
     public class Transaction1
     {
@@ -18,5 +20,6 @@
         public ulong Fee { get; set; }
 
         public ulong Deadline { get; set; }
+
     }
 }

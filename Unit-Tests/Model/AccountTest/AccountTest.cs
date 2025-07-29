@@ -13,8 +13,8 @@
 // limitations under the License.
 // 
 
-using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model2;
+using io.nem2.sdk.src.Model2.Accounts;
 using System.Diagnostics;
 
 namespace test.Model.AccountTest
@@ -28,12 +28,10 @@ namespace test.Model.AccountTest
             var keyAcc = SecretKeyPair.CreateFromPrivateKey("EBC3F2EA82AEDAE67E45258C6604706C7891F145655B6117670EBD5ECEE632CB");
             Debug.WriteLine(keyAcc.PublicKeyString);
             var pubAccount = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
-            Debug.WriteLine(pubAccount.PrivateKey);
-            Debug.WriteLine(pubAccount.Address.Pretty);
 
             var newAcc = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
 
-            Assert.That(newAcc.PublicKey.Length, Is.EqualTo(64));
+            Assert.That(newAcc.PublicAccount.PublicKey.Length, Is.EqualTo(64));
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace io.nem2.sdk.Model.Accounts
+﻿namespace io.nem2.sdk.src.Model2.Accounts
 {
     public static class RestrictionTypes
     {
@@ -16,7 +14,7 @@ namespace io.nem2.sdk.Model.Accounts
         public static ushort GetValue(this Types type)
         {
             if (!Enum.IsDefined(typeof(Types), type))
-                throw new InvalidEnumArgumentException(nameof(type), (ushort)type, typeof(Types));
+                throw new ArgumentException(nameof(type) + (ushort)type + typeof(Types));
 
             return (ushort)type;
         }

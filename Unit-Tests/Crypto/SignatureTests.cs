@@ -1,18 +1,20 @@
 ﻿using Integration_Tests;
-using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model.Mosaics;
-using io.nem2.sdk.Model.Transactions;
+
 using CopperCurve;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
 using io.nem2.sdk.src.Model2.Transactions.Messages;
 using io.nem2.sdk.src.Model2;
+using io.nem2.sdk.src.Model2.Articles;
+using io.nem2.sdk.src.Model2.Accounts;
+using io.nem2.sdk.Model2;
+using io.nem2.sdk.src.Model2.Transactions;
 
 namespace Unit_Tests.Crypto
 {
     internal class SignatureTests
     {
-        [Test]
+        [Test, Timeout(20000)]
         public async Task TestSignature()
         {
             var keyPair = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
@@ -24,17 +26,13 @@ namespace Unit_Tests.Crypto
 
             var ts = await nodeClient.GetNodeTime();
 
-            var transaction = TransferTransaction.Create(
-                account.PublicAccount,
-                NetworkType.Types.TEST_NET,
-                new Deadline(ts.CommunicationTimestamps.SendTimestamp, TimeSpan.FromMinutes(10)),
-                100,
-                address,
-                new List<Mosaic> { Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000) },
-                PlainMessage.Create("hello")
-            ).SignWith(keyPair, HttpSetUp.NetworkGenHash.FromHex());
+            var factory = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            Assert.True(transaction.VerifySignature());
+            var tx = factory.CreateTransferTransaction(address.Plain, "hello", new Tuple<string, ulong>("72C0212E67A08BCE", 1000));
+
+            var st = TransactionExtensions.PrepareTransaction<TransferTransaction_V1>(tx, keyPair);
+
+            Assert.True(st.VerifySignature());
 
 
         } 

@@ -3,7 +3,7 @@ using CopperCurve;
 using io.nem2.sdk.src.Model2;
 using Org.BouncyCastle.Crypto.Digests;
 
-namespace io.nem2.sdk.Model.Accounts
+namespace io.nem2.sdk.src.Model2.Accounts
 {
     public class Address
     {
@@ -27,7 +27,9 @@ namespace io.nem2.sdk.Model.Accounts
         private string _Address { get; }
 
         public NetworkType.Types NetworkByte { get; }
+
         public string Plain => _Address;      
+
         public string Pretty => Regex.Replace(_Address, ".{6}", "$0-");
       
         public static NetworkType.Types GetNetworkType(string address)

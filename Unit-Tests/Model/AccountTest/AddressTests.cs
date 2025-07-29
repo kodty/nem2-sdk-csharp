@@ -13,8 +13,8 @@
 // limitations under the License.
 // 
 
-using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model2;
+using io.nem2.sdk.src.Model2.Accounts;
 
 
 namespace test.Model.AccountTest

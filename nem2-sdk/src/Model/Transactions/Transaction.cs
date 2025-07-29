@@ -1,6 +1,6 @@
 ﻿using CopperCurve;
-using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.src.Model2;
+using io.nem2.sdk.src.Model2.Accounts;
 using Org.BouncyCastle.Crypto.Digests;
 using TweetNaclSharp.Core.Extensions;
 
@@ -32,7 +32,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal byte[] GetSigner()
         {
-            return Signer == null ? new byte[32] : Signer.PublicKey.FromHex();
+            return Signer == null ? new byte[32] : Signer.PublicKey;
         }
 
         public SignedTransaction SignWith(SecretKeyPair keyPair, byte[] networkGenHash)
@@ -61,7 +61,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public byte[] HashTransaction(byte[] signature, byte[] genHash)
         {
-            var hashBytes = signature.Concat(Signer.PublicKey.FromHex()).Concat(genHash).Concat(Headless.SubArray(32, Headless.Length - 32)).ToArray();
+            var hashBytes = signature.Concat(Signer.PublicKey).Concat(genHash).Concat(Headless.SubArray(32, Headless.Length - 32)).ToArray();
 
             var hash = new byte[32];
 
@@ -88,7 +88,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public Transaction ToAggregate(PublicAccount signer)
         {
-            Signer = PublicAccount.CreateFromPublicKey(signer.PublicKey, NetworkType);
+            Signer = PublicAccount.CreateFromPublicKey(signer.PublicKeyString, NetworkType);
 
             return this;
         }

@@ -1,4 +1,4 @@
-﻿namespace io.nem2.sdk.Model.Mosaics
+﻿namespace io.nem2.sdk.src.Model2.Articles
 {
     public class Mosaic
     {

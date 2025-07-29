@@ -1,9 +1,7 @@
-﻿using Integration_Tests;
-using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
-using io.nem2.sdk.Model.Accounts;
-using CopperCurve;
+﻿using CopperCurve;
 using System.Diagnostics;
 using io.nem2.sdk.src.Model2;
+using io.nem2.sdk.src.Model2.Accounts;
 
 namespace test.Model.AccountTest
 {

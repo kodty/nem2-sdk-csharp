@@ -2,7 +2,7 @@
 {
     public class EntityBody
     {
-        public string Signer { get; set; }
+        public byte[] Signer { get; set; }
 
         public uint Entity_body_reserved_1 { get; set; }
 

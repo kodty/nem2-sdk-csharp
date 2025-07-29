@@ -1,8 +1,9 @@
-﻿using System.ComponentModel;
-using System.Text.RegularExpressions;
+﻿using CopperCurve;
 using io.nem2.sdk.src.Model2;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
 
-namespace io.nem2.sdk.Model.Accounts
+namespace io.nem2.sdk.src.Model2.Accounts
 {
 
     public class PublicAccount
@@ -10,7 +11,9 @@ namespace io.nem2.sdk.Model.Accounts
 
         public Address Address { get; }
 
-        public string PublicKey { get; }
+        public byte[] PublicKey { get; }
+
+        public string PublicKeyString => PublicKey.ToHex();
 
         internal NetworkType.Types NetworkType { get; }
 
@@ -24,7 +27,7 @@ namespace io.nem2.sdk.Model.Accounts
                     typeof(NetworkType.Types));
 
             Address = Address.CreateFromPublicKey(publicKey, networkType);
-            PublicKey = publicKey;
+            PublicKey = publicKey.FromHex();
             NetworkType = networkType;
         }
 

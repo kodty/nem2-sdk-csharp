@@ -1,8 +1,7 @@
-﻿
-using CopperCurve;
+﻿using CopperCurve;
 using io.nem2.sdk.src.Core.Utils;
 
-namespace io.nem2.sdk.Model.Namespace
+namespace io.nem2.sdk.src.Model2.Articles
 {
     public class NamespaceId
     {

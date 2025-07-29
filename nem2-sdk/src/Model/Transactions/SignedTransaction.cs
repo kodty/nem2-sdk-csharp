@@ -7,7 +7,7 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public class SignedTransaction
     {
-        public string Payload { get; set; }
+        public byte[] Payload { get; set; }
 
         public string Hash { get; set; }
 
@@ -15,7 +15,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public string Signature { get; set; }
 
-        private byte[] SignedBytes { get; set; }
+        internal byte[] SignedBytes { get; set; }
 
         public TransactionTypes.Types TransactionType { get; }
 
@@ -23,12 +23,15 @@ namespace io.nem2.sdk.Model.Transactions
         {
             return NaclFast.SignDetachedVerify(SignedBytes, Signature.FromHex(), Signer.FromHex());
         }
+        internal SignedTransaction()
+        {
 
+        }
         internal SignedTransaction(string payload, byte[] signedBytes, string hash, string signer, string signature, TransactionTypes.Types transactionType)
         {          
             if (hash.Length != 64 || !Regex.IsMatch(hash, @"\A\b[0-9a-fA-F]+\b\Z")) throw new ArgumentException("Invalid hash.");
             TransactionType = transactionType;
-            Payload = payload;
+            Payload = payload.FromHex();
             Hash = hash;
             Signer = signer;
             Signature = signature;  

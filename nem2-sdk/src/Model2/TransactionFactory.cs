@@ -1,5 +1,4 @@
-﻿using io.nem2.sdk.Model.Mosaics;
-using io.nem2.sdk.Model.Namespace;
+﻿using io.nem2.sdk.src.Model2.Articles;
 using io.nem2.sdk.src.Model2.Transactions;
 using io.nem2.sdk.src.Model2.Transactions.AccountRestrictions;
 using io.nem2.sdk.src.Model2.Transactions.CrossChainTransactions;

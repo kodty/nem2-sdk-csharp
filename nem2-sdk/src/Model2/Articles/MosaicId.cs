@@ -1,6 +1,6 @@
 ﻿using CopperCurve;
 
-namespace io.nem2.sdk.Model.Mosaics
+namespace io.nem2.sdk.src.Model2.Articles
 {
     public class MosaicId
     {
@@ -20,12 +20,12 @@ namespace io.nem2.sdk.Model.Mosaics
         {
             Id = id;
 
-            HexId = DataConverter.ConvertFromUInt64(id).ToHex();
+            HexId = id.ConvertFromUInt64().ToHex();
         }
 
         public MosaicId(string hexId)
         {
-            Id = DataConverter.ConvertToUInt64(hexId.FromHex());
+            Id = hexId.FromHex().ConvertToUInt64();
 
             HexId = hexId;
         }
@@ -37,7 +37,7 @@ namespace io.nem2.sdk.Model.Mosaics
 
             var namespaceName = identifierParts[0];
             MosaicName = identifierParts[1];
-            FullName = String.Join(':', identifierParts);
+            FullName = string.Join(':', identifierParts);
 
             Id = 0;     
             HexId = "";
@@ -48,10 +48,5 @@ namespace io.nem2.sdk.Model.Mosaics
         {
             return new MosaicId(identifier);
         } 
-        
-        public override bool Equals(object obj)
-        {
-            return Id == ((MosaicId) obj)?.Id;
-        }
     }
 }

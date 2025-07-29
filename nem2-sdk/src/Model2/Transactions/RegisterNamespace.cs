@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.Model.Namespace;
+﻿using io.nem2.sdk.src.Model2.Articles;
 using System.Text;
 
 namespace io.nem2.sdk.src.Model2.Transactions

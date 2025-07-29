@@ -1,8 +1,10 @@
-﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using io.nem2.sdk.Model.Accounts;
+﻿using CopperCurve;
+using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model2;
+using io.nem2.sdk.src.Model2.Accounts;
+using io.nem2.sdk.src.Model2.Transactions;
 using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -181,16 +183,16 @@ namespace io.nem2.sdk.Infrastructure.Listeners
                 .Select(Composer.GenerateObject<CosignatureSignedTransaction>);
         }
 
-        private bool TransactionHasSignerOrReceptor(Transaction transaction, Address address)
+        private bool TransactionHasSignerOrReceptor(Transaction1 transaction, Address address)
         {
             var isReceptor = false;
 
-            if (transaction.TransactionType.GetValue() == TransactionTypes.Types.TRANSFER.GetValue())
+            if (transaction.Type == TransactionTypes.Types.TRANSFER.GetValue())
             {
-                isReceptor = ((TransferTransaction)transaction).Address.Plain == address.Plain;
+                isReceptor = AddressEncoder.EncodeAddress(((TransferTransaction_V1)transaction).Address) == address.Plain;
             }
 
-            return Address.CreateFromPublicKey(transaction.Signer.PublicKey, address.NetworkByte).Plain == address.Plain || isReceptor;
+            return Address.CreateFromPublicKey(transaction.EntityBody.Signer.ToHex(), address.NetworkByte).Plain == address.Plain || isReceptor;
         }
 
         public void Close()
@@ -199,16 +201,16 @@ namespace io.nem2.sdk.Infrastructure.Listeners
             LoopReads.Dispose();
         }
 
-        private bool TransactionFromAddress(Transaction transaction, Address address)
-        {
-            var transactionFromAddress = TransactionHasSignerOrReceptor(transaction, address);
-
-            if (!transactionFromAddress && transaction.TransactionType.GetValue() == TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue() && ((AggregateTransaction)transaction).Cosignatures != null)
-            {
-                transactionFromAddress = ((AggregateTransaction)transaction).Cosignatures.Any(e => Address.CreateFromPublicKey(e.Signer.PublicKey, address.NetworkByte).Plain == address.Plain);
-            }
-
-            return transactionFromAddress;
-        }     
+        //private bool TransactionFromAddress(Transaction1 transaction, Address address)
+        //{
+        //    var transactionFromAddress = TransactionHasSignerOrReceptor(transaction, address);
+        //
+        //    if (!transactionFromAddress && transaction.Type == TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue() && ((AggregateTransaction)transaction).Cosignatures != null)
+        //    {
+        //        transactionFromAddress = ((AggregateTransaction)transaction).Cosignatures.Any(e => Address.CreateFromPublicKey(e.Signer.PublicKey, address.NetworkByte).Plain == address.Plain);
+        //    }
+        //
+        //    return transactionFromAddress;
+        //}     
     }
 }

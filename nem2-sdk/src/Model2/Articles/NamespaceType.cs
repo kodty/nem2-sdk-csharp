@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace io.nem2.sdk.Model.Namespace
+﻿namespace io.nem2.sdk.src.Model2.Articles
 {
     public static class NamespaceTypes
     {
@@ -14,7 +12,7 @@ namespace io.nem2.sdk.Model.Namespace
         public static byte GetValue(this Types type)
         {
             if (!Enum.IsDefined(typeof(Types), type))
-                throw new InvalidEnumArgumentException(nameof(type), (int)type, typeof(Types));
+                throw new ArgumentException(nameof(type) + (int)type + typeof(Types));
 
             return (byte)type;
         }
