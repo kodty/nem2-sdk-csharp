@@ -50,7 +50,7 @@ namespace io.nem2.sdk.src.Model
             return new SecretKeyPair(privateKey, pk.ToHex());
         }
 
-        internal byte[] Sign(byte[] data)
+        public byte[] Sign(byte[] data)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
 

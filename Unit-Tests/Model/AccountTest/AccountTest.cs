@@ -13,6 +13,7 @@
 // limitations under the License.
 // 
 
+using CopperCurve;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
 using System.Diagnostics;
@@ -25,13 +26,10 @@ namespace test.Model.AccountTest
         [Test]
         public void CreateNewTestNetAccount()
         {
-            var keyAcc = SecretKeyPair.CreateFromPrivateKey("EBC3F2EA82AEDAE67E45258C6604706C7891F145655B6117670EBD5ECEE632CB");
-            Debug.WriteLine(keyAcc.PublicKeyString);
-            var pubAccount = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
-
             var newAcc = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
 
-            Assert.That(newAcc.PublicAccount.PublicKey.Length, Is.EqualTo(64));
+            Assert.That(newAcc.PublicAccount.PublicKey.ToHex().Length, Is.EqualTo(64));
+            Assert.That(newAcc.Address.Plain.IsBase32(), Is.True);
         }
     }
 }

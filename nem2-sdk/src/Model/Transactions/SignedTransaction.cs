@@ -23,6 +23,12 @@ namespace io.nem2.sdk.src.Model.Transactions
         {
             return NaclFast.SignDetachedVerify(SignedBytes, Signature.FromHex(), Signer.FromHex());
         }
+
+        public static bool VerifySignature(byte[] signedBytes, string signature, string signer)
+        {
+            return NaclFast.SignDetachedVerify(signedBytes, signature.FromHex(), signer.FromHex());
+        }
+
         internal SignedTransaction()
         {
 

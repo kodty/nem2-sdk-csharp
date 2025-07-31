@@ -35,6 +35,11 @@ namespace Unit_Tests.Crypto
             Assert.True(st.VerifySignature());
 
 
-        } 
+        }
+        [Test, Timeout(20000)]
+        public async Task CosignatureSignatureTest()
+        {
+
+        }      
     }
 }

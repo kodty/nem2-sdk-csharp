@@ -9,15 +9,16 @@ namespace Unit_Tests.Model.Mosaics
         [Test]
         public static void NamespaceCreate()
         {
-            var symbolId = IdGenerator.GenerateId(0, "");
+            var symbolId = IdGenerator.GenerateId(0, "symbol");
 
-            var symbolId1 = IdGenerator.GenerateId(0, "");
+            var symbolId1 = IdGenerator.GenerateId(0, "xym");
 
-            Assert.That(DataConverter.ConvertFromUInt64(symbolId1).ToHex(), Is.EqualTo(""));
-            
             Assert.That(DataConverter.ConvertFromUInt64(symbolId).ToHex(), Is.EqualTo("A95F1F8A96159516"));
             
+            Assert.That(DataConverter.ConvertFromUInt64(symbolId1).ToHex(), Is.EqualTo("84CB6A45853E78C4"));
+            
             var xymId = IdGenerator.GenerateId(symbolId, "xym");
+
             Assert.That(DataConverter.ConvertFromUInt64(xymId).ToHex(), Is.EqualTo("E74B99BA41F4AFEE"));
         }
 

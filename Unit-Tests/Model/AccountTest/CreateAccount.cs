@@ -7,87 +7,12 @@ namespace test.Model.AccountTest
 {
     public class CreateAccount
     {
-        [Test]
-        public void CreateNewAccount()
-        {
-            var charCount = new int[32];
-
-            char[] Base32Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567".ToCharArray();
-            int[] sectorFound = new int[8];
-
-            for (int i = 0; i < 100000000; i++)
-            {
-                var acc = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
-                Debug.WriteLine(acc.Address.Plain);
-                for (int e = 0; e < acc.Address.Plain.Length; e++)
-                {
-                    charCount[Base32Characters.ToList().IndexOf(acc.Address.Plain[e])]++;
-                }
-
-                if (acc.Address.Plain.Substring(0, 5).Contains('A'))
-                {
-                    sectorFound[0]++;
-                }
-                if (acc.Address.Plain.Substring(5, 5).Contains('A'))
-                {
-                    sectorFound[1]++;
-                }
-                if (acc.Address.Plain.Substring(10, 5).Contains('A'))
-                {
-                    sectorFound[2]++;
-                }
-                if (acc.Address.Plain.Substring(15, 5).Contains('A'))
-                {
-                    sectorFound[3]++;
-                }
-                if (acc.Address.Plain.Substring(20, 5).Contains('A'))
-                {
-                    sectorFound[4]++;
-                }
-                if (acc.Address.Plain.Substring(25, 5).Contains('A'))
-                {
-                    sectorFound[5]++;
-                }
-                if (acc.Address.Plain.Substring(30, 5).Contains('A'))
-                {
-                    sectorFound[6]++;
-                }
-                if (acc.Address.Plain.Substring(35, 4).Contains('A'))
-                {
-                    sectorFound[7]++;
-                }
-                Assert.AreEqual(64, acc.PublicAccount.PublicKey.Length);
-
-                if (i > 300 && acc.Address.Plain.EndsWith("A")) break;
-            }
-
-            
-            foreach (var item in charCount)
-            {
-                Debug.WriteLine(item);
-            }
-            Debug.WriteLine("");
-            Array.Sort(charCount);
-
-            foreach (var item in charCount)
-            {
-                Debug.WriteLine(item);
-            }
-
-            Debug.WriteLine("");
-
-            foreach (var item in sectorFound)
-            {
-                Debug.WriteLine(item);
-            }
-        }
-
         [Test] 
         public void CreateNewAccountFromKey()
         {
             var acc = Account.CreateFromPrivateKey("575DBB3062267EFF57C970A336EBBC8FBCFE12C5BD3ED7BC11EB0481D7704CED", NetworkType.Types.TEST_NET);
 
-            Assert.AreEqual("2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F", acc.PublicAccount.PublicKey);             
+            Assert.AreEqual("2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F", acc.PublicAccount.PublicKeyString);             
         }
 
         [Test]

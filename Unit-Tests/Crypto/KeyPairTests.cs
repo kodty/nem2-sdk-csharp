@@ -1,4 +1,5 @@
-﻿using io.nem2.sdk.src.Model;
+﻿using Integration_Tests;
+using io.nem2.sdk.src.Model;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Text.Json.Nodes;
@@ -10,7 +11,7 @@ namespace Unit_Tests.Crypto
         [Test]
         public static void TestKeyPair()
         {
-            var text = File.ReadAllLines("C:\\Users\\kaili\\Documents\\Bitbucket-Repositories\\nem2-sdk-csharp\\Unit-Tests\\Crypto\\Vectors\\TextFile1.txt");
+            var text = File.ReadAllLines(HttpSetUp.VectorsPath +  "TextFile1.txt");
 
             var keys = JsonObject.Parse(String.Concat(text));
 
