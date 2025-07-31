@@ -112,12 +112,19 @@ namespace CopperCurve
             }
         }
 
-        public void Serialize(Type type, object obj)
+        public void Serialize(Type type, object obj, bool embedded = true)
         {
-            foreach (var item in type.BaseType.GetProperties())
+            foreach (var item in type.BaseType.GetProperties().Take(type.BaseType.GetProperties().Count() - 2))
             {
                 FilterProperties(obj, item);
             }
+   
+            if(!embedded)
+                foreach (var item in type.BaseType.GetProperties().Take(new Range(type.BaseType.GetProperties().Count() - 2, 2)))
+                {
+                    FilterProperties(obj, item);
+                }
+
             foreach (var item in type.GetProperties().Where(e => e.DeclaringType != type.BaseType))
             {
                 FilterProperties(obj, item);
