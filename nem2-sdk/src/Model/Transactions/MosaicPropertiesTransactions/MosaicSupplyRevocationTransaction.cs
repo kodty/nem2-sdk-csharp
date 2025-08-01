@@ -2,7 +2,7 @@
 {
     public class MosaicSupplyRevocationTransaction1 : Transaction
     {
-        public MosaicSupplyRevocationTransaction1(string issuerAddress, Tuple<string, ulong> revokedMosaicAmount)
+        public MosaicSupplyRevocationTransaction1(string issuerAddress, Tuple<string, ulong> revokedMosaicAmount, bool embedded) : base (embedded)
         {
             IssuerAddress = issuerAddress;
             RevokedMosaicAmount = revokedMosaicAmount;

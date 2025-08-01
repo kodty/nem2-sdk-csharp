@@ -6,7 +6,7 @@ namespace io.nem2.sdk.src.Model.Transactions.CrossChainTransactions
 {
     public class SecretLockTransaction1 : Transaction
     {
-        public SecretLockTransaction1(Tuple<string, ulong> mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient)
+        public SecretLockTransaction1(Tuple<string, ulong> mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded) : base(embedded)
         {
             Mosaic = mosaic;
             Duration = duration;

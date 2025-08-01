@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 
 namespace CopperCurve
 {
@@ -99,7 +100,7 @@ namespace CopperCurve
             _offset += decoded.Length;
         }
 
-        private void FilterProperties(object obj, PropertyInfo op)
+        private void FilterProperties(object obj, PropertyInfo op, bool embedded)
         {
             if (IsNativeProperty(op))
             {
@@ -108,26 +109,23 @@ namespace CopperCurve
 
             else if (!IsNativeProperty(op))
             {
-                Serialize(op.PropertyType, op.GetValue(obj));
+                Serialize(op.PropertyType, op.GetValue(obj), embedded);
             }
         }
 
-        public void Serialize(Type type, object obj, bool embedded = true)
+        public void Serialize(Type type, object obj, bool embedded)
         {
-            foreach (var item in type.BaseType.GetProperties().Take(type.BaseType.GetProperties().Count() - 2))
+            Debug.WriteLine(8);
+            foreach (var item in type.BaseType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                FilterProperties(obj, item);
+                Debug.WriteLine(9);
+                FilterProperties(obj, item, embedded);     
             }
-   
-            if(!embedded)
-                foreach (var item in type.BaseType.GetProperties().Take(new Range(type.BaseType.GetProperties().Count() - 2, 2)))
-                {
-                    FilterProperties(obj, item);
-                }
 
             foreach (var item in type.GetProperties().Where(e => e.DeclaringType != type.BaseType))
             {
-                FilterProperties(obj, item);
+                Debug.WriteLine(10);
+                FilterProperties(obj, item, embedded);
             }
         }
 

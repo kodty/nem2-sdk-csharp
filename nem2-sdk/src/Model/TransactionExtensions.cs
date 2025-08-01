@@ -25,28 +25,32 @@ namespace io.nem2.sdk.Model
             return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
         }
 
-        public static byte[] Serialize<T>(object obj)
+        public static byte[] Serialize<T>(object obj, bool embedded)
         {
             DataSerializer serializer = new DataSerializer();
 
-            serializer.Serialize(typeof(T), obj);
+            serializer.Serialize(typeof(T), obj, embedded);
 
             return serializer.Bytes;
         }
 
-        public static Payload PrepareEmbeddedTransaction<T>(Transaction transaction, PublicAccount account)
+        public static UnsignedTransaction PrepareEmbeddedTransaction<T>(Transaction transaction, PublicAccount account)
         {
-            transaction.EntityBody.Signer = account.PublicKey;
+            transaction.EntityBody.Signer = new byte[32];
 
-            var body = Serialize<T>(transaction);
+            Debug.WriteLine(6);
+            var body = Serialize<T>(transaction, true);
 
+            Debug.WriteLine(7);
             byte[] size = ((uint)body.Length).ConvertFromUInt32();
 
+            Debug.WriteLine(8);
             byte[] reserved = new byte[4];
 
-            return new Payload()
+            Debug.WriteLine(9);
+            return new UnsignedTransaction()
             {
-                payload = size.Concat(reserved).Concat(body).ToArray()
+                Payload = size.Concat(reserved).Concat(body).ToArray()
             };
         }
 
@@ -54,7 +58,7 @@ namespace io.nem2.sdk.Model
         {
             transaction.EntityBody.Signer = keyPair.PublicKey;
 
-            var body = Serialize<T>(transaction);
+            var body = Serialize<T>(transaction, false);
 
             var genHashBytes = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4".FromHex();
             
@@ -63,7 +67,7 @@ namespace io.nem2.sdk.Model
             Array.Copy(body, 32 + 4, signingBytes, 32, body.Length - 32 - 4);
 
             for (int x = 0; x < 32; x++)
-                signingBytes[0] = genHashBytes[x];
+                signingBytes[x] = genHashBytes[x];
 
             var sig = keyPair.Sign(signingBytes);
 
@@ -74,7 +78,7 @@ namespace io.nem2.sdk.Model
                 Signature = sig               
             };
 
-            var header = Serialize<VerifiableEntity>(VerifiableEntity);
+            var header = Serialize<VerifiableEntity>(VerifiableEntity, false);
 
             var pl = header.Concat(body).ToArray();
 

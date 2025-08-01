@@ -58,6 +58,13 @@ namespace Unit_Tests.Model.Mosaics
 
             Assert.That(DataConverter.ConvertFromUInt64(id).ToHex(), Is.EqualTo("570FB3ED9379624C"));
             Assert.That(DataConverter.ConvertFromUInt64(id2).ToHex(), !Is.EqualTo("570FB3ED9379624C"));
-        }  
+        }
+
+        [Test]
+        public static void ConvertUlongToHexId()
+        {
+            var id = DataConverter.ToHex(DataConverter.ConvertFromUInt64(95442763262823));
+            Debug.WriteLine(id);
+        }
     }
 }

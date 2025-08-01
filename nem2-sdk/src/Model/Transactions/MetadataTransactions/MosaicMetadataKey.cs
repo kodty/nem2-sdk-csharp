@@ -5,7 +5,7 @@ namespace io.nem2.sdk.src.Model.Transactions.MetadataTransactions
 {
     public class MosaicMetadataTransaction1 : Transaction
     {
-        public MosaicMetadataTransaction1(string targetAddress, string targetMosaicId, string scopedKey, short valueSizeDelta, short valueSize, byte[] value)
+        public MosaicMetadataTransaction1(string targetAddress, string targetMosaicId, string scopedKey, short valueSizeDelta, short valueSize, byte[] value, bool embedded) : base(embedded)
         {
             TargetAddress = AddressEncoder.DecodeAddress(targetAddress);
             ScopedMetadataKey = scopedKey;

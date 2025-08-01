@@ -6,7 +6,7 @@ namespace io.nem2.sdk.src.Model.Transactions
 {
     public class TransferTransaction_V1 : Transaction
     {
-        public TransferTransaction_V1(string address, string messege, Tuple<string, ulong> mosaic)
+        public TransferTransaction_V1(string address, string messege, Tuple<string, ulong> mosaic, bool embedded) : base(embedded)
         {
             if (address.IsBase32(address.Length))
                 Address = AddressEncoder.DecodeAddress(address);

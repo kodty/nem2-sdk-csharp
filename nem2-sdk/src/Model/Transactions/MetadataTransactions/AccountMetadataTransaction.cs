@@ -6,7 +6,7 @@ namespace io.nem2.sdk.src.Model.Transactions.MetadataTransactions
 {
     public class AccountMetadataTransaction1 : Transaction
     {
-        public AccountMetadataTransaction1(string targetAddress, string scopedKey, short valueSizeDelta, short valueSize, byte[] value)
+        public AccountMetadataTransaction1(string targetAddress, string scopedKey, short valueSizeDelta, short valueSize, byte[] value, bool embedded) : base(embedded)
         {
             TargetAddress = AddressEncoder.DecodeAddress(targetAddress);
             ScopedMetadataKey = scopedKey;

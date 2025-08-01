@@ -3,7 +3,7 @@
     //AccountMosaic, AccountAddress, AccountOperation
     public class AccountRestrictionsTransaction1 : Transaction
     {
-        public AccountRestrictionsTransaction1(TransactionTypes.Types type, int restrictionFlags, string[] restrictionAdditions, string[] restrictionsDeletions) : base(type)
+        public AccountRestrictionsTransaction1(TransactionTypes.Types type, int restrictionFlags, string[] restrictionAdditions, string[] restrictionsDeletions, bool embedded) : base(type, embedded)
         {
             RestrictionFlags = restrictionFlags;
             RestrictionAdditions = restrictionAdditions;

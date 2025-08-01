@@ -4,7 +4,7 @@ namespace io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions
 {
     public class MosaicDefinitionTransaction1 : Transaction
     {
-        public MosaicDefinitionTransaction1(string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties) {
+        public MosaicDefinitionTransaction1(string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties, bool embedded) : base(embedded) {
 
             MosaicName = mosaicName;
             NamespaceId = namespaceId;

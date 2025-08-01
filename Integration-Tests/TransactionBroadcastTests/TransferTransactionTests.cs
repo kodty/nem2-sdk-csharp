@@ -3,6 +3,7 @@ using Integration_Tests;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
 using io.nem2.sdk.Model;
+using io.nem2.sdk.src.Core.Utils;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
 using io.nem2.sdk.src.Model.Transactions;
@@ -23,24 +24,6 @@ namespace IntegrationTests.Infrastructure.Transactions
             listener.Open().Wait();
         }
 
-        //[Test, Timeout(2000)]
-        public async Task CreateAggregateTransaction()
-        {
-            var keys = SecretKeyPair.CreateFromPrivateKey("98AA70CA43E5D3B95CD303A57892D0BA953C204A4D937AF4386ED658A8FA555D");
-
-            var publicAcc = new PublicAccount(keys.PublicKeyString, NetworkType.Types.TEST_NET);
-
-            var factory = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
-
-            var transfer = factory.CreateTransferTransaction(
-                    "TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA",
-                    "",
-                    new Tuple<string, ulong>("72C0212E67A08BCE", 100)
-                );
-
-            var payload = TransactionExtensions.PrepareEmbeddedTransaction<TransferTransaction_V1>(transfer, publicAcc);
-        }
-
         [Test, Timeout(20000)]
         public async Task TestNewTransactionFunctions()
         {
@@ -50,7 +33,8 @@ namespace IntegrationTests.Infrastructure.Transactions
                 .CreateTransferTransaction(
                     "TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA", 
                     "", 
-                    new Tuple<string, ulong>("72C0212E67A08BCE", 100)
+                    new Tuple<string, ulong>("72C0212E67A08BCE", 100),
+                    false
                 );
            
             var st = TransactionExtensions.PrepareTransaction<TransferTransaction_V1>(transfer, keys);

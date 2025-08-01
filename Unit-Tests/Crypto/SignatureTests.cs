@@ -28,7 +28,7 @@ namespace Unit_Tests.Crypto
 
             var factory = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            var tx = factory.CreateTransferTransaction(address.Plain, "hello", new Tuple<string, ulong>("72C0212E67A08BCE", 1000));
+            var tx = factory.CreateTransferTransaction(address.Plain, "hello", new Tuple<string, ulong>("72C0212E67A08BCE", 1000), false);
 
             var st = TransactionExtensions.PrepareTransaction<TransferTransaction_V1>(tx, keyPair);
 

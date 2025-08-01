@@ -1,17 +1,21 @@
-﻿namespace io.nem2.sdk.src.Model.Transactions
+﻿using CopperCurve;
+
+namespace io.nem2.sdk.src.Model.Transactions
 {
     public class AggregateTransaction1 : Transaction
     {
-        public AggregateTransaction1(string transactionsHash, byte[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type) : base(type) {
-            TransactionsHash = transactionsHash;
+        public AggregateTransaction1(string transactionsHash, byte[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type, bool embedded) : base(type, embedded) {
+            TransactionsHash = transactionsHash.FromHex();          
             EmbeddedTransactions = embeddedTransactions;
+            PayloadSize = (uint)EmbeddedTransactions.Length;
             Cosignatures = cosignatures;
+            Aggregate_​transaction_​header_​reserved_​1 = 0;
         }
 
-        public string TransactionsHash { get; set; }
+        public byte[] TransactionsHash { get; set; }
 
-        public int TransactionsCount { get; set; }
-        public int Aggregate_​transaction_​header_​reserved_​1 { get; set; }
+        public uint PayloadSize { get; set; }
+        public uint Aggregate_​transaction_​header_​reserved_​1 { get; set; }
          
         public byte[] EmbeddedTransactions { get; set; }
         public byte[] Cosignatures { get; set; }

@@ -3,7 +3,7 @@
     public class MosaicAddressRestrictionTransaction : MosaicRestrictionTransaction1
     {
         public string TargetAddress { get; set; }
-        public MosaicAddressRestrictionTransaction(string targetAddress, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue) : base(mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue)
+        public MosaicAddressRestrictionTransaction(string targetAddress, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded) : base(mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
         {
             TargetAddress = targetAddress;
         }
@@ -11,7 +11,7 @@
     public class MosaicGlobalRestrictionTransaction : MosaicRestrictionTransaction1
     {
         public string ReferenceMosaicId { get; set; }
-        public MosaicGlobalRestrictionTransaction(string mosaicID, string referenceMosaicId, string restrictionKey, string previousRestrictionValue, string newRestrictionValue) : base(mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue)
+        public MosaicGlobalRestrictionTransaction(string mosaicID, string referenceMosaicId, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded) : base(mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
         {
             ReferenceMosaicId = referenceMosaicId;
         }
@@ -19,7 +19,7 @@
 
     public class MosaicRestrictionTransaction1 : Transaction
     {
-        public MosaicRestrictionTransaction1(string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue) 
+        public MosaicRestrictionTransaction1(string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded) : base(embedded)
         {
             MosaicID = mosaicID;
             RestrictionKey = restrictionKey;

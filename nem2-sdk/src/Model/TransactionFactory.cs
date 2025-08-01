@@ -1,4 +1,5 @@
-﻿using io.nem2.sdk.src.Model.Articles;
+﻿using CopperCurve;
+using io.nem2.sdk.src.Model.Articles;
 using io.nem2.sdk.src.Model.Transactions;
 using io.nem2.sdk.src.Model.Transactions.AccountRestrictions;
 using io.nem2.sdk.src.Model.Transactions.CrossChainTransactions;
@@ -59,214 +60,228 @@ namespace io.nem2.sdk.src.Model
             Port = port;
         }
 
-        public MosaicSupplyChangeTransaction1 CreateMosaicSupplyChangeTransaction(ulong delta, Tuple<string, ulong> mosaic, MosaicSupplyType.Type supplyType)
+        public MosaicSupplyChangeTransaction1 CreateMosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, bool embedded)
         {
-            return new MosaicSupplyChangeTransaction1(delta, mosaic, supplyType)
+            return new MosaicSupplyChangeTransaction1(delta, mosaicId, supplyType, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee = DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public NamespaceMetadataTransaction1 CreateNamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, short valueSizeDelta, short valueSize, byte[] value)
+        public NamespaceMetadataTransaction1 CreateNamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, short valueSizeDelta, short valueSize, byte[] value, bool embedded)
         {
-            return new NamespaceMetadataTransaction1(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value)
+            return new NamespaceMetadataTransaction1(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public AccountMetadataTransaction1 CreateAccountMetadataTransaction(string targetAddress, string scopedKey, short valueSizeDelta, short valueSize, byte[] value)
+        public AccountMetadataTransaction1 CreateAccountMetadataTransaction(string targetAddress, string scopedKey, short valueSizeDelta, short valueSize, byte[] value, bool embedded)
         {
-            return new AccountMetadataTransaction1(targetAddress, scopedKey, valueSizeDelta, valueSize, value)
+            return new AccountMetadataTransaction1(targetAddress, scopedKey, valueSizeDelta, valueSize, value, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public MosaicMetadataTransaction1 CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, string targetMosaicId, short valueSizeDelta, short valueSize, byte[] value)
+        public MosaicMetadataTransaction1 CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, string targetMosaicId, short valueSizeDelta, short valueSize, byte[] value, bool embedded)
         {
-            return new MosaicMetadataTransaction1(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value)
+            return new MosaicMetadataTransaction1(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public MosaicDefinitionTransaction1 CreateMosaicDefinitionTransaction(string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties)
+        public MosaicDefinitionTransaction1 CreateMosaicDefinitionTransaction(string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties, bool embedded)
         {
-            return new MosaicDefinitionTransaction1(mosaicName, namespaceId, mosaicId, properties)
+            return new MosaicDefinitionTransaction1(mosaicName, namespaceId, mosaicId, properties, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_DEFINITION.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public LockFundsTransaction1 CreateLockFundsTransaction(Tuple<string, ulong> mosaic, ulong duration, string transactionHash)
+        public LockFundsTransaction1 CreateLockFundsTransaction(Tuple<string, ulong> mosaic, ulong duration, string transactionHash, bool embedded)
         {
-            return new LockFundsTransaction1(mosaic, duration, transactionHash)
+            return new LockFundsTransaction1(mosaic, duration, transactionHash, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.HASH_LOCK.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public SecretLockTransaction1 CreateSecretLockTransaction(Tuple<string, ulong> mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient)
+        public SecretLockTransaction1 CreateSecretLockTransaction(Tuple<string, ulong> mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded)
         {
-            return new SecretLockTransaction1(mosaic, duration, secret, hashAlgo, recipient)
+            return new SecretLockTransaction1(mosaic, duration, secret, hashAlgo, recipient, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.SECRET_LOCK.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
 
         }
 
-        public SecretProofTransaction1 CreateSecretProofTransaction(string recipientAddress, string secret, HashType.Types hashAlgo, string proof)
+        public SecretProofTransaction1 CreateSecretProofTransaction(string recipientAddress, string secret, HashType.Types hashAlgo, string proof, bool embedded)
         {
-            return new SecretProofTransaction1(recipientAddress, secret, hashAlgo, proof)
+            return new SecretProofTransaction1(recipientAddress, secret, hashAlgo, proof, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.SECRET_PROOF.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100           
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)           
             };
         }
 
-        public RegisterNamespace CreateNamespaceRegistrationTransaction(ulong duration, NamespaceId parentId, NamespaceId id, NamespaceTypes.Types type, string name)
+        public RegisterNamespace CreateNamespaceRegistrationTransaction(ulong duration, NamespaceId parentId, NamespaceId id, NamespaceTypes.Types type, string name, bool embedded)
         {
-            return new RegisterNamespace(duration, parentId, id, type, name)
+            return new RegisterNamespace(duration, parentId, id, type, name, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue(),
                 RegistrationType = type,
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public KeyLinkTransaction1 CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, int linkAction, byte linkType)
+        public KeyLinkTransaction1 CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, int linkAction, byte linkType, bool embedded)
         {
-            return new VotingKeyLinkTransaction1(startEpoch, endEpoch, linkedPublicKey, linkAction)
+            return new VotingKeyLinkTransaction1(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.VOTING_KEY_LINK.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public KeyLinkTransaction1 CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, int linkAction, byte linkType)
+        public KeyLinkTransaction1 CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, int linkAction, byte linkType, bool embedded)
         {
-            return new KeyLinkTransaction1(linkedPublicKey, linkAction)
+            return new KeyLinkTransaction1(linkedPublicKey, linkAction, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = type.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public TransferTransaction_V1 CreateTransferTransaction(string address, string messege, Tuple<string, ulong> mosaic)
+        public TransferTransaction_V1 CreateTransferTransaction(string address, string messege, Tuple<string, ulong> mosaic, bool embedded)
         {
-            return new TransferTransaction_V1(address, messege, mosaic)
+            return new TransferTransaction_V1(address, messege, mosaic, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.TRANSFER.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public AccountRestrictionsTransaction1 CreateAccountRestrictionTransaction(TransactionTypes.Types type, int restrictionFlags, string[] additions, string[] deletions)
+
+
+        public AccountRestrictionsTransaction1 CreateAccountRestrictionTransaction(TransactionTypes.Types type, int restrictionFlags, string[] additions, string[] deletions, bool embedded)
         {
-            return new AccountRestrictionsTransaction1(type, restrictionFlags, additions, deletions)
+            return new AccountRestrictionsTransaction1(type, restrictionFlags, additions, deletions, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = type.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public MosaicAddressRestrictionTransaction CreateMosaicAddressRestrictionTransaction(string targetAddress, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue)
+        public MosaicAddressRestrictionTransaction CreateMosaicAddressRestrictionTransaction(string targetAddress, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded)
         {
-            return new MosaicAddressRestrictionTransaction(targetAddress, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue)
+            return new MosaicAddressRestrictionTransaction(targetAddress, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public MosaicGlobalRestrictionTransaction CreateMosaicGlobalRestrictionTransaction(string referenceMosaicId, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue)
+        public MosaicGlobalRestrictionTransaction CreateMosaicGlobalRestrictionTransaction(string referenceMosaicId, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded)
         {
-            return new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue)
+            return new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public AddressAliasTransaction1 CreateAddressAliasTransaction(string address, string namepaceId, byte aliasAction)
+        public AddressAliasTransaction1 CreateAddressAliasTransaction(string address, string namepaceId, byte aliasAction, bool embedded)
         {
-            return new AddressAliasTransaction1(address, namepaceId, aliasAction)
+            return new AddressAliasTransaction1(address, namepaceId, aliasAction, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.ADDRESS_ALIAS.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public MosaicAliasTransaction1 CreateMosaicAliasTransaction(string mosaicId, string namepaceId, byte aliasAction)
+        public MosaicAliasTransaction1 CreateMosaicAliasTransaction(string mosaicId, string namepaceId, byte aliasAction, bool embedded)
         {
-            return new MosaicAliasTransaction1(mosaicId, namepaceId, aliasAction)
+            return new MosaicAliasTransaction1(mosaicId, namepaceId, aliasAction, embedded) 
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_ALIAS.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public MultisigAccountModificationTransaction1 CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions)
+        public MultisigAccountModificationTransaction1 CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions, bool embedded)
         {
-            return new MultisigAccountModificationTransaction1(minApproval, minRemoval, addressAdditions, addressDeletions)
+            return new MultisigAccountModificationTransaction1(minApproval, minRemoval, addressAdditions, addressDeletions, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
             };
         }
 
-        public AggregateTransaction1 CreateAggregateComplete(string txsHash, byte[] embeddedTransactions, byte[] cosignatures)
+        public AggregateTransaction1 CreateAggregateComplete(string txsHash, byte[] embeddedTransactions, byte[] cosignatures, bool embedded)
         {
-            return new AggregateTransaction1(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE)
+            return new AggregateTransaction1(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks,
-                Fee = 100
+                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
+                Fee =  DataConverter.ConvertFromUInt64(100)
+            };
+        }
+
+        public AggregateTransaction1 CreateAggregateBonded(string txsHash, byte[] embeddedTransactions, byte[] cosignatures, bool embedded)
+        {
+            return new AggregateTransaction1(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED, embedded)
+            {
+                EntityBody = DefaultEntityBody,
+                Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),
+                Deadline = ((ulong)8207562320463688160).ConvertFromUInt64(),
+                
+                Fee = DataConverter.ConvertFromUInt64(18370164183782063840)
             };
         }
     }  

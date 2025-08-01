@@ -5,7 +5,7 @@ namespace io.nem2.sdk.src.Model.Transactions
 {
     public class RegisterNamespace : Transaction
     {
-        public RegisterNamespace(ulong duration, NamespaceId parentId, NamespaceId id, NamespaceTypes.Types type, string name)
+        public RegisterNamespace(ulong duration, NamespaceId parentId, NamespaceId id, NamespaceTypes.Types type, string name, bool embedded) : base(embedded)
         {
             Duration = duration;
             ParentId = parentId;

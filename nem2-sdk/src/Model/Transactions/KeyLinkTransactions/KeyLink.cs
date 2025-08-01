@@ -2,7 +2,7 @@
 {
     public class KeyLinkTransaction1 : Transaction
     {
-        public KeyLinkTransaction1(string linkedPublicKey, int linkAction)
+        public KeyLinkTransaction1(string linkedPublicKey, int linkAction, bool embedded) : base(embedded)
         {
             LinkedPublicKey = linkedPublicKey;
             LinkAction = linkAction;

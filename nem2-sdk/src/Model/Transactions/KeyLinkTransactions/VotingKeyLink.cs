@@ -2,7 +2,7 @@
 {
     public class VotingKeyLinkTransaction1 : KeyLinkTransaction1
     {
-        public VotingKeyLinkTransaction1(ulong startEpoch, ulong endEpoch, string linkedPublicKey, int linkAction ) : base (linkedPublicKey, linkAction)
+        public VotingKeyLinkTransaction1(ulong startEpoch, ulong endEpoch, string linkedPublicKey, int linkAction, bool embedded) : base (linkedPublicKey, linkAction, embedded)
         {
             StartEpoch = startEpoch;
             EndEpoch = endEpoch;

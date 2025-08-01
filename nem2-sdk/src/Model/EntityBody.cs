@@ -15,10 +15,4 @@
             Entity_body_reserved_1 = 0;
         }
     }
-
-    
-
-
-
-
 }

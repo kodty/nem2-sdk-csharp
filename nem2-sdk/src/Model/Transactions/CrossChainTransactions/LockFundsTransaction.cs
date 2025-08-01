@@ -2,7 +2,7 @@
 {
     public class LockFundsTransaction1 : Transaction
     {
-        public LockFundsTransaction1(Tuple<string, ulong> mosaic, ulong duration, string transactionHash)
+        public LockFundsTransaction1(Tuple<string, ulong> mosaic, ulong duration, string transactionHash, bool embedded) : base(embedded)
         {
             Mosaic = mosaic;
             Duration = duration;

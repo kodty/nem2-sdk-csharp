@@ -5,10 +5,13 @@ using TweetNaclSharp;
 
 namespace io.nem2.sdk.src.Model.Transactions
 {
-    public class SignedTransaction
+    public class UnsignedTransaction
     {
         public byte[] Payload { get; set; }
+    }
 
+    public class SignedTransaction : UnsignedTransaction
+    {
         public string Hash { get; set; }
 
         public string Signer { get; set; }
