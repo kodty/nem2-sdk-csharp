@@ -71,7 +71,7 @@ namespace CopperCurve
         {
             Array.Resize(ref Bytes, Bytes.Length + 4);
 
-            _offset += reserved;
+            _offset += 4;
         }
 
         public void WriteHexString(string hexString)
@@ -115,16 +115,13 @@ namespace CopperCurve
 
         public void Serialize(Type type, object obj, bool embedded)
         {
-            Debug.WriteLine(8);
             foreach (var item in type.BaseType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                Debug.WriteLine(9);
                 FilterProperties(obj, item, embedded);     
             }
 
             foreach (var item in type.GetProperties().Where(e => e.DeclaringType != type.BaseType))
             {
-                Debug.WriteLine(10);
                 FilterProperties(obj, item, embedded);
             }
         }

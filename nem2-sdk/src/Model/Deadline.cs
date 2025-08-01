@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace io.nem2.sdk.src.Model
@@ -9,7 +10,7 @@ namespace io.nem2.sdk.src.Model
 
         internal DateTime Date { get; set; }
 
-        public ulong Ticks { get; }  
+        public ulong Ticks { get; set; }  
        
         public DateTime GetDateTime()
         {

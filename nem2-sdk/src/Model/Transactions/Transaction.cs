@@ -1,5 +1,6 @@
 ﻿using CopperCurve;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using System.Diagnostics;
 using TweetNaclSharp;
 
 namespace io.nem2.sdk.src.Model.Transactions
@@ -16,46 +17,48 @@ namespace io.nem2.sdk.src.Model.Transactions
             Type = type.GetValue();
         }
 
-        public required EntityBody EntityBody { get; set; }
+        public EntityBody EntityBody { get; set; }
 
-        public required ushort Type { get; set; }
+        public ushort Type { get; set; }
 
         private bool Embedded { get; set; }
 
+        private byte[] _Fee { get; set; }
         public byte[] Fee
         {
             get
             {
-                if (Embedded != true)
+                if (Embedded)
                 {
-                    return Fee;
+                    return new byte[] { };
                 }
-                else return new byte[] { };
+                else return _Fee;
             }
             set
             {
                 if (Fee != value)
                 {
-                    Fee = value;
+                    _Fee = value;
                 }
             }
         }
 
+        private byte[] _Deadline { get; set; }
         public byte[] Deadline
         {
             get
             {
-                if (Embedded != true)
+                if (Embedded)
                 {
-                    return Deadline;
+                    return new byte[] { };
                 }
-                else return new byte[] { };
+                else return _Deadline;
             }
             set
             {
-                if (Deadline != value)
+                if (_Deadline != value)
                 {
-                    Deadline = value;
+                    _Deadline = value;
                 }
             }
         }

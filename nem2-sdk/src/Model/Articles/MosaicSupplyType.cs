@@ -1,4 +1,6 @@
-﻿namespace io.nem2.sdk.src.Model.Articles
+﻿using System.Diagnostics;
+
+namespace io.nem2.sdk.src.Model.Articles
 {
     public static class MosaicSupplyType
     {

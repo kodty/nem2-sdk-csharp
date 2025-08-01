@@ -1,4 +1,6 @@
-﻿namespace CopperCurve
+﻿using System.Diagnostics;
+
+namespace CopperCurve
 {
     public static class DataConverter
     {

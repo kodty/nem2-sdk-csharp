@@ -7,15 +7,15 @@ namespace io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions
     {
         public MosaicSupplyChangeTransaction1(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, bool embedded) : base(embedded)
         {
-            Delta = delta;
             MosaicId = mosaicId.FromHex();
+            Delta = delta;
             SupplyType = supplyType.GetValue();
         }
 
-        public ulong Delta { get; }
+        public byte[] MosaicId { get; set; }
 
-        public byte[] MosaicId { get; }
+        public ulong Delta { get; set; }
 
-        public byte SupplyType { get; }
+        public byte SupplyType { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Reflection;
 using System.Text.Json.Nodes;
 
 namespace CopperCurve
@@ -98,7 +99,7 @@ namespace CopperCurve
         {
             foreach (var prop in nameToValueMap)
             {
-                var actualObjProp = actualObject.GetType().GetProperties()?
+                var actualObjProp = actualObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)?
                       .First(m =>
                       {
                           return (char.ToLower(m.Name[0]) + m.Name.Substring(1)).ToString() == (char.ToLower(prop.Key[0]) + prop.Key.Substring(1)).ToString();

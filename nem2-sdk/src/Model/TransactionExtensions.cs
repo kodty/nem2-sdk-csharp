@@ -36,18 +36,14 @@ namespace io.nem2.sdk.Model
 
         public static UnsignedTransaction PrepareEmbeddedTransaction<T>(Transaction transaction, PublicAccount account)
         {
-            transaction.EntityBody.Signer = new byte[32];
+            transaction.EntityBody.Signer = account.PublicKey;
 
-            Debug.WriteLine(6);
             var body = Serialize<T>(transaction, true);
 
-            Debug.WriteLine(7);
-            byte[] size = ((uint)body.Length).ConvertFromUInt32();
+            byte[] size = (4 + 4 + (uint)body.Length).ConvertFromUInt32();
 
-            Debug.WriteLine(8);
             byte[] reserved = new byte[4];
 
-            Debug.WriteLine(9);
             return new UnsignedTransaction()
             {
                 Payload = size.Concat(reserved).Concat(body).ToArray()
