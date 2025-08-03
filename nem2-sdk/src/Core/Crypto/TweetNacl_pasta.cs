@@ -5,7 +5,7 @@ using TweetNaclSharp.Core.Extensions;
 
 
 /// Taken from original to expose Unpackneg, Scalarmult(p, q, shortKeyHash), Pack(shared, p) as internal vs private, no other changes made with the exception of removing unused code.
-
+/// https://github.com/XeroXP/TweetNaclSharp/blob/master/TweetNaclSharp.Fast/NaclFast.cs
 
 namespace TweetNaclSharp.Core
 {
