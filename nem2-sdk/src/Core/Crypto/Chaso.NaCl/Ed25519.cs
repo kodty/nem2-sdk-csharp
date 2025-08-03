@@ -1,6 +1,7 @@
 ﻿using io.nem2.sdk.Core.Crypto.Chaos.NaCl.Internal.Ed25519ref10;
 using Org.BouncyCastle.Crypto.Digests;
 using System.Security.Cryptography;
+using TweetNaclSharp;
 
 namespace io.nem2.sdk.Core.Crypto.Chaos.NaCl
 {
@@ -113,9 +114,9 @@ namespace io.nem2.sdk.Core.Crypto.Chaos.NaCl
             var p = new[] { new long[16], new long[16], new long[16], new long[16] };
             var q = new[] { new long[16], new long[16], new long[16], new long[16] };
 
-            TweetNaCl.Unpackneg(q, pubkey); // returning -1 invalid signature
-            TweetNaCl.Scalarmult(p, q, shortKeyHash, 0);
-            TweetNaCl.Pack(shared, p);
+            NaclFast.Unpackneg(q, pubkey); // returning -1 invalid signature
+            NaclFast.Scalarmult(p, q, shortKeyHash);
+            NaclFast.Pack(shared, p);
 
             // for some reason the most significant bit of the last byte needs to be flipped.
             // doesnt seem to be any corrosponding action in nano/nem.core, so this may be an issue in one of the above 3 functions. i have no idea.
