@@ -40,9 +40,9 @@ namespace io.nem2.sdk.Core.Crypto.Chaos.NaCl
             GroupOperations.ge_scalarmult_base(out R, seededHash, 0);
             GroupOperations.ge_p3_tobytes(sig, 0, ref R);
 
-
             Array.Copy(sk, 32, skTemp, 0, 32);
-           // Array.Clear(sk, 0, sk.Length);
+
+            Array.Clear(sk, 0, sk.Length);
            
             SHA512.HashData(sig.Concat(skTemp).Concat(m).ToArray(), result);
 
@@ -52,42 +52,29 @@ namespace io.nem2.sdk.Core.Crypto.Chaos.NaCl
             Array.Copy(sig, 32, s, 0, 32);
             ScalarOperations.sc_muladd(s, result, privHash, seededHash);
 
-           // Array.Clear(privHash, 0, privHash.Length);
+            Array.Clear(privHash, 0, privHash.Length);
 
             Array.Copy(s, 0, sig, 32, 32);
 
-            //Array.Clear(s, 0, s.Length);
+            Array.Clear(s, 0, s.Length);
 
             var hasher = new Sha3Digest(512);
             {
                 hasher.BlockUpdate(sk, 0, keylen);
-                hasher.DoFinal(privHash, 0);
-            
-            
+                hasher.DoFinal(privHash, 0);            
             
                 hasher.Reset();
                 hasher.BlockUpdate(privHash, 32, 32);
                 hasher.BlockUpdate(m, 0, m.Length);
                 hasher.DoFinal(seededHash, 0);
-            
-            
-            
+                      
                 hasher.Reset();
                 hasher.BlockUpdate(sig, 0, 32);
                 hasher.BlockUpdate(sk, keylen, 32);
                 hasher.BlockUpdate(m, 0, m.Length);
                 hasher.DoFinal(result, 0);
             
-                ScalarOperations.sc_reduce(result);
-            
-               //var s = new byte[32]; //todo: remove allocation
-               //Array.Copy(sig, 32, s, 0, 32);
-               //ScalarOperations.sc_muladd(s, result, privHash, seededHash);
-               //Array.Copy(s, 0, sig, 32, 32);
-               //
-               //Array.Clear(s, 0, s.Length);
-            
-            
+                ScalarOperations.sc_reduce(result);            
             }
         }
 
@@ -133,29 +120,5 @@ namespace io.nem2.sdk.Core.Crypto.Chaos.NaCl
             digestSha3Two.BlockUpdate(shared, 0, 32);
             digestSha3Two.DoFinal(shared, 0);
         }
-
-        internal static byte[] PublicKeyFromSeed(byte[] privateKeySeed)
-        {
-            KeyPairFromSeed(out byte[] publicKey, out var privateKey, privateKeySeed);
-            Array.Clear(privateKey, 0, privateKey.Length);
-
-            return publicKey;
-        }
-
-
-
-        internal static void KeyPairFromSeed(out byte[] internalKey, out byte[] expandedPrivateKey, byte[] privateKeySeed)
-        {
-            if (privateKeySeed == null)
-                throw new ArgumentNullException(nameof(privateKeySeed));
-            if (privateKeySeed.Length != 32 && privateKeySeed.Length != 33)
-                throw new ArgumentException("privateKeySeed");
-            var pk = new byte[internalKeySizeInBytes];
-            var sk = new byte[ExpandedPrivateKeySizeInBytes];
-            Ed25519Operations.crypto_sign_keypair(pk, 0, sk, 0, privateKeySeed, 0);
-            internalKey = pk;
-            expandedPrivateKey = sk;
-        }
-
     }
 }

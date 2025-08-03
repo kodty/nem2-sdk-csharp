@@ -39,49 +39,6 @@ namespace io.nem2.sdk.Core.Crypto
             return temp;
         }
 
-        /*
-        /// <summary>
-        /// Encrypt a private key for mobile apps (AES_PBKF2)
-        /// </summary>
-        /// <param name="password">The password.</param>
-        /// <param name="privateKey">The private key.</param>
-        /// <returns>System.String.</returns>
-        public static string ToMobileKey(string password, string privateKey)
-        {
-            var random = new SecureRandom();
-
-            var salt = new byte[256 / 8];
-            random.NextBytes(salt);
-
-            var maker = new Rfc2898DeriveBytes(password, salt, 2000);
-            var key = maker.GetBytes(256 / 8);
-           
-            var ivData = new byte[16];
-            random.NextBytes(ivData);
-
-            return salt.ToHexLower() + AesEncryptor(key, ivData, privateKey);
-        }
-
-        /// <summary>
-        /// Decrypt a private key for mobile apps (AES_PBKF2)
-        /// </summary>
-        /// <param name="payload">The payload.</param>
-        /// <param name="password">The password.</param>
-        /// <returns>System.String.</returns>
-        public static string FromMobileKey(string payload, string password)
-        {
-            var salt = payload.FromHex().Take(32).ToArray();
-            var iv = payload.FromHex().Take(32, 16);
-            var cypher = payload.FromHex().Take(48, payload.FromHex().Length - 48);
-
-            var maker = new Rfc2898DeriveBytes(password, salt, 2000);
-            var key = maker.GetBytes(256 / 8);
-
-            return AesDecryptor(key, iv, cypher).ToUpper();
-
-        }
-        */
-
         /// <summary>
         /// Encodes the specified text.
         /// </summary>
