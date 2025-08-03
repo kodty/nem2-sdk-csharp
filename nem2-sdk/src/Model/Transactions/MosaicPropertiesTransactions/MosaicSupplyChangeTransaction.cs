@@ -1,4 +1,5 @@
 ﻿using CopperCurve;
+using io.nem2.sdk.src.Model.Accounts;
 using io.nem2.sdk.src.Model.Articles;
 
 namespace io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions

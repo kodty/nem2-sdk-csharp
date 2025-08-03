@@ -7,7 +7,6 @@ using io.nem2.sdk.src.Model.Transactions.Messages;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Articles;
 using io.nem2.sdk.src.Model.Accounts;
-using io.nem2.sdk.Model;
 using io.nem2.sdk.src.Model.Transactions;
 
 namespace Unit_Tests.Crypto
@@ -30,7 +29,7 @@ namespace Unit_Tests.Crypto
 
             var tx = factory.CreateTransferTransaction(address.Plain, "hello", new Tuple<string, ulong>("72C0212E67A08BCE", 1000), false);
 
-            var st = TransactionExtensions.PrepareTransaction(tx.GetType(), tx, keyPair);
+            var st = tx.WrapVerified(keyPair);
 
             Assert.True(st.VerifySignature());
 

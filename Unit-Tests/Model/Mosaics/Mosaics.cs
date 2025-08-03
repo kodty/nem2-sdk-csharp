@@ -64,7 +64,6 @@ namespace Unit_Tests.Model.Mosaics
         public static void ConvertUlongToHexId()
         {
             var id = DataConverter.ToHex(DataConverter.ConvertFromUInt64(95442763262823));
-            Debug.WriteLine(id);
         }
     }
 }

@@ -24,8 +24,6 @@ namespace Unit_Tests.DeadlineTests
             var deadline4 = Deadline.AddMinutes(82800);
 
             Assert.That(deadline.Ticks, Is.EqualTo(deadline.Ticks));
-
-            Debug.WriteLine(deadline.Ticks);
         }
     }
 }

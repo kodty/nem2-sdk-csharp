@@ -2,7 +2,7 @@
 using Integration_Tests;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
-using io.nem2.sdk.Model;
+
 using io.nem2.sdk.src.Core.Utils;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
@@ -37,7 +37,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     false
                 );
            
-            var st = TransactionExtensions.PrepareTransaction(transfer.GetType(), transfer, keys);
+            var st = transfer.WrapVerified(keys);
 
             var s = listener.GetTransactionStatus(Address.CreateFromPublicKey(transfer.EntityBody.Signer.ToHex(), NetworkType.Types.TEST_NET))
              .Subscribe(e =>

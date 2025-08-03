@@ -263,7 +263,7 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public AggregateTransaction CreateAggregateComplete(string txsHash, byte[] embeddedTransactions, byte[] cosignatures, bool embedded)
+        public AggregateTransaction CreateAggregateComplete(string txsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, bool embedded)
         {
             return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE, embedded)
             {
@@ -274,7 +274,7 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public AggregateTransaction CreateAggregateBonded(string txsHash, byte[] embeddedTransactions, byte[] cosignatures, bool embedded)
+        public AggregateTransaction CreateAggregateBonded(string txsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, bool embedded)
         {
             return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED, embedded)
             {

@@ -1,8 +1,8 @@
-﻿using io.nem2.sdk.Model;
+﻿using CopperCurve;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model;
 using System.Diagnostics;
-using CopperCurve;
+using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -23,7 +23,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             Host = host;
             Port = port;
             Client = new HttpClient();  
-            Composer = new ObjectComposer(TypeSerializationCatalog.CustomTypes, TransactionExtensions.GetTransactionType);
+            Composer = new ObjectComposer(TypeSerializationCatalog.CustomTypes, GetTransactionType);
         }
 
         internal Uri GetUri(object[] segs)
@@ -61,6 +61,20 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                 throw new HttpRequestException(r.Content.ReadAsStringAsync().Result);
 
             return result;
+        }
+
+        public static Type GetTransactionType(string t, bool embedded = false)
+        {
+            var type = (ushort)JsonObject.Parse(t)
+                                      .AsObject()["transaction"]["type"];
+
+            if (type == 16718)
+            {
+                type += (ushort)JsonObject.Parse(t)
+                                      .AsObject()["transaction"]["registrationType"];
+            }
+
+            return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
         }
     }
 }

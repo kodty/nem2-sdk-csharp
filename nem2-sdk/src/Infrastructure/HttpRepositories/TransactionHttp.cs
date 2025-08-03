@@ -91,8 +91,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         public IObservable<TransactionAnnounceResponse> Announce(SignedTransaction signedTransaction)
         {
-            Debug.WriteLine(signedTransaction.Payload.ToHex());
-
             return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new _Payload() { payload = signedTransaction.Payload.ToHex() }), Encoding.UTF8, "application/json")))
                 .Select(i =>  new TransactionAnnounceResponse() { Message = JsonNode.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
         }
