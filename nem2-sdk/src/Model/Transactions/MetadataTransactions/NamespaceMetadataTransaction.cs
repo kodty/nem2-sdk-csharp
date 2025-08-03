@@ -4,9 +4,9 @@ using CopperCurve;
 
 namespace io.nem2.sdk.src.Model.Transactions.MetadataTransactions
 {
-    public class NamespaceMetadataTransaction1 : Transaction
+    public class NamespaceMetadataTransaction : Transaction
     {
-        public NamespaceMetadataTransaction1(string targetAddress, string scopedKey, string targetNamespaceId, short valueSizeDelta, short valueSize, byte[] value, bool embedded) : base(embedded) 
+        public NamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, short valueSizeDelta, short valueSize, byte[] value, bool embedded) : base(embedded) 
         {
             TargetAddress = AddressEncoder.DecodeAddress(targetAddress);
             ScopedMetadataKey = scopedKey;

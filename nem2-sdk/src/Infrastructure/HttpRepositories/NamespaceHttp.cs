@@ -1,6 +1,4 @@
-﻿// ***********************************************************************
-// Assembly         : nem2-sdk
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using System.Text;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;

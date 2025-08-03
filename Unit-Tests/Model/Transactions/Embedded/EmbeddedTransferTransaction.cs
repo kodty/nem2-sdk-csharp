@@ -1,18 +1,12 @@
 ﻿using CopperCurve;
 using Integration_Tests;
 using io.nem2.sdk.Model;
-using io.nem2.sdk.src.Core.Utils;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
 using io.nem2.sdk.src.Model.Articles;
 using io.nem2.sdk.src.Model.Transactions;
 using io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Unit_Tests.Model.Transactions.Embedded
 {
@@ -35,7 +29,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
                     true
                 );
 
-            var supplyChangePayload = TransactionExtensions.PrepareEmbeddedTransaction<MosaicSupplyChangeTransaction1>(supplyChange, publicAcc);
+            var supplyChangePayload = TransactionExtensions.PrepareEmbeddedTransaction(supplyChange.GetType(), supplyChange, publicAcc);
 
             Debug.WriteLine(supplyChangePayload.Payload.ToHex());
 
@@ -58,13 +52,11 @@ namespace Unit_Tests.Model.Transactions.Embedded
                     true
                 );
 
-            var payload = TransactionExtensions.PrepareEmbeddedTransaction<TransferTransaction_V1>(transfer, publicAcc);
-
+            var payload = TransactionExtensions.PrepareEmbeddedTransaction(transfer.GetType(), transfer, publicAcc);
 
             Debug.WriteLine(payload.Payload.ToHex());
 
             Assert.That(payload.Payload.ToHex(), Is.EqualTo("600000000000000091D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B45200000000019854419841E5B8E40781CF74DABF592817DE48711D778648DEAFB20000010000000000672B0000CE5600006500000000000000"));
-
 
             var supplyChange = factory.CreateMosaicSupplyChangeTransaction(
                     10,
@@ -73,18 +65,17 @@ namespace Unit_Tests.Model.Transactions.Embedded
                     true
                 );
 
-            var supplyChangePayload = TransactionExtensions.PrepareEmbeddedTransaction<MosaicSupplyChangeTransaction1>(supplyChange, publicAcc);
+            var supplyChangePayload = TransactionExtensions.PrepareEmbeddedTransaction(supplyChange.GetType(), supplyChange, publicAcc);
 
             Debug.WriteLine(supplyChangePayload.Payload.ToHex());
 
             Assert.That(supplyChangePayload.Payload.ToHex(), Is.EqualTo("410000000000000091D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B4520000000001984D428969746E9B1A70570A0000000000000001"));
 
-
             var transactionFactory = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var aggTx = transactionFactory.CreateAggregateBonded("61E0F8B9AB2FE3E008DCE1380FECDAF5BCFB1851247BF990771154177A0B7E78", payload.Payload.Concat(supplyChangePayload.Payload).ToArray(), new byte[] { }, false);
 
-            var aggPayload = TransactionExtensions.PrepareTransaction<AggregateTransaction1>(aggTx, keys);
+            var aggPayload = TransactionExtensions.PrepareTransaction(aggTx.GetType(), aggTx, keys);
 
             Debug.WriteLine(aggPayload.Payload.ToHex());
 

@@ -30,7 +30,7 @@ namespace Unit_Tests.Crypto
 
             var tx = factory.CreateTransferTransaction(address.Plain, "hello", new Tuple<string, ulong>("72C0212E67A08BCE", 1000), false);
 
-            var st = TransactionExtensions.PrepareTransaction<TransferTransaction_V1>(tx, keyPair);
+            var st = TransactionExtensions.PrepareTransaction(tx.GetType(), tx, keyPair);
 
             Assert.True(st.VerifySignature());
 

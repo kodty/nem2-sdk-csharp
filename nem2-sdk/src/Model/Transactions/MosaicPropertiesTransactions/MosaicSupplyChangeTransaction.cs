@@ -3,9 +3,9 @@ using io.nem2.sdk.src.Model.Articles;
 
 namespace io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions
 {
-    public class MosaicSupplyChangeTransaction1 : Transaction
+    public class MosaicSupplyChangeTransaction : Transaction
     {
-        public MosaicSupplyChangeTransaction1(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, bool embedded) : base(embedded)
+        public MosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, bool embedded) : base(embedded)
         {
             MosaicId = mosaicId.FromHex();
             Delta = delta;

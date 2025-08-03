@@ -1,5 +1,4 @@
 ﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace io.nem2.sdk.src.Model

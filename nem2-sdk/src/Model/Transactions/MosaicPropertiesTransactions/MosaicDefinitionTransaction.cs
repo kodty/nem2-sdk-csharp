@@ -2,9 +2,9 @@
 
 namespace io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions
 {
-    public class MosaicDefinitionTransaction1 : Transaction
+    public class MosaicDefinitionTransaction : Transaction
     {
-        public MosaicDefinitionTransaction1(string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties, bool embedded) : base(embedded) {
+        public MosaicDefinitionTransaction(string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties, bool embedded) : base(embedded) {
 
             MosaicName = mosaicName;
             NamespaceId = namespaceId;

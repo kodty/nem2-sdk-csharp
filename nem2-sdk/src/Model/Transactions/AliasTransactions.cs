@@ -1,8 +1,8 @@
 ﻿namespace io.nem2.sdk.src.Model.Transactions
 {
-    public class AliasTransaction1 : Transaction
+    public class AliasTransaction : Transaction
     {
-        public AliasTransaction1(string namespaceId, byte aliasAction, bool embedded) : base(embedded)
+        public AliasTransaction(string namespaceId, byte aliasAction, bool embedded) : base(embedded)
         {
             AliasAction = aliasAction;
             NamespaceId = namespaceId;
@@ -13,9 +13,9 @@
         public byte AliasAction { get; set; }
     }
 
-    public class AddressAliasTransaction1 : AliasTransaction1
+    public class AddressAliasTransaction : AliasTransaction
     {
-        public AddressAliasTransaction1(string address, string namespaceId, byte aliasAction, bool embedded) : base(namespaceId, aliasAction, embedded)
+        public AddressAliasTransaction(string address, string namespaceId, byte aliasAction, bool embedded) : base(namespaceId, aliasAction, embedded)
         {
             Address = address;          
         }
@@ -23,9 +23,9 @@
         public string Address { get; set; }      
     }
 
-    public class MosaicAliasTransaction1 : AliasTransaction1
+    public class MosaicAliasTransaction : AliasTransaction
     {
-        public MosaicAliasTransaction1(string mosaicId, string namespaceId, byte aliasAction, bool embedded) : base(namespaceId, aliasAction, embedded)
+        public MosaicAliasTransaction(string mosaicId, string namespaceId, byte aliasAction, bool embedded) : base(namespaceId, aliasAction, embedded)
         {
             MosaicId = mosaicId;
 

@@ -1,5 +1,4 @@
-﻿
-using CopperCurve;
+﻿using CopperCurve;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;

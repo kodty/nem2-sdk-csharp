@@ -13,7 +13,6 @@ namespace io.nem2.sdk.src.Model
             ];
 
         public static object[] CustomTypes = [
-
             typeof(ushort),
             typeof(bool),
             typeof(byte),

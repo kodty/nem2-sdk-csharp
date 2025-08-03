@@ -37,7 +37,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     false
                 );
            
-            var st = TransactionExtensions.PrepareTransaction<TransferTransaction_V1>(transfer, keys);
+            var st = TransactionExtensions.PrepareTransaction(transfer.GetType(), transfer, keys);
 
             var s = listener.GetTransactionStatus(Address.CreateFromPublicKey(transfer.EntityBody.Signer.ToHex(), NetworkType.Types.TEST_NET))
              .Subscribe(e =>

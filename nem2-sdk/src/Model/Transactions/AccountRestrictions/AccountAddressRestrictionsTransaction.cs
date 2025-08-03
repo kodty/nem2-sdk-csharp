@@ -1,9 +1,9 @@
 ﻿namespace io.nem2.sdk.src.Model.Transactions.AccountRestrictions
 {
     //AccountMosaic, AccountAddress, AccountOperation
-    public class AccountRestrictionsTransaction1 : Transaction
+    public class AccountRestrictionsTransaction : Transaction
     {
-        public AccountRestrictionsTransaction1(TransactionTypes.Types type, int restrictionFlags, string[] restrictionAdditions, string[] restrictionsDeletions, bool embedded) : base(type, embedded)
+        public AccountRestrictionsTransaction(TransactionTypes.Types type, int restrictionFlags, string[] restrictionAdditions, string[] restrictionsDeletions, bool embedded) : base(type, embedded)
         {
             RestrictionFlags = restrictionFlags;
             RestrictionAdditions = restrictionAdditions;

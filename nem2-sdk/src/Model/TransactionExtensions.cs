@@ -25,20 +25,20 @@ namespace io.nem2.sdk.Model
             return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
         }
 
-        public static byte[] Serialize<T>(object obj, bool embedded)
+        public static byte[] Serialize(Type type, object obj, bool embedded)
         {
             DataSerializer serializer = new DataSerializer();
 
-            serializer.Serialize(typeof(T), obj, embedded);
+            serializer.Serialize(type, obj, embedded);
 
             return serializer.Bytes;
         }
 
-        public static UnsignedTransaction PrepareEmbeddedTransaction<T>(Transaction transaction, PublicAccount account)
+        public static UnsignedTransaction PrepareEmbeddedTransaction(Type type, dynamic transaction, PublicAccount account)
         {
             transaction.EntityBody.Signer = account.PublicKey;
-
-            var body = Serialize<T>(transaction, true);
+            
+            byte[] body = Serialize(type, transaction, true);
 
             byte[] size = (4 + 4 + (uint)body.Length).ConvertFromUInt32();
 
@@ -50,11 +50,13 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public static SignedTransaction PrepareTransaction<T>(Transaction transaction, SecretKeyPair keyPair)
+        public static SignedTransaction PrepareTransaction(Type type, Transaction transaction, SecretKeyPair keyPair)
         {
             transaction.EntityBody.Signer = keyPair.PublicKey;
 
-            var body = Serialize<T>(transaction, false);
+            Debug.WriteLine(keyPair.PublicKey.ToHex());
+
+            var body = Serialize(type, transaction, false);
 
             var genHashBytes = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4".FromHex();
             
@@ -74,7 +76,7 @@ namespace io.nem2.sdk.Model
                 Signature = sig               
             };
 
-            var header = Serialize<VerifiableEntity>(VerifiableEntity, false);
+            var header = Serialize(typeof(VerifiableEntity), VerifiableEntity, false);
 
             var pl = header.Concat(body).ToArray();
 

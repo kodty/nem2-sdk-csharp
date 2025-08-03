@@ -2,9 +2,9 @@
 
 namespace io.nem2.sdk.src.Model.Transactions.CrossChainTransactions
 {
-    public class SecretProofTransaction1 : Transaction
+    public class SecretProofTransaction : Transaction
     {
-        public SecretProofTransaction1(string recipientAddress, string secret, HashType.Types hashAlgo, string proof, bool embedded) : base(embedded)
+        public SecretProofTransaction(string recipientAddress, string secret, HashType.Types hashAlgo, string proof, bool embedded) : base(embedded)
         {
             RecipientAddress = AddressEncoder.DecodeAddress(recipientAddress);
             Secret = secret.FromHex();

@@ -1,8 +1,8 @@
 ﻿namespace io.nem2.sdk.src.Model.Transactions.KeyLinkTransactions
 {
-    public class VotingKeyLinkTransaction1 : KeyLinkTransaction1
+    public class VotingKeyLinkTransaction : KeyLinkTransaction
     {
-        public VotingKeyLinkTransaction1(ulong startEpoch, ulong endEpoch, string linkedPublicKey, int linkAction, bool embedded) : base (linkedPublicKey, linkAction, embedded)
+        public VotingKeyLinkTransaction(ulong startEpoch, ulong endEpoch, string linkedPublicKey, int linkAction, bool embedded) : base (linkedPublicKey, linkAction, embedded)
         {
             StartEpoch = startEpoch;
             EndEpoch = endEpoch;

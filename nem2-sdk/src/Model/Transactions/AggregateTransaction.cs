@@ -2,9 +2,9 @@
 
 namespace io.nem2.sdk.src.Model.Transactions
 {
-    public class AggregateTransaction1 : Transaction
+    public class AggregateTransaction : Transaction
     {
-        public AggregateTransaction1(string transactionsHash, byte[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type, bool embedded) : base(type, embedded) {
+        public AggregateTransaction(string transactionsHash, byte[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type, bool embedded) : base(type, embedded) {
             TransactionsHash = transactionsHash.FromHex();          
             EmbeddedTransactions = embeddedTransactions;
             PayloadSize = (uint)EmbeddedTransactions.Length;

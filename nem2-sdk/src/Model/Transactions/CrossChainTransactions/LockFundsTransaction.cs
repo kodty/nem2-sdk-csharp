@@ -1,8 +1,8 @@
 ﻿namespace io.nem2.sdk.src.Model.Transactions.CrossChainTransactions
 {
-    public class LockFundsTransaction1 : Transaction
+    public class LockFundsTransaction : Transaction
     {
-        public LockFundsTransaction1(Tuple<string, ulong> mosaic, ulong duration, string transactionHash, bool embedded) : base(embedded)
+        public LockFundsTransaction(Tuple<string, ulong> mosaic, ulong duration, string transactionHash, bool embedded) : base(embedded)
         {
             Mosaic = mosaic;
             Duration = duration;

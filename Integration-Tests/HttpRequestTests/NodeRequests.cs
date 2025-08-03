@@ -29,7 +29,7 @@ namespace Integration_Tests
 
             var response = await client.GetNodePeers();
 
-            Assert.That(response[0].Version, Is.EqualTo(0));
+            Assert.That(response[0].Version, Is.EqualTo(16777991));
             Assert.That(response[0].Host, !Is.Null);
             Assert.That(response[0].Port, Is.EqualTo(7900));
             Assert.That(response[0].NetworkIdentifier, Is.EqualTo(152));

@@ -1,8 +1,8 @@
 ﻿namespace io.nem2.sdk.src.Model.Transactions.KeyLinkTransactions
 {
-    public class KeyLinkTransaction1 : Transaction
+    public class KeyLinkTransaction : Transaction
     {
-        public KeyLinkTransaction1(string linkedPublicKey, int linkAction, bool embedded) : base(embedded)
+        public KeyLinkTransaction(string linkedPublicKey, int linkAction, bool embedded) : base(embedded)
         {
             LinkedPublicKey = linkedPublicKey;
             LinkAction = linkAction;

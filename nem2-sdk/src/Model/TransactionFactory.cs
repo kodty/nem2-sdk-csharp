@@ -61,9 +61,9 @@ namespace io.nem2.sdk.src.Model
             Port = port;
         }
 
-        public MosaicSupplyChangeTransaction1 CreateMosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, bool embedded)
+        public MosaicSupplyChangeTransaction CreateMosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, bool embedded)
         {
-            return new MosaicSupplyChangeTransaction1(delta, mosaicId, supplyType, embedded)
+            return new MosaicSupplyChangeTransaction(delta, mosaicId, supplyType, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE.GetValue(),
@@ -72,9 +72,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public NamespaceMetadataTransaction1 CreateNamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, short valueSizeDelta, short valueSize, byte[] value, bool embedded)
+        public NamespaceMetadataTransaction CreateNamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, short valueSizeDelta, short valueSize, byte[] value, bool embedded)
         {
-            return new NamespaceMetadataTransaction1(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value, embedded)
+            return new NamespaceMetadataTransaction(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
@@ -83,9 +83,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public AccountMetadataTransaction1 CreateAccountMetadataTransaction(string targetAddress, string scopedKey, short valueSizeDelta, short valueSize, byte[] value, bool embedded)
+        public AccountMetadataTransaction CreateAccountMetadataTransaction(string targetAddress, string scopedKey, short valueSizeDelta, short valueSize, byte[] value, bool embedded)
         {
-            return new AccountMetadataTransaction1(targetAddress, scopedKey, valueSizeDelta, valueSize, value, embedded)
+            return new AccountMetadataTransaction(targetAddress, scopedKey, valueSizeDelta, valueSize, value, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
@@ -94,9 +94,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public MosaicMetadataTransaction1 CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, string targetMosaicId, short valueSizeDelta, short valueSize, byte[] value, bool embedded)
+        public MosaicMetadataTransaction CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, string targetMosaicId, short valueSizeDelta, short valueSize, byte[] value, bool embedded)
         {
-            return new MosaicMetadataTransaction1(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value, embedded)
+            return new MosaicMetadataTransaction(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
@@ -105,9 +105,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public MosaicDefinitionTransaction1 CreateMosaicDefinitionTransaction(string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties, bool embedded)
+        public MosaicDefinitionTransaction CreateMosaicDefinitionTransaction(string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties, bool embedded)
         {
-            return new MosaicDefinitionTransaction1(mosaicName, namespaceId, mosaicId, properties, embedded)
+            return new MosaicDefinitionTransaction(mosaicName, namespaceId, mosaicId, properties, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_DEFINITION.GetValue(),
@@ -116,9 +116,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public LockFundsTransaction1 CreateLockFundsTransaction(Tuple<string, ulong> mosaic, ulong duration, string transactionHash, bool embedded)
+        public LockFundsTransaction CreateLockFundsTransaction(Tuple<string, ulong> mosaic, ulong duration, string transactionHash, bool embedded)
         {
-            return new LockFundsTransaction1(mosaic, duration, transactionHash, embedded)
+            return new LockFundsTransaction(mosaic, duration, transactionHash, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.HASH_LOCK.GetValue(),
@@ -127,9 +127,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public SecretLockTransaction1 CreateSecretLockTransaction(Tuple<string, ulong> mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded)
+        public SecretLockTransaction CreateSecretLockTransaction(Tuple<string, ulong> mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded)
         {
-            return new SecretLockTransaction1(mosaic, duration, secret, hashAlgo, recipient, embedded)
+            return new SecretLockTransaction(mosaic, duration, secret, hashAlgo, recipient, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.SECRET_LOCK.GetValue(),
@@ -139,9 +139,9 @@ namespace io.nem2.sdk.src.Model
 
         }
 
-        public SecretProofTransaction1 CreateSecretProofTransaction(string recipientAddress, string secret, HashType.Types hashAlgo, string proof, bool embedded)
+        public SecretProofTransaction CreateSecretProofTransaction(string recipientAddress, string secret, HashType.Types hashAlgo, string proof, bool embedded)
         {
-            return new SecretProofTransaction1(recipientAddress, secret, hashAlgo, proof, embedded)
+            return new SecretProofTransaction(recipientAddress, secret, hashAlgo, proof, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.SECRET_PROOF.GetValue(),
@@ -162,9 +162,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public KeyLinkTransaction1 CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, int linkAction, byte linkType, bool embedded)
+        public KeyLinkTransaction CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, int linkAction, byte linkType, bool embedded)
         {
-            return new VotingKeyLinkTransaction1(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
+            return new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.VOTING_KEY_LINK.GetValue(),
@@ -173,9 +173,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public KeyLinkTransaction1 CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, int linkAction, byte linkType, bool embedded)
+        public KeyLinkTransaction CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, int linkAction, byte linkType, bool embedded)
         {
-            return new KeyLinkTransaction1(linkedPublicKey, linkAction, embedded)
+            return new KeyLinkTransaction(linkedPublicKey, linkAction, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = type.GetValue(),
@@ -197,9 +197,9 @@ namespace io.nem2.sdk.src.Model
 
 
 
-        public AccountRestrictionsTransaction1 CreateAccountRestrictionTransaction(TransactionTypes.Types type, int restrictionFlags, string[] additions, string[] deletions, bool embedded)
+        public AccountRestrictionsTransaction CreateAccountRestrictionTransaction(TransactionTypes.Types type, int restrictionFlags, string[] additions, string[] deletions, bool embedded)
         {
-            return new AccountRestrictionsTransaction1(type, restrictionFlags, additions, deletions, embedded)
+            return new AccountRestrictionsTransaction(type, restrictionFlags, additions, deletions, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = type.GetValue(),
@@ -230,9 +230,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public AddressAliasTransaction1 CreateAddressAliasTransaction(string address, string namepaceId, byte aliasAction, bool embedded)
+        public AddressAliasTransaction CreateAddressAliasTransaction(string address, string namepaceId, byte aliasAction, bool embedded)
         {
-            return new AddressAliasTransaction1(address, namepaceId, aliasAction, embedded)
+            return new AddressAliasTransaction(address, namepaceId, aliasAction, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.ADDRESS_ALIAS.GetValue(),
@@ -241,9 +241,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public MosaicAliasTransaction1 CreateMosaicAliasTransaction(string mosaicId, string namepaceId, byte aliasAction, bool embedded)
+        public MosaicAliasTransaction CreateMosaicAliasTransaction(string mosaicId, string namepaceId, byte aliasAction, bool embedded)
         {
-            return new MosaicAliasTransaction1(mosaicId, namepaceId, aliasAction, embedded) 
+            return new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction, embedded) 
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_ALIAS.GetValue(),
@@ -252,9 +252,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public MultisigAccountModificationTransaction1 CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions, bool embedded)
+        public MultisigAccountModificationTransaction CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions, bool embedded)
         {
-            return new MultisigAccountModificationTransaction1(minApproval, minRemoval, addressAdditions, addressDeletions, embedded)
+            return new MultisigAccountModificationTransaction(minApproval, minRemoval, addressAdditions, addressDeletions, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION.GetValue(),
@@ -263,9 +263,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public AggregateTransaction1 CreateAggregateComplete(string txsHash, byte[] embeddedTransactions, byte[] cosignatures, bool embedded)
+        public AggregateTransaction CreateAggregateComplete(string txsHash, byte[] embeddedTransactions, byte[] cosignatures, bool embedded)
         {
-            return new AggregateTransaction1(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE, embedded)
+            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),
@@ -274,9 +274,9 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public AggregateTransaction1 CreateAggregateBonded(string txsHash, byte[] embeddedTransactions, byte[] cosignatures, bool embedded)
+        public AggregateTransaction CreateAggregateBonded(string txsHash, byte[] embeddedTransactions, byte[] cosignatures, bool embedded)
         {
-            return new AggregateTransaction1(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED, embedded)
+            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED, embedded)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),

@@ -1,6 +1,5 @@
 ﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.ComponentModel;
-using System.Diagnostics;
 
 namespace io.nem2.sdk.src.Model
 {

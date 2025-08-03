@@ -1,6 +1,6 @@
 ﻿namespace io.nem2.sdk.src.Model.Transactions
 {
-    public class MultisigAccountModificationTransaction1 : Transaction
+    public class MultisigAccountModificationTransaction : Transaction
     {
         public byte MinApprovalDelta { get; set; }
         public byte MinRemovalDelta { get; set; }
@@ -9,7 +9,7 @@
         public int Multisig_​account_​modification_​transaction_​body_​reserved_​1 { get; set; }
         public string[] AddressAdditions { get; set; }
         public string[] AddressDeletions { get; set; }
-        public MultisigAccountModificationTransaction1(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions, bool embedded) : base(embedded)
+        public MultisigAccountModificationTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions, bool embedded) : base(embedded)
         {
         
             MinApprovalDelta = minApproval;

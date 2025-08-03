@@ -1,9 +1,4 @@
-﻿using CopperCurve;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Diagnostics;
-using TweetNaclSharp;
-
-namespace io.nem2.sdk.src.Model.Transactions
+﻿namespace io.nem2.sdk.src.Model.Transactions
 {
     public class Transaction
     {
