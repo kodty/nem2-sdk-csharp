@@ -5,6 +5,7 @@ namespace io.nem2.sdk.src.Model.Transactions
 {
     public class TransferTransaction_V1 : Transaction
     {
+
         public TransferTransaction_V1(string address, string messege, Tuple<string, ulong> mosaic, bool embedded) : base(embedded)
         {
             if (address.IsBase32(address.Length))
@@ -18,6 +19,12 @@ namespace io.nem2.sdk.src.Model.Transactions
             MessegeSize = (ushort)Message.Length;
             Reserved_1 = 0;
             Reserved_2 = 0;
+
+             Size += 136 + (uint)Address.Length;
+             if (mosaic != null)
+                 Size += 16;
+             if (Message.Length > 0)
+                 Size += MessegeSize;
         }
 
         public byte[] Address { get; set; }

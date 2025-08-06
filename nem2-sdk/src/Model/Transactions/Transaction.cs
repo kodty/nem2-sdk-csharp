@@ -33,13 +33,11 @@ namespace io.nem2.sdk.src.Model.Transactions
 
             byte[] body = Serialize(type, this, true);
 
-            byte[] size = (4 + 4 + (uint)body.Length).ConvertFromUInt32();
-
             byte[] reserved = new byte[4];
 
             return new UnsignedTransaction()
             {
-                Payload = size.Concat(reserved).Concat(body).ToArray()
+                Payload = Size.ConvertFromUInt32().Concat(reserved).Concat(body).ToArray()
             };
         }
 
@@ -62,7 +60,7 @@ namespace io.nem2.sdk.src.Model.Transactions
 
             var VerifiableEntity = new VerifiableEntity()
             {
-                Size = (uint)(4 + 4 + 64 + body.Length),
+                Size = Size,
                 VerifiableEntityHeaderReserved = 0,
                 Signature = sig
             };
@@ -114,6 +112,8 @@ namespace io.nem2.sdk.src.Model.Transactions
             Embedded = embedded;
             Type = type.GetValue();
         }
+
+        internal uint Size { get; set; }
 
         public EntityBody EntityBody { get; set; }
 
