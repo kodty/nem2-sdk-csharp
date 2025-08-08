@@ -156,7 +156,7 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue(),
-                RegistrationType = type,
+                RegistrationType = type.GetValue(),
                 Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
                 Fee =  DataConverter.ConvertFromUInt64(100)
             };

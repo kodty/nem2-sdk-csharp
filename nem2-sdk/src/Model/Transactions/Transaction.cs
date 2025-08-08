@@ -1,7 +1,6 @@
 ﻿using CopperCurve;
 using io.nem2.sdk.src.Model.Accounts;
 using Org.BouncyCastle.Crypto.Digests;
-using System.Diagnostics;
 using TweetNaclSharp.Core.Extensions;
 
 namespace io.nem2.sdk.src.Model.Transactions

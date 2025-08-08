@@ -17,14 +17,13 @@ namespace io.nem2.sdk.src.Model.Articles
 
             Id = IdGenerator.GenerateId(0, id);
             Name = id;
-
-            HexId = BitConverter.GetBytes(Id).ToHex();
+            HexId = DataConverter.ConvertFromUInt64(Id).ToHex();
         }
 
         public NamespaceId(ulong id)
         {
             Id = id;
-            HexId = BitConverter.GetBytes(id).ToHex();
+            HexId = DataConverter.ConvertFromUInt64(Id).ToHex();
         }
         
         public static NamespaceId Create(string id)

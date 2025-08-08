@@ -1,14 +1,16 @@
-﻿namespace io.nem2.sdk.src.Model.Transactions
+﻿using CopperCurve;
+
+namespace io.nem2.sdk.src.Model.Transactions
 {
     public class AliasTransaction : Transaction
     {
         public AliasTransaction(string namespaceId, byte aliasAction, bool embedded) : base(embedded)
         {
             AliasAction = aliasAction;
-            NamespaceId = namespaceId;
+            NamespaceId = namespaceId.FromHex();
         }
 
-        public string NamespaceId { get; set; }
+        public byte[] NamespaceId { get; set; }
 
         public byte AliasAction { get; set; }
     }
