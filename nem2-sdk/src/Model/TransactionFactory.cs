@@ -150,7 +150,7 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public RegisterNamespace CreateNamespaceRegistrationTransaction(ulong duration, NamespaceId parentId, NamespaceId id, NamespaceTypes.Types type, string name, bool embedded)
+        public RegisterNamespace CreateNamespaceRegistrationTransaction(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, bool embedded)
         {
             return new RegisterNamespace(duration, parentId, id, type, name, embedded)
             {

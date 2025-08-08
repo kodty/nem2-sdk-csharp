@@ -6,14 +6,14 @@ namespace io.nem2.sdk.src.Model.Transactions
 {
     public class RegisterNamespace : Transaction
     {
-        public RegisterNamespace(ulong duration, NamespaceId parentId, NamespaceId id, NamespaceTypes.Types type, string name, bool embedded) : base(embedded)
+        public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, bool embedded) : base(embedded)
         {
             _Duration = duration;
 
             if(type.GetValue() == 0x01)
-                _ParentId = parentId.Id;
+                _ParentId = parentId;
 
-            Id = id.Id;
+            Id = id;
             RegistrationType = type.GetValue();
             Name = Encoding.UTF8.GetBytes(name);
             NameSize = (byte)Name.Length;
@@ -50,7 +50,6 @@ namespace io.nem2.sdk.src.Model.Transactions
                     throw new Exception("invalid registration type");
             }
         }
-
 
         public ulong Id { get; internal set; }
 
