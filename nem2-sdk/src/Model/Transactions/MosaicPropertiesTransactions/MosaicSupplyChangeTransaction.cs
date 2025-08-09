@@ -11,6 +11,7 @@ namespace io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions
             MosaicId = mosaicId.FromHex();
             Delta = delta;
             SupplyType = supplyType.GetValue();
+            Size += 17;
         }
 
         public byte[] MosaicId { get; set; }

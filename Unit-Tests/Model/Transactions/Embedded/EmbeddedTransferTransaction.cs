@@ -4,6 +4,7 @@ using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
 using io.nem2.sdk.src.Model.Articles;
 using System.Diagnostics;
+using Unit_Tests.Model.Transactions.Verified;
 
 namespace Unit_Tests.Model.Transactions.Embedded
 {
@@ -17,7 +18,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
 
             var publicAcc = new PublicAccount(keys.PublicKeyString, NetworkType.Types.TEST_NET);
 
-            var factory = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
+            var factory = new TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var supplyChange = factory.CreateMosaicSupplyChangeTransaction(
                     10,
@@ -38,7 +39,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
 
             var publicAcc = new PublicAccount(keys.PublicKeyString, NetworkType.Types.TEST_NET);
 
-            var factory = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
+            var factory = new Verified.TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var transfer = factory.CreateTransferTransaction(
                     "TBA6LOHEA6A465G2X5MSQF66JBYR254GJDPK7MQ",
@@ -46,6 +47,8 @@ namespace Unit_Tests.Model.Transactions.Embedded
                     new Tuple<string, ulong>("672B0000CE560000", 101),
                     true
                 );
+
+            Assert.That(transfer.Embed(publicAcc).Payload.ToHex(), Is.EqualTo("600000000000000091D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B45200000000019854419841E5B8E40781CF74DABF592817DE48711D778648DEAFB20000010000000000672B0000CE5600006500000000000000"));
 
             var supplyChange = factory.CreateMosaicSupplyChangeTransaction(
                     10,

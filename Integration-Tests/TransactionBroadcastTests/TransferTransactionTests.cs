@@ -34,6 +34,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     "TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA", 
                     "", 
                     new Tuple<string, ulong>("72C0212E67A08BCE", 100),
+                    100,
                     false
                 );
            

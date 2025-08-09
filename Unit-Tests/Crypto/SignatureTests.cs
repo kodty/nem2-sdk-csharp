@@ -8,6 +8,7 @@ using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Articles;
 using io.nem2.sdk.src.Model.Accounts;
 using io.nem2.sdk.src.Model.Transactions;
+using Unit_Tests.Model.Transactions.Verified;
 
 namespace Unit_Tests.Crypto
 {
@@ -25,7 +26,7 @@ namespace Unit_Tests.Crypto
 
             var ts = await nodeClient.GetNodeTime();
 
-            var factory = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
+            var factory = new TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var tx = factory.CreateTransferTransaction(address.Plain, "hello", new Tuple<string, ulong>("72C0212E67A08BCE", 1000), false);
 

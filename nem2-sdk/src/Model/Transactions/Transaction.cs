@@ -104,12 +104,20 @@ namespace io.nem2.sdk.src.Model.Transactions
         public Transaction(bool embedded)
         {
             Embedded = embedded;
+
+            Size += 48;
+            if (!embedded)
+                Size += 80;
         }
 
         public Transaction(TransactionTypes.Types type, bool embedded)
         {
             Embedded = embedded;
             Type = type.GetValue();
+
+            Size += 48;
+            if (!embedded)
+                Size += 80;
         }
 
         internal uint Size { get; set; }

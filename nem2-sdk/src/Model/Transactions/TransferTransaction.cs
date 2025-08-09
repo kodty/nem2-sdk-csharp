@@ -17,14 +17,16 @@ namespace io.nem2.sdk.src.Model.Transactions
 
             Message = Encoding.UTF8.GetBytes(messege);
             MessegeSize = (ushort)Message.Length;
+
             Reserved_1 = 0;
             Reserved_2 = 0;
+            Size += 8;
 
-             Size += 136 + (uint)Address.Length;
-             if (mosaic != null)
-                 Size += 16;
-             if (Message.Length > 0)
-                 Size += MessegeSize;
+            Size += (uint)Address.Length;
+            if (mosaic != null)
+                Size += 16;
+            if (Message.Length > 0)
+                Size += MessegeSize;
         }
 
         public byte[] Address { get; set; }
