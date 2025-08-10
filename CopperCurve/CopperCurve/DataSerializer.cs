@@ -199,7 +199,7 @@ namespace CopperCurve
 
         public static int Coppery(ref byte[] src, ref byte[] destination, string item, int offset)
         {
-            Array.Resize(ref src, destination.Length + src.Length);
+            Array.Resize(ref destination, destination.Length + src.Length);
 
             Buffer.BlockCopy(src, 0, destination, offset, src.Length);
 

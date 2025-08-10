@@ -72,7 +72,7 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public NamespaceMetadataTransaction CreateNamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, short valueSizeDelta, short valueSize, byte[] value, ulong fee, bool embedded)
+        public NamespaceMetadataTransaction CreateNamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee, bool embedded)
         {
             return new NamespaceMetadataTransaction(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value, embedded)
             {
@@ -83,7 +83,7 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public AccountMetadataTransaction CreateAccountMetadataTransaction(string targetAddress, string scopedKey, short valueSizeDelta, short valueSize, byte[] value, ulong fee, bool embedded)
+        public AccountMetadataTransaction CreateAccountMetadataTransaction(string targetAddress, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee, bool embedded)
         {
             return new AccountMetadataTransaction(targetAddress, scopedKey, valueSizeDelta, valueSize, value, embedded)
             {
@@ -94,7 +94,7 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public MosaicMetadataTransaction CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, string targetMosaicId, short valueSizeDelta, short valueSize, byte[] value, ulong fee, bool embedded)
+        public MosaicMetadataTransaction CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, string targetMosaicId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee, bool embedded)
         {
             return new MosaicMetadataTransaction(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value, embedded)
             {
@@ -105,7 +105,7 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public MosaicDefinitionTransaction CreateMosaicDefinitionTransaction(string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties, ulong fee, bool embedded)
+        public MosaicDefinitionTransaction CreateMosaicDefinitionTransaction(string mosaicName, string namespaceId, string mosaicId, MosaicProperties properties, ulong fee, bool embedded)
         {
             return new MosaicDefinitionTransaction(mosaicName, namespaceId, mosaicId, properties, embedded)
             {
@@ -227,7 +227,7 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public AddressAliasTransaction CreateAddressAliasTransaction(string address, string namepaceId, byte aliasAction, ulong fee, bool embedded)
+        public AddressAliasTransaction CreateAddressAliasTransaction(string address, ulong namepaceId, byte aliasAction, ulong fee, bool embedded)
         {
             return new AddressAliasTransaction(address, namepaceId, aliasAction, embedded)
             {
@@ -238,7 +238,7 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public MosaicAliasTransaction CreateMosaicAliasTransaction(string mosaicId, string namepaceId, byte aliasAction, ulong fee, bool embedded)
+        public MosaicAliasTransaction CreateMosaicAliasTransaction(string mosaicId, ulong namepaceId, byte aliasAction, ulong fee, bool embedded)
         {
             return new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction, embedded) 
             {

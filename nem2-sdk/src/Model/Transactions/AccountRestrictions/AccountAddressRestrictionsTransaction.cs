@@ -29,8 +29,8 @@ namespace io.nem2.sdk.src.Model.Transactions.AccountRestrictions
         public byte[] _RestrictionAdditions{ get; set; }
         public byte[] _RestrictionDeletions{ get; set; }       
 
-        private string[] RestrictionDeletions { set => _RestrictionDeletions = DataSerializer.CompileValues(value); }
-        private string[] RestrictionAdditions { set => _RestrictionAdditions = DataSerializer.CompileValues(value); }
+        private string[]? RestrictionDeletions { get { return null; } set => _RestrictionDeletions = DataSerializer.CompileValues(value); }
+        private string[]? RestrictionAdditions { get { return null; } set => _RestrictionAdditions = DataSerializer.CompileValues(value); }
 
         
     }
