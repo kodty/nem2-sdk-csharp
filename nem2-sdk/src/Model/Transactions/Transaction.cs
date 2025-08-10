@@ -128,7 +128,6 @@ namespace io.nem2.sdk.src.Model.Transactions
 
         private bool Embedded { get; set; }
 
-        private byte[] _Fee { get; set; }
         public byte[] Fee
         {
             get
@@ -137,18 +136,17 @@ namespace io.nem2.sdk.src.Model.Transactions
                 {
                     return new byte[] { };
                 }
-                else return _Fee;
+                else return Fee;
             }
             set
             {
-                if (Fee != value)
+                if (Fee != value && !Embedded)
                 {
-                    _Fee = value;
+                    Fee = value;
                 }
             }
         }
 
-        private byte[] _Deadline { get; set; }
         public byte[] Deadline
         {
             get
@@ -157,13 +155,13 @@ namespace io.nem2.sdk.src.Model.Transactions
                 {
                     return new byte[] { };
                 }
-                else return _Deadline;
+                else return Deadline;
             }
             set
             {
-                if (_Deadline != value)
+                if (Deadline != value)
                 {
-                    _Deadline = value;
+                    Deadline = value;
                 }
             }
         }

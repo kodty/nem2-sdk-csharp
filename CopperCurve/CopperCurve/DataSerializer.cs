@@ -175,5 +175,35 @@ namespace CopperCurve
             }
             else throw new NotImplementedException("Type " + type.ToString() + "unsupported");
         }
+
+        public static byte[] CompileValues(string[] value)
+        {
+            byte[] bitValues = new byte[] { };
+            int offset = 0;
+
+            foreach (var item in value)
+            {
+                byte[] decoded = new byte[24];
+
+                if (item.IsBase32())
+                    decoded = AddressEncoder.DecodeAddress(item);
+
+                if (item.IsHex())
+                    decoded = item.FromHex();
+
+                offset += Coppery(ref decoded, ref bitValues, item, offset);
+            }
+
+            return bitValues;
+        }
+
+        public static int Coppery(ref byte[] src, ref byte[] destination, string item, int offset)
+        {
+            Array.Resize(ref src, destination.Length + src.Length);
+
+            Buffer.BlockCopy(src, 0, destination, offset, src.Length);
+
+            return src.Length;
+        }
     }
 }
