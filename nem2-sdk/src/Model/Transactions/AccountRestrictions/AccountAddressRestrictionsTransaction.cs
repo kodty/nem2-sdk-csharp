@@ -10,7 +10,6 @@ namespace io.nem2.sdk.src.Model.Transactions.AccountRestrictions
 
         }
 
-
         public AccountRestrictionsTransaction(TransactionTypes.Types type, ushort restrictionFlags, string[] restrictionAdditions, string[] restrictionsDeletions, bool embedded) : base(type, embedded)
         {
             RestrictionFlags = restrictionFlags;

@@ -4,21 +4,9 @@ namespace io.nem2.sdk.src.Model.Transactions
 {
     public class AggregateTransaction : Transaction
     {
-        private byte[] Combine(params byte[][] arrays) // thanks matt
-        {
-            byte[] rv = new byte[arrays.Sum(a => a.Length)];
-            int offset = 0;
-            foreach (byte[] array in arrays)
-            {
-                System.Buffer.BlockCopy(array, 0, rv, offset, array.Length);
-                offset += array.Length;
-            }
-            return rv;
-        }
-
         public AggregateTransaction(string transactionsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type, bool embedded) : base(type, embedded) {
             TransactionsHash = transactionsHash.FromHex();          
-            EmbeddedTransactions = Combine(embeddedTransactions.ToList().Select(e => { return e.Payload; } ).ToArray());
+            EmbeddedTransactions = DataConverter.Combine(embeddedTransactions.ToList().Select(e => { return e.Payload; } ).ToArray());
             PayloadSize = (uint)EmbeddedTransactions.Length;
             Cosignatures = cosignatures;
             Aggregate_​transaction_​header_​reserved_​1 = 0;

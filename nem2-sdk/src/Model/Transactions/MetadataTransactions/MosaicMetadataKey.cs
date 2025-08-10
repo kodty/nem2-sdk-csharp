@@ -1,28 +1,16 @@
-﻿
-using CopperCurve;
+﻿using CopperCurve;
 
 namespace io.nem2.sdk.src.Model.Transactions.MetadataTransactions
 {
-    public class MosaicMetadataTransaction : Transaction
+    public class MosaicMetadataTransaction : AccountMetadataTransaction
     {
-        public MosaicMetadataTransaction(string targetAddress, string targetMosaicId, string scopedKey, short valueSizeDelta, short valueSize, byte[] value, bool embedded) : base(embedded)
+        public MosaicMetadataTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
+
+        public MosaicMetadataTransaction(string targetAddress, string targetMosaicId, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value, bool embedded) : base(targetAddress,  scopedKey,  valueSizeDelta,  valueSize, value,  embedded)
         {
-            TargetAddress = AddressEncoder.DecodeAddress(targetAddress);
-            ScopedMetadataKey = scopedKey;
-            ValueSizeDelta = valueSizeDelta;
-            ValueSize = valueSize;
-            Value = value;
-            TargetMosaicId = targetMosaicId;
+            TargetMosaicId = targetMosaicId.FromHex();
         }
-        public byte[] TargetAddress { get; set; }
 
-        public string ScopedMetadataKey { get; set; }
-        public string TargetMosaicId { get; set; }
-
-        public short ValueSizeDelta { get; set; }
-
-        public short ValueSize { get; set; }
-
-        public byte[] Value { get; set; }
+        public byte[] TargetMosaicId { get; set; }
     }
 }

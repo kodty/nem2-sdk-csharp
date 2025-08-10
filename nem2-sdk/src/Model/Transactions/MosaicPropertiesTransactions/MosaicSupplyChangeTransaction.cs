@@ -4,8 +4,11 @@ using io.nem2.sdk.src.Model.Articles;
 
 namespace io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions
 {
+    
     public class MosaicSupplyChangeTransaction : Transaction
     {
+        public MosaicSupplyChangeTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
+
         public MosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, bool embedded) : base(embedded)
         {
             MosaicId = mosaicId.FromHex();

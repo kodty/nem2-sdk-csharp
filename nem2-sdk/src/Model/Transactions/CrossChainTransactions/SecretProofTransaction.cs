@@ -1,26 +1,31 @@
 ﻿using CopperCurve;
+using Org.BouncyCastle.Cms;
 
 namespace io.nem2.sdk.src.Model.Transactions.CrossChainTransactions
 {
     public class SecretProofTransaction : Transaction
     {
-        public SecretProofTransaction(string recipientAddress, string secret, HashType.Types hashAlgo, string proof, bool embedded) : base(embedded)
-        {
-            RecipientAddress = AddressEncoder.DecodeAddress(recipientAddress);
+        public SecretProofTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) {}
+
+        public SecretProofTransaction(string recipient, string secret, HashType.Types hashAlgo, string proof, bool embedded) : base(embedded)
+        {    
             Secret = secret.FromHex();
-            HashAlgo = hashAlgo;
+            HashAlgo = hashAlgo.GetHashTypeValue();
             Proof = proof.FromHex();
             ProofSize = (uint)Proof.Length;
+            Recipient = recipient.IsBase32()
+                      ? AddressEncoder.DecodeAddress(recipient)
+                      : recipient.FromHex();
         }
 
-        public byte[] RecipientAddress { get; internal set; }
+        public byte[] Recipient { get; set; }
 
-        public byte[] Secret { get; internal set; }
+        public byte[] Secret { get; set; }
 
-        public uint ProofSize { get; internal set; }
+        public uint ProofSize { get; set; }
 
-        public HashType.Types HashAlgo { get; internal set; }
+        public byte HashAlgo { get; set; }
 
-        public byte[] Proof { get; internal set; }
+        public byte[] Proof { get; set; }
     }
 }

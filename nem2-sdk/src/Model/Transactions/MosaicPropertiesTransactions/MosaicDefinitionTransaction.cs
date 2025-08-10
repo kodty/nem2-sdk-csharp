@@ -1,24 +1,27 @@
-﻿using io.nem2.sdk.src.Model.Articles;
+﻿using CopperCurve;
+using io.nem2.sdk.src.Model.Articles;
+using System.Text;
 
 namespace io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions
 {
     public class MosaicDefinitionTransaction : Transaction
     {
-        public MosaicDefinitionTransaction(string mosaicName, NamespaceId namespaceId, MosaicId mosaicId, MosaicProperties properties, bool embedded) : base(embedded) {
+        public MosaicDefinitionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 
-            MosaicName = mosaicName;
-            NamespaceId = namespaceId;
-            MosaicId = mosaicId;
+        public MosaicDefinitionTransaction(string mosaicName, string namespaceId, string mosaicId, MosaicProperties properties, bool embedded) : base(embedded) {
+
+            MosaicName = Encoding.UTF8.GetBytes(mosaicName);
+            NamespaceId = namespaceId.FromHex();
+            MosaicId = mosaicId.FromHex();
             Properties = properties.GetFlags();
         }
 
-        public string MosaicName { get; }
+        public byte[] MosaicName { get; set; }
 
-        public NamespaceId NamespaceId { get; }
+        public byte[] NamespaceId { get; set; }
 
-        public MosaicId MosaicId { get; }
+        public byte[] MosaicId { get; set; }
 
-        public byte Properties { get; }
-
+        public byte Properties { get; set; }
     }
 }
