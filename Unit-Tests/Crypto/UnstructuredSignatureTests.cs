@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Unit_Tests.Model.Transactions;
 using Unit_Tests.Model.Transactions.Verified;
 
 namespace Unit_Tests.Crypto

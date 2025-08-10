@@ -9,8 +9,9 @@ using io.nem2.sdk.src.Model.Transactions.MetadataTransactions;
 using io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions;
 using io.nem2.sdk.src.Model.Transactions.MosaicRestrictions;
 using System.Diagnostics;
+using Unit_Tests.Model.Transactions.Verified;
 
-namespace Unit_Tests.Model.Transactions.Verified
+namespace Unit_Tests.Model.Transactions
 {
     public class TransactionTestFactory
     {

@@ -7,7 +7,7 @@ namespace io.nem2.sdk.src.Model.Transactions
 {
     public class Transaction
     {
-        public UnsignedTransaction Embed(PublicAccount account)
+        public UnsignedTransaction Embed(string account)
         {
             return PrepareEmbeddedTransaction(GetType(), account);
         }
@@ -26,9 +26,9 @@ namespace io.nem2.sdk.src.Model.Transactions
             return serializer.Bytes;
         }
 
-        internal UnsignedTransaction PrepareEmbeddedTransaction(Type type, PublicAccount account)
+        internal UnsignedTransaction PrepareEmbeddedTransaction(Type type, string publicKey)
         {
-            this.EntityBody.Signer = account.PublicKey;
+            this.EntityBody.Signer = publicKey.FromHex();
 
             byte[] body = Serialize(type, this, true);
 

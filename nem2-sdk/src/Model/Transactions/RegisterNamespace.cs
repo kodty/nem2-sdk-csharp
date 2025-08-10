@@ -17,7 +17,7 @@ namespace io.nem2.sdk.src.Model.Transactions
             RegistrationType = type.GetValue();
             Name = Encoding.UTF8.GetBytes(name);
             NameSize = (byte)Name.Length;
-            Size = (uint)(128 + 26 + Name.Length);
+            Size += 18 +  (uint)Name.Length;
         }
 
         internal ulong _Duration { get; set; }

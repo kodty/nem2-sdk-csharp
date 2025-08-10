@@ -20,6 +20,8 @@ namespace io.nem2.sdk.src.Model.Transactions.AccountRestrictions
             RestrictionDeletions = restrictionsDeletions;
             RestrictionsDeletionsCount = (byte)restrictionsDeletions.Count();
             Account_​restriction_​transaction_​body_​reserved_​1 = 0;
+
+            Size += (uint)(8 + _RestrictionAdditions.Length + _RestrictionDeletions.Length);
         }
 
         public ushort RestrictionFlags { get; set; }
@@ -30,8 +32,6 @@ namespace io.nem2.sdk.src.Model.Transactions.AccountRestrictions
         public byte[] _RestrictionDeletions{ get; set; }       
 
         private string[]? RestrictionDeletions { get { return null; } set => _RestrictionDeletions = DataSerializer.CompileValues(value); }
-        private string[]? RestrictionAdditions { get { return null; } set => _RestrictionAdditions = DataSerializer.CompileValues(value); }
-
-        
+        private string[]? RestrictionAdditions { get { return null; } set => _RestrictionAdditions = DataSerializer.CompileValues(value); }     
     }
 }

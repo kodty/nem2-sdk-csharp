@@ -1,16 +1,24 @@
 ﻿using CopperCurve;
 using Integration_Tests;
 using io.nem2.sdk.src.Model;
+using io.nem2.sdk.src.Model.Accounts;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Unit_Tests.Model.Transactions.Verified
+namespace Unit_Tests.Model.Transactions.Embedded
 {
-    internal class AccountRestrictionsTests
+    internal class AccountRestrictionsTest
     {
         [Test, Timeout(20000)]
-        public void CreateAccountRestriction()
+        public void CreateEmbeddedAccountRestriction()
         {
             var keys = SecretKeyPair.CreateFromPrivateKey("98AA70CA43E5D3B95CD303A57892D0BA953C204A4D937AF4386ED658A8FA555D");
+
+            var publicAccount = PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET);
 
             var accountRestriction = new TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateAccountRestrictionTransaction(
@@ -21,11 +29,11 @@ namespace Unit_Tests.Model.Transactions.Verified
                     false
                 );
 
-            var st = accountRestriction.WrapVerified(keys);
+            var st = accountRestriction.Embed(keys.PublicKeyString);
 
             Debug.WriteLine(st.Payload.ToHex());
 
-            Assert.That(st.Payload.ToHex(), Is.EqualTo("E800000000000000AE5824FCFD0F0F2BBE67DDAF7B2004C31AF35B46EE9CC32F5EC8CA6F531075A014C909FEFF7EA7D934C66402F88919D6F3ACE8905541A31A0DEDC98EDCAA960691D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B45200000000019850416A5D22B404000000B52E115A02000000010002020000000068172E4A424D395695A92AA7DAAFC0B1887846448ABD57AC90172E4A424D395695A92AA7DAAFC0B1887846448ABD57AC98172E4A424D395695A92AA7DAAFC0B1887846448ABD57ACA8172E4A424D395695A92AA7DAAFC0B1887846448ABD57AC"));
+            Assert.That(st.Payload.ToHex(), Is.EqualTo("E80000000000000091D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B45200000000019850416A5D22B404000000B52E115A02000000010002020000000068172E4A424D395695A92AA7DAAFC0B1887846448ABD57AC90172E4A424D395695A92AA7DAAFC0B1887846448ABD57AC98172E4A424D395695A92AA7DAAFC0B1887846448ABD57ACA8172E4A424D395695A92AA7DAAFC0B1887846448ABD57AC"));
         }
     }
 }

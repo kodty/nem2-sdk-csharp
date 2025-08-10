@@ -9,6 +9,7 @@ using io.nem2.sdk.src.Model.Articles;
 using io.nem2.sdk.src.Model.Accounts;
 using io.nem2.sdk.src.Model.Transactions;
 using Unit_Tests.Model.Transactions.Verified;
+using Unit_Tests.Model.Transactions;
 
 namespace Unit_Tests.Crypto
 {
