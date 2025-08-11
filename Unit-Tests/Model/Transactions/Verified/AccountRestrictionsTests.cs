@@ -1,7 +1,6 @@
 ﻿using Coppery;
 using Integration_Tests;
 using io.nem2.sdk.src.Model;
-using System.Diagnostics;
 
 namespace Unit_Tests.Model.Transactions.Verified
 {

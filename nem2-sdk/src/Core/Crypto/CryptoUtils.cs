@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using Org.BouncyCastle.Crypto.Digests;

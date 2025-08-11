@@ -3,12 +3,6 @@ using Integration_Tests;
 using io.nem2.sdk.src.Core.Utils;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Articles;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Unit_Tests.Model.Transactions.Verified
 {
