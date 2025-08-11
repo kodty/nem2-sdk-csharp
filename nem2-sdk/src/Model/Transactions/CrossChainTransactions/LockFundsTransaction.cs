@@ -11,12 +11,13 @@ namespace io.nem2.sdk.src.Model.Transactions.CrossChainTransactions
 
         public LockFundsTransaction(Tuple<string, ulong> mosaic, ulong duration, string transactionHash, bool embedded) : base(embedded)
         {
-            Mosaic = mosaic;
+            Mosaic = new Tuple<byte[], ulong>(mosaic.Item1.FromHex(), mosaic.Item2);
             Duration = duration;
             TransactionHash = transactionHash.FromHex();
+            Size += 56;
         }
 
-        public Tuple<string, ulong> Mosaic { get; set; }
+        public Tuple<byte[], ulong> Mosaic { get; set; }
 
         public ulong Duration { get; set; }
 
