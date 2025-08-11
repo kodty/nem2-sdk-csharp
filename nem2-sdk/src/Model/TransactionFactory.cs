@@ -161,7 +161,7 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public KeyLinkTransaction CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, int linkAction, byte linkType, ulong fee, bool embedded)
+        public KeyLinkTransaction CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, byte linkAction, byte linkType, ulong fee, bool embedded)
         {
             return new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
             {
@@ -172,7 +172,7 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public KeyLinkTransaction CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, int linkAction, byte linkType, ulong fee,  bool embedded)
+        public KeyLinkTransaction CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, byte linkAction, byte linkType, ulong fee,  bool embedded)
         {
             return new KeyLinkTransaction(linkedPublicKey, linkAction, embedded)
             {

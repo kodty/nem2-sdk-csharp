@@ -163,7 +163,7 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public KeyLinkTransaction CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, int linkAction, byte linkType, bool embedded)
+        public KeyLinkTransaction CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, byte linkAction, byte linkType, bool embedded)
         {
             return new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
             {
@@ -174,7 +174,7 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public KeyLinkTransaction CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, int linkAction, byte linkType, bool embedded)
+        public KeyLinkTransaction CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, byte linkAction, bool embedded)
         {
             return new KeyLinkTransaction(linkedPublicKey, linkAction, embedded)
             {

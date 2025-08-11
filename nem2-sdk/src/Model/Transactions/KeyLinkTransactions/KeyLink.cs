@@ -6,12 +6,13 @@ namespace io.nem2.sdk.src.Model.Transactions.KeyLinkTransactions
     {
         public KeyLinkTransaction(TransactionTypes.Types type, bool embedded) : base (type, embedded) { }
 
-        public KeyLinkTransaction(string linkedPublicKey, int linkAction, bool embedded) : base(embedded)
+        public KeyLinkTransaction(string linkedPublicKey, byte linkAction, bool embedded) : base(embedded)
         {
             LinkedPublicKey = linkedPublicKey.FromHex();
             LinkAction = linkAction;
+            Size += 33;
         }
         public byte[] LinkedPublicKey { get; set; }
-        public int LinkAction { get; set; }
+        public byte LinkAction { get; set; }
     }
 }
