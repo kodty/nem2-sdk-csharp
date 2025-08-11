@@ -1,4 +1,4 @@
-﻿using CopperCurve;
+﻿using Coppery;
 using io.nem2.sdk.Core.Crypto;
 
 namespace io.nem2.sdk.src.Model.Transactions.Messages

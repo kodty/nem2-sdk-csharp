@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace CopperCurve
+namespace Coppery
 {
     public static class DataValidationUtils
     {

@@ -13,7 +13,7 @@
 // limitations under the License.
 // 
 
-using CopperCurve;
+using Coppery;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
 using System.Diagnostics;

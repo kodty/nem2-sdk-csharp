@@ -1,4 +1,4 @@
-﻿namespace CopperCurve
+﻿namespace Coppery
 {
     public static class AddressEncoder
     {

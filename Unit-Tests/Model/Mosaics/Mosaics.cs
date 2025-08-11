@@ -1,4 +1,4 @@
-﻿using CopperCurve;
+﻿using Coppery;
 using System.Diagnostics;
 using io.nem2.sdk.src.Core.Utils;
 

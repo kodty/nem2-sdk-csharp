@@ -1,4 +1,4 @@
-﻿using CopperCurve;
+﻿using Coppery;
 using io.nem2.sdk.src.Model;
 using System.Text.RegularExpressions;
 using TweetNaclSharp;

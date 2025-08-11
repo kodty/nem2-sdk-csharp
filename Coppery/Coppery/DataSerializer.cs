@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
 
-namespace CopperCurve
+namespace Coppery
 {
     public class DataSerializer
     {

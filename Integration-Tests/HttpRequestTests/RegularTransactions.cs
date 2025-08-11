@@ -2,7 +2,7 @@
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
-using CopperCurve;
+using Coppery;
 using System.Diagnostics;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;

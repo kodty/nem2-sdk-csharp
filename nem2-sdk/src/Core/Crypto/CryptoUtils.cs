@@ -5,7 +5,7 @@ using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Security;
 using TweetNaclSharp.Core.Extensions;
-using CopperCurve;
+using Coppery;
 
 namespace io.nem2.sdk.Core.Crypto
 {

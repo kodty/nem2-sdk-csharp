@@ -1,4 +1,4 @@
-﻿using CopperCurve;
+﻿using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace Unit_Tests.Crypto

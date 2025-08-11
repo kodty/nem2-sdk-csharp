@@ -1,5 +1,5 @@
 using io.nem2.sdk.Infrastructure.HttpRepositories;
-using CopperCurve;
+using Coppery;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Diagnostics;

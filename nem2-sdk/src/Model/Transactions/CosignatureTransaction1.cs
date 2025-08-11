@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using CopperCurve;
+using Coppery;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model;
 

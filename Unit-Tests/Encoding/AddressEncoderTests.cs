@@ -1,4 +1,4 @@
-﻿using CopperCurve;
+﻿using Coppery;
 using System.Diagnostics;
 
 namespace Unit_Tests.Encoding

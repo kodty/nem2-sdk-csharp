@@ -1,4 +1,4 @@
-﻿using CopperCurve;
+﻿using Coppery;
 using Integration_Tests;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;

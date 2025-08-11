@@ -1,6 +1,6 @@
 ﻿using Integration_Tests;
 
-using CopperCurve;
+using Coppery;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
 using io.nem2.sdk.src.Model.Transactions.Messages;

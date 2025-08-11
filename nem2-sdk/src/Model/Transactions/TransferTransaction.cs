@@ -1,4 +1,4 @@
-﻿using CopperCurve;
+﻿using Coppery;
 using System.Text;
 
 namespace io.nem2.sdk.src.Model.Transactions

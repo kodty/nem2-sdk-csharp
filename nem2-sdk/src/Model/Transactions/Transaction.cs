@@ -1,4 +1,4 @@
-﻿using CopperCurve;
+﻿using Coppery;
 using io.nem2.sdk.src.Model.Accounts;
 using Org.BouncyCastle.Crypto.Digests;
 using TweetNaclSharp.Core.Extensions;

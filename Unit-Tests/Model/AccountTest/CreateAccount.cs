@@ -1,4 +1,4 @@
-﻿using CopperCurve;
+﻿using Coppery;
 using System.Diagnostics;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;

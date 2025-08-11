@@ -1,4 +1,4 @@
-﻿using CopperCurve;
+﻿using Coppery;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model;

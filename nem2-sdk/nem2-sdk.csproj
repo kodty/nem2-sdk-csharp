@@ -19,11 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CopperCurve\CopperCurve.csproj" />
+    <Folder Include="src\Model\Articles\Distinct\Symbol\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="src\Model\Articles\Distinct\Symbol\" />
+    <ProjectReference Include="..\Coppery\Coppery.csproj" />
   </ItemGroup>
 
 </Project>

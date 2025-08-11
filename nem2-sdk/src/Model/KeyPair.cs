@@ -1,4 +1,4 @@
-﻿using CopperCurve;
+﻿using Coppery;
 using io.nem2.sdk.Core.Crypto.Chaos.NaCl.Internal.Ed25519ref10;
 using System.Security.Cryptography;
 using TweetNaclSharp;

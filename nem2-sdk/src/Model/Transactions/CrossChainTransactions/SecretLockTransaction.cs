@@ -1,5 +1,5 @@
 ﻿
-using CopperCurve;
+using Coppery;
 
 namespace io.nem2.sdk.src.Model.Transactions.CrossChainTransactions
 {

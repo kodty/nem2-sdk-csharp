@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using CopperCurve;
+using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
 
 

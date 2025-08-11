@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text.Json.Nodes;
 
-namespace CopperCurve
+namespace Coppery
 {
     public class ObjectComposer
     {

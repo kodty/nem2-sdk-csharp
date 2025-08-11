@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace CopperCurve
+namespace Coppery
 {
     public static class DataConverter
     {

@@ -1,4 +1,4 @@
-﻿using CopperCurve;
+﻿using Coppery;
 using System.Security.Cryptography;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using Org.BouncyCastle.Crypto.Digests;
