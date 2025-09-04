@@ -73,6 +73,7 @@ namespace Coppery
 
                 if (!nameToValueMap.ContainsKey(op.Name))
                 {
+                    
                     if (IsNativeProperty(op))
                     {
                         nameToValueMap.Add(op.Name, GetTypedValue(op.PropertyType, objList.AsObject(), lwrCase));

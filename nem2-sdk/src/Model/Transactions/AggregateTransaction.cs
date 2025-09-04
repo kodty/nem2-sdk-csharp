@@ -10,6 +10,13 @@ namespace io.nem2.sdk.src.Model.Transactions
             PayloadSize = (uint)EmbeddedTransactions.Length;
             Cosignatures = cosignatures;
             Aggregate_​transaction_​header_​reserved_​1 = 0;
+
+            Size += 32;
+            Size += (uint)EmbeddedTransactions.Length;
+            Size += PayloadSize;
+            Size += (uint)Cosignatures.Length;
+            Size += 4;
+
         }
 
         public byte[] TransactionsHash { get; set; }

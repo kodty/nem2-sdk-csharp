@@ -18,7 +18,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     ["NALS4SSCJU4VNFNJFKT5VL6AWGEHQRSERK6VPLA", "SALS4SSCJU4VNFNJFKT5VL6AWGEHQRSERK6VPLA"],
                     ["TALS4SSCJU4VNFNJFKT5VL6AWGEHQRSERK6VPLA", "VALS4SSCJU4VNFNJFKT5VL6AWGEHQRSERK6VPLA"],
                     false
-                );
+                ); 
 
             var st = accountRestriction.WrapVerified(keys);
 

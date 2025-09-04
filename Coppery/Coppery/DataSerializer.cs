@@ -1,103 +1,20 @@
-﻿using System.Diagnostics;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace Coppery
+namespace Coppery.Coppery
 {
     public class DataSerializer
     {
-        public byte[] Bytes;
-        public int _offset = 0;
-        public DataSerializer()
+        internal byte[] _Buffer { get; set; }
+        private int _offset = 0;
+
+        public DataSerializer(uint size)
         {
-            Bytes = Array.Empty<byte>();
+            _Buffer = new byte[size];
         }
 
-        public void WriteUlong(ulong data)
+        public byte[] GetBytes()
         {
-            Array.Resize(ref Bytes, Bytes.Length + 8);
-
-            for (int i = 0; i < 8; i++)
-            {
-                Bytes[_offset + i] = (byte)(data >> (/*8 - 1 - */ i) * 8);
-            }
-
-            _offset += 8;
-        }
-
-        public void WriteUInt(uint data)
-        {
-            Array.Resize(ref Bytes, Bytes.Length + 4);
-
-            for (int i = 0; i < 4; i++)
-            {
-                Bytes[_offset + i] = (byte)(data >> (/*4 - 1 - */ i) * 8);
-            }
-
-            _offset += 4;
-        }
-
-        public void WriteUShort(ushort data)
-        {
-            Array.Resize(ref Bytes, Bytes.Length + 2);
-
-            for (int i = 0; i < 2; i++)
-            {
-                Bytes[_offset + i] = (byte)(data >> (/*2 - 1 - */ i) * 8); 
-            }
-
-            _offset += 2;
-        }
-
-        public void WriteByte(byte data)
-        {
-            Array.Resize(ref Bytes, Bytes.Length + 1);
-
-            Bytes[_offset] = data;
-
-            _offset += 1;
-        }
-
-        public void WriteBytes(byte[] data)
-        {
-            Array.Resize(ref Bytes, Bytes.Length + data.Length);
-
-            for (var i = 0; i < data.Length; i++)
-                Bytes[_offset + i] = data[i];
-
-            _offset += data.Length;
-        }
-
-        public void Reserve(int reserved)
-        {
-            Array.Resize(ref Bytes, Bytes.Length + 4);
-
-            _offset += 4;
-        }
-
-        public void WriteHexString(string hexString)
-        {
-            Array.Resize(ref Bytes, Bytes.Length + (hexString.Length / 2));
-
-            for (var i = 0; i < hexString.Length / 2; i++)
-            {
-                Bytes[_offset + i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
-            }
-
-            _offset += hexString.Length / 2;
-        }
-
-        public void WriteBase32(string encodedAddress)
-        {
-            var decoded = AddressEncoder.DecodeAddress(encodedAddress);
-
-            Array.Resize(ref Bytes, Bytes.Length + (decoded.Length / 2));
-
-            for (var i = 0; i < decoded.Length; i++)
-            {
-                Bytes[_offset + i] = decoded[i];
-            }
-
-            _offset += decoded.Length;
+            return _Buffer;
         }
 
         private void FilterProperties(object obj, PropertyInfo op, bool embedded)
@@ -117,7 +34,7 @@ namespace Coppery
         {
             foreach (var item in type.BaseType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                FilterProperties(obj, item, embedded);     
+                FilterProperties(obj, item, embedded);
             }
 
             foreach (var item in type.GetProperties().Where(e => e.DeclaringType != type.BaseType))
@@ -139,69 +56,70 @@ namespace Coppery
         {
             if (type == typeof(byte))
             {
-                this.WriteByte((byte)ob);
+                var source = new byte[1] { (byte)ob };
+
+                _offset += BlockCopy(ref source, _offset);
+
                 return;
             }
             if (type == typeof(uint))
             {
-                this.WriteUInt((uint)ob); 
+                var source = DataWriter.Write((uint)ob);
+
+                _offset += BlockCopy(ref source, _offset);
+
                 return;
-            }              
+            }
             if (type == typeof(ushort))
             {
-                this.WriteUShort((ushort)ob);
+                var source = DataWriter.Write((ushort)ob);
+
+                _offset += BlockCopy(ref source, _offset);
+
                 return;
-            }              
+            }
             if (type == typeof(ulong))
             {
-                this.WriteUlong((ulong)ob);
+                var source = DataWriter.Write((ulong)ob);
+
+                _offset += BlockCopy(ref source, _offset);
+
                 return;
-            }                           
+            }
             if (type == typeof(bool))
             {
-                this.WriteByte((byte)ob);
+                var source = new byte[1] { (byte)ob };
+
+                _offset += BlockCopy(ref source, _offset);
+
                 return;
             }
             if (type == typeof(byte[]))
             {
-                this.WriteBytes((byte[])ob);
+                var source = (byte[])ob;
+
+                _offset += BlockCopy(ref source, _offset);
+
                 return;
             }
             if (type == typeof(Tuple<byte[], ulong>))
             {
-                this.WriteBytes(((Tuple<byte[], ulong>)ob).Item1);
-                this.WriteUlong(((Tuple<byte[], ulong>)ob).Item2);
+                var source = ((Tuple<byte[], ulong>)ob).Item1;
+
+                _offset += BlockCopy(ref source, _offset);
+
+                var source2 = DataWriter.Write(((Tuple<byte[], ulong>)ob).Item2);
+
+                _offset += BlockCopy(ref source2, _offset);
+
                 return;
             }
             else throw new NotImplementedException("Type " + type.ToString() + "unsupported");
         }
 
-        public static byte[] CompileValues(string[] value)
+        public int BlockCopy(ref byte[] src, int offset)
         {
-            byte[] bitValues = new byte[] { };
-            int offset = 0;
-
-            foreach (var item in value)
-            {
-                byte[] decoded = new byte[24];
-
-                if (item.IsBase32())
-                    decoded = AddressEncoder.DecodeAddress(item);
-
-                if (item.IsHex())
-                    decoded = item.FromHex();
-
-                offset += Coppery(ref decoded, ref bitValues, item, offset);
-            }
-
-            return bitValues;
-        }
-
-        public static int Coppery(ref byte[] src, ref byte[] destination, string item, int offset)
-        {
-            Array.Resize(ref destination, destination.Length + src.Length);
-
-            Buffer.BlockCopy(src, 0, destination, offset, src.Length);
+            Buffer.BlockCopy(src, 0, _Buffer, offset, src.Length);
 
             return src.Length;
         }

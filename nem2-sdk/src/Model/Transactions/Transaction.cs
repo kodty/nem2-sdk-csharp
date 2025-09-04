@@ -1,5 +1,5 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Model.Accounts;
+using Coppery.Coppery;
 using Org.BouncyCastle.Crypto.Digests;
 using TweetNaclSharp.Core.Extensions;
 
@@ -17,20 +17,20 @@ namespace io.nem2.sdk.src.Model.Transactions
             return PrepareTransaction(GetType(), account);
         }
 
-        internal byte[] Serialize(Type type, object obj, bool embedded)
+        internal byte[] Serialize(Type type, object obj, bool embedded, uint size)
         {
-            DataSerializer serializer = new DataSerializer();
+            DataSerializer serializer = new DataSerializer(size);
 
             serializer.Serialize(type, obj, embedded);
 
-            return serializer.Bytes;
+            return serializer.GetBytes();
         }
 
         internal UnsignedTransaction PrepareEmbeddedTransaction(Type type, string publicKey)
         {
             this.EntityBody.Signer = publicKey.FromHex();
 
-            byte[] body = Serialize(type, this, true);
+            byte[] body = Serialize(type, this, true, Size - 8);
 
             byte[] reserved = new byte[4];
 
@@ -44,7 +44,7 @@ namespace io.nem2.sdk.src.Model.Transactions
         {
             this.EntityBody.Signer = keyPair.PublicKey;
 
-            var body = Serialize(type, this, false);
+            var body = Serialize(type, this, false, Size);
 
             var genHashBytes = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4".FromHex();
 
@@ -59,12 +59,12 @@ namespace io.nem2.sdk.src.Model.Transactions
 
             var VerifiableEntity = new VerifiableEntity()
             {
-                Size = Size,
+                Size = Size + 72,
                 VerifiableEntityHeaderReserved = 0,
                 Signature = sig
             };
 
-            var header = Serialize(typeof(VerifiableEntity), VerifiableEntity, false);
+            var header = Serialize(typeof(VerifiableEntity), VerifiableEntity, false, 72);
 
             var pl = header.Concat(body).ToArray();
 
@@ -107,7 +107,7 @@ namespace io.nem2.sdk.src.Model.Transactions
 
             Size += 48;
             if (!embedded)
-                Size += 80;
+                Size += 8;
         }
 
         public Transaction(TransactionTypes.Types type, bool embedded)
@@ -117,7 +117,7 @@ namespace io.nem2.sdk.src.Model.Transactions
 
             Size += 48;
             if (!embedded)
-                Size += 80;
+                Size += 8;
         }
 
         internal uint Size { get; set; }
