@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Coppery.Coppery
+namespace Coppery
 {
     public class DataSerializer
     {
@@ -33,14 +33,10 @@ namespace Coppery.Coppery
         public void Serialize(Type type, object obj, bool embedded)
         {
             foreach (var item in type.BaseType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
                 FilterProperties(obj, item, embedded);
-            }
 
-            foreach (var item in type.GetProperties().Where(e => e.DeclaringType != type.BaseType))
-            {
+            foreach (var item in type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(e => e.DeclaringType != type.BaseType))
                 FilterProperties(obj, item, embedded);
-            }
         }
 
         internal bool IsNativeProperty(PropertyInfo op)
