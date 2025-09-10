@@ -27,7 +27,7 @@ namespace io.nem2.sdk.src.Model.Transactions
             get
             {
                 if (RegistrationType == 0)
-                    return DataConverter.ConvertFromUInt64(_Duration);
+                    return DataConverter.ConvertFrom(_Duration);
                 
                 else if (RegistrationType == 0x1) 
                     return new byte[] { };
@@ -45,7 +45,7 @@ namespace io.nem2.sdk.src.Model.Transactions
                 if (RegistrationType == 0)
                     return new byte[] { };
                 else if (RegistrationType == 0x1) 
-                    return DataConverter.ConvertFromUInt64(_ParentId);
+                    return DataConverter.ConvertFrom(_ParentId);
                 else 
                     throw new Exception("invalid registration type");
             }

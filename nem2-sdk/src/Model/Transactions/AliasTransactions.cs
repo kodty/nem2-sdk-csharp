@@ -32,8 +32,7 @@ namespace io.nem2.sdk.src.Model.Transactions
     {
         public MosaicAliasTransaction(string mosaicId, ulong namespaceId, byte aliasAction, bool embedded) : base(namespaceId, aliasAction, embedded)
         {
-            MosaicId = DataConverter.ConvertToUInt64(mosaicId.FromHex());
-
+            MosaicId = DataConverter.ConvertTo<ulong>(mosaicId.FromHex());
         }
 
         public ulong MosaicId { get; set; }

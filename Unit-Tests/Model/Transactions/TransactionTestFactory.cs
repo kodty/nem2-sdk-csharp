@@ -69,8 +69,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -80,8 +80,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -91,8 +91,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -102,8 +102,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -113,8 +113,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_DEFINITION.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -124,8 +124,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.HASH_LOCK.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -135,8 +135,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.SECRET_LOCK.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
 
         }
@@ -147,8 +147,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.SECRET_PROOF.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -158,8 +158,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -169,8 +169,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.VOTING_KEY_LINK.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -180,8 +180,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = type.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -191,8 +191,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.TRANSFER.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -204,8 +204,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = type.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -215,8 +215,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -226,8 +226,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -237,8 +237,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.ADDRESS_ALIAS.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -248,8 +248,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_ALIAS.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -259,8 +259,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -270,8 +270,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
@@ -281,8 +281,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),
-                Deadline = ((ulong)10101010101).ConvertFromUInt64(),
-                Fee = ((ulong)20202020202).ConvertFromUInt64()
+                Deadline = DataConverter.ConvertFrom(10101010101),
+                Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
     }

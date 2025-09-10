@@ -36,7 +36,7 @@ namespace io.nem2.sdk.src.Model.Transactions
 
             return new UnsignedTransaction()
             {
-                Payload = Size.ConvertFromUInt32().Concat(reserved).Concat(body).ToArray()
+                Payload = DataConverter.ConvertFrom(Size).Concat(reserved).Concat(body).ToArray()
             };
         }
 

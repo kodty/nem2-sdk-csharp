@@ -1,9 +1,39 @@
-﻿using System.Diagnostics;
-
-namespace Coppery
+﻿namespace Coppery
 {
     public static class DataConverter
     {
+        public static byte[] ConvertFrom(this string[] value)
+        {
+            int len = 0;
+
+            foreach (var item in value)
+            {
+                if (item.IsHex()) len += item.Length / 2;
+                if (item.IsBase32()) len += 24;
+            }
+
+            byte[] bitValues = new byte[len];
+
+            int offset = 0;
+
+            foreach (var item in value)
+            {
+                byte[] decoded = new byte[24];
+
+                if (item.IsBase32())
+                    decoded = AddressEncoder.DecodeAddress(item);
+
+                if (item.IsHex())
+                    decoded = item.FromHex();
+
+                Buffer.BlockCopy(decoded, 0, bitValues, offset, decoded.Length);
+
+                offset += decoded.Length;
+            }
+
+            return bitValues;
+        }
+
         public static byte[] FromHex(this string hexString)
         {
             return Convert.FromHexString(hexString);
@@ -14,7 +44,7 @@ namespace Coppery
             return Convert.ToHexString(data);
         }
 
-        public static byte[] ConvertFromUInt64(this ulong value)
+        public static byte[] ConvertFrom(ulong value)
         {
             byte[] p = new byte[8];
 
@@ -26,7 +56,7 @@ namespace Coppery
             return p;
         }
 
-        public static byte[] ConvertFromUInt32(this uint value)
+        public static byte[] ConvertFrom(uint value)
         {
             byte[] p = new byte[4];
 
@@ -38,7 +68,7 @@ namespace Coppery
             return p;
         }
 
-        public static byte[] ConvertFromUInt16(this ushort value)
+        public static byte[] ConvertFrom(ushort value)
         {
             byte[] p = new byte[2];
 
@@ -50,7 +80,7 @@ namespace Coppery
             return p;
         }
 
-        public static ulong ConvertToUInt64(this byte[] value)
+        public static T ConvertTo<T>(this byte[] value)
         {
             ulong result = 0;
 
@@ -60,29 +90,17 @@ namespace Coppery
                 result += value[value.Length - 1 - i];
             }
 
-            return result;
+            return (T)Convert.ChangeType(result, typeof(T));
         }
 
-        public static uint ConvertToUInt32(this byte[] value)
-        {
-            uint result = 0;
-
-            for (int i = 0; i < value.Length; i++)
-            {
-                result <<= 8;
-                result += value[value.Length - 1 - i];
-            }
-
-            return result;
-        }
-
-        public static byte[] Combine(params byte[][] arrays) // thanks matt
+        public static byte[] Combine(params byte[][] arrays)
         {
             byte[] rv = new byte[arrays.Sum(a => a.Length)];
             int offset = 0;
+
             foreach (byte[] array in arrays)
             {
-                System.Buffer.BlockCopy(array, 0, rv, offset, array.Length);
+                Buffer.BlockCopy(array, 0, rv, offset, array.Length);
                 offset += array.Length;
             }
             return rv;

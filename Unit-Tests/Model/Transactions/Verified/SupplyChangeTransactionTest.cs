@@ -20,7 +20,7 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var supplyChange = factory.CreateMosaicSupplyChangeTransaction(
                     10,
-                    DataConverter.ConvertFromUInt64(6300565133566699913).ToHex(),
+                    DataConverter.ConvertFrom(6300565133566699913).ToHex(),
                     MosaicSupplyType.Type.INCREASE,
                     false
                 );

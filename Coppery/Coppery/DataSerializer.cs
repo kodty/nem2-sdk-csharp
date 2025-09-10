@@ -64,7 +64,7 @@ namespace Coppery.Coppery
             }
             if (type == typeof(uint))
             {
-                var source = DataWriter.Write((uint)ob);
+                var source = DataConverter.ConvertFrom((uint)ob);
 
                 _offset += BlockCopy(ref source, _offset);
 
@@ -72,7 +72,7 @@ namespace Coppery.Coppery
             }
             if (type == typeof(ushort))
             {
-                var source = DataWriter.Write((ushort)ob);
+                var source = DataConverter.ConvertFrom((ushort)ob);
 
                 _offset += BlockCopy(ref source, _offset);
 
@@ -80,7 +80,7 @@ namespace Coppery.Coppery
             }
             if (type == typeof(ulong))
             {
-                var source = DataWriter.Write((ulong)ob);
+                var source = DataConverter.ConvertFrom((ulong)ob);
 
                 _offset += BlockCopy(ref source, _offset);
 
@@ -108,7 +108,7 @@ namespace Coppery.Coppery
 
                 _offset += BlockCopy(ref source, _offset);
 
-                var source2 = DataWriter.Write(((Tuple<byte[], ulong>)ob).Item2);
+                var source2 = DataConverter.ConvertFrom(((Tuple<byte[], ulong>)ob).Item2);
 
                 _offset += BlockCopy(ref source2, _offset);
 

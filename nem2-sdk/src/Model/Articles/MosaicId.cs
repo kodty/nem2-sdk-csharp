@@ -20,12 +20,12 @@ namespace io.nem2.sdk.src.Model.Articles
         {
             Id = id;
 
-            HexId = id.ConvertFromUInt64().ToHex();
+            HexId = DataConverter.ConvertFrom(Id).ToHex();
         }
 
         public MosaicId(string hexId)
         {
-            Id = hexId.FromHex().ConvertToUInt64();
+            Id = hexId.FromHex().ConvertTo<ulong>();
 
             HexId = hexId;
         }

@@ -67,8 +67,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee = DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee = DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -78,8 +78,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -89,8 +89,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -100,8 +100,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -111,8 +111,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_DEFINITION.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -122,8 +122,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.HASH_LOCK.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -133,8 +133,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.SECRET_LOCK.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
 
         }
@@ -145,8 +145,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.SECRET_PROOF.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)           
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)           
             };
         }
 
@@ -156,8 +156,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue(),
-                Deadline = (Deadline.AutoDeadline(Node, Port).Ticks).ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -167,8 +167,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.VOTING_KEY_LINK.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -178,8 +178,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = type.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -189,8 +189,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.TRANSFER.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -200,8 +200,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = type.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -211,8 +211,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -222,8 +222,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -233,8 +233,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.ADDRESS_ALIAS.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -244,8 +244,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MOSAIC_ALIAS.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -255,8 +255,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -266,8 +266,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),
-                Fee =  DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),
+                Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
@@ -277,8 +277,8 @@ namespace io.nem2.sdk.src.Model
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),
-                Deadline = Deadline.AutoDeadline(Node, Port).Ticks.ConvertFromUInt64(),               
-                Fee = DataConverter.ConvertFromUInt64(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AutoDeadline(Node, Port).Ticks),               
+                Fee = DataConverter.ConvertFrom(fee)
             };
         }
     }  

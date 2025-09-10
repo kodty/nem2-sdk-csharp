@@ -13,39 +13,39 @@ namespace Unit_Tests.Model.Mosaics
 
             var symbolId1 = IdGenerator.GenerateId(0, "xym");
 
-            Assert.That(DataConverter.ConvertFromUInt64(symbolId).ToHex(), Is.EqualTo("A95F1F8A96159516"));
+            Assert.That(DataConverter.ConvertFrom(symbolId).ToHex(), Is.EqualTo("A95F1F8A96159516"));
             
-            Assert.That(DataConverter.ConvertFromUInt64(symbolId1).ToHex(), Is.EqualTo("84CB6A45853E78C4"));
+            Assert.That(DataConverter.ConvertFrom(symbolId1).ToHex(), Is.EqualTo("84CB6A45853E78C4"));
             
             var xymId = IdGenerator.GenerateId(symbolId, "xym");
 
-            Assert.That(DataConverter.ConvertFromUInt64(xymId).ToHex(), Is.EqualTo("E74B99BA41F4AFEE"));
+            Assert.That(DataConverter.ConvertFrom(xymId).ToHex(), Is.EqualTo("E74B99BA41F4AFEE"));
         }
 
         [Test]
         public static void Test16bitDataConverter()
         {
-            var bytes = DataConverter.ConvertFromUInt16(16961);
+            var bytes = DataConverter.ConvertFrom(16961);
 
             Assert.That(bytes.ToHex(), Is.EqualTo("4142")); // little endian
-            Assert.That(bytes.ConvertToUInt32(), Is.EqualTo(16961));
+            Assert.That(bytes.ConvertTo<ushort>(), Is.EqualTo(16961));
         }
 
         [Test]
         public static void Test32bitDataConverter()
         {
-            var bytes = DataConverter.ConvertFromUInt32(16961);
+            var bytes = DataConverter.ConvertFrom(16961);
 
-            Assert.That(bytes.ToHex(), Is.EqualTo("41420000")); // little endian
-            Assert.That(bytes.ConvertToUInt32(), Is.EqualTo(16961)); 
+            Assert.That(bytes.ToHex(), Is.EqualTo("4142")); // little endian
+            Assert.That(bytes.ConvertTo<uint>(), Is.EqualTo(16961)); 
         }
 
         [Test]
         public static void Test64bitDataConverter()
         {
-            var array = ((ulong)812613930).ConvertFromUInt64();
+            var array = DataConverter.ConvertFrom(812613930);
 
-            Assert.That("2A816F3000000000", Is.EqualTo(array.ToHex())); // little endian
+            Assert.That("2A816F30", Is.EqualTo(array.ToHex())); // little endian
         }
 
         [Test]
@@ -56,14 +56,14 @@ namespace Unit_Tests.Model.Mosaics
             var id = IdGenerator.GenerateId(decoded, 713125680);
             var id2 = IdGenerator.GenerateId(decoded, 729902896);
 
-            Assert.That(DataConverter.ConvertFromUInt64(id).ToHex(), Is.EqualTo("570FB3ED9379624C"));
-            Assert.That(DataConverter.ConvertFromUInt64(id2).ToHex(), !Is.EqualTo("570FB3ED9379624C"));
+            Assert.That(DataConverter.ConvertFrom(id).ToHex(), Is.EqualTo("570FB3ED9379624C"));
+            Assert.That(DataConverter.ConvertFrom(id2).ToHex(), !Is.EqualTo("570FB3ED9379624C"));
         }
 
         [Test]
         public static void ConvertUlongToHexId()
         {
-            var id = DataConverter.ToHex(DataConverter.ConvertFromUInt64(95442763262823));
+            var id = DataConverter.ToHex(DataConverter.ConvertFrom(95442763262823));
         }
     }
 }

@@ -16,7 +16,7 @@ namespace io.nem2.sdk.src.Core.Utils
 
         public static ulong GenerateId(byte[] hexAddress, uint nonce)
         {
-            return ReturnId(hexAddress, nonce.ConvertFromUInt32().Reverse().ToArray());
+            return ReturnId(hexAddress, DataConverter.ConvertFrom(nonce).Reverse().ToArray());
         }
 
         
@@ -24,7 +24,7 @@ namespace io.nem2.sdk.src.Core.Utils
         {
             var n = Encoding.UTF8.GetBytes(name);
 
-            return ReturnId(n, parentId.ConvertFromUInt64().Reverse().ToArray(), true);
+            return ReturnId(n, DataConverter.ConvertFrom(parentId).Reverse().ToArray(), true);
         }
 
         private static ulong ReturnId(byte[] n, byte[] p, bool nsFlag = false)
@@ -43,7 +43,7 @@ namespace io.nem2.sdk.src.Core.Utils
 
             result = result.Take(8).Reverse().ToArray();
 
-            return result.ConvertToUInt64();
+            return result.ConvertTo<ulong>();
         }    
     }
 }

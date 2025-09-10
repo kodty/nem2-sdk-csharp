@@ -20,7 +20,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
 
             var supplyChange = factory.CreateMosaicSupplyChangeTransaction(
                     10,
-                    DataConverter.ConvertFromUInt64(6300565133566699913).ToHex(),
+                    DataConverter.ConvertFrom(6300565133566699913).ToHex(),
                     MosaicSupplyType.Type.INCREASE,
                     true
                 );
@@ -50,7 +50,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
 
             var supplyChange = factory.CreateMosaicSupplyChangeTransaction(
                     10,
-                    DataConverter.ConvertFromUInt64(6300565133566699913).ToHex(),
+                    DataConverter.ConvertFrom(6300565133566699913).ToHex(),
                     MosaicSupplyType.Type.INCREASE,
                     true
                 );
