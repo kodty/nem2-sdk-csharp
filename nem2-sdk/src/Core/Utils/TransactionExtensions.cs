@@ -29,7 +29,7 @@ public static class TransactionExtensions
         };
     }
 
-    internal static SignedTransaction PrepareVerified(this Transaction transaction, SecretKeyPair keyPair)
+    internal static SignedTransaction PrepareVerified(this Transaction transaction, SecretKeyPair keyPair, string genHash)
     {
         transaction.EntityBody.Signer = keyPair.PublicKey;
 
@@ -37,7 +37,7 @@ public static class TransactionExtensions
 
         var signingBytes = new byte[32 + body.Length - 32 - 4];
 
-        var genHashBytes = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4".FromHex();
+        var genHashBytes = genHash.FromHex();
 
         for (int x = 0; x < 32; x++)
             signingBytes[x] = genHashBytes[x];

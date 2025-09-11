@@ -38,7 +38,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     false
                 );
            
-            var st = transfer.WrapVerified(keys);
+            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
 
             var s = listener.GetTransactionStatus(Address.CreateFromPublicKey(transfer.EntityBody.Signer.ToHex(), NetworkType.Types.TEST_NET))
              .Subscribe(e =>

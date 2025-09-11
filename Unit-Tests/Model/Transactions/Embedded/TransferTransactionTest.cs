@@ -64,7 +64,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
                 new byte[] { }, 
                 false);
 
-            var aggPayload = aggTx.WrapVerified(keys);
+            var aggPayload = aggTx.WrapVerified(keys, HttpSetUp.genHash);
 
             Assert.True(aggPayload.Payload.ToHex().Contains(transfer.Embed(keys.PublicKeyString).Payload.Concat(supplyChange.Embed(keys.PublicKeyString).Payload).ToArray().ToHex()));
            //Assert.That(aggPayload.Payload.ToHex(), Is.EqualTo(""));

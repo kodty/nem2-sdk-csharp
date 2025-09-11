@@ -73,9 +73,9 @@
             return TransactionExtensions.PrepareEmbedded(this, account);
         }
 
-        public SignedTransaction WrapVerified(SecretKeyPair account)
+        public SignedTransaction WrapVerified(SecretKeyPair account, string genHash)
         {
-            return TransactionExtensions.PrepareVerified(this, account);
+            return TransactionExtensions.PrepareVerified(this, account, genHash);
         }   
     }
 }
