@@ -32,7 +32,7 @@ public static class TransactionExtensions
     internal static SignedTransaction PrepareVerified(this Transaction transaction, SecretKeyPair keyPair, string genHash)
     {
         transaction.EntityBody.Signer = keyPair.PublicKey;
-
+        
         var body = Serialize(transaction.GetType(), transaction, false, transaction.Size);
 
         var signingBytes = new byte[32 + body.Length - 32 - 4];
@@ -44,14 +44,14 @@ public static class TransactionExtensions
 
         Array.Copy(body, 32 + 4, signingBytes, 32, body.Length - 32 - 4);
 
-        var VerifiableEntity = new VerifiableEntity()
+        var verifiableEntity = new VerifiableEntity()
         {
             Size = transaction.Size + 72,
             VerifiableEntityHeaderReserved = 0,
             Signature = keyPair.Sign(signingBytes)
         };
 
-        var header = Serialize(typeof(VerifiableEntity), VerifiableEntity, false, 72);
+        var header = Serialize(typeof(VerifiableEntity), verifiableEntity, false, 72);
 
         var pl = header.Concat(body).ToArray();
 
@@ -60,22 +60,16 @@ public static class TransactionExtensions
             Payload = pl,
             SignedBytes = signingBytes,
             Signer = keyPair.PublicKeyString,
-            Signature = VerifiableEntity.Signature.ToHex(),
-            Hash = HashTransaction(pl)
+            Signature = verifiableEntity.Signature.ToHex(),
+            Hash = HashTransaction(pl, verifiableEntity.Signature, keyPair.PublicKey, genHash)
         };
     }
 
-    internal static string HashTransaction(byte[] payload)
+    internal static string HashTransaction(byte[] payload, byte[] signature, byte[] signer, string genHash)
     {
-        var signature = payload.SubArray(4 + 4, 64);
+        var transactionData = payload.SubArray(4 + 4 + 64 + 32 + 4, payload.Length - (4 + 4 + 64 + 32 + 4));
 
-        var signer = payload.SubArray(4 + 4 + 64, 32);
-
-        var genHash = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4".FromHex();
-
-        var transactionData = payload.SubArray(4 + 4 + 64 + 32, payload.Length - (4 + 4 + 64 + 32));
-
-        var final = signature.Concat(signer).Concat(genHash).Concat(transactionData).ToArray();
+        var final = signature.Concat(signer).Concat(genHash.FromHex()).Concat(transactionData).ToArray();
 
         var hash = new byte[32];
 

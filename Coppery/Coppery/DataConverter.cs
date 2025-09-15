@@ -2,6 +2,16 @@
 {
     public static class DataConverter
     {
+        public static byte[] FromHex(this string hexString)
+        {
+            return Convert.FromHexString(hexString);
+        }
+
+        public static string ToHex(this byte[] data)
+        {
+            return Convert.ToHexString(data);
+        }
+
         public static byte[] ConvertFrom(this string[] value)
         {
             int len = 0;
@@ -34,15 +44,6 @@
             return bitValues;
         }
 
-        public static byte[] FromHex(this string hexString)
-        {
-            return Convert.FromHexString(hexString);
-        }
-
-        public static string ToHex(this byte[] data)
-        {
-            return Convert.ToHexString(data);
-        }
 
         public static byte[] ConvertFrom(ulong value)
         {

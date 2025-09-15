@@ -24,6 +24,25 @@ namespace test.Model.AccountTest
     public class AccountTest
     {
         [Test]
+        public void GenerateAccounts()
+        {
+            for(int x = 0; x < 1000; x++)
+            {
+                var newAcc = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
+                
+                foreach(byte a in newAcc.KeyPair.PrivateKey)
+                {
+                    Debug.WriteLine(Array.IndexOf(newAcc.KeyPair.PrivateKey, a));
+                    Assert.IsTrue(a != 0);
+                }
+
+                Assert.That(newAcc.PublicAccount.PublicKey.ToHex().Length, Is.EqualTo(64));
+                Assert.That(newAcc.KeyPair.PrivateKeyString.IsHex());
+                Assert.That(newAcc.PublicAccount.PublicKey.ToHex().IsHex());
+            }
+        }
+
+        [Test]
         public void CreateNewTestNetAccount()
         {
             var newAcc = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
