@@ -8,14 +8,6 @@ namespace Unit_Tests.DeadlineTests
     {
 
         [Test]
-        public void TestNetDeadline()
-        {
-            var deadline = new Deadline(0);
-
-            Debug.WriteLine(deadline.Ticks);
-        }
-
-        [Test]
         public void TestNetDeadlineAutoVsManual()
         {
             var deadline = Deadline.AutoDeadline("153.126.132.254", 3000);
