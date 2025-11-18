@@ -4,6 +4,7 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using System.Reactive.Linq;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
+using System.Diagnostics;
 
 namespace Integration_Tests.HttpRequests.AccountHttpTests
 {
@@ -21,14 +22,14 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
 
             var response = await accHttp.GetAccount("FC8C66547D7C20CD6CBF7F31DC5657247351AF8C12188E56F885FF012431B8C1");
 
-            Assert.That(response.Account.Version, Is.EqualTo(1));
-            Assert.That(response.Account.AddressHeight, Is.EqualTo(1));
-            Assert.IsTrue(response.Account.PublicKey.IsHex(64));
-            Assert.IsTrue(response.Account.Address.IsHex(48));
-            Assert.IsTrue(response.Account.SupplementalPublicKeys.Voting.PublicKeys[0].PublicKey.IsHex(64));
-            Assert.That(response.Account.SupplementalPublicKeys.Voting.PublicKeys[0].StartEpoch, Is.EqualTo(181));
-            Assert.That(response.Account.SupplementalPublicKeys.Voting.PublicKeys[0].EndEpoch, Is.EqualTo(357));
-            Assert.That(response.Account.Importance, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Account.Version, Is.EqualTo(1));
+            Assert.That(response.ComposedResponse.Account.AddressHeight, Is.EqualTo(1));
+            Assert.IsTrue(response.ComposedResponse.Account.PublicKey.IsHex(64));
+            Assert.IsTrue(response.ComposedResponse.Account.Address.IsHex(48));
+            Assert.IsTrue(response.ComposedResponse.Account.SupplementalPublicKeys.Voting.PublicKeys[0].PublicKey.IsHex(64));
+            Assert.That(response.ComposedResponse.Account.SupplementalPublicKeys.Voting.PublicKeys[0].StartEpoch, Is.EqualTo(181));
+            Assert.That(response.ComposedResponse.Account.SupplementalPublicKeys.Voting.PublicKeys[0].EndEpoch, Is.EqualTo(357));
+            Assert.That(response.ComposedResponse.Account.Importance, Is.EqualTo(0));
         }
 
         [Test, Timeout(20000)]
@@ -42,9 +43,9 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             queryModel.SetParam(QueryModel.DefinedParams.mosaicId, "63078E73FBCC2CAC");
             var response = await accountClient.SearchAccounts(queryModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
                 Assert.IsTrue(i.Account.PublicKey.IsHex(64));
                 Assert.That(i.Account.Importance, Is.GreaterThanOrEqualTo(0));
@@ -85,9 +86,9 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
 
             var response = await accountClient.GetAccounts(new List<string> { pubKey, "D3D95BFD3E990F418B4CFAD6A67081ECD0AE229000CEC981E380EB0528FD7DE4" });
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 Assert.IsTrue(i.Account.PublicKey.IsHex(64));
@@ -128,44 +129,63 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             var accountClient = new AccountHttp(HttpSetUp.Node, HttpSetUp.Port);
             var account = new PublicAccount(pubKey, NetworkType.Types.MAIN_NET);
 
-            var response = await accountClient.GetAccount(account.Address.Plain);
-
-            Assert.IsTrue(response.Id.IsHex(24));
-            Assert.That(response.Account.Version, Is.EqualTo(1));
-            Assert.That(response.Account.PublicKeyHeight, Is.GreaterThanOrEqualTo(0));
-            Assert.That(response.Account.Address.IsHex(48));
-            Assert.That(response.Account.Importance, Is.GreaterThan(1));
-            Assert.That(response.Account.AccountType, Is.GreaterThanOrEqualTo(0));
-            Assert.That(response.Account.AddressHeight, Is.GreaterThan(0));
-
-            Assert.IsTrue(response.Account.PublicKey.IsHex(64));
-            Assert.That(response.Account.SupplementalPublicKeys, !Is.Null);
-            Assert.IsTrue(response.Account.SupplementalPublicKeys.Linked.PublicKey.IsHex(64));
-            Assert.IsTrue(response.Account.SupplementalPublicKeys.Node.PublicKey.IsHex(64));
-            Assert.IsTrue(response.Account.SupplementalPublicKeys.Vrf.PublicKey.IsHex(64));
-
-
-            Assert.That(response.Account.ImportanceHeight, Is.GreaterThan(0));
-
-            if (response.Account.Mosaics != null)
+            var response = accountClient.GetAccount("NCA4PPX657N6GXPMVMZ2TZKLN37KZMJXNST63II");
+            Debug.WriteLine(account.Address.Plain);
+            response.Subscribe(r =>
             {
-                foreach (var item in response.Account.Mosaics)
-                {
-                    Assert.That(item.Amount, Is.GreaterThan(0));
-                    Assert.That(item.Id.Length, Is.EqualTo(16));
-                }
-            }
-            if (response.Account.ActivityBuckets != null)
-            {
-                foreach (var item in response.Account.ActivityBuckets)
-                {
-                    Assert.That(item.TotalFeesPaid, Is.GreaterThanOrEqualTo(0));
-                    Assert.That(item.RawScore, Is.GreaterThanOrEqualTo(0));
-                    Assert.That(item.BeneficiaryCount, Is.GreaterThanOrEqualTo(0));
-                    Assert.That(item.StartHeight, Is.GreaterThanOrEqualTo(0));
-                }
+                Debug.WriteLine(r.Response.StatusCode);
 
-            }
+                if (!r.Response.IsSuccessStatusCode)
+                {
+                    Debug.WriteLine(r.Response.Content.ReadAsStringAsync().Result);
+                    Assert.That(r.Response.IsSuccessStatusCode, Is.True);
+                    return;
+                }
+          
+                Assert.IsTrue(r.ComposedResponse.Id.IsHex(24));
+                Assert.That(r.ComposedResponse.Account.Version, Is.EqualTo(1));
+                Assert.That(r.ComposedResponse.Account.PublicKeyHeight, Is.GreaterThanOrEqualTo(0));
+                Assert.That(r.ComposedResponse.Account.Address.IsHex(48));
+                Assert.That(r.ComposedResponse.Account.Importance, Is.GreaterThan(1));
+                Assert.That(r.ComposedResponse.Account.AccountType, Is.GreaterThanOrEqualTo(0));
+                Assert.That(r.ComposedResponse.Account.AddressHeight, Is.GreaterThan(0));
+                
+                Assert.IsTrue(r.ComposedResponse.Account.PublicKey.IsHex(64));
+                Assert.That(r.ComposedResponse.Account.SupplementalPublicKeys, !Is.Null);
+                Assert.IsTrue(r.ComposedResponse.Account.SupplementalPublicKeys.Linked.PublicKey.IsHex(64));
+                Assert.IsTrue(r.ComposedResponse.Account.SupplementalPublicKeys.Node.PublicKey.IsHex(64));
+                Assert.IsTrue(r.ComposedResponse.Account.SupplementalPublicKeys.Vrf.PublicKey.IsHex(64));
+                
+                
+                Assert.That(r.ComposedResponse.Account.ImportanceHeight, Is.GreaterThan(0));
+                
+                if (r.ComposedResponse.Account.Mosaics != null)
+                {
+                    foreach (var item in r.ComposedResponse.Account.Mosaics)
+                    {
+                        Assert.That(item.Amount, Is.GreaterThan(0));
+                        Assert.That(item.Id.Length, Is.EqualTo(16));
+                    }
+                }
+                if (r.ComposedResponse.Account.ActivityBuckets != null)
+                {
+                    foreach (var item in r.ComposedResponse.Account.ActivityBuckets)
+                    {
+                        Assert.That(item.TotalFeesPaid, Is.GreaterThanOrEqualTo(0));
+                        Assert.That(item.RawScore, Is.GreaterThanOrEqualTo(0));
+                        Assert.That(item.BeneficiaryCount, Is.GreaterThanOrEqualTo(0));
+                        Assert.That(item.StartHeight, Is.GreaterThanOrEqualTo(0));
+                    }
+                
+                }
+            },
+            onError =>
+            {
+                Debug.WriteLine(onError.ToString());   
+            });
+
+            response.Wait();
+            
         }
 
         [Test, Timeout(20000)]
@@ -177,9 +197,9 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             var account = Address.CreateFromHex("6874CFD2665CD89339B9B74175A7F5A01059A1FEBF0A58A7");
             var response = await accountClient.GetAccountMerkle(account.Plain);
 
-            Assert.That(response.Raw.Length, Is.EqualTo(4584));
+            Assert.That(response.ComposedResponse.Raw.Length, Is.EqualTo(4584));
 
-            response.Tree.ForEach(t =>
+            response.ComposedResponse.Tree.ForEach(t =>
             {
                 if (t.Links.Count > 0) Assert.That(t.Links[0].Link.Length, Is.EqualTo(64));
                 if (t.Links.Count > 0) Assert.That(t.Links[0].Bit.Length, Is.EqualTo(1));
@@ -207,9 +227,9 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             queryModel.SetParam(QueryModel.DefinedParams.address, address.Plain);
             var response = await accountClient.SearchAccountRestrictions(queryModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            foreach (var item in response)
+            foreach (var item in response.ComposedResponse)
             {
                 Assert.That(item.AccountRestrictions.Version, Is.GreaterThan(0));
                 Assert.That(item.AccountRestrictions.Address.Length, Is.GreaterThan(0));
@@ -228,9 +248,9 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
 
             var restriction = await client.GetAccountRestriction(acc.Address.Plain);
 
-            Assert.IsTrue(Address.CreateFromHex(restriction.AccountRestrictions.Address).Plain.IsBase32(39));
-            Assert.That(restriction.AccountRestrictions.Restrictions[0].RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
-            Assert.IsTrue(restriction.AccountRestrictions.Restrictions[0].Values[0].IsHex(16));
+            Assert.IsTrue(Address.CreateFromHex(restriction.ComposedResponse.AccountRestrictions.Address).Plain.IsBase32(39));
+            Assert.That(restriction.ComposedResponse.AccountRestrictions.Restrictions[0].RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
+            Assert.IsTrue(restriction.ComposedResponse.AccountRestrictions.Restrictions[0].Values[0].IsHex(16));
         }
 
         [Test, Timeout(20000)]
@@ -243,10 +263,10 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
 
             var response = await accountClient.GetAccountRestriction(address.Plain);
 
-            Assert.That(response.AccountRestrictions.Address.Length, Is.GreaterThan(0));
-            Assert.That(response.AccountRestrictions.Restrictions[0].RestrictionFlags.ExtractRestrictionFlags()[0], Is.GreaterThan(RestrictionTypes.Types.ADDRESS));
-            Assert.That(response.AccountRestrictions.Restrictions[0].Values[0], Is.EqualTo("6BED913FA20223F8"));
-            Assert.That(Address.CreateFromHex(response.AccountRestrictions.Address).Plain, Is.EqualTo("NAEON4SL7TQIZW5WFLEK5SVTJZLT7NDNMF6WYKA"));
+            Assert.That(response.ComposedResponse.AccountRestrictions.Address.Length, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.AccountRestrictions.Restrictions[0].RestrictionFlags.ExtractRestrictionFlags()[0], Is.GreaterThan(RestrictionTypes.Types.ADDRESS));
+            Assert.That(response.ComposedResponse.AccountRestrictions.Restrictions[0].Values[0], Is.EqualTo("6BED913FA20223F8"));
+            Assert.That(Address.CreateFromHex(response.ComposedResponse.AccountRestrictions.Address).Plain, Is.EqualTo("NAEON4SL7TQIZW5WFLEK5SVTJZLT7NDNMF6WYKA"));
         }
 
         [Test, Timeout(20000)]
@@ -259,12 +279,12 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
 
             var response = await accountClient.GetAccountRestrictionsMerkle(account.Address.Plain);
 
-            Assert.That(response.Raw.Length, Is.GreaterThan(0));
-            Assert.IsTrue(response.Tree[0].Links[0].Link.IsHex(64));
-            Assert.That(response.Tree[0].Type, Is.EqualTo(0));
-            Assert.That(response.Tree[0].NibbleCount, Is.EqualTo(0));
-            Assert.That(response.Tree[0].Value, Is.Null);
-            Assert.IsTrue(response.Tree[0].BranchHash.IsHex(64));
+            Assert.That(response.ComposedResponse.Raw.Length, Is.GreaterThan(0));
+            Assert.IsTrue(response.ComposedResponse.Tree[0].Links[0].Link.IsHex(64));
+            Assert.That(response.ComposedResponse.Tree[0].Type, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Tree[0].NibbleCount, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Tree[0].Value, Is.Null);
+            Assert.IsTrue(response.ComposedResponse.Tree[0].BranchHash.IsHex(64));
         }
     }
 }

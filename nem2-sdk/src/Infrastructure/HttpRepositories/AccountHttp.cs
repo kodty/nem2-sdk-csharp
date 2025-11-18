@@ -4,7 +4,7 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Text;
 using System.Text.Json;
-
+using io.nem2.sdk.src.Infrastructure.HttpExtension;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -15,47 +15,47 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             
         }
 
-        public IObservable<List<AccountData>> SearchAccounts(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessage<List<AccountData>>> SearchAccounts(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts"], queryModel)))
-                 .Select(r => { return Composer.FilterEvents<AccountData>(OverrideEnsureSuccessStatusCode(r), "data"); });
+                 .Select(FormListResponse<AccountData>);               
         }
 
-        public IObservable<AccountData> GetAccount(string pubkOrAddress)
+        public IObservable<ExtendedHttpResponseMessage<AccountData>> GetAccount(string pubkOrAddress)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts",pubkOrAddress])))
-                 .Select(r => { return Composer.GenerateObject<AccountData>(OverrideEnsureSuccessStatusCode(r)); });
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts", pubkOrAddress])))
+                .Select(FormResponse<AccountData>);           
         }
 
-        public IObservable<List<AccountData>> GetAccounts(List<string> accounts) // flag
+        public IObservable<ExtendedHttpResponseMessage<List<AccountData>>> GetAccounts(List<string> accounts) // flag
         {
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["accounts"]), new StringContent(JsonSerializer.Serialize(new Public_Keys() { publicKeys = accounts }), Encoding.UTF8, "application/json")))
-                  .Select(r => { return Composer.FilterEvents<AccountData>(OverrideEnsureSuccessStatusCode(r)); });
+                  .Select(FormListResponse<AccountData>);
         }
 
 
-        public IObservable<MerkleRoot> GetAccountMerkle(string pubkOrAddress)
+        public IObservable<ExtendedHttpResponseMessage<MerkleRoot>> GetAccountMerkle(string pubkOrAddress)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts", pubkOrAddress, "merkle"])))
-                 .Select(r => { return Composer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(FormResponse<MerkleRoot>);
         }
 
-        public IObservable<List<RestrictionData>> SearchAccountRestrictions(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessage<List<RestrictionData>>> SearchAccountRestrictions(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account"], queryModel)))
-                .Select(r => { return Composer.FilterEvents<RestrictionData>(OverrideEnsureSuccessStatusCode(r), "data"); });
+                .Select(FormListResponse<RestrictionData>);
         }
 
-        public IObservable<RestrictionData> GetAccountRestriction(string address)
+        public IObservable<ExtendedHttpResponseMessage<RestrictionData>> GetAccountRestriction(string address)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account", address])))
-                .Select(r => { return Composer.GenerateObject<RestrictionData>(OverrideEnsureSuccessStatusCode(r)); });
+                 .Select(FormResponse<RestrictionData>);
         }
 
-        public IObservable<MerkleRoot> GetAccountRestrictionsMerkle(string address)
+        public IObservable<ExtendedHttpResponseMessage<MerkleRoot>> GetAccountRestrictionsMerkle(string address)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account", address, "merkle" ])))
-                .Select(r => { return Composer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(FormResponse<MerkleRoot>);
         }
     }
 }

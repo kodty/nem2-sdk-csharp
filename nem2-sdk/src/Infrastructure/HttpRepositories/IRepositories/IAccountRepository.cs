@@ -1,17 +1,18 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+﻿using io.nem2.sdk.src.Infrastructure.HttpExtension;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
 {
     interface IAccountRepository
     {
-        IObservable<List<AccountData>> SearchAccounts(QueryModel queryModel);
-        IObservable<AccountData> GetAccount(string pubkOrAddress);
-        IObservable<List<AccountData>> GetAccounts(List<string> publicKeys);
-        IObservable<MerkleRoot> GetAccountMerkle(string pubkOrAddress);
+        IObservable<ExtendedHttpResponseMessage<List<AccountData>>> SearchAccounts(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessage<AccountData>> GetAccount(string pubkOrAddress);
+        IObservable<ExtendedHttpResponseMessage<List<AccountData>>> GetAccounts(List<string> publicKeys);
+        IObservable<ExtendedHttpResponseMessage<MerkleRoot>> GetAccountMerkle(string pubkOrAddress);
 
         // restrictions
-        IObservable<List<RestrictionData>> SearchAccountRestrictions(QueryModel queryModel);
-        IObservable<RestrictionData> GetAccountRestriction(string compositeHash);
-        IObservable<MerkleRoot> GetAccountRestrictionsMerkle(string compositeHash);
+        IObservable<ExtendedHttpResponseMessage<List<RestrictionData>>> SearchAccountRestrictions(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessage<RestrictionData>> GetAccountRestriction(string compositeHash);
+        IObservable<ExtendedHttpResponseMessage<MerkleRoot>> GetAccountRestrictionsMerkle(string compositeHash);
     }
 }

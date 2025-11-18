@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model;
 using System.Diagnostics;
@@ -75,6 +76,30 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             }
 
             return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
+        }
+
+        internal ExtendedHttpResponseMessage<List<T>> FormListResponse<T>(HttpResponseMessage msg)
+        {
+            var extendedResponse = new ExtendedHttpResponseMessage<List<T>>();
+
+            extendedResponse.Response = msg;
+
+            if (msg.IsSuccessStatusCode)
+                extendedResponse.ComposedResponse = Composer.FilterEvents<T>(msg.Content.ReadAsStringAsync().Result, "data");
+
+            return extendedResponse;
+        }
+
+        internal ExtendedHttpResponseMessage<T> FormResponse<T>(HttpResponseMessage msg)
+        {
+            var extendedResponse = new ExtendedHttpResponseMessage<T>();
+
+            extendedResponse.Response = msg;
+
+            if (msg.IsSuccessStatusCode)
+                extendedResponse.ComposedResponse = Composer.GenerateObject<T>(msg.Content.ReadAsStringAsync().Result);
+
+            return extendedResponse;
         }
     }
 }
