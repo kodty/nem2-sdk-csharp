@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpExtension
 {
-    public class ExtendedHttpResponseMessage<T>
+    public class ExtendedHttpResponseMessege<T>
     {
         public HttpResponseMessage Response { get; set; }
         public T ComposedResponse { get; set; }

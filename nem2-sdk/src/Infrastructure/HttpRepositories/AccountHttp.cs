@@ -15,44 +15,44 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             
         }
 
-        public IObservable<ExtendedHttpResponseMessage<List<AccountData>>> SearchAccounts(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<List<AccountData>>> SearchAccounts(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts"], queryModel)))
-                 .Select(FormListResponse<AccountData>);               
+                 .Select(r => { return FormListResponse<AccountData>(r, "data"); });               
         }
 
-        public IObservable<ExtendedHttpResponseMessage<AccountData>> GetAccount(string pubkOrAddress)
+        public IObservable<ExtendedHttpResponseMessege<AccountData>> GetAccount(string pubkOrAddress)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts", pubkOrAddress])))
                 .Select(FormResponse<AccountData>);           
         }
 
-        public IObservable<ExtendedHttpResponseMessage<List<AccountData>>> GetAccounts(List<string> accounts) // flag
+        public IObservable<ExtendedHttpResponseMessege<List<AccountData>>> GetAccounts(List<string> accounts) // flag
         {
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["accounts"]), new StringContent(JsonSerializer.Serialize(new Public_Keys() { publicKeys = accounts }), Encoding.UTF8, "application/json")))
-                  .Select(FormListResponse<AccountData>);
+                  .Select(r => { return FormListResponse<AccountData>(r, "data"); });
         }
 
 
-        public IObservable<ExtendedHttpResponseMessage<MerkleRoot>> GetAccountMerkle(string pubkOrAddress)
+        public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetAccountMerkle(string pubkOrAddress)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts", pubkOrAddress, "merkle"])))
                 .Select(FormResponse<MerkleRoot>);
         }
 
-        public IObservable<ExtendedHttpResponseMessage<List<RestrictionData>>> SearchAccountRestrictions(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<List<RestrictionData>>> SearchAccountRestrictions(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account"], queryModel)))
-                .Select(FormListResponse<RestrictionData>);
+                .Select(r => { return FormListResponse<RestrictionData>(r, "data"); });
         }
 
-        public IObservable<ExtendedHttpResponseMessage<RestrictionData>> GetAccountRestriction(string address)
+        public IObservable<ExtendedHttpResponseMessege<RestrictionData>> GetAccountRestriction(string address)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account", address])))
                  .Select(FormResponse<RestrictionData>);
         }
 
-        public IObservable<ExtendedHttpResponseMessage<MerkleRoot>> GetAccountRestrictionsMerkle(string address)
+        public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetAccountRestrictionsMerkle(string address)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account", address, "merkle" ])))
                 .Select(FormResponse<MerkleRoot>);

@@ -78,9 +78,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
         }
 
-        internal ExtendedHttpResponseMessage<List<T>> FormListResponse<T>(HttpResponseMessage msg)
+        internal ExtendedHttpResponseMessege<List<T>> FormListResponse<T>(HttpResponseMessage msg, string path)
         {
-            var extendedResponse = new ExtendedHttpResponseMessage<List<T>>();
+            var extendedResponse = new ExtendedHttpResponseMessege<List<T>>();
 
             extendedResponse.Response = msg;
 
@@ -90,9 +90,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return extendedResponse;
         }
 
-        internal ExtendedHttpResponseMessage<T> FormResponse<T>(HttpResponseMessage msg)
+        internal ExtendedHttpResponseMessege<T> FormResponse<T>(HttpResponseMessage msg)
         {
-            var extendedResponse = new ExtendedHttpResponseMessage<T>();
+            var extendedResponse = new ExtendedHttpResponseMessege<T>();
 
             extendedResponse.Response = msg;
 
