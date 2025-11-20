@@ -28,9 +28,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         }
 
         public IObservable<ExtendedHttpResponseMessege<List<AccountData>>> GetAccounts(List<string> accounts) // flag
-        {
+        { // only accounts api that needs null path
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["accounts"]), new StringContent(JsonSerializer.Serialize(new Public_Keys() { publicKeys = accounts }), Encoding.UTF8, "application/json")))
-                  .Select(r => { return FormListResponse<AccountData>(r, "data"); });
+                  .Select(r => { return FormListResponse<AccountData>(r); });
         }
 
 

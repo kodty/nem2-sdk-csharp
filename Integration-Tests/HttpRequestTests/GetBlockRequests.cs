@@ -26,9 +26,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchBlocks(queryModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 Assert.That(i.Block.Height, Is.GreaterThan(0));
@@ -67,12 +67,12 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetBlock(1);
 
-            Assert.That(response.Block.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
-            Assert.IsTrue(response.Meta.Hash.IsHex(64));
-            Assert.That(response.Meta.StatementsCount, Is.EqualTo(259));
-            Assert.That(response.Meta.TotalFee, Is.EqualTo(0));
-            Assert.That(response.Id.IsHex(24));
-            Assert.That(response.Block.Height, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Block.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
+            Assert.IsTrue(response.ComposedResponse.Meta.Hash.IsHex(64));
+            Assert.That(response.ComposedResponse.Meta.StatementsCount, Is.EqualTo(259));
+            Assert.That(response.ComposedResponse.Meta.TotalFee, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Id.IsHex(24));
+            Assert.That(response.ComposedResponse.Block.Height, Is.GreaterThan(0));
         }
 
         [Test, Timeout(20000)]
@@ -82,8 +82,8 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetBlockTransactionMerkle(1, "B3FAD63E287D08209AA9CBE5E2E48CC1BEB1DA57993CBE7BE17E39C089186302");
 
-            Assert.That(response[0].Hash.IsHex(64));
-            Assert.That(response[0].Position, Is.EqualTo("right"));
+            Assert.That(response.ComposedResponse[0].Hash.IsHex(64));
+            Assert.That(response.ComposedResponse[0].Position, Is.EqualTo("right"));
 
         }
 
@@ -94,12 +94,12 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetBlockchainInfo();
 
-            Assert.That(response.Height, Is.GreaterThan(0));
-            Assert.That(response.ScoreHigh, Is.GreaterThan(0));
-            Assert.That(response.ScoreLow, Is.GreaterThan(0));
-            Assert.IsTrue(response.LatestFinalizedBlock.Hash.IsHex(64));
-            Assert.That(response.LatestFinalizedBlock.Height, Is.GreaterThan(0));
-            Assert.That(response.LatestFinalizedBlock.FinalizationEpoch, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Height, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.ScoreHigh, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.ScoreLow, Is.GreaterThan(0));
+            Assert.IsTrue(response.ComposedResponse.LatestFinalizedBlock.Hash.IsHex(64));
+            Assert.That(response.ComposedResponse.LatestFinalizedBlock.Height, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.LatestFinalizedBlock.FinalizationEpoch, Is.GreaterThan(0));
         }
     }
 }

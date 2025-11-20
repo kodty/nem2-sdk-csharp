@@ -78,14 +78,14 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
         }
 
-        internal ExtendedHttpResponseMessege<List<T>> FormListResponse<T>(HttpResponseMessage msg, string path)
+        internal ExtendedHttpResponseMessege<List<T>> FormListResponse<T>(HttpResponseMessage msg, string path = null)
         {
             var extendedResponse = new ExtendedHttpResponseMessege<List<T>>();
 
             extendedResponse.Response = msg;
 
             if (msg.IsSuccessStatusCode)
-                extendedResponse.ComposedResponse = Composer.FilterEvents<T>(msg.Content.ReadAsStringAsync().Result, "data");
+                extendedResponse.ComposedResponse = Composer.FilterEvents<T>(msg.Content.ReadAsStringAsync().Result, path);
 
             return extendedResponse;
         }
