@@ -6,17 +6,22 @@ namespace Coppery
 {
     public class ObjectComposer
     {
-        private object[] TypeArgs { get; set; }
+        private Type[] TypeArgs { get; set; }
 
         internal Func<string, bool, Type> GetTransactionType { get; set; }
 
-        public ObjectComposer(object[] args, Func<string, bool, Type> getTransactionType)
+        public ObjectComposer(Type[] args, Func<string, bool, Type> getTransactionType)
         {
             TypeArgs = args;
             GetTransactionType = getTransactionType;
         }
 
-        public List<T> FilterEvents<T>(string data, string path = null)
+        public ObjectComposer(Type[] args)
+        {
+            TypeArgs = args;
+        }
+
+        public List<T> ComposeEvents<T>(string data, string path = null)
         {
             var evs = path == null ? JsonNode.Parse(data) : JsonNode.Parse(data)[path];
 
@@ -30,7 +35,7 @@ namespace Coppery
             return events;
         }
 
-        public List<T> FilterTransactions<T>(string data, string path = null, bool embedded = false)
+        public List<T> ComposeTransactions<T>(string data, string path = null, bool embedded = false)
         {
             var tx = path == null ? JsonNode.Parse(data) : JsonNode.Parse(data)[path];
 
@@ -38,15 +43,23 @@ namespace Coppery
 
             foreach (var t in tx.AsArray())
             {
-                txs.Add(FilterSingle(typeof(T), t.ToString(), embedded));
+                txs.Add(ComposeTransaction(typeof(T), t.ToString(), embedded));
             }
 
             return txs;
         }
 
-        public T FilterSingle<T>(string data, bool embedded = false)
+        public dynamic ComposeTransaction(Type genType, string data, bool embedded = false)
         {
-            return FilterSingle(typeof(T), data, embedded);
+            var tx = JsonObject.Parse(data).AsObject();
+
+            var type = GetTransactionType(data, embedded);
+
+            dynamic shell = GenerateObject(genType, tx.AsObject());
+
+            shell.Transaction = GenerateObject(type, tx["transaction"].AsObject());
+
+            return shell;
         }
 
         public T GenerateObject<T>(string data)
@@ -112,18 +125,7 @@ namespace Coppery
             return Convert.ChangeType(actualObject, type);
         }
 
-        private dynamic FilterSingle(Type genType, string data, bool embedded = false)
-        {
-            var tx = JsonObject.Parse(data).AsObject();
-
-            var type = GetTransactionType(data, embedded);
-
-            dynamic shell = GenerateObject(genType, tx.AsObject());
-
-            shell.Transaction = GenerateObject(type, tx["transaction"].AsObject());
-
-            return shell;
-        }
+        
 
         private IList GetListTypeValue(Type type, JsonNode ob, string path)
         {
@@ -138,7 +140,7 @@ namespace Coppery
                     var tx = path == null ? ob.AsArray() : ob[path];
 
                     foreach (var t in tx.AsArray())
-                        values.Add(FilterSingle(genType, t.ToString(), true));
+                        values.Add(ComposeTransaction(genType, t.ToString(), true));
 
                     return values;
                 }
@@ -181,6 +183,9 @@ namespace Coppery
 
             if (TypeArgs.Contains(type.GetGenericArguments().SingleOrDefault()))
                 return GetListTypeValue(type, ob, path);
+
+            if (TypeArgs.Contains(type)) 
+                return GenerateObject(type, ob[path]);
 
             else throw new NotImplementedException(type.ToString());
         }
