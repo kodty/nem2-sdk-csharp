@@ -85,7 +85,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             extendedResponse.Response = msg;
 
             if (msg.IsSuccessStatusCode)
-                extendedResponse.ComposedResponse = Composer.FilterEvents<T>(msg.Content.ReadAsStringAsync().Result, path);
+                extendedResponse.ComposedResponse = Composer.ComposeEvents<T>(msg.Content.ReadAsStringAsync().Result, path);
 
             return extendedResponse;
         }

@@ -12,7 +12,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<List<SecretLockEvent>> SearchSecretLocks(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri([ "lock", "secret"])))
-              .Select(r => { return Composer.FilterEvents<SecretLockEvent>(OverrideEnsureSuccessStatusCode(r), "data"); });
+              .Select(r => { return Composer.ComposeEvents<SecretLockEvent>(OverrideEnsureSuccessStatusCode(r), "data"); });
         }
 
         public IObservable<SecretLockEvent> GetSecretLock(string hash)

@@ -12,7 +12,7 @@ namespace io.nem2.sdk.src.Model
             typeof(EmbeddedTransactionData)
             ];
 
-        public static object[] CustomTypes = [
+        public static Type[] CustomTypes = [
             typeof(ushort),
             typeof(bool),
             typeof(byte),

@@ -49,7 +49,12 @@ namespace Coppery
             return txs;
         }
 
-        public dynamic ComposeTransaction(Type genType, string data, bool embedded = false)
+        public T ComposeTransaction<T>(string data, bool embedded = false)
+        {
+            return ComposeTransaction(typeof(T), data, embedded);
+        }
+
+        internal dynamic ComposeTransaction(Type genType, string data, bool embedded = false)
         {
             var tx = JsonObject.Parse(data).AsObject();
 
