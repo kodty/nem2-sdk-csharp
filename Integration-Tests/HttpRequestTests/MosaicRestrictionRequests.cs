@@ -26,12 +26,12 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchMosaicRestrictions(queryModel);
 
-            Assert.That(response[3].MosaicRestrictionEntry.MosaicId, Is.EqualTo("613E6D0FC11F4530"));
-            Assert.That(response[3].MosaicRestrictionEntry.Version, Is.EqualTo(1));
-            Assert.That(response[3].MosaicRestrictionEntry.TargetAddress, Is.EqualTo("687B8885134F5BCE0AE5C97E222C5D3A462A3F4EA951CBE5"));
-            Assert.That(response[3].MosaicRestrictionEntry.CompositeHash, Is.EqualTo("A931981ED4D7E407D4F0F384E027490FA8771540693951A4DB63A00D8B48DF5F"));
-            Assert.That(response[3].MosaicRestrictionEntry.EntryType, Is.EqualTo(0));
-            Assert.IsTrue(response[3].MosaicRestrictionEntry.Restrictions[0].Key.IsHex(16));
+            Assert.That(response.ComposedResponse[3].MosaicRestrictionEntry.MosaicId, Is.EqualTo("613E6D0FC11F4530"));
+            Assert.That(response.ComposedResponse[3].MosaicRestrictionEntry.Version, Is.EqualTo(1));
+            Assert.That(response.ComposedResponse[3].MosaicRestrictionEntry.TargetAddress, Is.EqualTo("687B8885134F5BCE0AE5C97E222C5D3A462A3F4EA951CBE5"));
+            Assert.That(response.ComposedResponse[3].MosaicRestrictionEntry.CompositeHash, Is.EqualTo("A931981ED4D7E407D4F0F384E027490FA8771540693951A4DB63A00D8B48DF5F"));
+            Assert.That(response.ComposedResponse[3].MosaicRestrictionEntry.EntryType, Is.EqualTo(0));
+            Assert.IsTrue(response.ComposedResponse[3].MosaicRestrictionEntry.Restrictions[0].Key.IsHex(16));
         }
 
         [Test, Timeout(20000)]
@@ -41,14 +41,14 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetMosaicRestriction("048113BBAE7C5739F71C474FBD92EB911D4048170FC05EDEF28C4EDF8C665F52");
 
-            Assert.IsTrue(response.Id.IsHex(24));
-            Assert.IsTrue(response.MosaicRestrictionEntry.MosaicId.IsHex(16));
-            Assert.That(response.MosaicRestrictionEntry.Version, Is.EqualTo(1));
-            Assert.IsTrue(response.MosaicRestrictionEntry.TargetAddress.IsHex(48));
-            Assert.IsTrue(response.MosaicRestrictionEntry.CompositeHash.IsHex(64));
-            Assert.That(response.MosaicRestrictionEntry.EntryType, Is.EqualTo(0));
-            Assert.IsTrue(response.MosaicRestrictionEntry.Restrictions[0].Key.IsHex(16));
-            Assert.That(response.MosaicRestrictionEntry.Restrictions[0].Value, Is.EqualTo("1"));
+            Assert.IsTrue(response.ComposedResponse.Id.IsHex(24));
+            Assert.IsTrue(response.ComposedResponse.MosaicRestrictionEntry.MosaicId.IsHex(16));
+            Assert.That(response.ComposedResponse.MosaicRestrictionEntry.Version, Is.EqualTo(1));
+            Assert.IsTrue(response.ComposedResponse.MosaicRestrictionEntry.TargetAddress.IsHex(48));
+            Assert.IsTrue(response.ComposedResponse.MosaicRestrictionEntry.CompositeHash.IsHex(64));
+            Assert.That(response.ComposedResponse.MosaicRestrictionEntry.EntryType, Is.EqualTo(0));
+            Assert.IsTrue(response.ComposedResponse.MosaicRestrictionEntry.Restrictions[0].Key.IsHex(16));
+            Assert.That(response.ComposedResponse.MosaicRestrictionEntry.Restrictions[0].Value, Is.EqualTo("1"));
         }
 
         [Test, Timeout(20000)]
@@ -65,9 +65,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 var tx = (MosaicAddressRestriction)i.Transaction;
@@ -91,12 +91,12 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetMosaicRestrictionMerkle("048113BBAE7C5739F71C474FBD92EB911D4048170FC05EDEF28C4EDF8C665F52");
 
-            Assert.That(response.Tree[0].Links[0].Link.IsHex(64));
-            Assert.IsTrue(response.Raw.IsHex(1490));
-            Assert.That(response.Tree[0].Type, Is.EqualTo(0));
-            Assert.That(response.Tree[0].NibbleCount, Is.EqualTo(0));
-            Assert.That(response.Tree[0].Value, Is.Null);
-            Assert.IsTrue(response.Tree[0].BranchHash.IsHex(64));
+            Assert.That(response.ComposedResponse.Tree[0].Links[0].Link.IsHex(64));
+            Assert.IsTrue(response.ComposedResponse.Raw.IsHex(1490));
+            Assert.That(response.ComposedResponse.Tree[0].Type, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Tree[0].NibbleCount, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Tree[0].Value, Is.Null);
+            Assert.IsTrue(response.ComposedResponse.Tree[0].BranchHash.IsHex(64));
         }
     }
 }

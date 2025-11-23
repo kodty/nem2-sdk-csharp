@@ -21,7 +21,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("95837D9332DD2ED42C6FED83DC9EA0907E0046A4EEAEE761E185F5E6FAA2EA4C");
 
-            var embedded = (EmbeddedSimpleTransfer)((Aggregate)response.Transaction).Transactions[0].Transaction;
+            var embedded = (EmbeddedSimpleTransfer)((Aggregate)response.ComposedResponse.Transaction).Transactions[0].Transaction;
 
             Assert.That(embedded.Message, Is.EqualTo("00E5B091E381AAE38184E381A7E38199E38191E381A9E38081E381BFE38293E382B8E383A0E58F82E58AA0E381AEE3818AE7A4BCE381A7E38199E38082"));
         }
@@ -33,7 +33,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("55EB9659C81600F1760C4C0A4F8A7A5C90A39FCEE36E3165143B8E72BBC709E8");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var Voting = (EmbeddedKeyLink)aggregate.Transactions[2].Transaction;
 
@@ -52,7 +52,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("55EB9659C81600F1760C4C0A4F8A7A5C90A39FCEE36E3165143B8E72BBC709E8");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var Voting = (EmbeddedKeyLink)aggregate.Transactions[3].Transaction;
 
@@ -71,7 +71,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("384CF682EFFE8CBA4CF8A7F2C832B89547828DA024ECAC25E50A61B5C9E400F2");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var Voting = (EmbeddedMosaicMetadata)aggregate.Transactions[4].Transaction;
 
@@ -95,7 +95,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("F97F223C7C9011DCDECD11F13EBBBB257840BFC4A3D12DA2AD2E8F3047AAD01B");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var Voting = (EmbeddedNamespaceMetadata)aggregate.Transactions[0].Transaction;
 
@@ -119,7 +119,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var change = (EmbeddedMosaicSupplyChange)aggregate.Transactions[1].Transaction;
 
@@ -139,7 +139,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059");
 
-            var tx = (Aggregate)response.Transaction;
+            var tx = (Aggregate)response.ComposedResponse.Transaction;
             var embedded = tx.Transactions;
             var definition = (EmbeddedMosaicDefinition)embedded[0].Transaction;
 
@@ -160,7 +160,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("7E3049EBF37DD84C2C52C96A4234281326F3FA434DCFBDA71CF68A194ACB5059");
 
-            var tx = (Aggregate)response.Transaction;
+            var tx = (Aggregate)response.ComposedResponse.Transaction;
             var embedded = tx.Transactions;
             var definition = (EmbeddedMosaicSupplyChange)embedded[1].Transaction;
 
@@ -179,7 +179,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("55EB9659C81600F1760C4C0A4F8A7A5C90A39FCEE36E3165143B8E72BBC709E8");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var restriction = (EmbeddedAccountRestriction)aggregate.Transactions[1].Transaction;
 
@@ -199,7 +199,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("F6421D85126AD4E4795848BFB1E6FCAC606F6C0B8D89A6D9825E36C83D594F3C");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var restriction = (EmbeddedAccountMetadata)aggregate.Transactions[0].Transaction;
 
@@ -222,7 +222,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("5C949FA7F9CFBEA30525B79224147D5C575C4232E28CA7CEA760B08E2018047F");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var Voting = (EmbeddedVotingKeyLink)aggregate.Transactions[2].Transaction;
 
@@ -243,7 +243,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("38504353F21B9D4FE327923E8813EF39549CAA01AFC978F25F0CCF1C206F6F7E");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var Voting = (EmbeddedSecretLockT)aggregate.Transactions[0].Transaction;
 
@@ -267,7 +267,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("890B8D3B84A65FF5C3A4F743CD0A4A98D6F92250D4DB53463CBF2010C4CC7F39");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var Voting = (EmbeddedSecretProofT)aggregate.Transactions[0].Transaction;
 
@@ -288,7 +288,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("5C15C196C2B0924142B45901EF99AA821C8DA9096EC9B5FAD61DCC605B977028");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var Voting = (EmbeddedAddressAlias)aggregate.Transactions[0].Transaction;
 
@@ -309,7 +309,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("377CEFFC0FB99B9289E627D14729D9341AC082832EBFC54A25098594E732FB82");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var Voting = (EmbeddedMosaicSupplyRevocation)aggregate.Transactions[1].Transaction;
 
@@ -329,7 +329,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("8E7CE907451516EAD51DE86348F51A2950F869A92FEF645CAD2990D5E9BB9121");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var VRF = (EmbeddedKeyLink)aggregate.Transactions[0].Transaction;
 
@@ -368,7 +368,7 @@ namespace Integration_Tests.HttpRequests
 
             var transaction = await client.GetConfirmedTransaction("30FA71E6D1E34DF1E430A07E1B0817BED9A4ED6B0245B7471B0557380A700E1B");
 
-            var restriction = (EmbeddedAccountRestriction)((Aggregate)transaction.Transaction).Transactions[1].Transaction;
+            var restriction = (EmbeddedAccountRestriction)((Aggregate)transaction.ComposedResponse.Transaction).Transactions[1].Transaction;
 
             Assert.That(restriction.RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
             Assert.That(restriction.RestrictionAdditions[0].IsHex(16));
@@ -382,7 +382,7 @@ namespace Integration_Tests.HttpRequests
 
             var tx = await client.GetConfirmedTransaction("BFBD18CE27575CF154826C9ECFE587C472193AB035E8F8E4ABFEB6FE1E53520C");
 
-            var aggregate = (Aggregate)tx.Transaction;
+            var aggregate = (Aggregate)tx.ComposedResponse.Transaction;
 
             var Embedded = aggregate.Transactions;
 
@@ -418,24 +418,24 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransactions(new string[] { "64B675060AEE4E82460B0CC9", "64B6750B0AEE4E82460B0F47" });
 
-            var aggTx1 = (Aggregate)response[0].Transaction;
-            var aggTx2 = (Aggregate)response[1].Transaction;
+            var aggTx1 = (Aggregate)response.ComposedResponse[0].Transaction;
+            var aggTx2 = (Aggregate)response.ComposedResponse[1].Transaction;
 
 
-            Assert.IsTrue(response[0].Id.IsHex(24));
-            Assert.That(response[0].Meta.Hash.IsHex(64));
-            Assert.That(response[0].Meta.Index, Is.EqualTo(0));        
-            Assert.That(response[0].Meta.Timestamp, Is.EqualTo(88309778));
-            Assert.IsTrue(response[0].Meta.MerkleComponentHash.IsHex(64));
-            Assert.That(response[0].Meta.FeeMultiplier, Is.EqualTo(100));
+            Assert.IsTrue(response.ComposedResponse[0].Id.IsHex(24));
+            Assert.That(response.ComposedResponse[0].Meta.Hash.IsHex(64));
+            Assert.That(response.ComposedResponse[0].Meta.Index, Is.EqualTo(0));        
+            Assert.That(response.ComposedResponse[0].Meta.Timestamp, Is.EqualTo(88309778));
+            Assert.IsTrue(response.ComposedResponse[0].Meta.MerkleComponentHash.IsHex(64));
+            Assert.That(response.ComposedResponse[0].Meta.FeeMultiplier, Is.EqualTo(100));
 
-            Assert.IsTrue(response[1].Id.IsHex(24));
-            Assert.That(response[1].Meta.Hash.IsHex(64));
-            Assert.That(response[1].Meta.Index, Is.EqualTo(0));
-            Assert.That(response[1].Meta.Height, Is.EqualTo(419));
-            Assert.That(response[1].Meta.Timestamp, Is.EqualTo(97632236));
-            Assert.IsTrue(response[1].Meta.MerkleComponentHash.IsHex(64));
-            Assert.That(response[1].Meta.FeeMultiplier, Is.EqualTo(2314));
+            Assert.IsTrue(response.ComposedResponse[1].Id.IsHex(24));
+            Assert.That(response.ComposedResponse[1].Meta.Hash.IsHex(64));
+            Assert.That(response.ComposedResponse[1].Meta.Index, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse[1].Meta.Height, Is.EqualTo(419));
+            Assert.That(response.ComposedResponse[1].Meta.Timestamp, Is.EqualTo(97632236));
+            Assert.IsTrue(response.ComposedResponse[1].Meta.MerkleComponentHash.IsHex(64));
+            Assert.That(response.ComposedResponse[1].Meta.FeeMultiplier, Is.EqualTo(2314));
 
             Assert.That(aggTx1.Size, Is.EqualTo(312));
             Assert.That(aggTx1.Transactions, !Is.Null);
@@ -511,14 +511,14 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("E906272E7A715CD24D959A51CDFADC4CC8CA0E63097EA161C1DEBD31E9754A74");
 
-            var tx = (Aggregate)response.Transaction;
+            var tx = (Aggregate)response.ComposedResponse.Transaction;
 
-            Assert.IsTrue(response.Meta.Hash.IsHex(64));
-            Assert.That(response.Meta.Index, Is.EqualTo(25465));
-            Assert.IsTrue(response.Meta.MerkleComponentHash.IsHex(64));
-            Assert.That(response.Meta.Height, Is.EqualTo(1));
-            Assert.That(response.Meta.Timestamp, Is.EqualTo(0));
-            Assert.IsTrue(response.Id.IsHex(24));
+            Assert.IsTrue(response.ComposedResponse.Meta.Hash.IsHex(64));
+            Assert.That(response.ComposedResponse.Meta.Index, Is.EqualTo(25465));
+            Assert.IsTrue(response.ComposedResponse.Meta.MerkleComponentHash.IsHex(64));
+            Assert.That(response.ComposedResponse.Meta.Height, Is.EqualTo(1));
+            Assert.That(response.ComposedResponse.Meta.Timestamp, Is.EqualTo(0));
+            Assert.IsTrue(response.ComposedResponse.Id.IsHex(24));
 
             Assert.That(tx.Size, Is.EqualTo(864));
             Assert.That(tx.Transactions, !Is.Null);

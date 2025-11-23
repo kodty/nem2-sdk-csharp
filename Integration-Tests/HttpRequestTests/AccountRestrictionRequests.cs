@@ -21,7 +21,7 @@ namespace Integration_Tests.HttpRequests
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var restriction = await client.GetConfirmedTransaction("2A5280F16603DCF1544619D87BB0BC367F29C32D3D52C5B659744B7CEE6301A6");
-            var tx = (AccountRestriction)restriction.Transaction;
+            var tx = (AccountRestriction)restriction.ComposedResponse.Transaction;
            
             Assert.IsTrue(tx.RestrictionAdditions[0].IsHex(48));
             Assert.That(tx.RestrictionDeletions.Count, Is.EqualTo(0));
@@ -42,9 +42,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 var tx = (AccountOperationRestriction)i.Transaction;
@@ -77,12 +77,12 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response[0].Meta, !Is.EqualTo(null));
-            Assert.IsTrue(response[0].Meta.Hash.IsHex(64));
-            Assert.IsTrue(response[0].Id.IsHex(24));
-            Assert.That(response.Count, Is.EqualTo(2));
+            Assert.That(response.ComposedResponse[0].Meta, !Is.EqualTo(null));
+            Assert.IsTrue(response.ComposedResponse[0].Meta.Hash.IsHex(64));
+            Assert.IsTrue(response.ComposedResponse[0].Id.IsHex(24));
+            Assert.That(response.ComposedResponse.Count, Is.EqualTo(2));
 
-            var tx1 = (AccountRestriction)response[0].Transaction;
+            var tx1 = (AccountRestriction)response.ComposedResponse[0].Transaction;
 
             Assert.IsTrue(tx1.SignerPublicKey.IsHex(64));
             Assert.That(tx1.Version, Is.EqualTo(1));
@@ -90,7 +90,7 @@ namespace Integration_Tests.HttpRequests
             Assert.IsTrue(tx1.RestrictionAdditions[0].IsHex(16));
             Assert.That(tx1.RestrictionDeletions.Count, Is.EqualTo(0));
 
-            var tx2 = (AccountRestriction)response[1].Transaction;
+            var tx2 = (AccountRestriction)response.ComposedResponse[1].Transaction;
 
             Assert.IsTrue(tx2.SignerPublicKey.IsHex(64));
          

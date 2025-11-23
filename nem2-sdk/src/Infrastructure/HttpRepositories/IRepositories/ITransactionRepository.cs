@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
+using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model.Transactions;
@@ -8,17 +9,17 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
     interface ITransactionRepository
     {
         // Get     
-        IObservable<List<TransactionData>> SearchConfirmedTransactions(QueryModel queryModel);
-        IObservable<List<TransactionData>> SearchUnconfirmedTransactions(QueryModel queryModel);
-        IObservable<List<TransactionData>> SearchPartialTransactions(QueryModel queryModel);
-        IObservable<TransactionData> GetConfirmedTransaction(string hash);
-        IObservable<TransactionData> GetUnconfirmedTransaction(string hash);
-        IObservable<TransactionData> GetPartialTransaction(string hash);
+        IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> SearchConfirmedTransactions(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> SearchUnconfirmedTransactions(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> SearchPartialTransactions(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessege<TransactionData>> GetConfirmedTransaction(string hash);
+        IObservable<ExtendedHttpResponseMessege<TransactionData>> GetUnconfirmedTransaction(string hash);
+        IObservable<ExtendedHttpResponseMessege<TransactionData>> GetPartialTransaction(string hash);
 
         // Post
-        IObservable<List<TransactionData>> GetConfirmedTransactions(string[] transactionIds);
-        IObservable<List<TransactionData>> GetUnconfirmedTransactions(string[] transactionIds);
-        IObservable<List<TransactionData>> GetPartialTransactions(string[] transactionIds);
+        IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> GetConfirmedTransactions(string[] transactionIds);
+        IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> GetUnconfirmedTransactions(string[] transactionIds);
+        IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> GetPartialTransactions(string[] transactionIds);
 
         // Put
         IObservable<TransactionAnnounceResponse> Announce(SignedTransaction payload);

@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
+using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Reactive.Linq;
@@ -9,28 +10,28 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
     {
         public NetworkHttp(string host, int port) : base(host, port) { }
 
-        public IObservable<NetworkInfo> GetNetwork()
+        public IObservable<ExtendedHttpResponseMessege<NetworkInfo>> GetNetwork()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network"])))
-              .Select(r => { return Composer.GenerateObject<NetworkInfo>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(FormResponse<NetworkInfo>);
         }
 
-        public IObservable<NetworkRentalFees> GetRentalFees()
+        public IObservable<ExtendedHttpResponseMessege<NetworkRentalFees>> GetRentalFees()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network", "fees", "rental"])))
-              .Select(r => { return Composer.GenerateObject<NetworkRentalFees>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(FormResponse<NetworkRentalFees>);
         }
 
-        public IObservable<NetworkTransactionFees> GetTransactionFees()
+        public IObservable<ExtendedHttpResponseMessege<NetworkTransactionFees>> GetTransactionFees()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network", "fees", "transaction"])))
-              .Select(r => { return Composer.GenerateObject<NetworkTransactionFees>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(FormResponse<NetworkTransactionFees>);
         }
 
-        public IObservable<NetworkProperties> GetNetworkProperties()
+        public IObservable<ExtendedHttpResponseMessege<NetworkProperties>> GetNetworkProperties()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network", "properties"])))
-             .Select(r => { return Composer.GenerateObject<NetworkProperties>(OverrideEnsureSuccessStatusCode(r)); });
+             .Select(FormResponse<NetworkProperties>);
         }
     }
 }

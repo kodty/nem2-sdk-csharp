@@ -34,9 +34,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
                 ((SimpleTransfer)i.Transaction).Mosaics
                     .ForEach(m =>
@@ -67,9 +67,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 var tx = (MosaicSupplyChange)i.Transaction;
@@ -98,7 +98,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 var tx = (MosaicSupplyRevocation)i.Transaction;
@@ -118,7 +118,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("B48A3BCE25D31A458303489D8EC02006CB74B72F05E046E5D7428C654CDC0625");
 
-            var tx = (MosaicDefinition)response.Transaction;
+            var tx = (MosaicDefinition)response.ComposedResponse.Transaction;
 
             Assert.That(tx.Nonce, Is.EqualTo(0));
             Assert.That(tx.Duration, Is.EqualTo(0));
@@ -138,7 +138,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("7CEDB7FF3BA9D302B6870E5507C48C0433E988D96D5C5BFFCEA917E76D3BB87F");
 
-            var tx = (KeyLink)response.Transaction;
+            var tx = (KeyLink)response.ComposedResponse.Transaction;
 
             Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
             Assert.That(tx.LinkAction, Is.EqualTo(1));
@@ -156,7 +156,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("F6A12DDA59412CF3A74D558E631FF6C6F5E2B43620CDC950698BBD17FF8F0B57");
 
-            var tx = (KeyLink)response.Transaction;
+            var tx = (KeyLink)response.ComposedResponse.Transaction;
 
             Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
             Assert.That(tx.LinkAction, Is.EqualTo(1));
@@ -174,7 +174,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("DF4ED49CC5C1E81C4E7A4821FB06F5E7C8CEBE21DF38CBA891C300B7B9BE3DBC");
 
-            var tx = (KeyLink)response.Transaction;
+            var tx = (KeyLink)response.ComposedResponse.Transaction;
 
             Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
             Assert.That(tx.LinkAction, Is.EqualTo(1));
@@ -192,7 +192,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("901807C96B582AACC140BE64CE3C18AF754E3DFBD2269AC573A5121097005DF8");
 
-            var tx = (VotingKeyLink)response.Transaction;
+            var tx = (VotingKeyLink)response.ComposedResponse.Transaction;
 
             Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
             Assert.That(tx.LinkAction, Is.EqualTo(1));
@@ -212,7 +212,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("4ED3697F2058FB41F5B80BA13F687CD864F719834906BAFE660EA140D26A8CAE");
 
-            var tx = (HashLockT)response.Transaction;
+            var tx = (HashLockT)response.ComposedResponse.Transaction;
 
             Assert.That(tx.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
@@ -232,7 +232,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("9D4F3856CE6A748C6DA73DEFF92084C23D578032FA307E9E68EEA040189174C6");
 
-            var tx = (SecretLockT)response.Transaction;
+            var tx = (SecretLockT)response.ComposedResponse.Transaction;
 
             Assert.That(tx.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
@@ -253,7 +253,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("81371DB98536CC911DB10C1D08AA69D495D1B2840850AFA15D618826F72AEE12");
 
-            var tx = (SecretProofT)response.Transaction;
+            var tx = (SecretProofT)response.ComposedResponse.Transaction;
 
             Assert.That(tx.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
@@ -280,9 +280,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 var tx = (SimpleTransfer)i.Transaction;
@@ -305,7 +305,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("9B4D7D69E671E60D7862D7AFC183896A1758FD144C0C1A93BA1BA93191F1CDFE");
 
-            var tx = (MosaicSupplyRevocation)response.Transaction;
+            var tx = (MosaicSupplyRevocation)response.ComposedResponse.Transaction;
 
             Assert.That(tx.Amount, Is.EqualTo(9));
             Assert.IsTrue(tx.SourceAddress.IsHex(48));
@@ -323,7 +323,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("54B99E12887443F0B6A2DAA6120EF72384B1A2BBC1CA4AF345198E6E72653770");
 
-            var tx = (AddressAlias)response.Transaction;
+            var tx = (AddressAlias)response.ComposedResponse.Transaction;
 
 
             Assert.That(tx.AliasAction, Is.EqualTo(1));
@@ -342,7 +342,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("8135D5533F45765ADE747BFEB06474CB11EEB02E221ACBD42295F8F1D237C467");
 
-            var tx = (MosaicAlias)response.Transaction;
+            var tx = (MosaicAlias)response.ComposedResponse.Transaction;
 
 
             Assert.That(tx.AliasAction, Is.EqualTo(1));
@@ -360,7 +360,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("FF31ABA28DEA461AFC0C4A68F31AB7CCD86EFCAA6A3781B6B741B59A4DDC01C2");
 
-            var tx = (RootNamespaceRegistration)response.Transaction;
+            var tx = (RootNamespaceRegistration)response.ComposedResponse.Transaction;
         
             Assert.That(tx.RegistrationType, Is.EqualTo(0));
             Assert.That(tx.Duration, Is.EqualTo(0));
@@ -380,7 +380,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("2AC16BC578E3A1C7BF731A3040465C320786987E2C782D4FA709C8E5992247AB");
 
-            var tx = (SimpleTransfer)response.Transaction;
+            var tx = (SimpleTransfer)response.ComposedResponse.Transaction;
 
             Assert.That(tx.SignerPublicKey, Is.EqualTo("BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F"));
             Assert.That(tx.RecipientAddress, Is.EqualTo("68FD492EE69DD21970DA18521D2B6EE22F09E4B0E11D1044"));
@@ -394,7 +394,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("2A5280F16603DCF1544619D87BB0BC367F29C32D3D52C5B659744B7CEE6301A6");
 
-            var tx = (AccountRestriction)response.Transaction;
+            var tx = (AccountRestriction)response.ComposedResponse.Transaction;
 
             Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.ADDRESS));
             Assert.IsTrue(tx.RestrictionAdditions[0].IsHex(48));
@@ -412,7 +412,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("B8A9E72ADC49D2A880C49D6D4A8F88D3B64137DC0EC0A399CD9A1A8FB4C16FC0");
 
-            var tx = (AccountRestriction)response.Transaction;
+            var tx = (AccountRestriction)response.ComposedResponse.Transaction;
 
             Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
             Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[1], Is.EqualTo(RestrictionTypes.Types.MOSAIC_ID));
@@ -432,7 +432,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("53D3ED8322AF889A37DFB6DC42B07269E413D91B6ACE51E065A2030C0D4E5266");
 
-            var tx = (AccountOperationRestriction)response.Transaction;
+            var tx = (AccountOperationRestriction)response.ComposedResponse.Transaction;
 
             Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[0], Is.EqualTo(RestrictionTypes.Types.BLOCK));
             Assert.That(tx.RestrictionFlags.ExtractRestrictionFlags()[1], Is.EqualTo(RestrictionTypes.Types.OUTGOING));
@@ -452,7 +452,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("FF44C70577FDE571DC03A3827A3DAD138EC9D21C3839C63217896B4E992F7897");
 
-            var tx = (MosaicAddressRestriction)response.Transaction;
+            var tx = (MosaicAddressRestriction)response.ComposedResponse.Transaction;
 
             Assert.That(tx.NewRestrictionValue, Is.EqualTo(1));
             Assert.That(tx.PreviousRestrictionValue, Is.EqualTo(18446744073709551615));
@@ -474,15 +474,15 @@ namespace Integration_Tests.HttpRequests
             var response = await client.GetConfirmedTransaction("11B55558B111E21CABAE7278DE2D3CF393A2384F65AF2C62B88872312FFD0101");
 
 
-            var tx = (SimpleTransfer)response.Transaction;
+            var tx = (SimpleTransfer)response.ComposedResponse.Transaction;
 
             Assert.That(tx.Message, Is.EqualTo("FE2A8061577301E2402E3F75637E6EFD62DBA4580EE027304459C8C6C50C0E305766F88AE75F6734F6FA6C36A1E6F5093CBB53FC3F8F4BD34B5709DC46A3DB5104685E233024B972E5543FEC16B4458F712FD0AAA00E61CE3B716811DA4E3BB3F1F6851BCD0D58D892BF213BA3F3CE72918F70AA2F78B333654AB2AF8E09F8318C2A63F5"));
             Assert.That(tx.RecipientAddress.IsHex(48));
             Assert.That(tx.SignerPublicKey.IsHex(64));
             Assert.That(tx.Mosaics, Is.Empty);
             Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.TRANSFER));
-            Assert.That(response.Meta.Hash.IsHex(64));
-            Assert.That(response.Id.IsHex(24));
+            Assert.That(response.ComposedResponse.Meta.Hash.IsHex(64));
+            Assert.That(response.ComposedResponse.Id.IsHex(24));
         }
     }
 }

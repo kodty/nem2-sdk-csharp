@@ -25,9 +25,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 var tx = (KeyLink)i.Transaction;
@@ -55,9 +55,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 var tx = (KeyLink)i.Transaction;
@@ -81,9 +81,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 var tx = (VotingKeyLink)i.Transaction;
@@ -107,7 +107,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("55EB9659C81600F1760C4C0A4F8A7A5C90A39FCEE36E3165143B8E72BBC709E8");
 
-            var agg = (Aggregate)response.Transaction;
+            var agg = (Aggregate)response.ComposedResponse.Transaction;
 
             var EmbeddedKeyLink = (EmbeddedVotingKeyLink)agg.Transactions[4].Transaction;
 
@@ -132,9 +132,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 var tx = (KeyLink)i.Transaction;
@@ -154,11 +154,11 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("901807C96B582AACC140BE64CE3C18AF754E3DFBD2269AC573A5121097005DF8");
 
-            var tx = (VotingKeyLink)response.Transaction;
+            var tx = (VotingKeyLink)response.ComposedResponse.Transaction;
 
-            Assert.IsTrue(response.Id.IsHex(24));
-            Assert.IsTrue(response.Meta.Hash.IsHex(64));
-            Assert.IsTrue(response.Meta.MerkleComponentHash.IsHex(64));
+            Assert.IsTrue(response.ComposedResponse.Id.IsHex(24));
+            Assert.IsTrue(response.ComposedResponse.Meta.Hash.IsHex(64));
+            Assert.IsTrue(response.ComposedResponse.Meta.MerkleComponentHash.IsHex(64));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
             Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
             Assert.That(tx.StartEpoch, Is.EqualTo(1));
@@ -172,11 +172,11 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("F6A12DDA59412CF3A74D558E631FF6C6F5E2B43620CDC950698BBD17FF8F0B57");
 
-            var tx = (KeyLink)response.Transaction;
+            var tx = (KeyLink)response.ComposedResponse.Transaction;
 
-            Assert.That(response.Id.Length, Is.EqualTo(24));
-            Assert.That(response.Meta.Hash.Length, Is.EqualTo(64));
-            Assert.That(response.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
+            Assert.That(response.ComposedResponse.Id.Length, Is.EqualTo(24));
+            Assert.That(response.ComposedResponse.Meta.Hash.Length, Is.EqualTo(64));
+            Assert.That(response.ComposedResponse.Meta.MerkleComponentHash.Length, Is.EqualTo(64));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
             Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
         }
@@ -188,11 +188,11 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("901807C96B582AACC140BE64CE3C18AF754E3DFBD2269AC573A5121097005DF8");
 
-            var tx = (KeyLink)response.Transaction;
+            var tx = (KeyLink)response.ComposedResponse.Transaction;
 
-            Assert.IsTrue(response.Id.IsHex(24));
-            Assert.IsTrue(response.Meta.Hash.IsHex(64));
-            Assert.IsTrue(response.Meta.MerkleComponentHash.IsHex(64));
+            Assert.IsTrue(response.ComposedResponse.Id.IsHex(24));
+            Assert.IsTrue(response.ComposedResponse.Meta.Hash.IsHex(64));
+            Assert.IsTrue(response.ComposedResponse.Meta.MerkleComponentHash.IsHex(64));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
             Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
         }
@@ -204,11 +204,11 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetConfirmedTransaction("5C27AD1B777E811946DDB9AB5ABCC464C7B80CCE77CDA3870EB19F1DD1AF22BA");
 
-            var tx = (KeyLink)response.Transaction;
+            var tx = (KeyLink)response.ComposedResponse.Transaction;
 
-            Assert.IsTrue(response.Id.IsHex(24));
-            Assert.IsTrue(response.Meta.Hash.IsHex(64));
-            Assert.IsTrue(response.Meta.MerkleComponentHash.IsHex(64));
+            Assert.IsTrue(response.ComposedResponse.Id.IsHex(24));
+            Assert.IsTrue(response.ComposedResponse.Meta.Hash.IsHex(64));
+            Assert.IsTrue(response.ComposedResponse.Meta.MerkleComponentHash.IsHex(64));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
             Assert.IsTrue(tx.LinkedPublicKey.IsHex(64));
         }

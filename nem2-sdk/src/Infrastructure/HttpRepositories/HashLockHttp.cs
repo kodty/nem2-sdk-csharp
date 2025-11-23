@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
+using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Reactive.Linq;
@@ -9,20 +10,20 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
     {
         public HashLockHttp(string host, int port) : base(host, port) { }
 
-        public IObservable<List<HashLockEvent>> SearchHashLocks(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<List<HashLockEvent>>> SearchHashLocks(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "hash"], queryModel)))
-              .Select(r => { return Composer.ComposeEvents<HashLockEvent>(OverrideEnsureSuccessStatusCode(r), "data"); });
+              .Select(r => { return FormListResponse<HashLockEvent>(r, "data"); });
         }
-        public IObservable<HashLockEvent> GetHashLockInfo(string hash)
+        public IObservable<ExtendedHttpResponseMessege<HashLockEvent>> GetHashLockInfo(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "hash", hash])))
-              .Select(r => { return Composer.GenerateObject<HashLockEvent>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(FormResponse<HashLockEvent>);
         }
-        public IObservable<MerkleRoot> GetHashLockMerkleInfo(string hash)
+        public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetHashLockMerkleInfo(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "hash", hash, "merkle"])))
-              .Select(r => { return Composer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+               .Select(FormResponse<MerkleRoot>);
         }
     }
 }

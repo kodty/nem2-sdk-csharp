@@ -2,6 +2,7 @@
 using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json.Nodes;
 
@@ -54,16 +55,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return uri.Uri;
         }
 
-        public string OverrideEnsureSuccessStatusCode(HttpResponseMessage r)
-        {
-            var result = r.Content.ReadAsStringAsync().Result;
-
-            if (!r.IsSuccessStatusCode)
-                throw new HttpRequestException(r.Content.ReadAsStringAsync().Result);
-
-            return result;
-        }
-
         public static Type GetTransactionType(string t, bool embedded = false)
         {
             var type = (ushort)JsonObject.Parse(t)
@@ -78,11 +69,18 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
         }
 
-        internal ExtendedHttpResponseMessege<List<T>> FormListResponse<T>(HttpResponseMessage msg, string path = null)
+        internal static ExtendedHttpResponseMessege<T> ExtendResponse<T>(HttpResponseMessage msg)
         {
-            var extendedResponse = new ExtendedHttpResponseMessege<List<T>>();
+            var extendedResponse = new ExtendedHttpResponseMessege<T>();
 
             extendedResponse.Response = msg;
+
+            return extendedResponse;
+        }
+
+        internal ExtendedHttpResponseMessege<List<T>> FormListResponse<T>(HttpResponseMessage msg, string path = null)
+        {
+            var extendedResponse = ExtendResponse<List<T>>(msg);
 
             if (msg.IsSuccessStatusCode)
                 extendedResponse.ComposedResponse = Composer.ComposeEvents<T>(msg.Content.ReadAsStringAsync().Result, path);
@@ -92,9 +90,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         internal ExtendedHttpResponseMessege<T> FormResponse<T>(HttpResponseMessage msg)
         {
-            var extendedResponse = new ExtendedHttpResponseMessege<T>();
-
-            extendedResponse.Response = msg;
+            var extendedResponse = ExtendResponse<T>(msg);
 
             if (msg.IsSuccessStatusCode)
                 extendedResponse.ComposedResponse = Composer.GenerateObject<T>(msg.Content.ReadAsStringAsync().Result);

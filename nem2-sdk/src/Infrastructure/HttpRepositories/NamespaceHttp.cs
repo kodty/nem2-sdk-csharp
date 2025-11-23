@@ -4,6 +4,7 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Text.Json;
+using io.nem2.sdk.src.Infrastructure.HttpExtension;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -12,25 +13,25 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public NamespaceHttp(string host, int port) 
             : base(host, port) { }
 
-        public IObservable<List<NamespaceDatum>> SearchNamespaces(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<List<NamespaceDatum>>> SearchNamespaces(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["namespaces"], queryModel)))
-                .Select(r => { return Composer.ComposeEvents<NamespaceDatum>(OverrideEnsureSuccessStatusCode(r), "data"); });
+                 .Select(r => { return FormListResponse<NamespaceDatum>(r, "data"); });
         }
 
-        public IObservable<NamespaceDatum> GetNamespace(string namespaceId)
+        public IObservable<ExtendedHttpResponseMessege<NamespaceDatum>> GetNamespace(string namespaceId)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["namespaces", namespaceId])))
-                .Select(r => { return Composer.GenerateObject<NamespaceDatum>(OverrideEnsureSuccessStatusCode(r)); });            
+                .Select(FormResponse<NamespaceDatum>);
         }
 
-        public IObservable<MerkleRoot> GetNamespaceMerkle(string namespaceId)
+        public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetNamespaceMerkle(string namespaceId)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["namespaces", namespaceId, "merkle"])))
-                .Select(r => { return Composer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(FormResponse<MerkleRoot>);
         }
 
-        public IObservable<List<NamespaceName>> GetNamespacesNames(List<string> namespaceIds)
+        public IObservable<ExtendedHttpResponseMessege<List<NamespaceName>>> GetNamespacesNames(List<string> namespaceIds)
         {
             var ids = new Namespace_Ids()
             {
@@ -38,10 +39,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             };
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
-                .Select(r => { return Composer.ComposeEvents<NamespaceName>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(r => { return FormListResponse<NamespaceName>(r); });
         }
 
-        public IObservable<List<AccountName>> GetAccountNames(List<string> addresses)
+        public IObservable<ExtendedHttpResponseMessege<List<AccountName>>> GetAccountNames(List<string> addresses)
         {
             var ids = new Account_Ids()
             {
@@ -49,10 +50,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             };
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "account", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
-               .Select(r => { return Composer.ComposeEvents<AccountName>(OverrideEnsureSuccessStatusCode(r), "accountNames"); });
+               .Select(r => { return FormListResponse<AccountName>(r, "accountNames"); });
         }
 
-        public IObservable<List<MosaicName>> GetMosaicNames(List<string> mosaicIds)
+        public IObservable<ExtendedHttpResponseMessege<List<MosaicName>>> GetMosaicNames(List<string> mosaicIds)
         {
             var ids = new MosaicIds()
             {
@@ -60,7 +61,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             };
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "mosaic", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
-                 .Select(r => { return Composer.ComposeEvents<MosaicName>(OverrideEnsureSuccessStatusCode(r), "mosaicNames"); });
+                  .Select(r => { return FormListResponse<MosaicName>(r, "accountNames"); });
         }
     }
 }

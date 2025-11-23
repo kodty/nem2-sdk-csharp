@@ -30,9 +30,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 var tx = (NamespaceRegistration)i.Transaction;
@@ -68,9 +68,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchNamespaces(queryModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            foreach (var item in response)
+            foreach (var item in response.ComposedResponse)
             {
                 Assert.That(item.Id.Length, Is.EqualTo(24));
                 Assert.That(item.Meta.Active, Is.EqualTo(true));
@@ -96,18 +96,18 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetNamespace("A95F1F8A96159516");
 
-            Assert.That(response.Id.IsHex(16));
-            Assert.That(response.Meta.Active, Is.EqualTo(true));
-            Assert.That(response.Meta.Index, Is.EqualTo(0));
-            Assert.That(response.Namespace.RegistrationType, Is.EqualTo(0));
-            Assert.IsTrue(response.Namespace.Level0.IsHex(16));
-            Assert.That(response.Namespace.Depth, Is.EqualTo(1));
-            Assert.That(response.Namespace.Alias.Type, Is.EqualTo(0));
-            if (response.Namespace.Alias.Address != null) Assert.That(response.Namespace.Alias.Address.Length, Is.EqualTo(48));
-            if (response.Namespace.Alias.MosaicId != null) Assert.That(response.Namespace.Alias.MosaicId.Length, Is.EqualTo(16));
-            Assert.That(response.Namespace.ParentId, Is.EqualTo("0000000000000000"));
-            Assert.That(response.Namespace.OwnerAddress.IsHex(48));
-            Assert.That(response.Namespace.EndHeight, Is.EqualTo(18446744073709551615));
+            Assert.That(response.ComposedResponse.Id.IsHex(16));
+            Assert.That(response.ComposedResponse.Meta.Active, Is.EqualTo(true));
+            Assert.That(response.ComposedResponse.Meta.Index, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Namespace.RegistrationType, Is.EqualTo(0));
+            Assert.IsTrue(response.ComposedResponse.Namespace.Level0.IsHex(16));
+            Assert.That(response.ComposedResponse.Namespace.Depth, Is.EqualTo(1));
+            Assert.That(response.ComposedResponse.Namespace.Alias.Type, Is.EqualTo(0));
+            if (response.ComposedResponse.Namespace.Alias.Address != null) Assert.That(response.ComposedResponse.Namespace.Alias.Address.Length, Is.EqualTo(48));
+            if (response.ComposedResponse.Namespace.Alias.MosaicId != null) Assert.That(response.ComposedResponse.Namespace.Alias.MosaicId.Length, Is.EqualTo(16));
+            Assert.That(response.ComposedResponse.Namespace.ParentId, Is.EqualTo("0000000000000000"));
+            Assert.That(response.ComposedResponse.Namespace.OwnerAddress.IsHex(48));
+            Assert.That(response.ComposedResponse.Namespace.EndHeight, Is.EqualTo(18446744073709551615));
         }
 
         [Test, Timeout(20000)]
@@ -117,9 +117,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetNamespaceMerkle("A95F1F8A96159516");
 
-            Assert.That(response.Raw.Length, Is.EqualTo(1618));
-            Assert.That(response.Tree[1].Type, Is.EqualTo(0));
-            Assert.That(response.Tree[1].Links[0].Link.IsHex(64));
+            Assert.That(response.ComposedResponse.Raw.Length, Is.EqualTo(1618));
+            Assert.That(response.ComposedResponse.Tree[1].Type, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Tree[1].Links[0].Link.IsHex(64));
         }
 
         [Test, Timeout(20000)]
@@ -129,9 +129,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetNamespacesNames(new List<string> { "A95F1F8A96159516" });
 
-            Assert.That(response[0].Name, Is.EqualTo("symbol"));
-            Assert.That(response[0].ParentId, Is.Null);
-            Assert.That(response[0].Id.IsHex(16));
+            Assert.That(response.ComposedResponse[0].Name, Is.EqualTo("symbol"));
+            Assert.That(response.ComposedResponse[0].ParentId, Is.Null);
+            Assert.That(response.ComposedResponse[0].Id.IsHex(16));
         }
 
         [Test, Timeout(20000)]
@@ -141,8 +141,8 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetAccountNames(new List<string> { "NBCXLKLGGDWGYC47X42AQADSCMZBV7YHU6BX4UA" });
 
-            Assert.IsTrue(response[0].Address.IsHex(48));
-            Assert.That(response[0].Names, Is.Empty);
+            Assert.IsTrue(response.ComposedResponse[0].Address.IsHex(48));
+            Assert.That(response.ComposedResponse[0].Names, Is.Empty);
 
         }
        
@@ -154,8 +154,8 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetMosaicNames(new List<string> { "6BED913FA20223F8" });
 
-            Assert.That(response[0].Names[0], Is.EqualTo( "symbol.xym"));
-            Assert.That(response[0].MosaicId.IsHex(16));
+            Assert.That(response.ComposedResponse[0].Names[0], Is.EqualTo( "symbol.xym"));
+            Assert.That(response.ComposedResponse[0].MosaicId.IsHex(16));
         }
     }
 }

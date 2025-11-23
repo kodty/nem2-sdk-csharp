@@ -1,6 +1,8 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model;
+using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Reactive.Linq;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
@@ -9,46 +11,46 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
     {
         public NodeHttp(string host, int port) : base(host, port) { }
 
-        public IObservable<NodeHealth> GetNodeHealth()
+        public IObservable<ExtendedHttpResponseMessege<NodeHealth>> GetNodeHealth()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "health"])))
-              .Select(r => { return Composer.GenerateObject<NodeHealth>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(FormResponse<NodeHealth>);
         }
 
-        public IObservable<NodeInfo> GetNodeInformation()
+        public IObservable<ExtendedHttpResponseMessege<NodeInfo>> GetNodeInformation()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "info"])))
-              .Select(r => { return Composer.GenerateObject<NodeInfo>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(FormResponse<NodeInfo>);
         }
 
-        public IObservable<List<NodePeer>> GetNodePeers()
+        public IObservable<ExtendedHttpResponseMessege<List<NodePeer>>> GetNodePeers()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "peers"])))
-              .Select(r => { return Composer.ComposeEvents<NodePeer>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(r => { return FormListResponse<NodePeer>(r); });
         }
 
-        public IObservable<NodeStorage> GetNodeStorageInfo()
+        public IObservable<ExtendedHttpResponseMessege<NodeStorage>> GetNodeStorageInfo()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "storage"])))
-              .Select(r => { return Composer.GenerateObject<NodeStorage>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(FormResponse<NodeStorage>);
         }
 
-        public IObservable<NodeTime> GetNodeTime()
+        public IObservable<ExtendedHttpResponseMessege<NodeTime>> GetNodeTime()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "time"])))
-              .Select(r => { return Composer.GenerateObject<NodeTime>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(FormResponse<NodeTime>);
         }
 
-        public IObservable<NodeRESTVersion> GetNodeRESTVersion()
+        public IObservable<ExtendedHttpResponseMessege<NodeRESTVersion>> GetNodeRESTVersion()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "server"])))
-              .Select(r => { return Composer.GenerateObject<NodeRESTVersion>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(FormResponse<NodeRESTVersion>);
         }
 
-        public IObservable<NodeUnlockedAccounts> GetNodeHArvestingAccountInfo()
+        public IObservable<ExtendedHttpResponseMessege<NodeUnlockedAccounts>> GetNodeHArvestingAccountInfo()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "unlocked"])))
-              .Select(r => { return Composer.GenerateObject<NodeUnlockedAccounts>(OverrideEnsureSuccessStatusCode(r)); });
+              .Select(FormResponse<NodeUnlockedAccounts>);
         }
     }
 }

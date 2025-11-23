@@ -1,11 +1,12 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+﻿using io.nem2.sdk.src.Infrastructure.HttpExtension;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
 {
     public interface IHashLockRepository
     {
-        IObservable<List<HashLockEvent>> SearchHashLocks(QueryModel queryModel);
-        IObservable<HashLockEvent> GetHashLockInfo(string hash);
-        IObservable<MerkleRoot> GetHashLockMerkleInfo(string hash);
+        IObservable<ExtendedHttpResponseMessege<List<HashLockEvent>>> SearchHashLocks(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessege<HashLockEvent>> GetHashLockInfo(string hash);
+        IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetHashLockMerkleInfo(string hash);
     }
 }

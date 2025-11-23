@@ -61,7 +61,7 @@ namespace io.nem2.sdk.src.Model
 
             var timeStamp = client.GetNodeTime().Wait();
 
-            return new Deadline(timeStamp.CommunicationTimestamps.SendTimestamp, TimeSpan.FromHours(23));
+            return new Deadline(timeStamp.ComposedResponse.CommunicationTimestamps.SendTimestamp, TimeSpan.FromHours(23));
         }
     }
 }

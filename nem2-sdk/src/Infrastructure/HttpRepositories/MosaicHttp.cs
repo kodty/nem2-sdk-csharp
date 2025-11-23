@@ -3,6 +3,7 @@ using System.Text;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Text.Json;
+using io.nem2.sdk.src.Infrastructure.HttpExtension;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -10,47 +11,47 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
     {
         public MosaicHttp(string host, int port) : base(host, port) { }
 
-        public IObservable<List<MosaicEvent>> SearchMosaics(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<List<MosaicEvent>>> SearchMosaics(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetStringAsync(GetUri(["mosaics"], queryModel)))
-                .Select(m => Composer.ComposeEvents<MosaicEvent>(m, "data"));
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["mosaics"], queryModel)))
+                .Select(r => { return FormListResponse<MosaicEvent>(r, "data"); });
         }
 
-        public IObservable<MosaicEvent> GetMosaic(string mosaicId)
+        public IObservable<ExtendedHttpResponseMessege<MosaicEvent>> GetMosaic(string mosaicId)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["mosaics", mosaicId])))
-                .Select(r => { return Composer.GenerateObject<MosaicEvent>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(FormResponse<MosaicEvent>);
         }
 
-        public IObservable<List<MosaicEvent>> GetMosaics(List<string> mosaicIds)
+        public IObservable<ExtendedHttpResponseMessege<List<MosaicEvent>>> GetMosaics(List<string> mosaicIds)
         {     
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["mosaics"]), new StringContent(JsonSerializer.Serialize(new MosaicIds() { mosaicIds = mosaicIds }), Encoding.UTF8, "application/json")))
-                .Select(r => { return Composer.ComposeEvents<MosaicEvent>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(r => { return FormListResponse<MosaicEvent>(r); });
         }
 
-        public IObservable<MerkleRoot> GetMosaicMerkle(string mosaicId)
+        public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMosaicMerkle(string mosaicId)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["mosaics", mosaicId, "merkle"])))
-                .Select(r => { return Composer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(FormResponse<MerkleRoot>);
 
         }
 
-        public IObservable<List<MosaicRestrictionData>> SearchMosaicRestrictions(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<List<MosaicRestrictionData>>> SearchMosaicRestrictions(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "mosaic"], queryModel)))
-               .Select(r => { return Composer.ComposeEvents<MosaicRestrictionData>(OverrideEnsureSuccessStatusCode(r), "data"); });
+               .Select(r => { return FormListResponse<MosaicRestrictionData>(r, "data"); });
         }
 
-        public IObservable<MosaicRestrictionData> GetMosaicRestriction(string compositeHash)
+        public IObservable<ExtendedHttpResponseMessege<MosaicRestrictionData>> GetMosaicRestriction(string compositeHash)
         { 
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "mosaic", compositeHash])))
-                .Select(r => { return Composer.GenerateObject<MosaicRestrictionData>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(FormResponse<MosaicRestrictionData>);
         }
 
-        public IObservable<MerkleRoot> GetMosaicRestrictionMerkle(string compositeHash)
+        public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMosaicRestrictionMerkle(string compositeHash)
         { 
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "mosaic", compositeHash, "merkle"])))
-                .Select(r => { return Composer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+                .Select(FormResponse<MerkleRoot>);
         }
     }
 }

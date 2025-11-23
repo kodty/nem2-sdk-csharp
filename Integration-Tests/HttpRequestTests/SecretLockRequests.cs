@@ -32,9 +32,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await hashClient.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
 
@@ -73,11 +73,11 @@ namespace Integration_Tests.HttpRequests
 
             var response = await nodeClient.SearchSecretLocks(queryModel);
 
-            Assert.IsTrue(response[0].Lock.OwnerAddress.IsHex(48));
-            Assert.IsTrue(response[0].Lock.MosaicId.IsHex(16));
-            Assert.That(response[0].Lock.Status, Is.EqualTo(0));
-            Assert.That(response[0].Lock.Amount, Is.EqualTo(100000000));
-            Assert.IsTrue(response[0].Lock.CompositeHash.IsHex(64));
+            Assert.IsTrue(response.ComposedResponse[0].Lock.OwnerAddress.IsHex(48));
+            Assert.IsTrue(response.ComposedResponse[0].Lock.MosaicId.IsHex(16));
+            Assert.That(response.ComposedResponse[0].Lock.Status, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse[0].Lock.Amount, Is.EqualTo(100000000));
+            Assert.IsTrue(response.ComposedResponse[0].Lock.CompositeHash.IsHex(64));
         }
 
         [Test, Timeout(20000)]
@@ -89,15 +89,15 @@ namespace Integration_Tests.HttpRequests
 
             var response = await nodeClient.GetSecretLock("8381CE9DCDDB13FB8095C8E0A29DE893D337443822A1AA9DD515644092BD52DA");
 
-            Assert.That(response.Id.Length, Is.GreaterThan(0));
-            Assert.That(response.Lock.OwnerAddress.IsHex(48));
-            Assert.IsTrue(response.Lock.MosaicId.IsHex(16));
-            Assert.That(response.Lock.Status, Is.EqualTo(0));
-            Assert.That(response.Lock.Amount, Is.EqualTo(100000000));
-            Assert.IsTrue(response.Lock.CompositeHash.IsHex(64));
-            Assert.That(response.Lock.EndHeight, Is.EqualTo(4611561));
-            Assert.IsTrue(response.Lock.RecipientAddress.IsHex(48));
-            Assert.IsTrue(response.Lock.Secret.IsHex(64));
+            Assert.That(response.ComposedResponse.Id.Length, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Lock.OwnerAddress.IsHex(48));
+            Assert.IsTrue(response.ComposedResponse.Lock.MosaicId.IsHex(16));
+            Assert.That(response.ComposedResponse.Lock.Status, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Lock.Amount, Is.EqualTo(100000000));
+            Assert.IsTrue(response.ComposedResponse.Lock.CompositeHash.IsHex(64));
+            Assert.That(response.ComposedResponse.Lock.EndHeight, Is.EqualTo(4611561));
+            Assert.IsTrue(response.ComposedResponse.Lock.RecipientAddress.IsHex(48));
+            Assert.IsTrue(response.ComposedResponse.Lock.Secret.IsHex(64));
         }
 
         [Test, Timeout(20000)]
@@ -109,14 +109,14 @@ namespace Integration_Tests.HttpRequests
 
             var response = await nodeClient.GetSecretLockMerkle("8381CE9DCDDB13FB8095C8E0A29DE893D337443822A1AA9DD515644092BD52DA");
 
-            Assert.That(response.Raw.IsHex(396));
-            Assert.That(response.Tree[0].BranchHash.IsHex(64));
-            Assert.That(response.Tree[0].Links[0].Link.IsHex(64));
-            Assert.That(response.Tree[1].Type, Is.EqualTo(255));
-            Assert.That(response.Tree[1].NibbleCount, Is.EqualTo(63));
-            Assert.That(response.Tree[1].LeafHash.IsHex(64));
-            Assert.That(response.Tree[1].BranchHash, Is.Null);
-            Assert.That(response.Tree[1].Value.IsHex(64));
+            Assert.That(response.ComposedResponse.Raw.IsHex(396));
+            Assert.That(response.ComposedResponse.Tree[0].BranchHash.IsHex(64));
+            Assert.That(response.ComposedResponse.Tree[0].Links[0].Link.IsHex(64));
+            Assert.That(response.ComposedResponse.Tree[1].Type, Is.EqualTo(255));
+            Assert.That(response.ComposedResponse.Tree[1].NibbleCount, Is.EqualTo(63));
+            Assert.That(response.ComposedResponse.Tree[1].LeafHash.IsHex(64));
+            Assert.That(response.ComposedResponse.Tree[1].BranchHash, Is.Null);
+            Assert.That(response.ComposedResponse.Tree[1].Value.IsHex(64));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
+using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Reactive.Linq;
@@ -9,10 +10,10 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
     {
         public MultisigHttp(string host, int port) : base(host, port) { }
 
-        public IObservable<MerkleRoot> GetMultisigMerkleInfo(string pubkOrAddress)
+        public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMultisigMerkleInfo(string pubkOrAddress)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(Host + ":" + Port + "/accounts/" + pubkOrAddress + "/multisig/merkle"))
-                 .Select(r => { return Composer.GenerateObject<MerkleRoot>(OverrideEnsureSuccessStatusCode(r)); });
+                 .Select(FormResponse<MerkleRoot>);
         }
 
         /*

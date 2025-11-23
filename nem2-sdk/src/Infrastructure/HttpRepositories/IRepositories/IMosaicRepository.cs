@@ -1,18 +1,19 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+﻿using io.nem2.sdk.src.Infrastructure.HttpExtension;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
     interface IMosaicRepository
     {
-        IObservable<List<MosaicEvent>> SearchMosaics(QueryModel queryModel);
-        IObservable<MosaicEvent> GetMosaic(string mosaicId);
-        IObservable<List<MosaicEvent>> GetMosaics(List<string> mosaicIds);
-        IObservable<MerkleRoot> GetMosaicMerkle(string mosaicId);
+        IObservable<ExtendedHttpResponseMessege<List<MosaicEvent>>> SearchMosaics(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessege<MosaicEvent>> GetMosaic(string mosaicId);
+        IObservable<ExtendedHttpResponseMessege<List<MosaicEvent>>> GetMosaics(List<string> mosaicIds);
+        IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMosaicMerkle(string mosaicId);
 
         // restrictions
-        IObservable<List<MosaicRestrictionData>> SearchMosaicRestrictions(QueryModel queryModel);
-        IObservable<MosaicRestrictionData> GetMosaicRestriction(string compositeHash);
-        IObservable<MerkleRoot> GetMosaicRestrictionMerkle(string compositeHash);
+        IObservable<ExtendedHttpResponseMessege<List<MosaicRestrictionData>>> SearchMosaicRestrictions(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessege<MosaicRestrictionData>> GetMosaicRestriction(string compositeHash);
+        IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMosaicRestrictionMerkle(string compositeHash);
     }
 }

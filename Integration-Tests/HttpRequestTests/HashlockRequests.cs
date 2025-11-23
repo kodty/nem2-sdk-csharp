@@ -22,7 +22,7 @@ namespace Integration_Tests.HttpRequests
 
             var result = await client.GetHashLockInfo(hash);
 
-            Assert.That(result.Lock.MosaicId, Is.EqualTo("6BED913FA20223F8"));
+            Assert.That(result.ComposedResponse.Lock.MosaicId, Is.EqualTo("6BED913FA20223F8"));
         }
 
         [Test, Timeout(20000)]
@@ -34,7 +34,7 @@ namespace Integration_Tests.HttpRequests
 
             var result = await client.GetHashLockMerkleInfo(hash);
 
-            Assert.That(result.Tree[0].LeafHash, Is.EqualTo("C1B3FB7531222664A33F5199D2E0328F22F6C04C1717AF47C633E835E9EC90F4"));
+            Assert.That(result.ComposedResponse.Tree[0].LeafHash, Is.EqualTo("C1B3FB7531222664A33F5199D2E0328F22F6C04C1717AF47C633E835E9EC90F4"));
         }
 
         [Test, Timeout(20000)]
@@ -51,9 +51,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ForEach(i =>
+            response.ComposedResponse.ForEach(i =>
             {
 
                 var tx = (HashLockT)i.Transaction;

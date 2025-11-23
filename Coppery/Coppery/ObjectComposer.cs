@@ -72,7 +72,7 @@ namespace Coppery
             return (T)GenerateObject(typeof(T), JsonObject.Parse(data));
         }
 
-        private dynamic GenerateObject(Type type, JsonNode jObject)
+        public dynamic GenerateObject(Type type, JsonNode jObject)
         {
             var actualObject = Activator.CreateInstance(type);
 
