@@ -4,6 +4,8 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Reactive.Linq;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
+using System.Diagnostics;
+using io.nem2.sdk.src.Model.Transactions;
 
 namespace Integration_Tests.HttpRequests
 {
@@ -305,6 +307,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetEmbeddedMosaicSupplyRevocationTransaction()
         {
+
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var tx = await client.GetConfirmedTransaction("377CEFFC0FB99B9289E627D14729D9341AC082832EBFC54A25098594E732FB82");
@@ -416,44 +419,45 @@ namespace Integration_Tests.HttpRequests
 
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
-            var response = await client.GetConfirmedTransactions(new string[] { "64B675060AEE4E82460B0CC9", "64B6750B0AEE4E82460B0F47" });
+            var response = await client.GetConfirmedTransactions(new string[] { "68D3FEAB95C55B925B057BD6", "68D3FEAB95C55B925B057E36" });
 
+            Debug.WriteLine(response.Response.Content.ReadAsStringAsync().Result);
             var aggTx1 = (Aggregate)response.ComposedResponse[0].Transaction;
             var aggTx2 = (Aggregate)response.ComposedResponse[1].Transaction;
 
 
             Assert.IsTrue(response.ComposedResponse[0].Id.IsHex(24));
             Assert.That(response.ComposedResponse[0].Meta.Hash.IsHex(64));
-            Assert.That(response.ComposedResponse[0].Meta.Index, Is.EqualTo(0));        
-            Assert.That(response.ComposedResponse[0].Meta.Timestamp, Is.EqualTo(88309778));
+            Assert.That(response.ComposedResponse[0].Meta.Index, Is.EqualTo(25190));        
+            Assert.That(response.ComposedResponse[0].Meta.Timestamp, Is.EqualTo(0));
             Assert.IsTrue(response.ComposedResponse[0].Meta.MerkleComponentHash.IsHex(64));
-            Assert.That(response.ComposedResponse[0].Meta.FeeMultiplier, Is.EqualTo(100));
+            Assert.That(response.ComposedResponse[0].Meta.FeeMultiplier, Is.EqualTo(0));
 
             Assert.IsTrue(response.ComposedResponse[1].Id.IsHex(24));
             Assert.That(response.ComposedResponse[1].Meta.Hash.IsHex(64));
-            Assert.That(response.ComposedResponse[1].Meta.Index, Is.EqualTo(0));
-            Assert.That(response.ComposedResponse[1].Meta.Height, Is.EqualTo(419));
-            Assert.That(response.ComposedResponse[1].Meta.Timestamp, Is.EqualTo(97632236));
+            Assert.That(response.ComposedResponse[1].Meta.Index, Is.EqualTo(25476));
+            Assert.That(response.ComposedResponse[1].Meta.Height, Is.EqualTo(1));
+            Assert.That(response.ComposedResponse[1].Meta.Timestamp, Is.EqualTo(0));
             Assert.IsTrue(response.ComposedResponse[1].Meta.MerkleComponentHash.IsHex(64));
-            Assert.That(response.ComposedResponse[1].Meta.FeeMultiplier, Is.EqualTo(2314));
+            Assert.That(response.ComposedResponse[1].Meta.FeeMultiplier, Is.EqualTo(0));
 
-            Assert.That(aggTx1.Size, Is.EqualTo(312));
+            Assert.That(aggTx1.Size, Is.EqualTo(6672));
             Assert.That(aggTx1.Transactions, !Is.Null);
             Assert.That(aggTx1.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.IsTrue(aggTx1.TransactionsHash.IsHex(64));
             Assert.That(aggTx1.Signature.IsHex(128));
-            Assert.That(aggTx1.Deadline, Is.EqualTo(95507057));
-            Assert.That(aggTx1.MaxFee, Is.EqualTo(31200));
+            Assert.That(aggTx1.Deadline, Is.EqualTo(1));
+            Assert.That(aggTx1.MaxFee, Is.EqualTo(0));
             Assert.That(aggTx1.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.AGGREGATE_COMPLETE));
             Assert.IsTrue(aggTx1.SignerPublicKey.IsHex(64));
 
-            Assert.That(aggTx2.Size, Is.EqualTo(432));
+            Assert.That(aggTx2.Size, Is.EqualTo(864));
             Assert.That(aggTx2.Transactions, !Is.Null);
             Assert.That(aggTx2.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.IsTrue(aggTx2.TransactionsHash.IsHex(64));
             Assert.IsTrue(aggTx2.Signature.IsHex(128));
-            Assert.That(aggTx2.Deadline, Is.EqualTo(104816725));
-            Assert.That(aggTx2.MaxFee, Is.EqualTo(1000000));
+            Assert.That(aggTx2.Deadline, Is.EqualTo(1));
+            Assert.That(aggTx2.MaxFee, Is.EqualTo(0));
             Assert.That(aggTx2.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.AGGREGATE_COMPLETE));
             Assert.IsTrue(aggTx2.SignerPublicKey.IsHex(64));
 
@@ -463,41 +467,41 @@ namespace Integration_Tests.HttpRequests
                 Assert.That(i.Version, Is.EqualTo(0));
             });
 
-            Assert.IsTrue(aggTx1.Transactions[0].Transaction.SignerPublicKey.IsHex(64));
-            Assert.That(aggTx1.Transactions[0].Transaction.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET)); // network shouldnt be twice - check why
-            Assert.That(aggTx1.Transactions[0].Transaction.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.MOSAIC_DEFINITION));
-            Assert.That(aggTx1.Transactions[0].Transaction.Version, Is.EqualTo(1));
+            Assert.IsTrue(aggTx1.Transactions[1].Transaction.SignerPublicKey.IsHex(64));
+            Assert.That(aggTx1.Transactions[1].Transaction.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET)); // network shouldnt be twice - check why
+            Assert.That(aggTx1.Transactions[1].Transaction.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.TRANSFER));
+            Assert.That(aggTx1.Transactions[1].Transaction.Version, Is.EqualTo(1));
 
-            Assert.IsTrue(aggTx2.Transactions[1].Transaction.SignerPublicKey.IsHex(64));
-            Assert.That(aggTx2.Transactions[1].Transaction.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET)); // network shouldnt be twice - check why
-            Assert.That(aggTx2.Transactions[1].Transaction.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.ACCOUNT_KEY_LINK));
-            Assert.That(aggTx2.Transactions[1].Transaction.Version, Is.EqualTo(1));
+            Assert.IsTrue(aggTx2.Transactions[0].Transaction.SignerPublicKey.IsHex(64));
+            Assert.That(aggTx2.Transactions[0].Transaction.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET)); // network shouldnt be twice - check why
+            Assert.That(aggTx2.Transactions[0].Transaction.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION));
+            Assert.That(aggTx2.Transactions[0].Transaction.Version, Is.EqualTo(1));
 
-            var embedded1 = (EmbeddedMosaicDefinition)aggTx1.Transactions[0].Transaction;
-            var embedded2 = (EmbeddedKeyLink)aggTx2.Transactions[1].Transaction;
+            var embedded1 = (EmbeddedSimpleTransfer)aggTx1.Transactions[1].Transaction;
+            var embedded2 = (EmbeddedMultisigModification)aggTx2.Transactions[0].Transaction;
 
-            Assert.IsTrue(aggTx1.Transactions[0].Id.IsHex(24));
-            Assert.That(aggTx1.Transactions[0].Meta.Index, Is.EqualTo(0));
-            Assert.That(aggTx1.Transactions[0].Meta.Height, Is.EqualTo(117));
-            Assert.That(aggTx1.Transactions[0].Meta.Timestamp, Is.EqualTo(88309778));
-            Assert.That(aggTx1.Transactions[0].Meta.FeeMultiplier, Is.EqualTo(100));
-            Assert.IsTrue(aggTx1.Transactions[0].Meta.AggregateHash.IsHex(64));
-            Assert.IsTrue(aggTx1.Transactions[0].Meta.AggregateId.IsHex(24));
+            Assert.IsTrue(aggTx1.Transactions[1].Id.IsHex(24));
+            Assert.That(aggTx1.Transactions[1].Meta.Index, Is.EqualTo(1));
+            Assert.That(aggTx1.Transactions[1].Meta.Height, Is.EqualTo(1));
+            Assert.That(aggTx1.Transactions[1].Meta.Timestamp, Is.EqualTo(0));
+            Assert.That(aggTx1.Transactions[1].Meta.FeeMultiplier, Is.EqualTo(0));
+            Assert.IsTrue(aggTx1.Transactions[1].Meta.AggregateHash.IsHex(64));
+            Assert.IsTrue(aggTx1.Transactions[1].Meta.AggregateId.IsHex(24));
 
-            Assert.IsTrue(aggTx2.Transactions[1].Id.IsHex(24));
-            Assert.That(aggTx2.Transactions[1].Meta.Index, Is.EqualTo(1));
-            Assert.That(aggTx2.Transactions[1].Meta.Height, Is.EqualTo(419));
-            Assert.That(aggTx2.Transactions[1].Meta.Timestamp, Is.EqualTo(97632236));
-            Assert.That(aggTx2.Transactions[1].Meta.FeeMultiplier, Is.EqualTo(2314));
-            Assert.IsTrue(aggTx2.Transactions[1].Meta.AggregateHash.IsHex(64));
-            Assert.IsTrue(aggTx2.Transactions[1].Meta.AggregateId.IsHex(24));
+            Assert.IsTrue(aggTx2.Transactions[0].Id.IsHex(24));
+            Assert.That(aggTx2.Transactions[0].Meta.Index, Is.EqualTo(0));
+            Assert.That(aggTx2.Transactions[0].Meta.Height, Is.EqualTo(1));
+            Assert.That(aggTx2.Transactions[0].Meta.Timestamp, Is.EqualTo(0));
+            Assert.That(aggTx2.Transactions[0].Meta.FeeMultiplier, Is.EqualTo(0));
+            Assert.IsTrue(aggTx2.Transactions[0].Meta.AggregateHash.IsHex(64));
+            Assert.IsTrue(aggTx2.Transactions[0].Meta.AggregateId.IsHex(24));
 
             Assert.IsTrue(embedded1.SignerPublicKey.IsHex(64));
             Assert.That(embedded1.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(embedded1.Version, Is.EqualTo(1));
-            Assert.That(embedded1.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.MOSAIC_DEFINITION));
+            Assert.That(embedded1.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.TRANSFER));
 
-            Assert.That(embedded2.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.ACCOUNT_KEY_LINK));
+            Assert.That(embedded2.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION));
             Assert.That(embedded2.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(embedded2.Version, Is.EqualTo(1));
         }

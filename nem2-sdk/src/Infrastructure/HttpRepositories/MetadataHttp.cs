@@ -10,10 +10,10 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
     {
         public MetadataHttp(string host, int port) : base(host, port) { }
 
-        public IObservable<ExtendedHttpResponseMessege<List<Metadata>>> SearchMetadataEntries(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<Datum<Metadata>>> SearchMetadataEntries(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["metadata"], queryModel)))
-               .Select(r => { return FormListResponse<Metadata>(r, "data"); });
+               .Select(FormResponse<Datum<Metadata>>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<Metadata>> GetMetadata(string compositeHash)

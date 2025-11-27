@@ -1,11 +1,5 @@
 ﻿namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 {
-    public class AccountsData
-    {
-        public List<AccountData> Data { get; set; }
-        public Pagination Pagination { get; set; }
-    }
-
     public class AccountData
     {
        public AccountInfo Account {  get; set; }

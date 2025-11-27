@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Model;
@@ -78,14 +79,20 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return extendedResponse;
         }
 
-        internal ExtendedHttpResponseMessege<List<T>> FormListResponse<T>(HttpResponseMessage msg, string path = null)
+        internal ExtendedHttpResponseMessege<List<T>> FormObjectList<T>(HttpResponseMessage msg)
         {
-            var extendedResponse = ExtendResponse<List<T>>(msg);
+            var extended = ExtendResponse<List<T>>(msg);
 
-            if (msg.IsSuccessStatusCode)
-                extendedResponse.ComposedResponse = Composer.ComposeEvents<T>(msg.Content.ReadAsStringAsync().Result, path);
+            var objs = JsonNode.Parse(msg.Content.ReadAsStringAsync().Result);
 
-            return extendedResponse;
+            List<T> data = new List<T>();
+
+            foreach (var o in objs.AsArray())
+                data.Add(Composer.GenerateObject<T>(o.ToString()));
+
+            extended.ComposedResponse = data;
+
+            return extended;
         }
 
         internal ExtendedHttpResponseMessege<T> FormResponse<T>(HttpResponseMessage msg)

@@ -13,16 +13,16 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public NamespaceHttp(string host, int port) 
             : base(host, port) { }
 
-        public IObservable<ExtendedHttpResponseMessege<List<NamespaceDatum>>> SearchNamespaces(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<Datum<NamespaceData>>> SearchNamespaces(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["namespaces"], queryModel)))
-                 .Select(r => { return FormListResponse<NamespaceDatum>(r, "data"); });
+                .Select(FormResponse<Datum<NamespaceData>>);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<NamespaceDatum>> GetNamespace(string namespaceId)
+        public IObservable<ExtendedHttpResponseMessege<NamespaceData>> GetNamespace(string namespaceId)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["namespaces", namespaceId])))
-                .Select(FormResponse<NamespaceDatum>);
+                .Select(FormResponse<NamespaceData>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetNamespaceMerkle(string namespaceId)
@@ -39,10 +39,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             };
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
-                .Select(r => { return FormListResponse<NamespaceName>(r); });
+                .Select(FormObjectList<NamespaceName>);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<AccountName>>> GetAccountNames(List<string> addresses)
+        public IObservable<ExtendedHttpResponseMessege<Account_Names>> GetAccountNames(List<string> addresses)
         {
             var ids = new Account_Ids()
             {
@@ -50,10 +50,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             };
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "account", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
-               .Select(r => { return FormListResponse<AccountName>(r, "accountNames"); });
+                .Select(FormResponse<Account_Names>);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<MosaicName>>> GetMosaicNames(List<string> mosaicIds)
+        public IObservable<ExtendedHttpResponseMessege<Mosaic_Names>> GetMosaicNames(List<string> mosaicIds)
         {
             var ids = new MosaicIds()
             {
@@ -61,7 +61,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             };
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "mosaic", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
-                  .Select(r => { return FormListResponse<MosaicName>(r, "accountNames"); });
+                  .Select(FormResponse<Mosaic_Names>);
         }
     }
 }

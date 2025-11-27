@@ -142,11 +142,10 @@ namespace Coppery
             {
                 if (genType.Name == "EmbeddedTransactionData")
                 {
-                    var tx = path == null ? ob.AsArray() : ob[path];
 
-                    foreach (var t in tx.AsArray())
+                    foreach (var t in ob[path].AsArray())
                         values.Add(ComposeTransaction(genType, t.ToString(), true));
-
+                
                     return values;
                 }
 

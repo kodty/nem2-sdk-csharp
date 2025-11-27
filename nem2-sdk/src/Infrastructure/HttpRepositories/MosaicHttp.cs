@@ -11,10 +11,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
     {
         public MosaicHttp(string host, int port) : base(host, port) { }
 
-        public IObservable<ExtendedHttpResponseMessege<List<MosaicEvent>>> SearchMosaics(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<Datum<MosaicEvent>>> SearchMosaics(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["mosaics"], queryModel)))
-                .Select(r => { return FormListResponse<MosaicEvent>(r, "data"); });
+                .Select(FormResponse<Datum<MosaicEvent>>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<MosaicEvent>> GetMosaic(string mosaicId)
@@ -26,7 +26,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<ExtendedHttpResponseMessege<List<MosaicEvent>>> GetMosaics(List<string> mosaicIds)
         {     
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["mosaics"]), new StringContent(JsonSerializer.Serialize(new MosaicIds() { mosaicIds = mosaicIds }), Encoding.UTF8, "application/json")))
-                .Select(r => { return FormListResponse<MosaicEvent>(r); });
+                .Select(FormObjectList<MosaicEvent>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMosaicMerkle(string mosaicId)
@@ -36,10 +36,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<MosaicRestrictionData>>> SearchMosaicRestrictions(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<Datum<MosaicRestrictionData>>> SearchMosaicRestrictions(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "mosaic"], queryModel)))
-               .Select(r => { return FormListResponse<MosaicRestrictionData>(r, "data"); });
+               .Select(FormResponse<Datum<MosaicRestrictionData>>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<MosaicRestrictionData>> GetMosaicRestriction(string compositeHash)

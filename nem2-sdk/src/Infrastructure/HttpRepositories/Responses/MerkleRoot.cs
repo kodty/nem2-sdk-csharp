@@ -1,6 +1,10 @@
 ﻿namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 {
-    public class MerklePath
+    public class Merkle_Path{
+        public List<Leaf> MerklePath { get; set; }
+    }
+
+    public class Leaf
     {
         public string Hash { get; set; }
         public string Position { get; set; }

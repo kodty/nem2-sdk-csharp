@@ -4,6 +4,7 @@ using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Reactive.Linq;
+using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 {
@@ -26,7 +27,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         public IObservable<ExtendedHttpResponseMessege<List<NodePeer>>> GetNodePeers()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "peers"])))
-              .Select(r => { return FormListResponse<NodePeer>(r); });
+              .Select(FormObjectList<NodePeer>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<NodeStorage>> GetNodeStorageInfo()

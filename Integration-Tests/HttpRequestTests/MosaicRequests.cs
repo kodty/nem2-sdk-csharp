@@ -25,15 +25,15 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchMosaics(queryModel);
 
-            Assert.IsTrue(response.ComposedResponse[0].Mosaic.Id.IsHex(16));
-            Assert.That(response.ComposedResponse[0].Mosaic.Version, Is.EqualTo(1));
-            Assert.That(response.ComposedResponse[0].Mosaic.Supply, Is.GreaterThan(8427457774427808));
-            Assert.That(response.ComposedResponse[0].Mosaic.StartHeight, Is.EqualTo(1));
-            Assert.That(response.ComposedResponse[0].Mosaic.OwnerAddress.IsHex(48));
-            Assert.That(response.ComposedResponse[0].Mosaic.Revision, Is.EqualTo(1));
-            Assert.That(response.ComposedResponse[0].Mosaic.Flags, Is.EqualTo(2));
-            Assert.That(response.ComposedResponse[0].Mosaic.Divisibility, Is.EqualTo(6));
-            Assert.That(response.ComposedResponse[0].Mosaic.Duration, Is.EqualTo(0));
+            Assert.IsTrue(response.ComposedResponse.Data[0].Mosaic.Id.IsHex(16));
+            Assert.That(response.ComposedResponse.Data[0].Mosaic.Version, Is.EqualTo(1));
+            Assert.That(response.ComposedResponse.Data[0].Mosaic.Supply, Is.GreaterThan(8427457774427808));
+            Assert.That(response.ComposedResponse.Data[0].Mosaic.StartHeight, Is.EqualTo(1));
+            Assert.That(response.ComposedResponse.Data[0].Mosaic.OwnerAddress.IsHex(48));
+            Assert.That(response.ComposedResponse.Data[0].Mosaic.Revision, Is.EqualTo(1));
+            Assert.That(response.ComposedResponse.Data[0].Mosaic.Flags, Is.EqualTo(2));
+            Assert.That(response.ComposedResponse.Data[0].Mosaic.Divisibility, Is.EqualTo(6));
+            Assert.That(response.ComposedResponse.Data[0].Mosaic.Duration, Is.EqualTo(0));
         }
 
         [Test, Timeout(20000)]

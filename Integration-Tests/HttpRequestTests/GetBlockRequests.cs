@@ -82,8 +82,20 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetBlockTransactionMerkle(1, "B3FAD63E287D08209AA9CBE5E2E48CC1BEB1DA57993CBE7BE17E39C089186302");
 
-            Assert.That(response.ComposedResponse[0].Hash.IsHex(64));
-            Assert.That(response.ComposedResponse[0].Position, Is.EqualTo("right"));
+            Assert.That(response.ComposedResponse.MerklePath[0].Hash.IsHex(64));
+            Assert.That(response.ComposedResponse.MerklePath[0].Position, Is.EqualTo("right"));
+
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetBlockReceiptMerkle()
+        {
+            var client = new BlockchainHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetBlockRecieptMerkle(1, "B3FAD63E287D08209AA9CBE5E2E48CC1BEB1DA57993CBE7BE17E39C089186302");
+
+            Assert.That(response.ComposedResponse.MerklePath[0].Hash.IsHex(64));
+            Assert.That(response.ComposedResponse.MerklePath[0].Position, Is.EqualTo("right"));
 
         }
 

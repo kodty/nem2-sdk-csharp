@@ -10,13 +10,13 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public string Address { get; set; }
     }
 
-    public class NamespaceDatum
+    public class NamespaceData
     {
         public string Id { get; set; }
 
         public NamespaceMeta Meta { get; set; }
 
-        public NamespaceData Namespace { get; set; }
+        public Namespace Namespace { get; set; }
     }
 
     public class NamespaceMeta
@@ -26,7 +26,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public int Index { get; set; }
     }
 
-    public class NamespaceData
+    public class Namespace
     {
         public int Version { get; set; }
 

@@ -26,12 +26,12 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchMosaicRestrictions(queryModel);
 
-            Assert.That(response.ComposedResponse[3].MosaicRestrictionEntry.MosaicId, Is.EqualTo("613E6D0FC11F4530"));
-            Assert.That(response.ComposedResponse[3].MosaicRestrictionEntry.Version, Is.EqualTo(1));
-            Assert.That(response.ComposedResponse[3].MosaicRestrictionEntry.TargetAddress, Is.EqualTo("687B8885134F5BCE0AE5C97E222C5D3A462A3F4EA951CBE5"));
-            Assert.That(response.ComposedResponse[3].MosaicRestrictionEntry.CompositeHash, Is.EqualTo("A931981ED4D7E407D4F0F384E027490FA8771540693951A4DB63A00D8B48DF5F"));
-            Assert.That(response.ComposedResponse[3].MosaicRestrictionEntry.EntryType, Is.EqualTo(0));
-            Assert.IsTrue(response.ComposedResponse[3].MosaicRestrictionEntry.Restrictions[0].Key.IsHex(16));
+            Assert.That(response.ComposedResponse.Data[3].MosaicRestrictionEntry.MosaicId, Is.EqualTo("613E6D0FC11F4530"));
+            Assert.That(response.ComposedResponse.Data[3].MosaicRestrictionEntry.Version, Is.EqualTo(1));
+            Assert.That(response.ComposedResponse.Data[3].MosaicRestrictionEntry.TargetAddress, Is.EqualTo("68EE1B99E5D8BE46B1921A49CBD85B704C2DABA2A09235F9"));
+            Assert.That(response.ComposedResponse.Data[3].MosaicRestrictionEntry.CompositeHash, Is.EqualTo("FDA655832A99844A650868FDED88B2A9723A70B32CAAF5BD8B32A5CDD1318972"));
+            Assert.That(response.ComposedResponse.Data[3].MosaicRestrictionEntry.EntryType, Is.EqualTo(0));
+            Assert.IsTrue(response.ComposedResponse.Data[3].MosaicRestrictionEntry.Restrictions[0].Key.IsHex(16));
         }
 
         [Test, Timeout(20000)]

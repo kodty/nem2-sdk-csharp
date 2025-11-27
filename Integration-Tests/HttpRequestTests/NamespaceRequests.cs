@@ -68,9 +68,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchNamespaces(queryModel);
 
-            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Data.Count, Is.GreaterThan(0));
 
-            foreach (var item in response.ComposedResponse)
+            foreach (var item in response.ComposedResponse.Data)
             {
                 Assert.That(item.Id.Length, Is.EqualTo(24));
                 Assert.That(item.Meta.Active, Is.EqualTo(true));
@@ -117,7 +117,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetNamespaceMerkle("A95F1F8A96159516");
 
-            Assert.That(response.ComposedResponse.Raw.Length, Is.EqualTo(1618));
+            Assert.That(response.ComposedResponse.Raw.Length, Is.EqualTo(1682));
             Assert.That(response.ComposedResponse.Tree[1].Type, Is.EqualTo(0));
             Assert.That(response.ComposedResponse.Tree[1].Links[0].Link.IsHex(64));
         }
@@ -141,8 +141,8 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetAccountNames(new List<string> { "NBCXLKLGGDWGYC47X42AQADSCMZBV7YHU6BX4UA" });
 
-            Assert.IsTrue(response.ComposedResponse[0].Address.IsHex(48));
-            Assert.That(response.ComposedResponse[0].Names, Is.Empty);
+            Assert.IsTrue(response.ComposedResponse.AccountNames[0].Address.IsHex(48));
+            Assert.That(response.ComposedResponse.AccountNames[0].Names, Is.Empty);
 
         }
        
@@ -154,8 +154,8 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetMosaicNames(new List<string> { "6BED913FA20223F8" });
 
-            Assert.That(response.ComposedResponse[0].Names[0], Is.EqualTo( "symbol.xym"));
-            Assert.That(response.ComposedResponse[0].MosaicId.IsHex(16));
+            Assert.That(response.ComposedResponse.MosaicNames[0].Names[0], Is.EqualTo( "symbol.xym"));
+            Assert.That(response.ComposedResponse.MosaicNames[0].MosaicId.IsHex(16));
         }
     }
 }

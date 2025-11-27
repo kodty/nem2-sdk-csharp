@@ -12,6 +12,13 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public ulong Amount { get; set; }
     }
 
+    public class Datum<T>
+    {
+        public List<T> Data { get; set; }
+
+        public Pagination Pagination { get; set; }
+    }
+
     public class MosaicEvent
     {
         public MosaicArtifact Mosaic { get; set; }

@@ -146,7 +146,7 @@
         public int MaxCosignedAccountsPerAccount { get; set; }
     }
 
-    public class Namespace
+    public class NetworkNamespaceInfo
     {
         public int MaxNameSize { get; set; }
 
@@ -198,7 +198,7 @@
 
         public Multisig Multisig { get; set; }
 
-        public Namespace Namespace { get; set; }
+        public NetworkNamespaceInfo Namespace { get; set; }
 
         public Restrictionaccount Restrictionaccount { get; set; }
 

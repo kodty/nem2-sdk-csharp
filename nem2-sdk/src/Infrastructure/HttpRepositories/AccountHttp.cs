@@ -1,10 +1,11 @@
-﻿using System.Reactive.Linq;
+﻿using io.nem2.sdk.src.Infrastructure.Buffers.Model;
+using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using System.Reactive.Linq;
 using System.Text;
 using System.Text.Json;
-using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
@@ -16,10 +17,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             
         }
 
-        public IObservable<ExtendedHttpResponseMessege<AccountsData>> SearchAccounts(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<Datum<AccountData>>> SearchAccounts(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts"], queryModel)))
-                 .Select(FormResponse<AccountsData>);
+                 .Select(FormResponse<Datum<AccountData>>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<AccountData>> GetAccount(string pubkOrAddress)
@@ -31,21 +32,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<ExtendedHttpResponseMessege<List<AccountData>>> GetAccounts(List<string> accounts) // flag
         {
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["accounts"]), new StringContent(JsonSerializer.Serialize(new Public_Keys() { publicKeys = accounts }), Encoding.UTF8, "application/json")))
-                  .Select(r => {
-
-                      var extended = ExtendResponse<List<AccountData>>(r);
-
-                      var objs = JsonNode.Parse(r.Content.ReadAsStringAsync().Result);
-
-                      List<AccountData> data = new List<AccountData>();
-
-                      foreach (var o in objs.AsArray())
-                          data.Add(Composer.GenerateObject<AccountData>(o.ToString()));
-
-                      extended.ComposedResponse = data;
-                      
-                      return extended;
-                  });
+                  .Select(FormObjectList<AccountData>);
         }
 
 

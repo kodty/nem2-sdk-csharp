@@ -10,10 +10,10 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
     {
         public SecretLockHttp(string host, int port) : base(host, port) { }
         
-        public IObservable<ExtendedHttpResponseMessege<List<SecretLockEvent>>> SearchSecretLocks(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<Datum<SecretLockEvent>>> SearchSecretLocks(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri([ "lock", "secret"])))
-               .Select(r => { return FormListResponse<SecretLockEvent>(r, "data"); });
+               .Select(FormResponse<Datum<SecretLockEvent>>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<SecretLockEvent>> GetSecretLock(string hash)

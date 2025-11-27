@@ -5,7 +5,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
 {
     internal interface ISecretLockRepository
     {
-        IObservable<ExtendedHttpResponseMessege<List<SecretLockEvent>>> SearchSecretLocks(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessege<Datum<SecretLockEvent>>> SearchSecretLocks(QueryModel queryModel);
         IObservable<ExtendedHttpResponseMessege<SecretLockEvent>> GetSecretLock(string hash);
         IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetSecretLockMerkle(string hash);
     }

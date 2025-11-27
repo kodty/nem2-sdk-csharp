@@ -7,7 +7,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
     {
         IObservable<ExtendedHttpResponseMessege<ExtendedBlocksInfoData>> SearchBlocks(QueryModel queryModel);
         IObservable<ExtendedHttpResponseMessege<ExtendedBlockInfo>> GetBlock(ulong height);
-        IObservable<ExtendedHttpResponseMessege<List<MerklePath>>> GetBlockTransactionMerkle(ulong height, string hash);
-        IObservable<ExtendedHttpResponseMessege<List<MerklePath>>> GetBlockRecieptMerkle(ulong height, string hash);
+        IObservable<ExtendedHttpResponseMessege<Merkle_Path>> GetBlockTransactionMerkle(ulong height, string hash);
+        IObservable<ExtendedHttpResponseMessege<Merkle_Path>> GetBlockRecieptMerkle(ulong height, string hash);
     }
 }

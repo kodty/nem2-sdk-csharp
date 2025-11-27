@@ -22,6 +22,8 @@ namespace io.nem2.sdk.src.Model
             typeof(uint),
             typeof(Pagination),
             typeof(ExtendedBlockInfo),
+            typeof(Leaf),
+            typeof(Metadata),
             typeof(AccountData),
             typeof(ActivityBucket),
             typeof(VotingKeys),
@@ -44,7 +46,8 @@ namespace io.nem2.sdk.src.Model
             typeof(MosaicRestrictionData),
             typeof(Cosignature),
             typeof(EmbeddedTransactionData),
-            typeof(MosaicRestriction)
+            typeof(MosaicRestriction),
+            typeof(NamespaceData)
             ];
     }
 }

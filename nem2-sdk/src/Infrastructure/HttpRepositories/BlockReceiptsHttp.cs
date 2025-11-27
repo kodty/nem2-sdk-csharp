@@ -11,22 +11,22 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
     {
         public BlockReceiptsHttp(string host, int port) : base(host, port) { }
 
-        public IObservable<ExtendedHttpResponseMessege<List<ReceiptDatum>>> SearchTransactionStatements(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<Datum<ReceiptDatum>>> SearchTransactionStatements(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["statements", "transaction"])))
-              .Select(r => { return FormListResponse<ReceiptDatum>(r, "data"); });
+              .Select(FormResponse<Datum<ReceiptDatum>>);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<AddressDatum>>> GetAddressStatements(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<Datum<AddressDatum>>> GetAddressStatements(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["statements", "resolutions", "address"])))
-              .Select(r => { return FormListResponse<AddressDatum>(r, "data"); });
+              .Select(FormResponse<Datum<AddressDatum>>);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<MosaicDatum>>> GetMosaicStatements(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<Datum<MosaicDatum>>> GetMosaicStatements(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["statements", "resolutions", "mosaic"])))
-              .Select(r => { return FormListResponse<MosaicDatum>(r, "data"); });
+            .Select(FormResponse<Datum<MosaicDatum>>);
         }
     }
 }

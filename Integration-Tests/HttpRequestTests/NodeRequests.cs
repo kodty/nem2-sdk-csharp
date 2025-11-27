@@ -29,14 +29,14 @@ namespace Integration_Tests
 
             var response = await client.GetNodePeers();
 
-            Assert.That(response.ComposedResponse[0].Version, Is.EqualTo(16777991));
-            Assert.That(response.ComposedResponse[0].Host, !Is.Null);
-            Assert.That(response.ComposedResponse[0].Port, Is.EqualTo(7900));
-            Assert.That(response.ComposedResponse[0].NetworkIdentifier, Is.EqualTo(152));
-            Assert.That(response.ComposedResponse[0].Roles, Is.GreaterThan(0));
-            Assert.That(response.ComposedResponse[0].NetworkGenerationHashSeed, Is.EqualTo("49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4"));
-            Assert.That(response.ComposedResponse[0].FriendlyName.Length, Is.GreaterThan(0));
-            Assert.That(response.ComposedResponse[0].PublicKey.Length, Is.EqualTo(64));           
+            Assert.That(response.ComposedResponse[1].Version, Is.EqualTo(16777993));
+            Assert.That(response.ComposedResponse[1].Host, !Is.Null);
+            Assert.That(response.ComposedResponse[1].Port, Is.EqualTo(7900));
+            Assert.That(response.ComposedResponse[1].NetworkIdentifier, Is.EqualTo(152));
+            Assert.That(response.ComposedResponse[1].Roles, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse[1].NetworkGenerationHashSeed, Is.EqualTo("49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4"));
+            Assert.That(response.ComposedResponse[1].FriendlyName.Length, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse[1].PublicKey.Length, Is.EqualTo(64));           
         }
 
         [Test, Timeout(20000)]

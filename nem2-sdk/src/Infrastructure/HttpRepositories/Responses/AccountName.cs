@@ -6,6 +6,10 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public List<string> addresses { get; set; }
     }
 
+    public class Account_Names
+    {
+        public List<AccountName> AccountNames { get; set; }
+    }
     public class AccountName
     {
         public string Address { get; set; }
@@ -22,6 +26,10 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public string Name { get; set; }
     }
 
+    public class Mosaic_Names { 
+        public List<MosaicName> MosaicNames { get; set; }
+    
+    }
     public class MosaicName
     {
         public string MosaicId { get; set; }

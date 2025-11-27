@@ -26,16 +26,16 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                  .Select(FormResponse<ExtendedBlockInfo>);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<MerklePath>>> GetBlockTransactionMerkle(ulong height, string hash)
+        public IObservable<ExtendedHttpResponseMessege<Merkle_Path>> GetBlockTransactionMerkle(ulong height, string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height, "transactions", hash, "merkle"])))
-                  .Select(r => { return FormListResponse<MerklePath>(r, "merklePath"); });
+                  .Select(FormResponse<Merkle_Path>);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<MerklePath>>> GetBlockRecieptMerkle(ulong height, string hash)
+        public IObservable<ExtendedHttpResponseMessege<Merkle_Path>> GetBlockRecieptMerkle(ulong height, string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height, "reciepts", hash, "merkle"])))
-               .Select(r => { return FormListResponse<MerklePath>(r, "merklePath"); });
+                .Select(FormResponse<Merkle_Path>);
         }
  
         public IObservable<ExtendedHttpResponseMessege<BlockchainInfo>> GetBlockchainInfo()
