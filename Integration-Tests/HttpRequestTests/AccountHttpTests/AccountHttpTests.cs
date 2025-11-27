@@ -43,9 +43,9 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             queryModel.SetParam(QueryModel.DefinedParams.mosaicId, "63078E73FBCC2CAC");
             var response = await accountClient.SearchAccounts(queryModel);
 
-            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Data.Count, Is.GreaterThan(0));
 
-            response.ComposedResponse.ForEach(i =>
+            response.ComposedResponse.Data.ForEach(i =>
             {
                 Assert.IsTrue(i.Account.PublicKey.IsHex(64));
                 Assert.That(i.Account.Importance, Is.GreaterThanOrEqualTo(0));
@@ -130,14 +130,11 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             var account = new PublicAccount(pubKey, NetworkType.Types.MAIN_NET);
 
             var response = accountClient.GetAccount("NCA4PPX657N6GXPMVMZ2TZKLN37KZMJXNST63II");
-            Debug.WriteLine(account.Address.Plain);
+
             response.Subscribe(r =>
             {
-                Debug.WriteLine(r.Response.StatusCode);
-
                 if (!r.Response.IsSuccessStatusCode)
                 {
-                    Debug.WriteLine(r.Response.Content.ReadAsStringAsync().Result);
                     Assert.That(r.Response.IsSuccessStatusCode, Is.True);
                     return;
                 }
@@ -227,9 +224,9 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             queryModel.SetParam(QueryModel.DefinedParams.address, address.Plain);
             var response = await accountClient.SearchAccountRestrictions(queryModel);
 
-            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Data.Count, Is.GreaterThan(0));
 
-            foreach (var item in response.ComposedResponse)
+            foreach (var item in response.ComposedResponse.Data)
             {
                 Assert.That(item.AccountRestrictions.Version, Is.GreaterThan(0));
                 Assert.That(item.AccountRestrictions.Address.Length, Is.GreaterThan(0));

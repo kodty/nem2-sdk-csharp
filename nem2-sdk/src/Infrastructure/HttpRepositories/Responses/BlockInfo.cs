@@ -1,5 +1,12 @@
 ﻿namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 {
+    public class ExtendedBlocksInfoData
+    {
+        public List<ExtendedBlockInfo> Data { get; set; }
+        public Pagination Pagination { get; set; }
+
+    }
+
     public class ExtendedBlockInfo
     {
         public ExtendedMeta Meta { get; set; }

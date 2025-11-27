@@ -14,10 +14,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public BlockchainHttp(string host, int port) 
             : base(host, port) { }
 
-        public IObservable<ExtendedHttpResponseMessege<List<ExtendedBlockInfo>>> SearchBlocks(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<ExtendedBlocksInfoData>> SearchBlocks(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks"], queryModel)))
-                  .Select(r => { return FormListResponse<ExtendedBlockInfo>(r, "data"); });
+                  .Select(FormResponse<ExtendedBlocksInfoData>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<ExtendedBlockInfo>> GetBlock(ulong height)

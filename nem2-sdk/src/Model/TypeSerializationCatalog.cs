@@ -12,7 +12,7 @@ namespace io.nem2.sdk.src.Model
             typeof(EmbeddedTransactionData)
             ];
 
-        public static Type[] CustomTypes = [
+        public static Type[] CustomTypes = [ // include non native, generic type arguments
             typeof(ushort),
             typeof(bool),
             typeof(byte),
@@ -20,8 +20,12 @@ namespace io.nem2.sdk.src.Model
             typeof(ulong),
             typeof(string),
             typeof(uint),
+            typeof(Pagination),
+            typeof(ExtendedBlockInfo),
+            typeof(AccountData),
             typeof(ActivityBucket),
             typeof(VotingKeys),
+            typeof(RestrictionData),
             typeof(MosaicTransfer),
             typeof(MessageGroup),
             typeof(Signature),

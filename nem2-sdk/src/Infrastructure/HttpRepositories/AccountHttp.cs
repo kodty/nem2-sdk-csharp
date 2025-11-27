@@ -5,6 +5,7 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Text;
 using System.Text.Json;
 using io.nem2.sdk.src.Infrastructure.HttpExtension;
+using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -15,10 +16,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<AccountData>>> SearchAccounts(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<AccountsData>> SearchAccounts(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["accounts"], queryModel)))
-                 .Select(r => { return FormListResponse<AccountData>(r, "data"); });               
+                 .Select(FormResponse<AccountsData>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<AccountData>> GetAccount(string pubkOrAddress)
@@ -28,9 +29,23 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         }
 
         public IObservable<ExtendedHttpResponseMessege<List<AccountData>>> GetAccounts(List<string> accounts) // flag
-        { // only accounts api that needs null path
+        {
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["accounts"]), new StringContent(JsonSerializer.Serialize(new Public_Keys() { publicKeys = accounts }), Encoding.UTF8, "application/json")))
-                  .Select(r => { return FormListResponse<AccountData>(r); });
+                  .Select(r => {
+
+                      var extended = ExtendResponse<List<AccountData>>(r);
+
+                      var objs = JsonNode.Parse(r.Content.ReadAsStringAsync().Result);
+
+                      List<AccountData> data = new List<AccountData>();
+
+                      foreach (var o in objs.AsArray())
+                          data.Add(Composer.GenerateObject<AccountData>(o.ToString()));
+
+                      extended.ComposedResponse = data;
+                      
+                      return extended;
+                  });
         }
 
 
@@ -40,10 +55,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                 .Select(FormResponse<MerkleRoot>);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<RestrictionData>>> SearchAccountRestrictions(QueryModel queryModel)
+        public IObservable<ExtendedHttpResponseMessege<RestrictionsData>> SearchAccountRestrictions(QueryModel queryModel)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "account"], queryModel)))
-                .Select(r => { return FormListResponse<RestrictionData>(r, "data"); });
+                .Select(FormResponse<RestrictionsData>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<RestrictionData>> GetAccountRestriction(string address)

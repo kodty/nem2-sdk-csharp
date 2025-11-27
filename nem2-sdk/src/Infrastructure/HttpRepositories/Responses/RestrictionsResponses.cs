@@ -38,6 +38,11 @@
         public List<Restrictions> Restrictions { get; set; }
     }
 
+    public class RestrictionsData
+    {
+        public List<RestrictionData> Data { get; set; }
+        public Pagination Pagination { get; set; }
+    }
     public class RestrictionData
     {
         public AccountRestrictions AccountRestrictions { get; set; }

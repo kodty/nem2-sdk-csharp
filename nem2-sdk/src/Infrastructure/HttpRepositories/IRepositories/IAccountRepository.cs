@@ -5,13 +5,13 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
 {
     interface IAccountRepository
     {
-        IObservable<ExtendedHttpResponseMessege<List<AccountData>>> SearchAccounts(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessege<AccountsData>> SearchAccounts(QueryModel queryModel);
         IObservable<ExtendedHttpResponseMessege<AccountData>> GetAccount(string pubkOrAddress);
         IObservable<ExtendedHttpResponseMessege<List<AccountData>>> GetAccounts(List<string> publicKeys);
         IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetAccountMerkle(string pubkOrAddress);
 
         // restrictions
-        IObservable<ExtendedHttpResponseMessege<List<RestrictionData>>> SearchAccountRestrictions(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessege<RestrictionsData>> SearchAccountRestrictions(QueryModel queryModel);
         IObservable<ExtendedHttpResponseMessege<RestrictionData>> GetAccountRestriction(string compositeHash);
         IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetAccountRestrictionsMerkle(string compositeHash);
     }

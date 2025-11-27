@@ -26,9 +26,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchBlocks(queryModel);
 
-            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Data.Count, Is.GreaterThan(0));
 
-            response.ComposedResponse.ForEach(i =>
+            response.ComposedResponse.Data.ForEach(i =>
             {
 
                 Assert.That(i.Block.Height, Is.GreaterThan(0));
