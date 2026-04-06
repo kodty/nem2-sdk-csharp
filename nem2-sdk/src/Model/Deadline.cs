@@ -5,6 +5,18 @@ namespace io.nem2.sdk.src.Model
 {
     public class Deadline
     {
+        private static DateTime TestNet = new DateTime(2022, 10, 31, 21, 07, 47);
+
+        private static DateTime MainNet = new DateTime(2021, 03, 16, 00, 06, 25);
+
+        private static DateTime CustomDateTime { get; set; }
+
+        public enum NetworkType
+        {
+            MAINNET = 0,
+            TESTNET = 1,
+            CUSTOMNET
+        }
         internal DateTime EpochDate { get; set; }
 
         internal DateTime Date { get; set; }
@@ -16,43 +28,48 @@ namespace io.nem2.sdk.src.Model
             return Date;
         }
 
-        private TimeSpan GetTimeSinceEpoch()
+        public Deadline(NetworkType type, TimeSpan time)
         {
-            EpochDate = new DateTime(2022, 10, 31, 22, 07, 47).ToUniversalTime();
-            
-            return DateTime.UtcNow.Subtract(EpochDate);
+            switch (type)
+            {
+                case NetworkType.MAINNET:
+                    EpochDate = MainNet;
+                    break;
+                case NetworkType.TESTNET:
+                    EpochDate = TestNet;
+                    break;
+                case NetworkType.CUSTOMNET:
+                    EpochDate = CustomDateTime;
+                    break;
+            }
+
+            var now = DateTime.UtcNow;
+
+            var deadline = now - EpochDate;
+
+            Ticks = (ulong)deadline.Add(time).TotalMilliseconds;
         }
 
-        public Deadline(TimeSpan time)
-        {
-            var deadline = GetTimeSinceEpoch().Add(time);
-
-            Date = EpochDate.Add(deadline);
-
-            Ticks = (ulong)Date.Millisecond;
-        }
-
-        // use with NodeHttp.GetNodeTime() to get timestamp
         public Deadline(ulong timestamp, TimeSpan time)
         {
             Ticks = (ulong)(timestamp + time.TotalMilliseconds);
         }
 
-        public Deadline(int hours) : this(TimeSpan.FromHours(hours)) { }
+        public Deadline(NetworkType type, int hours) : this(type, TimeSpan.FromHours(hours)) { }
 
-        public static Deadline AddHours(int hours)
+        public static Deadline AddHours(int hours, NetworkType type = NetworkType.TESTNET)
         {
-            return new Deadline(TimeSpan.FromHours(hours));
+            return new Deadline(type, TimeSpan.FromHours(hours));
         }
 
-        public static Deadline AddMinutes(int mins)
+        public static Deadline AddMinutes(int mins, NetworkType type = NetworkType.TESTNET)
         {
-            return new Deadline(TimeSpan.FromMinutes(mins));
+            return new Deadline(type, TimeSpan.FromMinutes(mins));
         }
 
-        public static Deadline AddSeconds(int seconds)
+        public static Deadline AddSeconds(int seconds, NetworkType type = NetworkType.TESTNET)
         {
-            return new Deadline(TimeSpan.FromSeconds(seconds));
+            return new Deadline(type, TimeSpan.FromSeconds(seconds));
         }
 
         public static Deadline AutoDeadline(string node, int port)
