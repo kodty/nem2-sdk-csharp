@@ -33,11 +33,12 @@ namespace io.nem2.sdk.src.Model
             switch (type)
             {
                 case NetworkType.MAINNET:
-                    EpochDate = MainNet;
-                    break;
+                    throw new Exception("Network unsupported code not tested sufficiently. Supported in development branch at your own risk"); //EpochDate = MainNet;
+
                 case NetworkType.TESTNET:
                     EpochDate = TestNet;
                     break;
+
                 case NetworkType.CUSTOMNET:
                     EpochDate = CustomDateTime;
                     break;
