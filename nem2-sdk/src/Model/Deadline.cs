@@ -1,7 +1,4 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using System.Reactive.Linq;
-
-namespace io.nem2.sdk.src.Model
+﻿namespace io.nem2.sdk.src.Model
 {
     public class Deadline
     {
@@ -9,14 +6,6 @@ namespace io.nem2.sdk.src.Model
 
         private static DateTime MainNet = new DateTime(2021, 03, 16, 00, 06, 25);
 
-        private static DateTime CustomDateTime { get; set; }
-
-        public enum NetworkType
-        {
-            MAINNET = 0,
-            TESTNET = 1,
-            CUSTOMNET
-        }
         internal DateTime EpochDate { get; set; }
 
         internal DateTime Date { get; set; }
@@ -28,20 +17,15 @@ namespace io.nem2.sdk.src.Model
             return Date;
         }
 
-        public Deadline(NetworkType type, TimeSpan time)
+        public Deadline(NetworkType.Types type, TimeSpan time)
         {
             switch (type)
             {
-                case NetworkType.MAINNET:
-                    EpochDate = MainNet;
-                    break;
-
-                case NetworkType.TESTNET:
+                case NetworkType.Types.MAIN_NET:
+                    throw new Exception("Network unsupported code not tested sufficiently. Supported in development branch at your own risk"); //EpochDate = MainNet;
+            
+                case NetworkType.Types.TEST_NET:
                     EpochDate = TestNet;
-                    break;
-
-                case NetworkType.CUSTOMNET:
-                    EpochDate = CustomDateTime;
                     break;
             }
 
@@ -57,30 +41,21 @@ namespace io.nem2.sdk.src.Model
             Ticks = (ulong)(timestamp + time.TotalMilliseconds);
         }
 
-        public Deadline(NetworkType type, int hours) : this(type, TimeSpan.FromHours(hours)) { }
+        public Deadline(NetworkType.Types type, int hours) : this(type, TimeSpan.FromHours(hours)) { }
 
-        public static Deadline AddHours(int hours, NetworkType type = NetworkType.TESTNET)
+        public static Deadline AddHours(int hours, NetworkType.Types type = NetworkType.Types.TEST_NET)
         {
             return new Deadline(type, TimeSpan.FromHours(hours));
         }
 
-        public static Deadline AddMinutes(int mins, NetworkType type = NetworkType.TESTNET)
+        public static Deadline AddMinutes(int mins, NetworkType.Types type = NetworkType.Types.TEST_NET)
         {
             return new Deadline(type, TimeSpan.FromMinutes(mins));
         }
 
-        public static Deadline AddSeconds(int seconds, NetworkType type = NetworkType.TESTNET)
+        public static Deadline AddSeconds(int seconds, NetworkType.Types type = NetworkType.Types.TEST_NET)
         {
             return new Deadline(type, TimeSpan.FromSeconds(seconds));
-        }
-
-        public static Deadline AutoDeadline(string node, int port)
-        {
-            var client = new NodeHttp(node, port);
-
-            var timeStamp = client.GetNodeTime().Wait();
-
-            return new Deadline(timeStamp.ComposedResponse.CommunicationTimestamps.SendTimestamp, TimeSpan.FromHours(23));
         }
     }
 }
