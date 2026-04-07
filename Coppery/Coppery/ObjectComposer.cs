@@ -87,23 +87,21 @@ namespace Coppery
 
             type?.GetProperties().ToList().ForEach(op =>
             {
-                var lwrCase = (char.ToLower(op.Name[0]) + op.Name.Substring(1)).ToString();
-
-                if (!nameToValueMap.ContainsKey(op.Name))
+                if (!nameToValueMap.ContainsKey(op.Name.ToLower()))
                 {
                     
                     if (IsNativeProperty(op))
                     {
-                        nameToValueMap.Add(op.Name, GetTypedValue(op.PropertyType, objList.AsObject(), lwrCase));
+                        nameToValueMap.Add(op.Name.ToLower(), GetTypedValue(op.PropertyType, objList.AsObject(), char.ToLower(op.Name[0]) + op.Name.Substring(1)));
                         return;
                     }
                     else
                     {                       
                         foreach (var obj in objList.AsObject())
                         {
-                            if (obj.Key.Contains(lwrCase))
+                            if (obj.Key.ToLower().Contains(op.Name.ToLower()))
                             {
-                                nameToValueMap.Add(op.Name, GenerateObject(op.PropertyType, obj.Value));
+                                nameToValueMap.Add(op.Name.ToLower(), GenerateObject(op.PropertyType, obj.Value));
                                 break;
                             }
                         }
@@ -121,7 +119,7 @@ namespace Coppery
                 var actualObjProp = actualObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)?
                       .First(m =>
                       {
-                          return (char.ToLower(m.Name[0]) + m.Name.Substring(1)).ToString() == (char.ToLower(prop.Key[0]) + prop.Key.Substring(1)).ToString();
+                          return m.Name.ToLower() == prop.Key.ToLower();
                       });
 
                 actualObjProp.SetValue(actualObject, prop.Value);
