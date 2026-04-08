@@ -12,14 +12,14 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
         
         public IObservable<ExtendedHttpResponseMessege<Datum<SecretLockEvent>>> SearchSecretLocks(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri([ "lock", "secret"])))
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "secret"])))
                .Select(FormResponse<Datum<SecretLockEvent>>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<SecretLockEvent>> GetSecretLock(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "secret", hash])))
-              .Select(FormResponse<SecretLockEvent>);
+              .Select(r => FormResponse<SecretLockEvent>(r));
         }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetSecretLockMerkle(string hash)
