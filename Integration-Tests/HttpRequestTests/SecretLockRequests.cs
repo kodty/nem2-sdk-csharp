@@ -2,7 +2,6 @@
 using Coppery;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Diagnostics;
 using System.Reactive.Linq;
 using io.nem2.sdk.src.Model;
 
@@ -65,7 +64,7 @@ namespace Integration_Tests.HttpRequests
         }
 
         [Test, Timeout(20000)]
-        public async Task SearchSecreltLocks()
+        public async Task SearchSecretLocks()
         {
             var nodeClient = new SecretLockHttp(HttpSetUp.Node, HttpSetUp.Port);
 
@@ -76,7 +75,7 @@ namespace Integration_Tests.HttpRequests
             Assert.IsTrue(response.ComposedResponse.Data[0].Lock.OwnerAddress.IsHex(48));
             Assert.IsTrue(response.ComposedResponse.Data[0].Lock.MosaicId.IsHex(16));
             Assert.That(response.ComposedResponse.Data[0].Lock.Status, Is.EqualTo(0));
-            Assert.That(response.ComposedResponse.Data[0].Lock.Amount, Is.EqualTo(100000000));
+            Assert.That(response.ComposedResponse.Data[0].Lock.Amount, Is.EqualTo(300000000));
             Assert.IsTrue(response.ComposedResponse.Data[0].Lock.CompositeHash.IsHex(64));
         }
 
@@ -109,14 +108,12 @@ namespace Integration_Tests.HttpRequests
 
             var response = await nodeClient.GetSecretLockMerkle("8381CE9DCDDB13FB8095C8E0A29DE893D337443822A1AA9DD515644092BD52DA");
 
-            Assert.That(response.ComposedResponse.Raw.IsHex(396));
+            Assert.That(response.ComposedResponse.Raw.IsHex(136));
             Assert.That(response.ComposedResponse.Tree[0].BranchHash.IsHex(64));
             Assert.That(response.ComposedResponse.Tree[0].Links[0].Link.IsHex(64));
-            Assert.That(response.ComposedResponse.Tree[1].Type, Is.EqualTo(255));
-            Assert.That(response.ComposedResponse.Tree[1].NibbleCount, Is.EqualTo(63));
-            Assert.That(response.ComposedResponse.Tree[1].LeafHash.IsHex(64));
-            Assert.That(response.ComposedResponse.Tree[1].BranchHash, Is.Null);
-            Assert.That(response.ComposedResponse.Tree[1].Value.IsHex(64));
+            Assert.That(response.ComposedResponse.Tree[0].LinkMask, Is.EqualTo("2080"));
+            Assert.That(response.ComposedResponse.Tree[0].Type, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Tree[0].NibbleCount, Is.EqualTo(0));
         }
     }
 }
