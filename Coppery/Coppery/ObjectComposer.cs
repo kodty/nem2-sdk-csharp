@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json.Nodes;
 
@@ -6,6 +7,7 @@ namespace Coppery
 {
     public class ObjectComposer
     {
+        private int i { get; set; }
         private Type[] TypeArgs { get; set; }
 
         internal Func<string, bool, Type> GetTransactionType { get; set; }
@@ -19,52 +21,6 @@ namespace Coppery
         public ObjectComposer(Type[] args)
         {
             TypeArgs = args;
-        }
-
-        public List<T> ComposeEvents<T>(string data, string path = null)
-        {
-            var evs = path == null ? JsonNode.Parse(data) : JsonNode.Parse(data)[path];
-
-            List<T> events = new List<T>();
-
-            foreach (var e in evs.AsArray())
-            {
-                events.Add(GenerateObject(typeof(T), e.AsObject()));
-            }
-
-            return events;
-        }
-
-        public List<T> ComposeTransactions<T>(string data, string path = null, bool embedded = false)
-        {
-            var tx = path == null ? JsonNode.Parse(data) : JsonNode.Parse(data)[path];
-
-            List<T> txs = new List<T>();
-
-            foreach (var t in tx.AsArray())
-            {
-                txs.Add(ComposeTransaction(typeof(T), t.ToString(), embedded));
-            }
-
-            return txs;
-        }
-
-        public T ComposeTransaction<T>(string data, bool embedded = false)
-        {
-            return ComposeTransaction(typeof(T), data, embedded);
-        }
-
-        internal dynamic ComposeTransaction(Type genType, string data, bool embedded = false)
-        {
-            var tx = JsonObject.Parse(data).AsObject();
-
-            var type = GetTransactionType(data, embedded);
-
-            dynamic shell = GenerateObject(genType, tx.AsObject());
-
-            shell.Transaction = GenerateObject(type, tx["transaction"].AsObject());
-
-            return shell;
         }
 
         public T GenerateObject<T>(string data)
@@ -126,9 +82,7 @@ namespace Coppery
             }
 
             return Convert.ChangeType(actualObject, type);
-        }
-
-        
+        }     
 
         private IList GetListTypeValue(Type type, JsonNode ob, string path)
         {
@@ -138,28 +92,24 @@ namespace Coppery
 
             if (ob.AsObject().ContainsKey(path))
             {
-                if (genType.Name == "EmbeddedTransactionData")
-                {
-
-                    foreach (var t in ob[path].AsArray())
-                        values.Add(ComposeTransaction(genType, t.ToString(), true));
-                
-                    return values;
-                }
-
                 foreach (var item in ob[path].AsArray())
                 {
-                    if (genType.IsPrimitive)
+                    if (genType.IsPrimitive || genType == typeof(string))
                     {
                         values.Add(Convert.ChangeType(item.ToString(), genType));
-                    }
-                    if (genType == typeof(string))
-                    {
-                        values.Add((string)item);
-                    }
+                    }    
                     else if (!genType.IsPrimitive && genType != typeof(string))
                     {
-                        values.Add(GenerateObject(genType, item.AsObject()));
+                        var T = GenerateObject(genType, item.AsObject());
+
+                        if(genType.Name == "EmbeddedTransactionData")
+                        {
+                            var t_type = GetTransactionType(item.ToString(), true);
+
+                            T.Transaction = GenerateObject(t_type, item["transaction"].AsObject());
+                        }
+
+                        values.Add(T);
                     }
                 }
             }
@@ -167,7 +117,7 @@ namespace Coppery
             return values;
         }
 
-        private bool IsNativeProperty(System.Reflection.PropertyInfo op)
+        private bool IsNativeProperty(PropertyInfo op)
         {
             if (TypeArgs.Contains(op.PropertyType) || TypeArgs.Contains(op.PropertyType.GetGenericArguments().SingleOrDefault()))
                 return true;
@@ -178,17 +128,18 @@ namespace Coppery
         private dynamic? GetTypedValue(Type type, JsonObject ob, string path)
         {
             if (type.IsPrimitive)
-                return Convert.ChangeType(ob[path].ToString(), type);              
+                return Convert.ChangeType(ob[path].ToString(), type);             
 
             if (type == typeof(string))
                 return (string)ob[path];
 
-            if (TypeArgs.Contains(type.GetGenericArguments().SingleOrDefault()))
+            
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
                 return GetListTypeValue(type, ob, path);
 
-            if (TypeArgs.Contains(type)) 
+            if (TypeArgs.Contains(type))
                 return GenerateObject(type, ob[path]);
-
+                
             else throw new NotImplementedException(type.ToString());
         }
     }

@@ -39,19 +39,19 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<ExtendedHttpResponseMessege<TransactionData>> GetConfirmedTransaction(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "confirmed", hash])))
-              .Select(r => { return FormTransactionResponse(r); });
+              .Select(FormTransactionResponse);
         }
 
         public IObservable<ExtendedHttpResponseMessege<TransactionData>> GetUnconfirmedTransaction(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "unconfirmed", hash])))
-              .Select(r => { return FormTransactionResponse(r); });
+              .Select(FormTransactionResponse);
         }
 
         public IObservable<ExtendedHttpResponseMessege<TransactionData>> GetPartialTransaction(string hash)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "partial", hash])))
-              .Select(r => { return FormTransactionResponse(r); });
+              .Select(FormTransactionResponse);
         }
 
         public IObservable<ExtendedHttpResponseMessege<ExtendedBroadcastStatus>> GetTransactionStatus(string hash)
@@ -118,7 +118,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             var extendedResponse = ExtendResponse<TransactionData>(msg);
 
             if (msg.IsSuccessStatusCode)
-                extendedResponse.ComposedResponse = Composer.ComposeTransaction<TransactionData>(msg.Content.ReadAsStringAsync().Result);
+                extendedResponse.ComposedResponse = ComposeTransaction<TransactionData>(msg.Content.ReadAsStringAsync().Result);
 
             return extendedResponse;
         }
@@ -128,8 +128,19 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             var extendedResponse = ExtendResponse<List<TransactionData>>(msg);
 
             if (msg.IsSuccessStatusCode)
-                extendedResponse.ComposedResponse = Composer.ComposeTransactions<TransactionData>(msg.Content.ReadAsStringAsync().Result, path);
+            {
+                var tx = path == null ? JsonNode.Parse(msg.Content.ReadAsStringAsync().Result) : JsonNode.Parse(msg.Content.ReadAsStringAsync().Result)[path];
 
+                List<TransactionData> txs = new List<TransactionData>();
+
+                foreach (var t in tx.AsArray())
+                {
+                    txs.Add(ComposeTransaction<TransactionData>(t.ToString()));
+                }
+
+                extendedResponse.ComposedResponse = txs;
+            }
+              
             return extendedResponse;
         }
     }

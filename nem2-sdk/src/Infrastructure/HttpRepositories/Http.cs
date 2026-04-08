@@ -104,5 +104,23 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             return extendedResponse;
         }
+
+        internal T ComposeTransaction<T>(string data, bool embedded = false)
+        {
+            return ComposeTransaction(typeof(T), data, embedded);
+        }
+
+        internal dynamic ComposeTransaction(Type genType, string data, bool embedded = false)
+        {
+            var tx = JsonObject.Parse(data).AsObject();
+
+            var type = GetTransactionType(data, embedded);
+
+            dynamic shell = Composer.GenerateObject(genType, tx.AsObject());
+
+            shell.Transaction = Composer.GenerateObject(type, tx["transaction"].AsObject());
+
+            return shell;
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace io.nem2.sdk.src.Model
             typeof(EmbeddedTransactionData)
             ];
 
-        public static Type[] CustomTypes = [ // include non native, generic type arguments
+        public static Type[] CustomTypes = [
             typeof(ushort),
             typeof(bool),
             typeof(byte),
@@ -44,6 +44,7 @@ namespace io.nem2.sdk.src.Model
             typeof(Receipt),
             typeof(ResolutionEntry),
             typeof(MosaicRestrictionData),
+            typeof(SecretLockEvent),
             typeof(Cosignature),
             typeof(EmbeddedTransactionData),
             typeof(MosaicRestriction),
