@@ -414,12 +414,12 @@ namespace Integration_Tests.HttpRequests
 
         [Test, Timeout(20000)]
         public async Task GetAggregatesComplete()
-        {//http://153.126.132.254:3000/transactions/confirmed
+        {   ///transactions/confirmed?height=1&type=16705&signerpublickey=6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D
             string pubKey = "6BBE9AF9CCD65F5E438175A8BF0D9AA7C26244679AB99CB1ED83F902662EEC7D";
 
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
-            var response = await client.GetConfirmedTransactions(new string[] { "68D3FEAB95C55B925B057BD6", "68D3FEAB95C55B925B057E36" });
+            var response = await client.GetConfirmedTransactions(new string[] { "67C6611CA1F349DB14021C48", "67C6611CA1F349DB1402209B" });
 
             Debug.WriteLine(response.Response.Content.ReadAsStringAsync().Result);
             var aggTx1 = (Aggregate)response.ComposedResponse[0].Transaction;

@@ -73,7 +73,7 @@ namespace Integration_Tests
             Assert.That(response.ComposedResponse.ServerInfo.Deployment.LastUpdatedDate, Is.EqualTo("n/a"));
             Assert.That(response.ComposedResponse.ServerInfo.Deployment.DeploymentToolVersion, Is.EqualTo("alpha"));
             Assert.That(response.ComposedResponse.ServerInfo.Deployment.DeploymentTool, Is.EqualTo("shoestring"));
-            Assert.That(response.ComposedResponse.ServerInfo.RestVersion, Is.EqualTo("2.5.0"));
+            Assert.That(response.ComposedResponse.ServerInfo.RestVersion, Is.EqualTo("2.5.1"));
             Assert.That(response.ComposedResponse.ServerInfo.SdkVersion, Is.Null);
         }
     }

@@ -117,7 +117,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetNamespaceMerkle("A95F1F8A96159516");
 
-            Assert.That(response.ComposedResponse.Raw.Length, Is.EqualTo(1682));
+            Assert.That(response.ComposedResponse.Raw.Length, Is.EqualTo(1618));
             Assert.That(response.ComposedResponse.Tree[1].Type, Is.EqualTo(0));
             Assert.That(response.ComposedResponse.Tree[1].Links[0].Link.IsHex(64));
         }

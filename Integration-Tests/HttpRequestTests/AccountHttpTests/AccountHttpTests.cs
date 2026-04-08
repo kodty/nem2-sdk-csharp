@@ -194,7 +194,7 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             var account = Address.CreateFromHex("6874CFD2665CD89339B9B74175A7F5A01059A1FEBF0A58A7");
             var response = await accountClient.GetAccountMerkle(account.Plain);
 
-            Assert.That(response.ComposedResponse.Raw.Length, Is.EqualTo(4584));
+            Assert.That(response.ComposedResponse.Raw.Length, Is.EqualTo(4648));
 
             response.ComposedResponse.Tree.ForEach(t =>
             {

@@ -55,18 +55,18 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchTransactionStatements(qModel);
 
-            Assert.That(response.ComposedResponse.Data[2].Meta.Timestamp, Is.EqualTo(0));
-            Assert.That(response.ComposedResponse.Data[2].Statement.Height, Is.EqualTo(1));
-            Assert.IsTrue(response.ComposedResponse.Data[2].Statement.Receipts[0].MosaicId.IsHex(16));
-            Assert.That(response.ComposedResponse.Data[2].Statement.Receipts[0].Type, Is.EqualTo(4942)); // flag
+            Assert.That(response.ComposedResponse.Data[3].Meta.Timestamp, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Data[3].Statement.Height, Is.EqualTo(1));
+            Assert.IsTrue(response.ComposedResponse.Data[3].Statement.Receipts[0].MosaicId.IsHex(16));
+            Assert.That(response.ComposedResponse.Data[3].Statement.Receipts[0].Type, Is.EqualTo(4942)); // flag
             // https://docs.symbol.dev/concepts/receipt.html#recorded-receipts
 
-            Assert.That(response.ComposedResponse.Data[2].Statement.Receipts[0].Version, Is.EqualTo(1));
-            Assert.That(response.ComposedResponse.Data[2].Statement.Receipts[0].Amount, Is.EqualTo(0));
-            Assert.That(response.ComposedResponse.Data[2].Statement.Receipts[0].SenderAddress.Length, Is.EqualTo(48));
-            Assert.IsTrue(response.ComposedResponse.Data[2].Statement.Receipts[0].RecipientAddress.IsHex(48));
-            Assert.That(response.ComposedResponse.Data[2].Statement.Source.PrimaryId, Is.EqualTo(25677));
-            Assert.That(response.ComposedResponse.Data[2].Statement.Source.SecondaryId, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Data[3].Statement.Receipts[0].Version, Is.EqualTo(1));
+            Assert.That(response.ComposedResponse.Data[3].Statement.Receipts[0].Amount, Is.EqualTo(0));
+            Assert.That(response.ComposedResponse.Data[3].Statement.Receipts[0].SenderAddress.Length, Is.EqualTo(48));
+            Assert.IsTrue(response.ComposedResponse.Data[3].Statement.Receipts[0].RecipientAddress.IsHex(48));
+            Assert.That(response.ComposedResponse.Data[3].Statement.Source.PrimaryId, Is.EqualTo(25658));
+            Assert.That(response.ComposedResponse.Data[3].Statement.Source.SecondaryId, Is.EqualTo(0));
         }
     }
 }

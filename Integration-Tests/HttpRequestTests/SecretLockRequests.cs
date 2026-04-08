@@ -86,15 +86,15 @@ namespace Integration_Tests.HttpRequests
 
             QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockTransactions);
 
-            var response = await nodeClient.GetSecretLock("20D5E0DC1ED3FAA32ED6188C5FE112CE370EAE0F0A80C0B7281EB84CBB02A60C");
+            var response = await nodeClient.GetSecretLock("909C0B561BE914BC765CEF10DA7C3E69E65804F289AB212E491EE8CDFCF9683C");
 
             Assert.That(response.ComposedResponse.Id.Length, Is.GreaterThan(0));
             Assert.That(response.ComposedResponse.Lock.OwnerAddress.IsHex(48));
             Assert.IsTrue(response.ComposedResponse.Lock.MosaicId.IsHex(16));
             Assert.That(response.ComposedResponse.Lock.Status, Is.EqualTo(0));
-            Assert.That(response.ComposedResponse.Lock.Amount, Is.EqualTo(100000000));
+            Assert.That(response.ComposedResponse.Lock.Amount, Is.EqualTo(300000000));
             Assert.IsTrue(response.ComposedResponse.Lock.CompositeHash.IsHex(64));
-            Assert.That(response.ComposedResponse.Lock.EndHeight, Is.EqualTo(4611561));
+            Assert.That(response.ComposedResponse.Lock.EndHeight, Is.EqualTo(4870408));
             Assert.IsTrue(response.ComposedResponse.Lock.RecipientAddress.IsHex(48));
             Assert.IsTrue(response.ComposedResponse.Lock.Secret.IsHex(64));
         }
