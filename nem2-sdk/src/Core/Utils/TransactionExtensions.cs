@@ -35,14 +35,14 @@ public static class TransactionExtensions
         
         var body = Serialize(transaction.GetType(), transaction, false, transaction.Size);
 
-        var signingBytes = new byte[32 + body.Length - 32 - 4];
+        var unverifiedTransactionData = body.SubArray(32 + 4, body.Length - (32 + 4));
 
         var genHashBytes = genHash.FromHex();
 
-        for (int x = 0; x < 32; x++)
-            signingBytes[x] = genHashBytes[x];
-
-        Array.Copy(body, 32 + 4, signingBytes, 32, body.Length - 32 - 4);
+        var signingBytes = genHashBytes
+                                    .Concat(
+                                       unverifiedTransactionData
+                                     ).ToArray();
 
         var verifiableEntity = new VerifiableEntity()
         {
@@ -61,15 +61,18 @@ public static class TransactionExtensions
             SignedBytes = signingBytes,
             Signer = keyPair.PublicKeyString,
             Signature = verifiableEntity.Signature.ToHex(),
-            Hash = HashTransaction(pl, verifiableEntity.Signature, keyPair.PublicKey, genHash)
+            Hash = HashTransaction(verifiableEntity.Signature, keyPair.PublicKey, genHashBytes, unverifiedTransactionData)
         };
     }
 
-    internal static string HashTransaction(byte[] payload, byte[] signature, byte[] signer, string genHash)
+    private static byte[] ConcatTransactionData(byte[] signature, byte[] signer, byte[] genHash, byte[] unverifiedTransactionData)
     {
-        var transactionData = payload.SubArray(4 + 4 + 64 + 32 + 4, payload.Length - (4 + 4 + 64 + 32 + 4));
+        return signature.Concat(signer).Concat(genHash).Concat(unverifiedTransactionData).ToArray();
+    }
 
-        var final = signature.Concat(signer).Concat(genHash.FromHex()).Concat(transactionData).ToArray();
+    internal static string HashTransaction(byte[] signature, byte[] signer, byte[] genHash, byte[] unverifiedTransactionData)
+    {
+        var final = ConcatTransactionData(signature, signer, genHash, unverifiedTransactionData);
 
         var hash = new byte[32];
 
