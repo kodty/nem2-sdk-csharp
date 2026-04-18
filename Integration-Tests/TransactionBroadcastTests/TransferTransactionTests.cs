@@ -9,6 +9,7 @@ using io.nem2.sdk.src.Model.Accounts;
 using io.nem2.sdk.src.Model.Transactions;
 using System.Diagnostics;
 using System.Reactive.Linq;
+using TweetNaclSharp.Core.Extensions;
 
 
 namespace IntegrationTests.Infrastructure.Transactions
@@ -24,14 +25,14 @@ namespace IntegrationTests.Infrastructure.Transactions
             listener.Open().Wait();
         }
 
-        [Test, Timeout(20000)]
+        [Test, Timeout(80000)]
         public async Task TestNewTransactionFunctions()
         {
             var keys = SecretKeyPair.CreateFromPrivateKey("98AA70CA43E5D3B95CD303A57892D0BA953C204A4D937AF4386ED658A8FA555D");
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateTransferTransaction(
-                    "TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA", 
+                    "TB3LCAYOKFB7S552N7UQIVHZZL6EUXTO2OPBJGY", 
                     "", 
                     new Tuple<string, ulong>("72C0212E67A08BCE", 100),
                     100,
@@ -40,26 +41,30 @@ namespace IntegrationTests.Infrastructure.Transactions
            
             var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
 
-            var s = listener.GetTransactionStatus(Address.CreateFromPublicKey(transfer.EntityBody.Signer.ToHex(), NetworkType.Types.TEST_NET))
+            var bl = listener.NewBlock().Subscribe(e =>
+            {
+                Debug.WriteLine("block");
+                Debug.WriteLine("e " + e.Block.Height);
+            });
+
+            var s = listener.GetTransactionStatus(Address.CreateFromEncoded("TD4MZ66MVUX6ETNIXNLF6SA7YRTPU6C4X56ZJQA"))
              .Subscribe(e =>
              {
                  Debug.WriteLine("listener");
                  Debug.WriteLine("e " + e.Data.Code);
                  Debug.WriteLine("e " + e.Data.Deadline);
              });
-           
+            
            
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-           
+            Debug.WriteLine(st.Payload.ToHex());
             var a = await client.Announce(st);
-           
-            Debug.WriteLine("msg " + a.Message);
-           
+            Debug.WriteLine(a.Message);
             var status = await client.GetTransactionStatus(st.Hash);
            
             var listenerStatus = await listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(transfer.EntityBody.Signer.ToHex(), NetworkType.Types.TEST_NET)).Take(1);
 
-            Thread.Sleep(10000);
+            Thread.Sleep(80000);
             Assert.AreEqual(keys.PublicKeyString, listenerStatus.Transaction.SignerPublicKey);
 
         }

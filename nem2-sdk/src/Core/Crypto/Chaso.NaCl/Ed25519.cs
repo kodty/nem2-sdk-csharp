@@ -21,61 +21,100 @@ namespace io.nem2.sdk.Core.Crypto.Chaos.NaCl
             int keylen) // 32
         {
             byte[] privHash = new byte[64];
-            byte[] privHashTemp = new byte[32];
-            byte[] skTemp = new byte[32];
             byte[] seededHash = new byte[64];
             byte[] result = new byte[64];
             GroupElementP3 R = new GroupElementP3();
 
-            SHA512.HashData(sk, privHash);
-
-            ScalarOperations.sc_clamp(privHash, 0);
-
-            Array.Copy(privHash, 32, privHashTemp, 0, 32);
-
-            SHA512.HashData(privHashTemp.Concat(m).ToArray(), seededHash);
-
-            ScalarOperations.sc_reduce(seededHash);
-
-            GroupOperations.ge_scalarmult_base(out R, seededHash, 0);
-            GroupOperations.ge_p3_tobytes(sig, 0, ref R);
-
-            Array.Copy(sk, 32, skTemp, 0, 32);
-
-            Array.Clear(sk, 0, sk.Length);
-           
-            SHA512.HashData(sig.Concat(skTemp).Concat(m).ToArray(), result);
-
-            ScalarOperations.sc_reduce(result);
-
-            var s = new byte[32]; //todo: remove allocation
-            Array.Copy(sig, 32, s, 0, 32);
-            ScalarOperations.sc_muladd(s, result, privHash, seededHash);
-
-            Array.Clear(privHash, 0, privHash.Length);
-
-            Array.Copy(s, 0, sig, 32, 32);
-
-            Array.Clear(s, 0, s.Length);
-
             var hasher = new Sha3Digest(512);
             {
-                hasher.BlockUpdate(sk, 0, keylen);
-                hasher.DoFinal(privHash, 0);            
-            
+                var reversedPrivateKey = new byte[keylen];
+                Array.Copy(sk, 0, reversedPrivateKey, 0, keylen);
+               // Array.Reverse(reversedPrivateKey);
+
+                hasher.BlockUpdate(reversedPrivateKey, 0, keylen);
+                hasher.DoFinal(privHash, 0);
+
+                ScalarOperations.sc_clamp(privHash, 0);
+
                 hasher.Reset();
                 hasher.BlockUpdate(privHash, 32, 32);
                 hasher.BlockUpdate(m, 0, m.Length);
                 hasher.DoFinal(seededHash, 0);
-                      
+
+                ScalarOperations.sc_reduce(seededHash);
+
+                GroupOperations.ge_scalarmult_base(out R, seededHash, 0);
+                GroupOperations.ge_p3_tobytes(sig, 0, ref R);
+
                 hasher.Reset();
                 hasher.BlockUpdate(sig, 0, 32);
                 hasher.BlockUpdate(sk, keylen, 32);
                 hasher.BlockUpdate(m, 0, m.Length);
                 hasher.DoFinal(result, 0);
-            
-                ScalarOperations.sc_reduce(result);            
+
+                ScalarOperations.sc_reduce(result);
+
+                var s = new byte[32]; //todo: remove allocation
+                Array.Copy(sig, 32, s, 0, 32);
+                ScalarOperations.sc_muladd(s, result, privHash, seededHash);
+                Array.Copy(s, 0, sig, 32, 32);
             }
+            // byte[] privHash = new byte[64];
+            // byte[] privHashTemp = new byte[32];
+            // byte[] skTemp = new byte[32];
+            // byte[] seededHash = new byte[64];
+            // byte[] result = new byte[64];
+            // GroupElementP3 R = new GroupElementP3();
+            //
+            // SHA512.HashData(sk, privHash);
+            //
+            // ScalarOperations.sc_clamp(privHash, 0);
+            //
+            // Array.Copy(privHash, 32, privHashTemp, 0, 32);
+            //
+            // SHA512.HashData(privHashTemp.Concat(m).ToArray(), seededHash);
+            //
+            // ScalarOperations.sc_reduce(seededHash);
+            //
+            // GroupOperations.ge_scalarmult_base(out R, seededHash, 0);
+            // GroupOperations.ge_p3_tobytes(sig, 0, ref R);
+            //
+            // Array.Copy(sk, 32, skTemp, 0, 32);
+            //
+            // Array.Clear(sk, 0, sk.Length);
+            //
+            // SHA512.HashData(sig.Concat(skTemp).Concat(m).ToArray(), result);
+            //
+            // ScalarOperations.sc_reduce(result);
+            //
+            // var s = new byte[32]; //todo: remove allocation
+            // Array.Copy(sig, 32, s, 0, 32);
+            // ScalarOperations.sc_muladd(s, result, privHash, seededHash);
+            //
+            // Array.Clear(privHash, 0, privHash.Length);
+            //
+            // Array.Copy(s, 0, sig, 32, 32);
+            //
+            // Array.Clear(s, 0, s.Length);
+            //
+            // var hasher = new Sha3Digest(512);
+            // {
+            //     hasher.BlockUpdate(sk, 0, keylen);
+            //     hasher.DoFinal(privHash, 0);            
+            // 
+            //     hasher.Reset();
+            //     hasher.BlockUpdate(privHash, 32, 32);
+            //     hasher.BlockUpdate(m, 0, m.Length);
+            //     hasher.DoFinal(seededHash, 0);
+            //           
+            //     hasher.Reset();
+            //     hasher.BlockUpdate(sig, 0, 32);
+            //     hasher.BlockUpdate(sk, keylen, 32);
+            //     hasher.BlockUpdate(m, 0, m.Length);
+            //     hasher.DoFinal(result, 0);
+            // 
+            //     ScalarOperations.sc_reduce(result);            
+            // }
         }
 
         internal static void key_derive(byte[] shared, byte[] salt, byte[] secretKey, byte[] pubkey)
