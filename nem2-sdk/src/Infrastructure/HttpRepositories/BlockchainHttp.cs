@@ -1,6 +1,4 @@
-﻿
-using System.Reactive.Linq;
-using io.nem2.sdk.src.Infrastructure.HttpExtension;
+﻿using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
@@ -16,32 +14,27 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         public IObservable<ExtendedHttpResponseMessege<ExtendedBlocksInfoData>> SearchBlocks(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks"], queryModel)))
-                  .Select(FormResponse<ExtendedBlocksInfoData>);
+            return HttpGetAsync<ExtendedBlocksInfoData>(queryModel, ["blocks"]);
         }
 
         public IObservable<ExtendedHttpResponseMessege<ExtendedBlockInfo>> GetBlock(ulong height)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height])))
-                 .Select(FormResponse<ExtendedBlockInfo>);
+            return HttpGetAsync<ExtendedBlockInfo>(["blocks", height]);
         }
 
         public IObservable<ExtendedHttpResponseMessege<Merkle_Path>> GetBlockTransactionMerkle(ulong height, string hash)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height, "transactions", hash, "merkle"])))
-                  .Select(FormResponse<Merkle_Path>);
+            return HttpGetAsync<Merkle_Path>(["blocks", height, "transactions", hash, "merkle"]);
         }
 
         public IObservable<ExtendedHttpResponseMessege<Merkle_Path>> GetBlockRecieptMerkle(ulong height, string hash)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["blocks", height, "reciepts", hash, "merkle"])))
-                .Select(FormResponse<Merkle_Path>);
+            return HttpGetAsync<Merkle_Path>(["blocks", height, "statements", hash, "merkle"]);
         }
  
         public IObservable<ExtendedHttpResponseMessege<BlockchainInfo>> GetBlockchainInfo()
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["chain", "info"])))
-               .Select(FormResponse<BlockchainInfo>);
+            return HttpGetAsync<BlockchainInfo>(["chain", "info"]);
         }
     }
 }
