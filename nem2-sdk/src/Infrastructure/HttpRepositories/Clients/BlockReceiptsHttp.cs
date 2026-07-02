@@ -12,20 +12,17 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
         public IObservable<ExtendedHttpResponseMessege<Datum<ReceiptDatum>>> SearchTransactionStatements(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["statements", "transaction"])))
-              .Select(FormResponse<Datum<ReceiptDatum>>);
+            return HttpGetAsync<Datum<ReceiptDatum>>(queryModel, ["statements", "transaction"]);    
         }
 
         public IObservable<ExtendedHttpResponseMessege<Datum<AddressDatum>>> GetAddressStatements(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["statements", "resolutions", "address"])))
-              .Select(FormResponse<Datum<AddressDatum>>);
+            return HttpGetAsync<Datum<AddressDatum>>(queryModel, ["statements", "resolutions", "address"]);
         }
 
         public IObservable<ExtendedHttpResponseMessege<Datum<MosaicDatum>>> GetMosaicStatements(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["statements", "resolutions", "mosaic"])))
-            .Select(FormResponse<Datum<MosaicDatum>>);
+            return HttpGetAsync<Datum<MosaicDatum>>(queryModel, ["statements", "resolutions", "mosaic"]);
         }
     }
 }

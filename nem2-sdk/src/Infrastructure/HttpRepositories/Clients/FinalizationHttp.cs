@@ -1,7 +1,6 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Reactive.Linq;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 {
@@ -11,14 +10,12 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
         public IObservable<ExtendedHttpResponseMessege<FinalizationProof>> GetFinalizationProofByHeight(ulong height)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["finalization", "proof", "height", height])))
-                 .Select(FormResponse<FinalizationProof>);
+            return HttpGetAsync<FinalizationProof>(["finalization", "proof", "height", height]);
         }
 
         public IObservable<ExtendedHttpResponseMessege<FinalizationProof>> GetFinalizationProofByEpoch(ulong epoch)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["finalization", "proof", "epoch", epoch])))
-                 .Select(FormResponse<FinalizationProof>);
+            return HttpGetAsync<FinalizationProof>(["finalization", "proof", "epoch", epoch]);
         }
     }
 }

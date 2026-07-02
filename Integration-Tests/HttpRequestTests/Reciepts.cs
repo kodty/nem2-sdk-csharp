@@ -19,6 +19,7 @@ namespace Integration_Tests.HttpRequests
             var client = new BlockReceiptsHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.GetRecieptsAddressResolutionStatements);
+            qModel.SetParam(QueryModel.DefinedParams.height, 923);
 
             var response = await client.GetAddressStatements(qModel);
 

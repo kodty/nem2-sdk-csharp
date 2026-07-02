@@ -26,7 +26,7 @@ namespace IntegrationTests.Infrastructure.Transactions
             listener.Open().Wait();
         }
 
-        [Test, Timeout(80000)]
+        [Test, Timeout(30000)]
         public async Task TestNewTransactionFunctions()
         {
             var keys = SecretKeyPair.CreateFromPrivateKey("98AA70CA43E5D3B95CD303A57892D0BA953C204A4D937AF4386ED658A8FA555D");
