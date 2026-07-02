@@ -1,10 +1,12 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reactive.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
@@ -54,6 +56,24 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             Debug.WriteLine(uri.Uri);
 
             return uri.Uri;
+        }
+
+        public IObservable<ExtendedHttpResponseMessege<T>> HttpGetAsync<T>(string[] path)
+        {
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(path)))
+                 .Select(FormResponse<T>);
+        }
+
+        public IObservable<ExtendedHttpResponseMessege<T>> HttpGetAsync<T>(QueryModel queryModel, string[] path)
+        {
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(path, queryModel)))
+                 .Select(FormResponse<T>);
+        }
+
+        public IObservable<ExtendedHttpResponseMessege<List<T>>> HttpPostAsync<T>(string[] path, List<string> accounts)
+        {
+            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), new StringContent(JsonSerializer.Serialize(new Public_Keys() { publicKeys = accounts }), Encoding.UTF8, "application/json")))
+                  .Select(FormObjectList<T>);
         }
 
         public static Type GetTransactionType(string t, bool embedded = false)
