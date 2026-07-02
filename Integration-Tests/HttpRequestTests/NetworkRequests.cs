@@ -1,5 +1,5 @@
 ﻿using io.nem2.sdk.src;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests
@@ -35,7 +35,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(response.ComposedResponse.EffectiveChildNamespaceRentalFee, Is.EqualTo(10000000));
         }
 
-        //[Test, Timeout(20000)]
+        [Test, Timeout(20000)]
         public async Task GetNetworkTransactionFees()
         {
             var client = new NetworkHttp(HttpSetUp.Node, HttpSetUp.Port);

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace io.nem2.sdk.src.Infrastructure.HttpExtension
+namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
 {
     public class ExtendedHttpResponseMessege<T>
     {

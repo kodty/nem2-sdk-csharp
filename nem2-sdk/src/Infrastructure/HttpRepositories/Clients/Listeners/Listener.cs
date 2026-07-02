@@ -10,7 +10,7 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Text.Json.Nodes;
 
-namespace io.nem2.sdk.Infrastructure.Listeners
+namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
 {
     public class Listener : HttpRouter
     {
@@ -156,12 +156,12 @@ namespace io.nem2.sdk.Infrastructure.Listeners
 
         private BlockInfo ReturnSocketBlockResponse(string data)
         {
-            return Composer.GenerateObject<BlockInfo>(JsonObject.Parse(data)["data"].ToString()); 
+            return Composer.GenerateObject<BlockInfo>(JsonNode.Parse(data)["data"].ToString()); 
         }
 
         private TransactionData ReturnSocketTransactionResponse(string data)
         {
-            var t = JsonObject.Parse(data)["data"].ToString();
+            var t = JsonNode.Parse(data)["data"].ToString();
 
             return ComposeTransaction<TransactionData>(t);
         }

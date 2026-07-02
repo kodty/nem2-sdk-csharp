@@ -13,7 +13,7 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var accountRestriction = new TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateTransferTransaction(
-                    "TBA6LOHEA6A465G2X5MSQF66JBYR254GJDPK7MQ",
+                    "TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA",
                     "",
                     new Tuple<string, ulong>("72C0212E67A08BCE", 101),
                     false

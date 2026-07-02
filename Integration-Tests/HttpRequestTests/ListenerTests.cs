@@ -1,10 +1,5 @@
-﻿using IntegrationTests.Infrastructure.Transactions;
-using io.nem2.sdk.Infrastructure.HttpRepositories;
-using io.nem2.sdk.Infrastructure.Listeners;
-using Coppery;
-using System.Reactive.Linq;
-using io.nem2.sdk.src.Model;
-using io.nem2.sdk.src.Model.Accounts;
+﻿using System.Reactive.Linq;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners;
 
 namespace Integration_Tests.HttpRequests
 {

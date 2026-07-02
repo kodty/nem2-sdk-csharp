@@ -1,5 +1,4 @@
 ﻿using io.nem2.sdk.src.Infrastructure.Buffers.Model;
-using io.nem2.sdk.src.Infrastructure.HttpExtension;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
 {

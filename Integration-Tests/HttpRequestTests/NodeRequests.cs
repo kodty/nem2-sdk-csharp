@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
 using System.Reactive.Linq;
 
 namespace Integration_Tests
@@ -29,7 +29,7 @@ namespace Integration_Tests
 
             var response = await client.GetNodePeers();
 
-            Assert.That(response.ComposedResponse[1].Version, Is.EqualTo(16777993));
+            Assert.That(response.ComposedResponse[1].Version, Is.EqualTo(0));
             Assert.That(response.ComposedResponse[1].Host, !Is.Null);
             Assert.That(response.ComposedResponse[1].Port, Is.EqualTo(7900));
             Assert.That(response.ComposedResponse[1].NetworkIdentifier, Is.EqualTo(152));

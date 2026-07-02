@@ -1,5 +1,5 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests

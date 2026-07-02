@@ -1,5 +1,5 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpExtension;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories

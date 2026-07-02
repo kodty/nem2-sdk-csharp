@@ -1,5 +1,9 @@
 ﻿using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
+using System.Diagnostics;
+using System.Linq;
+using System.Xml.Linq;
+using TweetNaclSharp.Core.Extensions;
 
 namespace Unit_Tests.Crypto
 {
@@ -28,27 +32,20 @@ namespace Unit_Tests.Crypto
             Assert.That(original.FromHex(), Is.EqualTo(hash));
         }
 
-        [Test] 
-        public void TestHash1()
+        [Test]
+        public static void TestHash2()
         {
-            byte[] signature = "6ba8b1c24df6ace04c8f9b435011ecb1fb4269b4485b18c3d3ac0a19037b71573913b8a4dd7c1b2c8dcf8817e1c08bc2e32428c3de0893ea3ca34f71c12efa0b".FromHex();
-            byte[] signer = "91d5dcb54e185d3700dd88283d9dc8c3edc58a18305bb2b933bba252b516b452".FromHex();
-            byte[] genHash = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4".FromHex();
-            byte[] txData = "000000000198415400000000000000640000001344a8041a98d9807ac250198ea57d689a7239dfa3b52e1506a3f71fdc000501000000000072c0212e67a08bce00000000000003e868656c6c6f".FromHex();
+            string payload = "019854416A5D22B404000000B52E115A0200000098E21944E27CE919474CE22D4145725E322766E1A278E414050001000000000072C0212E67A08BCEE80300000000000068656C6C6F";
+            byte[] signature = "16AB50DDDF9FC8958AB1D90700EFD9B96CB78B77BCF5F1E41CABE125A726ECF4FFB39FCB47808644AEBEA6D9F9B8007897C84226FCFEAFBC63438CE01EAC5306".FromHex();
+            string signer = "91D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B452";
+            string genHash = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4";
+
+            string actualHash = "EC91D6E9ECB3BD4663AAB29A9AC589983C50A1D7FE6338F37026CF82D55FDB80";
+
             
-            string actualHash = "3F2BE873F569828C88CD0DE37BB31C998FA0AAEB3308A1FFBF3D01CE49E8E9F7";
+            var final = TransactionExtensions.HashTransaction(signature, signer.FromHex(), genHash.FromHex(), payload.FromHex());
 
-            var concatonatedTransaction = signature.Concat(signer).Concat(genHash).Concat(txData).ToArray();
-
-            var hash = new byte[32];
-            var sha3Hasher = new Sha3Digest(256);
-
-            sha3Hasher.BlockUpdate(concatonatedTransaction, 0, concatonatedTransaction.Length);
-
-            sha3Hasher.DoFinal(hash, 0);
-
-            Assert.That(hash.ToHex(), Is.EqualTo(actualHash));
-
+            Assert.AreEqual(final, actualHash);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model;
@@ -58,7 +57,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return uri.Uri;
         }
 
-        public IObservable<ExtendedHttpResponseMessege<T>> HttpGetAsync<T>(string[] path)
+        public IObservable<ExtendedHttpResponseMessege<T>> HttpGetAsync<T>(object[] path)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(path)))
                  .Select(FormResponse<T>);

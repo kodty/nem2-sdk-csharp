@@ -1,12 +1,11 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model;
-using io.nem2.sdk.src.Infrastructure.HttpExtension;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Reactive.Linq;
 using System.Text.Json.Nodes;
 
-namespace io.nem2.sdk.src.Infrastructure.HttpRepositories
+namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 {
     public class NodeHttp : HttpRouter, INodeRepository
     {

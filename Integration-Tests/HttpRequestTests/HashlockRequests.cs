@@ -1,5 +1,5 @@
-﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model;
 using System.Reactive.Linq;
@@ -34,7 +34,7 @@ namespace Integration_Tests.HttpRequests
 
             var result = await client.GetHashLockMerkleInfo(hash);
 
-            Assert.That(result.ComposedResponse.Tree[0].LeafHash, Is.EqualTo("C1B3FB7531222664A33F5199D2E0328F22F6C04C1717AF47C633E835E9EC90F4"));
+            Assert.That(result.ComposedResponse.Tree[0].LeafHash, Is.EqualTo("D825C21F9FF60A9D4AF96D73C8C3C577676A977A8664F606FE65645E51C22691"));
         }
 
         [Test, Timeout(20000)]

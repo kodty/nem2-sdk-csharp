@@ -12,10 +12,10 @@ namespace test.Model.AccountTest
         {
             var acc = Account.CreateFromPrivateKey("575DBB3062267EFF57C970A336EBBC8FBCFE12C5BD3ED7BC11EB0481D7704CED", NetworkType.Types.TEST_NET);
 
-            Assert.AreEqual("2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F", acc.PublicAccount.PublicKeyString);             
+            Assert.AreEqual("2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F", acc.KeyPair.PublicKeyString);             
         }
 
-        [Test]
+        [Test] 
         public void TestPublicAccount1()
         {
             var pubAccount = new PublicAccount("87C45C6A2C87589786549BAD91568E56822507CA1D85D5B0E86B6F555231A4F8", NetworkType.Types.TEST_NET);

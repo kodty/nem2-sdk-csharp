@@ -1,7 +1,6 @@
 ﻿using Coppery;
+using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses;
-using io.nem2.sdk.src.Infrastructure.HttpExtension;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Transactions;
@@ -10,7 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace io.nem2.sdk.Infrastructure.HttpRepositories
+namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 {
     public class TransactionHttp : HttpRouter, ITransactionRepository
     {

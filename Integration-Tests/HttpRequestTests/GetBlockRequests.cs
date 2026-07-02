@@ -1,8 +1,8 @@
-﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using Coppery;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+﻿using Coppery;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
 using System.Reactive.Linq;
 using io.nem2.sdk.src.Model;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 
 
 namespace Integration_Tests.HttpRequests
@@ -80,7 +80,7 @@ namespace Integration_Tests.HttpRequests
         {
             var client = new BlockchainHttp(HttpSetUp.Node, HttpSetUp.Port);
 
-            var response = await client.GetBlockTransactionMerkle(1, "B3FAD63E287D08209AA9CBE5E2E48CC1BEB1DA57993CBE7BE17E39C089186302");
+            var response = await client.GetBlockTransactionMerkle(1, "FF31ABA28DEA461AFC0C4A68F31AB7CCD86EFCAA6A3781B6B741B59A4DDC01C2");
 
             Assert.That(response.ComposedResponse.MerklePath[0].Hash.IsHex(64));
             Assert.That(response.ComposedResponse.MerklePath[0].Position, Is.EqualTo("right"));
