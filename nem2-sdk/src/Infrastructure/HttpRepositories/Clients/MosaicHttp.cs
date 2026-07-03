@@ -20,10 +20,11 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             return HttpGetAsync<MosaicEvent>(["mosaics", mosaicId]);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<ComposedMosaicEvents>> GetMosaics(List<string> mosaicIds) // object list
+        public IObservable<ExtendedHttpResponseMessege<MosaicEvent[]>> GetMosaics(List<string> mosaicIds) // object list
         {
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["mosaics"]), new StringContent(JsonSerializer.Serialize(new MosaicIds() { mosaicIds = mosaicIds }), Encoding.UTF8, "application/json")))
-                .Select(FormResponse<ComposedMosaicEvents>);
+            var content = new StringContent(JsonSerializer.Serialize(new MosaicIds() { mosaicIds = mosaicIds }), Encoding.UTF8, "application/json");
+
+            return HttpPostAsync<MosaicEvent>(["mosaics"], content);
         }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMosaicMerkle(string mosaicId)

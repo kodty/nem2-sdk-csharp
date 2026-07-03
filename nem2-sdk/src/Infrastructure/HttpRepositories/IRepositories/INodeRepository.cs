@@ -6,7 +6,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
     {
         IObservable<ExtendedHttpResponseMessege<NodeHealth>> GetNodeHealth();
         IObservable<ExtendedHttpResponseMessege<NodeInfo>> GetNodeInformation();
-        IObservable<ExtendedHttpResponseMessege<List<NodePeer>>> GetNodePeers();
+        IObservable<ExtendedHttpResponseMessege<NodePeer[]>> GetNodePeers();
         IObservable<ExtendedHttpResponseMessege<NodeStorage>> GetNodeStorageInfo();
         IObservable<ExtendedHttpResponseMessege<NodeTime>> GetNodeTime();
         IObservable<ExtendedHttpResponseMessege<NodeRESTVersion>> GetNodeRESTVersion();

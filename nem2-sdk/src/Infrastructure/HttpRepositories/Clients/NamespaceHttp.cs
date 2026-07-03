@@ -29,15 +29,16 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
                 .Select(FormResponse<MerkleRoot>);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<NamespaceName>>> GetNamespacesNames(List<string> namespaceIds)
+        public IObservable<ExtendedHttpResponseMessege<NamespaceName[]>> GetNamespacesNames(List<string> namespaceIds)
         {
             var ids = new Namespace_Ids()
             {
                 namespaceIds = namespaceIds
             };
 
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
-                .Select(FormObjectList<NamespaceName>);
+            var content = new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json");
+
+            return HttpPostAsync<NamespaceName>(["namespaces", "names"], content);
         }
 
         public IObservable<ExtendedHttpResponseMessege<Account_Names>> GetAccountNames(List<string> addresses)

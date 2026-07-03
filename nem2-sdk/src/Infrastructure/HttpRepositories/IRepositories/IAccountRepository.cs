@@ -6,7 +6,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
     {
         IObservable<ExtendedHttpResponseMessege<Datum<AccountData>>> SearchAccounts(QueryModel queryModel);
         IObservable<ExtendedHttpResponseMessege<AccountData>> GetAccount(string pubkOrAddress);
-        IObservable<ExtendedHttpResponseMessege<List<AccountData>>> GetAccounts(List<string> publicKeys);
+        IObservable<ExtendedHttpResponseMessege<AccountData[]>> GetAccounts(List<string> publicKeys);
         IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetAccountMerkle(string pubkOrAddress);
 
         // restrictions

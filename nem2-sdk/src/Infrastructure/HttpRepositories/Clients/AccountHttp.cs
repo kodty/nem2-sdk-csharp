@@ -1,6 +1,8 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using System.Text;
+using System.Text.Json;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 {
@@ -21,11 +23,12 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             return HttpGetAsync<AccountData>(["accounts", pubkOrAddress]);          
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<AccountData>>> GetAccounts(List<string> accounts) // flag
+        public IObservable<ExtendedHttpResponseMessege<AccountData[]>> GetAccounts(List<string> accounts) // flag
         {
-            return HttpPostAsync<AccountData>(["accounts"], accounts);
-        }
+            var content = new StringContent(JsonSerializer.Serialize(new Public_Keys() { publicKeys = accounts }), Encoding.UTF8, "application/json");
 
+            return HttpPostAsync<AccountData>(["accounts"], content);
+        }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetAccountMerkle(string pubkOrAddress)
         {

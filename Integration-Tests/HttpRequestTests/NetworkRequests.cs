@@ -19,7 +19,7 @@ namespace Integration_Tests.HttpRequests
             var response = await client.GetNetwork();
 
             Assert.That(response.ComposedResponse.Name, Is.EqualTo("mainnet"));
-            Assert.That(response.ComposedResponse.Description, Is.EqualTo("Symbol Mainnet"));
+            Assert.That(response.ComposedResponse.Description, Is.EqualTo("Symbol mainnet network"));
 
         }
 

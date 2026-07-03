@@ -418,7 +418,7 @@ namespace Integration_Tests.HttpRequests
 
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
-            var response = await client.GetConfirmedTransactions(new string[] { "67C6611CA1F349DB14021C48", "67C6611CA1F349DB1402209B" });
+            var response = await client.GetConfirmedTransactions(new string[] { "6644D77CED4FBE214609E6F5", "6644D77CED4FBE214609F21C" });
 
             Debug.WriteLine(response.Response.Content.ReadAsStringAsync().Result);
             var aggTx1 = (Aggregate)response.ComposedResponse[0].Transaction;

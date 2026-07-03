@@ -88,8 +88,9 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
 
             Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
 
-            response.ComposedResponse.ForEach(i =>
+            for (var x = 0; x < response.ComposedResponse.Length; x++)
             {
+                var i = response.ComposedResponse[x];
 
                 Assert.IsTrue(i.Account.PublicKey.IsHex(64));
                 Assert.That(i.Account.Importance, Is.GreaterThanOrEqualTo(0));
@@ -118,7 +119,8 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
                     i.Account.Mosaics.ForEach(m => Assert.That(m.Amount, Is.GreaterThan(0)));
 
                 }
-            });
+            }
+            
         }
 
         [Test, Timeout(20000)]

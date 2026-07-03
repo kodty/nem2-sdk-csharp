@@ -19,11 +19,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
         public Pagination Pagination { get; set; }
     }
 
-    public class ComposedMosaicEvents
-    {
-        public List<MosaicEvent> MosaicEvents { get; set; }
-    }
-
     public class MosaicEvent
     {
         public MosaicArtifact Mosaic { get; set; }

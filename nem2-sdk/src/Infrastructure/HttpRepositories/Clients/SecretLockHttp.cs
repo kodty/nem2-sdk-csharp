@@ -11,7 +11,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
         
         public IObservable<ExtendedHttpResponseMessege<Datum<SecretLockEvent>>> SearchSecretLocks(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "secret"])))
+            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "secret"], queryModel)))
                .Select(FormResponse<Datum<SecretLockEvent>>);
         }
 

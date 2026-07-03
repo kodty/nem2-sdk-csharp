@@ -1,11 +1,8 @@
 ﻿using Coppery;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using io.nem2.sdk.src.Model;
 using System.Diagnostics;
 using System.Reactive.Linq;
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
@@ -69,10 +66,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                  .Select(FormResponse<T>);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<T>>> HttpPostAsync<T>(string[] path, List<string> accounts)
+        public IObservable<ExtendedHttpResponseMessege<T[]>> HttpPostAsync<T>(string[] path, HttpContent content)
         {
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), new StringContent(JsonSerializer.Serialize(new Public_Keys() { publicKeys = accounts }), Encoding.UTF8, "application/json")))
-                  .Select(FormObjectList<T>);
+            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), content))
+                  .Select(e => FormResponse<T>([], e));
         }
 
         public static Type GetTransactionType(string t, bool embedded = false)
@@ -97,21 +94,23 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             return extendedResponse;
         }
-
-        internal ExtendedHttpResponseMessege<List<T>> FormObjectList<T>(HttpResponseMessage msg) // for removal
+       
+        internal ExtendedHttpResponseMessege<T[]> FormResponse<T>(T[] type, HttpResponseMessage msg)
         {
-            var extended = ExtendResponse<List<T>>(msg);
+            var extendedResponse = ExtendResponse<T[]>(msg);
 
             var objs = JsonNode.Parse(msg.Content.ReadAsStringAsync().Result);
 
-            List<T> data = new List<T>();
+            var values = new T[objs.AsArray().Count];
+            
+            for (var x = 0; x < objs.AsArray().Count;  x++)
+            {
+                values[x] = Composer.GenerateObject(typeof(T), objs.AsArray()[x]);
+            }
 
-            foreach (var o in objs.AsArray())
-                data.Add(Composer.GenerateObject<T>(o.ToString()));
+            extendedResponse.ComposedResponse = values;
 
-            extended.ComposedResponse = data;
-
-            return extended;
+            return extendedResponse;
         }
 
         internal ExtendedHttpResponseMessege<T> FormResponse<T>(HttpResponseMessage msg)

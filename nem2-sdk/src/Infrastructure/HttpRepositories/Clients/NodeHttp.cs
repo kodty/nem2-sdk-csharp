@@ -23,10 +23,10 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
               .Select(FormResponse<NodeInfo>);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<NodePeer>>> GetNodePeers()
+        public IObservable<ExtendedHttpResponseMessege<NodePeer[]>> GetNodePeers()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "peers"])))
-              .Select(FormObjectList<NodePeer>);
+              .Select(e => FormResponse<NodePeer>([], e));
         }
 
         public IObservable<ExtendedHttpResponseMessege<NodeStorage>> GetNodeStorageInfo()
