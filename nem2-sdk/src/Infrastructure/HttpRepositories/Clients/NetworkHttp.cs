@@ -12,25 +12,25 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
         public IObservable<ExtendedHttpResponseMessege<NetworkInfo>> GetNetwork()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network"])))
-              .Select(FormResponse<NetworkInfo>);
+              .Select(e => FormResponse(ExtendResponse<NetworkInfo>(e)));
         }
 
         public IObservable<ExtendedHttpResponseMessege<NetworkRentalFees>> GetRentalFees()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network", "fees", "rental"])))
-              .Select(FormResponse<NetworkRentalFees>);
+              .Select(e => FormResponse(ExtendResponse<NetworkRentalFees>(e)));
         }
 
         public IObservable<ExtendedHttpResponseMessege<NetworkTransactionFees>> GetTransactionFees()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network", "fees", "transaction"])))
-              .Select(FormResponse<NetworkTransactionFees>);
+              .Select(e => FormResponse(ExtendResponse<NetworkTransactionFees>(e)));
         }
 
         public IObservable<ExtendedHttpResponseMessege<NetworkProperties>> GetNetworkProperties()
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["network", "properties"])))
-             .Select(FormResponse<NetworkProperties>);
+             .Select(e => FormResponse(ExtendResponse<NetworkProperties>(e)));
         }
     }
 }

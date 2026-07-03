@@ -1,7 +1,6 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Reactive.Linq;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 {
@@ -11,20 +10,17 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
         
         public IObservable<ExtendedHttpResponseMessege<Datum<SecretLockEvent>>> SearchSecretLocks(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "secret"], queryModel)))
-               .Select(FormResponse<Datum<SecretLockEvent>>);
+             return HttpGetAsync<Datum<SecretLockEvent>>(["lock", "secret"]);      
         }
 
         public IObservable<ExtendedHttpResponseMessege<SecretLockEvent>> GetSecretLock(string hash)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "secret", hash])))
-              .Select(r => FormResponse<SecretLockEvent>(r));
+            return HttpGetAsync<SecretLockEvent>(["lock", "secret", hash]); 
         }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetSecretLockMerkle(string hash)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "secret", hash, "merkle"])))
-              .Select(FormResponse<MerkleRoot>);
+            return HttpGetAsync<MerkleRoot>(["lock", "secret", hash, "merkle"]);
         }
     }
 }

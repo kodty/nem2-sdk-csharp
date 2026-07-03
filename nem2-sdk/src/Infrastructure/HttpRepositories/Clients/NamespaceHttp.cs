@@ -1,9 +1,9 @@
-﻿using System.Reactive.Linq;
-using System.Text;
+﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using System.Reactive.Linq;
+using System.Text;
 using System.Text.Json;
-using io.nem2.sdk.Infrastructure.HttpRepositories;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 {
@@ -25,8 +25,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetNamespaceMerkle(string namespaceId)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["namespaces", namespaceId, "merkle"])))
-                .Select(FormResponse<MerkleRoot>);
+            return HttpGetAsync<MerkleRoot>(["namespaces", namespaceId, "merkle"]);
         }
 
         public IObservable<ExtendedHttpResponseMessege<NamespaceName[]>> GetNamespacesNames(List<string> namespaceIds)
@@ -49,7 +48,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             };
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "account", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
-                .Select(FormResponse<Account_Names>);
+                .Select(e => FormResponse(ExtendResponse<Account_Names>(e)));
         }
 
         public IObservable<ExtendedHttpResponseMessege<Mosaic_Names>> GetMosaicNames(List<string> mosaicIds)
@@ -60,7 +59,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             };
 
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "mosaic", "names"]), new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json")))
-                  .Select(FormResponse<Mosaic_Names>);
+                  .Select(e => FormResponse(ExtendResponse<Mosaic_Names>(e)));
         }
     }
 }

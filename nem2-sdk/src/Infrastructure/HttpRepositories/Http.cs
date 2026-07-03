@@ -54,25 +54,25 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return uri.Uri;
         }
 
-        public IObservable<ExtendedHttpResponseMessege<T>> HttpGetAsync<T>(object[] path)
+        internal IObservable<ExtendedHttpResponseMessege<T>> HttpGetAsync<T>(object[] path)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(path)))
-                 .Select(FormResponse<T>);
+                 .Select(e => FormResponse(ExtendResponse<T>(e)));
         }
 
-        public IObservable<ExtendedHttpResponseMessege<T>> HttpGetAsync<T>(QueryModel queryModel, string[] path)
+        internal IObservable<ExtendedHttpResponseMessege<T>> HttpGetAsync<T>(QueryModel queryModel, string[] path)
         {
             return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(path, queryModel)))
-                 .Select(FormResponse<T>);
+                 .Select(e => FormResponse(ExtendResponse<T>(e)));
         }
 
-        public IObservable<ExtendedHttpResponseMessege<T[]>> HttpPostAsync<T>(string[] path, HttpContent content)
+        internal IObservable<ExtendedHttpResponseMessege<T[]>> HttpPostAsync<T>(string[] path, HttpContent content)
         {
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), content))
-                  .Select(e => FormResponse<T>([], e));
+                  .Select(e => FormResponse(ExtendResponse<T[]>(e)));
         }
 
-        public static Type GetTransactionType(string t, bool embedded = false)
+        internal static Type GetTransactionType(string t, bool embedded = false)
         {
             var type = (ushort)JsonObject.Parse(t)
                                       .AsObject()["transaction"]["type"];
@@ -95,11 +95,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return extendedResponse;
         }
        
-        internal ExtendedHttpResponseMessege<T[]> FormResponse<T>(T[] type, HttpResponseMessage msg)
+        internal ExtendedHttpResponseMessege<T[]> FormResponse<T>(ExtendedHttpResponseMessege<T[]> extendedResponse)
         {
-            var extendedResponse = ExtendResponse<T[]>(msg);
-
-            var objs = JsonNode.Parse(msg.Content.ReadAsStringAsync().Result);
+            var objs = JsonNode.Parse(extendedResponse.Response.Content.ReadAsStringAsync().Result);
 
             var values = new T[objs.AsArray().Count];
             
@@ -113,12 +111,11 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return extendedResponse;
         }
 
-        internal ExtendedHttpResponseMessege<T> FormResponse<T>(HttpResponseMessage msg)
+        internal ExtendedHttpResponseMessege<T> FormResponse<T>(ExtendedHttpResponseMessege<T> extendedResponse)
         {
-            var extendedResponse = ExtendResponse<T>(msg);
 
-            if (msg.IsSuccessStatusCode)
-                extendedResponse.ComposedResponse = Composer.GenerateObject<T>(msg.Content.ReadAsStringAsync().Result);
+            if (extendedResponse.Response.IsSuccessStatusCode)
+                extendedResponse.ComposedResponse = Composer.GenerateObject<T>(extendedResponse.Response.Content.ReadAsStringAsync().Result);
 
             return extendedResponse;
         }

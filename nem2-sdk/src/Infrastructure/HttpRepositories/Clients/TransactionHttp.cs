@@ -55,8 +55,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
         public IObservable<ExtendedHttpResponseMessege<ExtendedBroadcastStatus>> GetTransactionStatus(string hash)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactionStatus", hash])))
-               .Select(FormResponse<ExtendedBroadcastStatus>);
+            return HttpGetAsync<ExtendedBroadcastStatus>(["transactionStatus", hash]); 
         }
 
         public IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> GetConfirmedTransactions(string[] transactionIds)
