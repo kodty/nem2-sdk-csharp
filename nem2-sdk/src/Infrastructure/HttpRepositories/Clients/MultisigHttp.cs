@@ -11,8 +11,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMultisigMerkleInfo(string pubkOrAddress)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(Host + ":" + Port + "/accounts/" + pubkOrAddress + "/multisig/merkle"))
-                 .Select(FormResponse<MerkleRoot>);
+            return HttpGetAsync<MerkleRoot>(["accounts", pubkOrAddress, "multisig", "merkle"]);
         }
 
         /*

@@ -14,14 +14,13 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
         public IObservable<ExtendedHttpResponseMessege<Datum<NamespaceData>>> SearchNamespaces(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["namespaces"], queryModel)))
-                .Select(FormResponse<Datum<NamespaceData>>);
+            return HttpGetAsync<Datum<NamespaceData>>(queryModel, ["namespaces"]);
+
         }
 
         public IObservable<ExtendedHttpResponseMessege<NamespaceData>> GetNamespace(string namespaceId)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["namespaces", namespaceId])))
-                .Select(FormResponse<NamespaceData>);
+            return HttpGetAsync<NamespaceData>(["namespaces", namespaceId]);
         }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetNamespaceMerkle(string namespaceId)

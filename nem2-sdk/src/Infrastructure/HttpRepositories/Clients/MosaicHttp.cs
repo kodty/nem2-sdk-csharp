@@ -1,8 +1,8 @@
-﻿using System.Reactive.Linq;
-using System.Text;
+﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using System.Reactive.Linq;
+using System.Text;
 using System.Text.Json;
-using io.nem2.sdk.Infrastructure.HttpRepositories;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 {
@@ -12,45 +12,38 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
         public IObservable<ExtendedHttpResponseMessege<Datum<MosaicEvent>>> SearchMosaics(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["mosaics"], queryModel)))
-                .Select(FormResponse<Datum<MosaicEvent>>);
+            return HttpGetAsync<Datum<MosaicEvent>>(queryModel, ["mosaics" ]);            
         }
 
         public IObservable<ExtendedHttpResponseMessege<MosaicEvent>> GetMosaic(string mosaicId)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["mosaics", mosaicId])))
-                .Select(FormResponse<MosaicEvent>);
+            return HttpGetAsync<MosaicEvent>(["mosaics", mosaicId]);
         }
 
-        public IObservable<ExtendedHttpResponseMessege<List<MosaicEvent>>> GetMosaics(List<string> mosaicIds)
-        {     
+        public IObservable<ExtendedHttpResponseMessege<ComposedMosaicEvents>> GetMosaics(List<string> mosaicIds) // object list
+        {
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["mosaics"]), new StringContent(JsonSerializer.Serialize(new MosaicIds() { mosaicIds = mosaicIds }), Encoding.UTF8, "application/json")))
-                .Select(FormObjectList<MosaicEvent>);
+                .Select(FormResponse<ComposedMosaicEvents>);
         }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMosaicMerkle(string mosaicId)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["mosaics", mosaicId, "merkle"])))
-                .Select(FormResponse<MerkleRoot>);
-
+            return HttpGetAsync<MerkleRoot>(["mosaics", mosaicId, "merkle"]); 
         }
 
         public IObservable<ExtendedHttpResponseMessege<Datum<MosaicRestrictionData>>> SearchMosaicRestrictions(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "mosaic"], queryModel)))
-               .Select(FormResponse<Datum<MosaicRestrictionData>>);
+            return HttpGetAsync<Datum<MosaicRestrictionData>>(queryModel, ["restrictions", "mosaic"]); 
         }
 
         public IObservable<ExtendedHttpResponseMessege<MosaicRestrictionData>> GetMosaicRestriction(string compositeHash)
         { 
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "mosaic", compositeHash])))
-                .Select(FormResponse<MosaicRestrictionData>);
+            return HttpGetAsync<MosaicRestrictionData>(["restrictions", "mosaic", compositeHash]); 
         }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMosaicRestrictionMerkle(string compositeHash)
         { 
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["restrictions", "mosaic", compositeHash, "merkle"])))
-                .Select(FormResponse<MerkleRoot>);
+            return HttpGetAsync<MerkleRoot>(["restrictions", "mosaic", compositeHash, "merkle"]);
         }
     }
 }

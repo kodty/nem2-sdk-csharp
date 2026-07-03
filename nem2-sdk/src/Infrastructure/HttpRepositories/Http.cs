@@ -98,7 +98,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return extendedResponse;
         }
 
-        internal ExtendedHttpResponseMessege<List<T>> FormObjectList<T>(HttpResponseMessage msg)
+        internal ExtendedHttpResponseMessege<List<T>> FormObjectList<T>(HttpResponseMessage msg) // for removal
         {
             var extended = ExtendResponse<List<T>>(msg);
 

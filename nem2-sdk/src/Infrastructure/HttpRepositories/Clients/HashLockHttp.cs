@@ -11,18 +11,15 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
         public IObservable<ExtendedHttpResponseMessege<Datum<HashLockEvent>>> SearchHashLocks(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "hash"], queryModel)))
-              .Select(FormResponse<Datum<HashLockEvent>>);
+            return HttpGetAsync<Datum<HashLockEvent>>(queryModel, ["lock", "hash"]);
         }
         public IObservable<ExtendedHttpResponseMessege<HashLockEvent>> GetHashLockInfo(string hash)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "hash", hash])))
-              .Select(FormResponse<HashLockEvent>);
+            return HttpGetAsync<HashLockEvent>(["lock", "hash", hash]);
         }
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetHashLockMerkleInfo(string hash)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["lock", "hash", hash, "merkle"])))
-               .Select(FormResponse<MerkleRoot>);
+            return HttpGetAsync<MerkleRoot>(["lock", "hash", hash, "merkle"]);             
         }
     }
 }

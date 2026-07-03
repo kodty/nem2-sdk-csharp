@@ -8,7 +8,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
     {
         IObservable<ExtendedHttpResponseMessege<Datum<MosaicEvent>>> SearchMosaics(QueryModel queryModel);
         IObservable<ExtendedHttpResponseMessege<MosaicEvent>> GetMosaic(string mosaicId);
-        IObservable<ExtendedHttpResponseMessege<List<MosaicEvent>>> GetMosaics(List<string> mosaicIds);
+        IObservable<ExtendedHttpResponseMessege<ComposedMosaicEvents>> GetMosaics(List<string> mosaicIds);
         IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMosaicMerkle(string mosaicId);
 
         // restrictions

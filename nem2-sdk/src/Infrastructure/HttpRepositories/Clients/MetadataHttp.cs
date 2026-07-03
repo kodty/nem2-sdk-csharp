@@ -11,20 +11,17 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
         public IObservable<ExtendedHttpResponseMessege<Datum<Metadata>>> SearchMetadataEntries(QueryModel queryModel)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["metadata"], queryModel)))
-               .Select(FormResponse<Datum<Metadata>>);
+            return HttpGetAsync<Datum<Metadata>>(queryModel, ["metadata"] );
         }
 
         public IObservable<ExtendedHttpResponseMessege<Metadata>> GetMetadata(string compositeHash)
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["metadata", compositeHash])))
-               .Select(FormResponse<Metadata>);
+            return HttpGetAsync<Metadata>(["metadata", compositeHash]);
         }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMetadataMerkle(string compositeHash) 
         {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["metadata", compositeHash, "merkle"])))
-               .Select(FormResponse<MerkleRoot>);
+            return HttpGetAsync<MerkleRoot>(["metadata", compositeHash, "merkle"]);           
         }
     }
 }
