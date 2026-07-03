@@ -36,7 +36,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
             var content = new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json");
 
-            return HttpPostAsync<NamespaceName>(["namespaces", "names"], content);
+            return HttpPostAsync<NamespaceName[]>(["namespaces", "names"], content);
         }
 
         public IObservable<ExtendedHttpResponseMessege<Account_Names>> GetAccountNames(List<string> addresses)
@@ -48,8 +48,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
             var content = new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json");
        
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "account", "names"]), content))
-                  .Select(e => FormResponse(ExtendResponse<Account_Names>(e)));
+            return HttpPostAsync<Account_Names>(["namespaces", "account", "names"], content);
         }
 
         public IObservable<ExtendedHttpResponseMessege<Mosaic_Names>> GetMosaicNames(List<string> mosaicIds)
@@ -61,8 +60,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
             var content = new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json");
 
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "mosaic", "names"]), content))
-                  .Select(e => FormResponse(ExtendResponse<Mosaic_Names>(e)));
+            return HttpPostAsync<Mosaic_Names>(["namespaces", "mosaic", "names"], content);
         }
     }
 }

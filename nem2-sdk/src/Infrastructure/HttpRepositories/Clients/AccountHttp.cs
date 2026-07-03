@@ -27,7 +27,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
         {
             var content = new StringContent(JsonSerializer.Serialize(new Public_Keys() { publicKeys = accounts }), Encoding.UTF8, "application/json");
 
-            return HttpPostAsync<AccountData>(["accounts"], content);
+            return HttpPostAsync<AccountData[]>(["accounts"], content);
         }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetAccountMerkle(string pubkOrAddress)

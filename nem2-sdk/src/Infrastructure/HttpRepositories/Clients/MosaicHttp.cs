@@ -24,7 +24,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
         {
             var content = new StringContent(JsonSerializer.Serialize(new MosaicIds() { mosaicIds = mosaicIds }), Encoding.UTF8, "application/json");
 
-            return HttpPostAsync<MosaicEvent>(["mosaics"], content);
+            return HttpPostAsync<MosaicEvent[]>(["mosaics"], content);
         }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMosaicMerkle(string mosaicId)

@@ -66,10 +66,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                  .Select(e => FormResponse(ExtendResponse<T>(e)));
         }
 
-        internal IObservable<ExtendedHttpResponseMessege<T[]>> HttpPostAsync<T>(string[] path, HttpContent content)
+        internal IObservable<ExtendedHttpResponseMessege<T>> HttpPostAsync<T>(string[] path, HttpContent content)
         {
             return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), content))
-                  .Select(e => FormResponse(ExtendResponse<T[]>(e)));
+                  .Select(e => FormResponse(ExtendResponse<T>(e)));
         }
 
         internal static Type GetTransactionType(string t, bool embedded = false)
@@ -88,11 +88,11 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         internal static ExtendedHttpResponseMessege<T> ExtendResponse<T>(HttpResponseMessage msg)
         {
-            var extendedResponse = new ExtendedHttpResponseMessege<T>();
+            return new ExtendedHttpResponseMessege<T>()
+            {
+                Response = msg
 
-            extendedResponse.Response = msg;
-
-            return extendedResponse;
+            };
         }
        
         internal ExtendedHttpResponseMessege<T[]> FormResponse<T>(ExtendedHttpResponseMessege<T[]> extendedResponse)
