@@ -23,9 +23,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             Host = host;
             Port = port;
-            Client = new HttpClient();  
-            Composer = new ObjectComposer(TypeSerializationCatalog.CustomTypes, GetTransactionType);
-        }
+            Client = new HttpClient();
+            Composer = new ObjectComposer(TypeSerializationCatalog.CustomTypes);
+        }       
 
         internal Uri GetUri(object[] segs)
         {
@@ -66,20 +66,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), content))
                   .Select(e => FormResponse(ExtendResponse<T[]>(e)));
 
-        internal static Type GetTransactionType(string t, bool embedded = false)
-        {
-            var type = (ushort)JsonObject.Parse(t)
-                                      .AsObject()["transaction"]["type"];
-
-            if (type == 16718)
-            {
-                type += (ushort)JsonObject.Parse(t)
-                                      .AsObject()["transaction"]["registrationType"];
-            }
-
-            return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
-        }
-
         internal static ExtendedHttpResponseMessege<T> ExtendResponse<T>(HttpResponseMessage msg)
         {
             return new ExtendedHttpResponseMessege<T>()
@@ -111,24 +97,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                 extendedResponse.ComposedResponse = Composer.GenerateObject<T>(extendedResponse.Response.Content.ReadAsStringAsync().Result);
 
             return extendedResponse;
-        }
-
-        internal T ComposeTransaction<T>(string data, bool embedded = false)
-        {
-            return ComposeTransaction(typeof(T), data, embedded);
-        }
-
-        internal dynamic ComposeTransaction(Type genType, string data, bool embedded = false)
-        {
-            var tx = JsonObject.Parse(data).AsObject();
-
-            var type = GetTransactionType(data, embedded);
-
-            dynamic shell = Composer.GenerateObject(genType, tx.AsObject());
-
-            shell.Transaction = Composer.GenerateObject(type, tx["transaction"].AsObject());
-
-            return shell;
         }
     }
 }

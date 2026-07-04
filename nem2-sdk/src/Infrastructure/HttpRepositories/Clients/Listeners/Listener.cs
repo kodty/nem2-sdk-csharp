@@ -14,7 +14,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
 {
     public class Listener : HttpRouter
     {
-        private WebsocketUID Uid { get; set; }
+        public  WebsocketUID Uid { get; set; }
 
         private ClientWebSocket ClientSocket { get; }
 
@@ -23,9 +23,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
 
         private readonly Subject<string> _subject = new Subject<string>();
 
-        public string Domain { get; set; }
-
-        public int Port { get; set; }
+        private TransactionHttp TransactionHttpClient { get; set; }
 
         public class SocketTopic
         {
@@ -40,18 +38,16 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
 
         public Listener(string domain, int port = 3000) : base(domain, port)
         {
+            base.Composer.GetEmbedded = TransactionTypes.ComposeEmbeddedTransaction;
+
             ClientSocket = new ClientWebSocket();
-
-            Domain = domain;
-
-            Port = port;
 		}
 
         public IObservable<bool> Open()
         {
             return Observable.Start(() =>
             {
-                ClientSocket.ConnectAsync(new Uri(string.Concat("ws://", Domain, ":", Port, "/ws")), CancellationToken.None)
+                ClientSocket.ConnectAsync(new Uri(string.Concat("ws://", Host, ":", Port, "/ws")), CancellationToken.None)
                     .GetAwaiter()
                     .GetResult();
 
@@ -163,7 +159,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
         {
             var t = JsonNode.Parse(data)["data"].ToString();
 
-            return ComposeTransaction(typeof(TransactionData), t);
+            return TransactionHttpClient.ComposeTransaction(typeof(TransactionData), t);
         }
 
         public IObservable<SocketTopic> GetTransactionStatus(Address address)

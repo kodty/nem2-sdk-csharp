@@ -1,5 +1,8 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+﻿using Coppery;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.src.Model
 {
@@ -44,6 +47,28 @@ namespace io.nem2.sdk.src.Model
             MOSAIC_ADDRESS_RESTRICTION = 0x4251,
             MOSAIC_GLOBAL_RESTRICTION = 0x4151,
             TRANSFER = 0x4154
+        }
+
+        internal static dynamic ComposeEmbeddedTransaction(dynamic T, Type genType, ObjectComposer composer, JsonNode item)
+        {
+            if (genType.Name == "EmbeddedTransactionData")
+            {
+                var t_type = GetTransactionType(item.ToString(), true);
+                
+                T.Transaction = composer.GenerateObject(t_type, item["transaction"].AsObject());
+            }
+
+            return T;
+        }
+
+        internal static Type GetTransactionType(string t, bool embedded = false)
+        {
+            var type = (ushort)JsonObject.Parse(t).AsObject()["transaction"]["type"];
+
+            if (type == 16718)
+                type += (ushort)JsonObject.Parse(t).AsObject()["transaction"]["registrationType"];
+
+            return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
         }
 
         public static ushort GetValue(this Types type)

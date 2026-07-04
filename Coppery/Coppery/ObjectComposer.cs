@@ -7,15 +7,14 @@ namespace Coppery
 {
     public class ObjectComposer
     {
-        private int i { get; set; }
         private Type[] TypeArgs { get; set; }
 
-        internal Func<string, bool, Type> GetTransactionType { get; set; }
+        public Func<dynamic, Type, ObjectComposer, JsonNode, dynamic> GetEmbedded { get; set; }
 
-        public ObjectComposer(Type[] args, Func<string, bool, Type> getTransactionType)
+        public ObjectComposer(Type[] args, Func<dynamic, Type, ObjectComposer, JsonNode, dynamic> getEmbedded)
         {
             TypeArgs = args;
-            GetTransactionType = getTransactionType;
+            GetEmbedded = getEmbedded;
         }
 
         public ObjectComposer(Type[] args)
@@ -102,12 +101,8 @@ namespace Coppery
                     {
                         var T = GenerateObject(genType, item.AsObject());
 
-                        if(genType.Name == "EmbeddedTransactionData")
-                        {
-                            var t_type = GetTransactionType(item.ToString(), true);
-
-                            T.Transaction = GenerateObject(t_type, item["transaction"].AsObject());
-                        }
+                        if(GetEmbedded != null)
+                            T = GetEmbedded(T, genType, this, item);
 
                         values.Add(T);
                     }

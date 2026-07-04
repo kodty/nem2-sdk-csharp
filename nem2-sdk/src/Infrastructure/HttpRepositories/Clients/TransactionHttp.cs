@@ -12,8 +12,9 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 {
     public class TransactionHttp : HttpRouter, ITransactionRepository
     {
-        public TransactionHttp(string host, int port) : base(host, port) 
-        {
+        public TransactionHttp(string host, int port) : base(host, port) {
+
+            Composer = new ObjectComposer(TypeSerializationCatalog.CustomTypes, TransactionTypes.ComposeEmbeddedTransaction);
         }
 
         public IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> SearchConfirmedTransactions(QueryModel queryModel)
@@ -29,7 +30,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
                  .Select(r => { return FormTransactionResponse(r, "data"); });
               
         public IObservable<ExtendedHttpResponseMessege<TransactionData>> GetConfirmedTransaction(string hash)
-             => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "confirmed", hash])))
+            => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "confirmed", hash])))
                  .Select(FormTransactionResponse);
 
         public IObservable<ExtendedHttpResponseMessege<TransactionData>> GetUnconfirmedTransaction(string hash)
@@ -37,7 +38,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
                 .Select(FormTransactionResponse);
 
         public IObservable<ExtendedHttpResponseMessege<TransactionData>> GetPartialTransaction(string hash)
-             => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "partial", hash])))
+            => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "partial", hash])))
                  .Select(FormTransactionResponse);
 
         public IObservable<ExtendedHttpResponseMessege<ExtendedBroadcastStatus>> GetTransactionStatus(string hash)
@@ -124,6 +125,19 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             }
               
             return extendedResponse;
+        }
+
+        internal dynamic ComposeTransaction(Type genType, string data, bool embedded = false)
+        {
+            var tx = JsonObject.Parse(data).AsObject();
+
+            var type = TransactionTypes.GetTransactionType(data, embedded);
+
+            dynamic shell = Composer.GenerateObject(genType, tx.AsObject());
+
+            shell.Transaction = Composer.GenerateObject(type, tx["transaction"].AsObject());
+
+            return shell;
         }
     }
 }
