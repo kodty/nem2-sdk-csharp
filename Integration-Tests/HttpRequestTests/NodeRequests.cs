@@ -1,4 +1,5 @@
 ﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.Reactive.Linq;
 
 namespace Integration_Tests
@@ -16,7 +17,12 @@ namespace Integration_Tests
             var client = new NodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var response = await client.GetNodeHealth();
-
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response.ComposedResponse, Is.Not.Null);
+            Assert.That(response.ComposedResponse.GetType(), Is.EqualTo(typeof(NodeHealth)));
+            Assert.That(response.Response, Is.Not.Null);
+            Assert.That(response.ComposedResponse.Status, Is.Not.Null);
+            Assert.That(response.ComposedResponse.Status.Db, Is.Not.Null);
             Assert.That(response.ComposedResponse.Status.Db, Is.EqualTo("up"));
             Assert.That(response.ComposedResponse.Status.ApiNode, Is.EqualTo("up"));
            
