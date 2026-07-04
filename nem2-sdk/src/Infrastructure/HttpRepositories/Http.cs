@@ -55,22 +55,16 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         }
 
         internal IObservable<ExtendedHttpResponseMessege<T>> HttpGetAsync<T>(object[] path)
-        {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(path)))
+            => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(path)))
                  .Select(e => FormResponse(ExtendResponse<T>(e)));
-        }
 
         internal IObservable<ExtendedHttpResponseMessege<T>> HttpGetAsync<T>(QueryModel queryModel, string[] path)
-        {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(path, queryModel)))
+            => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(path, queryModel)))
                  .Select(e => FormResponse(ExtendResponse<T>(e)));
-        }
 
-        internal IObservable<ExtendedHttpResponseMessege<T>> HttpPostAsync<T>(string[] path, HttpContent content)
-        {
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), content))
-                  .Select(e => FormResponse(ExtendResponse<T>(e)));
-        }
+        internal IObservable<ExtendedHttpResponseMessege<T[]>> HttpPostAsync<T>(string[] path, HttpContent content)
+            => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), content))
+                  .Select(e => FormResponse(ExtendResponse<T[]>(e)));
 
         internal static Type GetTransactionType(string t, bool embedded = false)
         {
@@ -113,7 +107,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         internal ExtendedHttpResponseMessege<T> FormResponse<T>(ExtendedHttpResponseMessege<T> extendedResponse)
         {
-
             if (extendedResponse.Response.IsSuccessStatusCode)
                 extendedResponse.ComposedResponse = Composer.GenerateObject<T>(extendedResponse.Response.Content.ReadAsStringAsync().Result);
 

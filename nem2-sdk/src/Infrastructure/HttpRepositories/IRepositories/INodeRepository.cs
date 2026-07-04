@@ -1,4 +1,6 @@
-﻿namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
+﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+
+namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
 {
     public interface INodeRepository
     {

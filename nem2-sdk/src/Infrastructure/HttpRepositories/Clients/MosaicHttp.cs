@@ -16,7 +16,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             => HttpGetAsync<MosaicEvent>(["mosaics", mosaicId]);
 
         public IObservable<ExtendedHttpResponseMessege<MosaicEvent[]>> GetMosaics(List<string> mosaicIds) // object list
-            => HttpPostAsync<MosaicEvent[]>(["mosaics"], 
+            => HttpPostAsync<MosaicEvent>(["mosaics"], 
                     new StringContent(
                             JsonSerializer.Serialize(
                                 new MosaicIds() { mosaicIds = mosaicIds }), 

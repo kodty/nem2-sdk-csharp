@@ -17,6 +17,7 @@
         {
             return (byte)type;
         }
+
         public static Types GetNetwork(string name)
         {
             switch (name)

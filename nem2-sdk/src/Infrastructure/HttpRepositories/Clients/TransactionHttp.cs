@@ -100,7 +100,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             var extendedResponse = ExtendResponse<TransactionData>(msg);
 
             if (msg.IsSuccessStatusCode)
-                extendedResponse.ComposedResponse = ComposeTransaction<TransactionData>(msg.Content.ReadAsStringAsync().Result);
+                extendedResponse.ComposedResponse = ComposeTransaction(typeof(TransactionData), msg.Content.ReadAsStringAsync().Result);
 
             return extendedResponse;
         }
@@ -117,7 +117,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
                 foreach (var t in tx.AsArray())
                 {
-                    txs.Add(ComposeTransaction<TransactionData>(t.ToString()));
+                    txs.Add(ComposeTransaction(typeof(TransactionData), t.ToString()));
                 }
 
                 extendedResponse.ComposedResponse = txs;

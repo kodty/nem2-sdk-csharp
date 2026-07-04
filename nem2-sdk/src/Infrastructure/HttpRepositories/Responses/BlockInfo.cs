@@ -9,7 +9,7 @@
 
     public class ExtendedBlockInfo
     {
-        public ExtendedMeta Meta { get; set; }
+        public ExtendedBlockInfoMetadata Meta { get; set; }
 
         public Block Block { get; set; }
 
@@ -18,14 +18,13 @@
 
     public class BlockInfo
     {
-        public Meta Meta { get; set; }
+        public BlockInfoMetadata Meta { get; set; }
 
         public Block Block { get; set; }
     }
 
     public class Block
     {
-
         public string Signature { get; set; }
 
         public string SignerPublicKey { get; set; }
@@ -61,13 +60,14 @@
         public int FeeMultiplier { get; set; }
     }
 
-    public class Meta
+    public class BlockInfoMetadata
     {
         public string Hash { get; set; }
 
         public string GenerationHash { get; set; }
     }
-    public class ExtendedMeta
+
+    public class ExtendedBlockInfoMetadata
     {
         public string Hash { get; set; }
 
