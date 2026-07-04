@@ -1,7 +1,6 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Reactive.Linq;
 using System.Text;
 using System.Text.Json;
 
@@ -13,54 +12,46 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             : base(host, port) { }
 
         public IObservable<ExtendedHttpResponseMessege<Datum<NamespaceData>>> SearchNamespaces(QueryModel queryModel)
-        {
-            return HttpGetAsync<Datum<NamespaceData>>(queryModel, ["namespaces"]);
-        }
+            => HttpGetAsync<Datum<NamespaceData>>(queryModel, ["namespaces"]);
 
         public IObservable<ExtendedHttpResponseMessege<NamespaceData>> GetNamespace(string namespaceId)
-        {
-            return HttpGetAsync<NamespaceData>(["namespaces", namespaceId]);
-        }
+            => HttpGetAsync<NamespaceData>(["namespaces", namespaceId]);
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetNamespaceMerkle(string namespaceId)
-        {
-            return HttpGetAsync<MerkleRoot>(["namespaces", namespaceId, "merkle"]);
-        }
+            => HttpGetAsync<MerkleRoot>(["namespaces", namespaceId, "merkle"]);
 
         public IObservable<ExtendedHttpResponseMessege<NamespaceName[]>> GetNamespacesNames(List<string> namespaceIds)
-        {
-            var ids = new Namespace_Ids()
-            {
-                namespaceIds = namespaceIds
-            };
-
-            var content = new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json");
-
-            return HttpPostAsync<NamespaceName[]>(["namespaces", "names"], content);
-        }
+            => HttpPostAsync<NamespaceName[]>(["namespaces", "names"], 
+                new StringContent(
+                    JsonSerializer.Serialize(
+                        new Namespace_Ids(){
+                            namespaceIds = namespaceIds
+                        }), 
+                    Encoding.UTF8, 
+                    "application/json")
+                );
 
         public IObservable<ExtendedHttpResponseMessege<Account_Names>> GetAccountNames(List<string> addresses)
-        {
-            var ids = new Account_Ids()
-            {
-                addresses = addresses
-            };
-
-            var content = new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json");
+            => HttpPostAsync<Account_Names>(["namespaces", "account", "names"], 
+                new StringContent(
+                    JsonSerializer.Serialize(
+                        new Account_Ids(){
+                             addresses = addresses
+                        }), 
+                    Encoding.UTF8, 
+                    "application/json")
+                );
        
-            return HttpPostAsync<Account_Names>(["namespaces", "account", "names"], content);
-        }
 
         public IObservable<ExtendedHttpResponseMessege<Mosaic_Names>> GetMosaicNames(List<string> mosaicIds)
-        {
-            var ids = new MosaicIds()
-            {
-                mosaicIds = mosaicIds
-            };
-
-            var content = new StringContent(JsonSerializer.Serialize(ids), Encoding.UTF8, "application/json");
-
-            return HttpPostAsync<Mosaic_Names>(["namespaces", "mosaic", "names"], content);
-        }
+            => HttpPostAsync<Mosaic_Names>(["namespaces", "mosaic", "names"], 
+                new StringContent(
+                    JsonSerializer.Serialize(
+                        new MosaicIds(){
+                            mosaicIds = mosaicIds
+                        }), 
+                    Encoding.UTF8, 
+                    "application/json")
+                );
     }
 }

@@ -10,16 +10,12 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
         public HashLockHttp(string host, int port) : base(host, port) { }
 
         public IObservable<ExtendedHttpResponseMessege<Datum<HashLockEvent>>> SearchHashLocks(QueryModel queryModel)
-        {
-            return HttpGetAsync<Datum<HashLockEvent>>(queryModel, ["lock", "hash"]);
-        }
+            => HttpGetAsync<Datum<HashLockEvent>>(queryModel, ["lock", "hash"]);
+        
         public IObservable<ExtendedHttpResponseMessege<HashLockEvent>> GetHashLockInfo(string hash)
-        {
-            return HttpGetAsync<HashLockEvent>(["lock", "hash", hash]);
-        }
+            => HttpGetAsync<HashLockEvent>(["lock", "hash", hash]);
+
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetHashLockMerkleInfo(string hash)
-        {
-            return HttpGetAsync<MerkleRoot>(["lock", "hash", hash, "merkle"]);             
-        }
+            => HttpGetAsync<MerkleRoot>(["lock", "hash", hash, "merkle"]);             
     }
 }

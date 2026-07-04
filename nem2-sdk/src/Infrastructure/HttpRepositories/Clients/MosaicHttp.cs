@@ -11,40 +11,30 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
         public MosaicHttp(string host, int port) : base(host, port) { }
 
         public IObservable<ExtendedHttpResponseMessege<Datum<MosaicEvent>>> SearchMosaics(QueryModel queryModel)
-        {
-            return HttpGetAsync<Datum<MosaicEvent>>(queryModel, ["mosaics" ]);            
-        }
+            => HttpGetAsync<Datum<MosaicEvent>>(queryModel, ["mosaics" ]);            
 
         public IObservable<ExtendedHttpResponseMessege<MosaicEvent>> GetMosaic(string mosaicId)
-        {
-            return HttpGetAsync<MosaicEvent>(["mosaics", mosaicId]);
-        }
+            => HttpGetAsync<MosaicEvent>(["mosaics", mosaicId]);
 
         public IObservable<ExtendedHttpResponseMessege<MosaicEvent[]>> GetMosaics(List<string> mosaicIds) // object list
-        {
-            var content = new StringContent(JsonSerializer.Serialize(new MosaicIds() { mosaicIds = mosaicIds }), Encoding.UTF8, "application/json");
-
-            return HttpPostAsync<MosaicEvent[]>(["mosaics"], content);
-        }
+            => HttpPostAsync<MosaicEvent[]>(["mosaics"], 
+                    new StringContent(
+                            JsonSerializer.Serialize(
+                                new MosaicIds() { mosaicIds = mosaicIds }), 
+                            Encoding.UTF8, 
+                            "application/json"
+                        ));
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMosaicMerkle(string mosaicId)
-        {
-            return HttpGetAsync<MerkleRoot>(["mosaics", mosaicId, "merkle"]); 
-        }
+            => HttpGetAsync<MerkleRoot>(["mosaics", mosaicId, "merkle"]); 
 
         public IObservable<ExtendedHttpResponseMessege<Datum<MosaicRestrictionData>>> SearchMosaicRestrictions(QueryModel queryModel)
-        {
-            return HttpGetAsync<Datum<MosaicRestrictionData>>(queryModel, ["restrictions", "mosaic"]); 
-        }
+            => HttpGetAsync<Datum<MosaicRestrictionData>>(queryModel, ["restrictions", "mosaic"]); 
 
         public IObservable<ExtendedHttpResponseMessege<MosaicRestrictionData>> GetMosaicRestriction(string compositeHash)
-        { 
-            return HttpGetAsync<MosaicRestrictionData>(["restrictions", "mosaic", compositeHash]); 
-        }
+            => HttpGetAsync<MosaicRestrictionData>(["restrictions", "mosaic", compositeHash]); 
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMosaicRestrictionMerkle(string compositeHash)
-        { 
-            return HttpGetAsync<MerkleRoot>(["restrictions", "mosaic", compositeHash, "merkle"]);
-        }
+            => HttpGetAsync<MerkleRoot>(["restrictions", "mosaic", compositeHash, "merkle"]);
     }
 }

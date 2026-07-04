@@ -10,6 +10,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories
         IObservable<ExtendedHttpResponseMessege<NodeStorage>> GetNodeStorageInfo();
         IObservable<ExtendedHttpResponseMessege<NodeTime>> GetNodeTime();
         IObservable<ExtendedHttpResponseMessege<NodeRESTVersion>> GetNodeRESTVersion();
-        IObservable<ExtendedHttpResponseMessege<NodeUnlockedAccounts>> GetNodeHArvestingAccountInfo();
+        IObservable<ExtendedHttpResponseMessege<NodeUnlockedAccounts>> GetNodeHarvestingAccountInfo();
     }
 }

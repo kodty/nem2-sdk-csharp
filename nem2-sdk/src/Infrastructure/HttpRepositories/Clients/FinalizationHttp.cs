@@ -9,13 +9,9 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
         public FinalizationHttp(string host, int port) :base(host, port) { }
 
         public IObservable<ExtendedHttpResponseMessege<FinalizationProof>> GetFinalizationProofByHeight(ulong height)
-        {
-            return HttpGetAsync<FinalizationProof>(["finalization", "proof", "height", height]);
-        }
+            => HttpGetAsync<FinalizationProof>(["finalization", "proof", "height", height]);
 
         public IObservable<ExtendedHttpResponseMessege<FinalizationProof>> GetFinalizationProofByEpoch(ulong epoch)
-        {
-            return HttpGetAsync<FinalizationProof>(["finalization", "proof", "epoch", epoch]);
-        }
+            => HttpGetAsync<FinalizationProof>(["finalization", "proof", "epoch", epoch]);
     }
 }

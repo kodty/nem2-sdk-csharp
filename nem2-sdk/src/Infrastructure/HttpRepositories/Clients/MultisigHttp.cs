@@ -10,9 +10,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
         public MultisigHttp(string host, int port) : base(host, port) { }
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMultisigMerkleInfo(string pubkOrAddress)
-        {
-            return HttpGetAsync<MerkleRoot>(["accounts", pubkOrAddress, "multisig", "merkle"]);
-        }
+            => HttpGetAsync<MerkleRoot>(["accounts", pubkOrAddress, "multisig", "merkle"]);
 
         /*
         public IObservable<MultisigAccountInfo> GetMultisigAccountInfo(PublicAccount account)

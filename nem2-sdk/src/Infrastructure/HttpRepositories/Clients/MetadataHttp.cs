@@ -1,7 +1,6 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Reactive.Linq;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 {
@@ -10,18 +9,12 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
         public MetadataHttp(string host, int port) : base(host, port) { }
 
         public IObservable<ExtendedHttpResponseMessege<Datum<Metadata>>> SearchMetadataEntries(QueryModel queryModel)
-        {
-            return HttpGetAsync<Datum<Metadata>>(queryModel, ["metadata"] );
-        }
+            => HttpGetAsync<Datum<Metadata>>(queryModel, ["metadata"] );
 
         public IObservable<ExtendedHttpResponseMessege<Metadata>> GetMetadata(string compositeHash)
-        {
-            return HttpGetAsync<Metadata>(["metadata", compositeHash]);
-        }
+            => HttpGetAsync<Metadata>(["metadata", compositeHash]);
 
         public IObservable<ExtendedHttpResponseMessege<MerkleRoot>> GetMetadataMerkle(string compositeHash) 
-        {
-            return HttpGetAsync<MerkleRoot>(["metadata", compositeHash, "merkle"]);           
-        }
+            => HttpGetAsync<MerkleRoot>(["metadata", compositeHash, "merkle"]);           
     }
 }

@@ -18,69 +18,54 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
         }
 
         public IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> SearchConfirmedTransactions(QueryModel queryModel)
-        {          
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "confirmed"], queryModel)))
-               .Select(r => { return FormTransactionResponse(r, "data"); });
-        }
+             => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "confirmed"], queryModel)))
+                 .Select(r => { return FormTransactionResponse(r, "data"); });
 
         public IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> SearchUnconfirmedTransactions(QueryModel queryModel)
-        {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "unconfirmed"], queryModel)))
-              .Select(r => { return FormTransactionResponse(r, "data"); });
-        }
+             => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "unconfirmed"], queryModel)))
+                 .Select(r => { return FormTransactionResponse(r, "data"); });
 
         public IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> SearchPartialTransactions(QueryModel queryModel)
-        {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "partial"], queryModel)))
-                .Select(r => { return FormTransactionResponse(r, "data"); });
-        }
+             => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "partial"], queryModel)))
+                 .Select(r => { return FormTransactionResponse(r, "data"); });
               
         public IObservable<ExtendedHttpResponseMessege<TransactionData>> GetConfirmedTransaction(string hash)
-        {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "confirmed", hash])))
-              .Select(FormTransactionResponse);
-        }
+             => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "confirmed", hash])))
+                 .Select(FormTransactionResponse);
 
         public IObservable<ExtendedHttpResponseMessege<TransactionData>> GetUnconfirmedTransaction(string hash)
-        {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "unconfirmed", hash])))
-              .Select(FormTransactionResponse);
-        }
+            => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "unconfirmed", hash])))
+                .Select(FormTransactionResponse);
 
         public IObservable<ExtendedHttpResponseMessege<TransactionData>> GetPartialTransaction(string hash)
-        {
-            return Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "partial", hash])))
-              .Select(FormTransactionResponse);
-        }
+             => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "partial", hash])))
+                 .Select(FormTransactionResponse);
 
         public IObservable<ExtendedHttpResponseMessege<ExtendedBroadcastStatus>> GetTransactionStatus(string hash)
-        {
-            return HttpGetAsync<ExtendedBroadcastStatus>(["transactionStatus", hash]); 
-        }
+            => HttpGetAsync<ExtendedBroadcastStatus>(["transactionStatus", hash]); 
 
         public IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> GetConfirmedTransactions(string[] transactionIds)
-        {
-            var postBody = JsonSerializer.Serialize(new TransactionIdentifiers() { transactionIds = transactionIds });
-
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["transactions", "confirmed"]), new StringContent(postBody, Encoding.UTF8, "application/json")))
-                 .Select(r => { return FormTransactionResponse(r, null); });
-        }
+             => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["transactions", "confirmed"]), 
+                new StringContent(
+                    JsonSerializer.Serialize(
+                        new TransactionIdentifiers() { transactionIds = transactionIds }), 
+                    Encoding.UTF8, 
+                    "application/json")
+                )).Select(r => { return FormTransactionResponse(r, null); });        
 
         public IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> GetUnconfirmedTransactions(string[] transactionIds)
-        {
-            var postBody = JsonSerializer.Serialize(new TransactionIdentifiers() { transactionIds = transactionIds });
-
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["transactions", "unconfirmed"]), new StringContent(postBody, Encoding.UTF8, "application/json")))
-                  .Select(r => { return FormTransactionResponse(r, null); });
-        }
+             => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["transactions", "unconfirmed"]), new StringContent(JsonSerializer.Serialize(new TransactionIdentifiers() { transactionIds = transactionIds }), Encoding.UTF8, "application/json")))
+                 .Select(r => { return FormTransactionResponse(r, null); });
 
         public IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> GetPartialTransactions(string[] transactionIds)
-        {
-            var postBody = JsonSerializer.Serialize(new TransactionIdentifiers() { transactionIds = transactionIds });
-
-            return Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["transactions", "partial"]), new StringContent(postBody, Encoding.UTF8, "application/json")))
-                 .Select(r => { return FormTransactionResponse(r, null); });
-        }
+             => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["transactions", "partial"]), 
+                 new StringContent(
+                     JsonSerializer.Serialize(
+                         new TransactionIdentifiers() { transactionIds = transactionIds }), 
+                     Encoding.UTF8, 
+                     "application/json")
+                 )).Select(r => { return FormTransactionResponse(r, null); });
+        
 
         public class _Payload
         {
