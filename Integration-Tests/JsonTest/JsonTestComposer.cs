@@ -304,7 +304,7 @@ namespace Integration_Tests.JsonTest
                 ]
                 """;
 
-            var composer = new ObjectComposer([typeof(bool), typeof(int), typeof(string), typeof(double), typeof(Root), typeof(Dimensions), typeof(Ratings), typeof(Review), typeof(Stock), typeof(Variant)]);
+            var composer = new ObjectComposer();
 
             var root = composer.GenerateObject<Root>(JsonNode.Parse(json).AsArray()[0].ToString());
 

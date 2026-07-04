@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json.Nodes;
 
@@ -7,19 +6,15 @@ namespace Coppery
 {
     public class ObjectComposer
     {
-        private Type[] TypeArgs { get; set; }
-
         public Func<dynamic, Type, ObjectComposer, JsonNode, dynamic> GetEmbedded { get; set; }
 
-        public ObjectComposer(Type[] args, Func<dynamic, Type, ObjectComposer, JsonNode, dynamic> getEmbedded)
+        public ObjectComposer(Func<dynamic, Type, ObjectComposer, JsonNode, dynamic> getEmbedded)
         {
-            TypeArgs = args;
             GetEmbedded = getEmbedded;
         }
 
-        public ObjectComposer(Type[] args)
+        public ObjectComposer()
         {
-            TypeArgs = args;
         }
 
         public T GenerateObject<T>(string data)
@@ -36,32 +31,60 @@ namespace Coppery
             return ValueMapToObject(nameToValueMap, actualObject, type);
         }
 
-        private Dictionary<string, object> GetPropNamesValues(Type type, JsonNode objList)
+        private Dictionary<string, object> GetPropNamesValues(Type type, JsonNode ob)
         {
             Dictionary<string, object> nameToValueMap = new Dictionary<string, object>();
 
             type?.GetProperties().ToList().ForEach(op =>
-            {
-                if (!nameToValueMap.ContainsKey(op.Name.ToLower()))
+            {               
+                var path = char.ToLower(op.Name[0]) + op.Name.Substring(1);
+
+                if (op.PropertyType.IsPrimitive)
                 {
-                    
-                    if (IsNativeProperty(op))
+                    nameToValueMap.Add(op.Name.ToLower(), Convert.ChangeType(ob[path].ToString(), op.PropertyType));
+                    return;
+                }
+
+                if (op.PropertyType == typeof(string))
+                {
+                    nameToValueMap.Add(op.Name.ToLower(), (string)ob[path]);
+                    return;
+                }
+
+                if (op.PropertyType.IsGenericType && op.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    var values = (IList)Activator.CreateInstance(op.PropertyType);
+
+                    var argType = op.PropertyType.GetGenericArguments().SingleOrDefault();
+
+                    if (ob.AsObject().ContainsKey(path))
                     {
-                        nameToValueMap.Add(op.Name.ToLower(), GetTypedValue(op.PropertyType, objList.AsObject(), char.ToLower(op.Name[0]) + op.Name.Substring(1)));
-                        return;
-                    }
-                    else
-                    {                       
-                        foreach (var obj in objList.AsObject())
+                        foreach (var item in ob[path].AsArray())
                         {
-                            if (obj.Key.ToLower().Contains(op.Name.ToLower()))
+                            if (argType.IsPrimitive || argType == typeof(string))
                             {
-                                nameToValueMap.Add(op.Name.ToLower(), GenerateObject(op.PropertyType, obj.Value));
-                                break;
+                                values.Add(Convert.ChangeType(item.ToString(), argType));
+                            }
+                            else if (!argType.IsPrimitive && argType != typeof(string))
+                            {
+                                var T = GenerateObject(argType, item.AsObject());
+
+                                if (GetEmbedded != null)
+                                    T = GetEmbedded(T, argType, this, item);
+
+                                values.Add(T);
                             }
                         }
                     }
+
+                    nameToValueMap.Add(op.Name.ToLower(), values);
+                    return;
                 }
+
+                if(ob.AsObject().ContainsKey(path))
+                    nameToValueMap.Add(op.Name.ToLower(), GenerateObject(op.PropertyType, ob[path]));
+
+                return;   
             });
 
             return nameToValueMap;
@@ -82,60 +105,5 @@ namespace Coppery
 
             return Convert.ChangeType(actualObject, type);
         }     
-
-        private IList GetListTypeValue(Type type, JsonNode ob, string path)
-        {
-            var values = (IList)Activator.CreateInstance(type);
-
-            var genType = type.GetGenericArguments().SingleOrDefault();
-
-            if (ob.AsObject().ContainsKey(path))
-            {
-                foreach (var item in ob[path].AsArray())
-                {
-                    if (genType.IsPrimitive || genType == typeof(string))
-                    {
-                        values.Add(Convert.ChangeType(item.ToString(), genType));
-                    }    
-                    else if (!genType.IsPrimitive && genType != typeof(string))
-                    {
-                        var T = GenerateObject(genType, item.AsObject());
-
-                        if(GetEmbedded != null)
-                            T = GetEmbedded(T, genType, this, item);
-
-                        values.Add(T);
-                    }
-                }
-            }
-
-            return values;
-        }
-
-        private bool IsNativeProperty(PropertyInfo op)
-        {
-            if (TypeArgs.Contains(op.PropertyType) || TypeArgs.Contains(op.PropertyType.GetGenericArguments().SingleOrDefault()))
-                return true;
-
-            else return false;
-        }
-
-        private dynamic? GetTypedValue(Type type, JsonObject ob, string path)
-        {
-            if (type.IsPrimitive)
-                return Convert.ChangeType(ob[path].ToString(), type);             
-
-            if (type == typeof(string))
-                return (string)ob[path];
-
-            
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
-                return GetListTypeValue(type, ob, path);
-
-            if (TypeArgs.Contains(type))
-                return GenerateObject(type, ob[path]);
-                
-            else throw new NotImplementedException(type.ToString());
-        }
     }
 }

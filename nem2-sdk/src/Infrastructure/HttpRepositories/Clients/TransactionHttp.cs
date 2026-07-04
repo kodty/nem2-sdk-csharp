@@ -14,7 +14,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
     {
         public TransactionHttp(string host, int port) : base(host, port) {
 
-            Composer = new ObjectComposer(TypeSerializationCatalog.CustomTypes, TransactionTypes.ComposeEmbeddedTransaction);
+            Composer = new ObjectComposer(TransactionTypes.ComposeEmbeddedTransaction);
         }
 
         public IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> SearchConfirmedTransactions(QueryModel queryModel)

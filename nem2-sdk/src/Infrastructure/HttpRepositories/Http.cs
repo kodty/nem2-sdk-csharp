@@ -24,7 +24,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             Host = host;
             Port = port;
             Client = new HttpClient();
-            Composer = new ObjectComposer(TypeSerializationCatalog.CustomTypes);
+            Composer = new ObjectComposer();
         }       
 
         internal Uri GetUri(object[] segs)
