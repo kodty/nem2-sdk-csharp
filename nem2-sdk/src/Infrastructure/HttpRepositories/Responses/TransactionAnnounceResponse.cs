@@ -1,4 +1,4 @@
-﻿namespace io.nem2.sdk.src.Infrastructure.Buffers.Model.Responses
+﻿namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses
 {
     public class TransactionAnnounceResponse
     {

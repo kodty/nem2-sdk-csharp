@@ -1,5 +1,4 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Model.Articles;
 
 namespace io.nem2.sdk.src.Model.Transactions
 {

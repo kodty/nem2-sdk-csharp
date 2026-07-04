@@ -1,6 +1,5 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Reactive.Linq;
 using System.Text;
 using System.Text.Json;
 

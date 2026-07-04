@@ -1,5 +1,4 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Infrastructure.Buffers.Model;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using System.Reactive.Linq;
 

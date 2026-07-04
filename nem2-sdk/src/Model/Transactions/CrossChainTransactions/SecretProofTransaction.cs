@@ -1,5 +1,4 @@
 ﻿using Coppery;
-using Org.BouncyCastle.Cms;
 
 namespace io.nem2.sdk.src.Model.Transactions.CrossChainTransactions
 {

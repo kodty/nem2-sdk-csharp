@@ -3,8 +3,6 @@ using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Transactions;
 using Org.BouncyCastle.Crypto.Digests;
-using System.Diagnostics;
-using TweetNaclSharp;
 using TweetNaclSharp.Core.Extensions;
 
 public static class TransactionExtensions
