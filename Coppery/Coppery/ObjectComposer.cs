@@ -6,11 +6,13 @@ namespace Coppery
 {
     public class ObjectComposer
     {
-        public Func<dynamic, Type, ObjectComposer, JsonNode, dynamic> GetEmbedded { get; set; }
+        internal int Depth = 0;
 
-        public ObjectComposer(Func<dynamic, Type, ObjectComposer, JsonNode, dynamic> getEmbedded)
+        public Func<dynamic, Type, ObjectComposer, JsonNode, dynamic> Function { get; set; }
+
+        public ObjectComposer(Func<dynamic, Type, ObjectComposer, JsonNode, dynamic> function)
         {
-            GetEmbedded = getEmbedded;
+            Function = function;
         }
 
         public ObjectComposer()
@@ -22,13 +24,31 @@ namespace Coppery
             return (T)GenerateObject(typeof(T), JsonObject.Parse(data));
         }
 
-        public dynamic GenerateObject(Type type, JsonNode jObject)
+        public dynamic GenerateObject(Type type, JsonNode ob)
         {
-            var actualObject = Activator.CreateInstance(type);
+            try
+            {
+                if (Depth < 64)
+                {
+                    var actualObject = Activator.CreateInstance(type);
 
-            var nameToValueMap = GetPropNamesValues(type, jObject);
+                    Interlocked.Increment(ref Depth);
 
-            return ValueMapToObject(nameToValueMap, actualObject, type);
+                    var nameToValueMap = GetPropNamesValues(type, ob);
+
+                    Interlocked.Decrement(ref Depth);
+
+                    var value = ValueMapToObject(nameToValueMap, actualObject, type);
+
+                    return value;
+                }
+                else throw new Exception("Max depth limit exceeded");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
 
         private Dictionary<string, object> GetPropNamesValues(Type type, JsonNode ob)
@@ -67,10 +87,10 @@ namespace Coppery
                             }
                             else
                             {
-                                var T = GenerateObject(argType, item.AsObject());
+                                var T = GenerateObject(argType, item);
 
-                                if (GetEmbedded != null)
-                                    T = GetEmbedded(T, argType, this, item);
+                                if (Function != null)
+                                    T = Function(T, argType, this, item);
 
                                 values.Add(T);
                             }
@@ -81,14 +101,14 @@ namespace Coppery
                     return;
                 }
 
-                if(ob.AsObject().ContainsKey(path))
+                if (ob.AsObject().ContainsKey(path))
                     nameToValueMap.Add(op.Name.ToLower(), GenerateObject(op.PropertyType, ob[path]));
-
+                
                 return;   
             });
 
             return nameToValueMap;
-        }
+        }    
 
         private dynamic ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)
         {

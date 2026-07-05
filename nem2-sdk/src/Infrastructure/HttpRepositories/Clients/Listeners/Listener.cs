@@ -38,7 +38,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
 
         public Listener(string domain, int port = 3000) : base(domain, port)
         {
-            base.Composer.GetEmbedded = TransactionTypes.ComposeEmbeddedTransaction;
+            base.Composer.Function = TransactionTypes.ComposeEmbeddedTransaction;
 
             ClientSocket = new ClientWebSocket();
 		}
