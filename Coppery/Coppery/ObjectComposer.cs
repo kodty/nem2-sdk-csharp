@@ -65,7 +65,7 @@ namespace Coppery
                             {
                                 values.Add(Convert.ChangeType(item.ToString(), argType));
                             }
-                            else if (!argType.IsPrimitive && argType != typeof(string))
+                            else
                             {
                                 var T = GenerateObject(argType, item.AsObject());
 
