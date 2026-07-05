@@ -26,34 +26,24 @@ namespace Coppery
 
         public dynamic GenerateObject(Type type, JsonNode ob)
         {
-            try
+            if (Depth < 64)
             {
-                if (Depth < 64)
-                {
-                    var actualObject = Activator.CreateInstance(type);
+                var actualObject = Activator.CreateInstance(type);
 
-                    Interlocked.Increment(ref Depth);
+                    Depth++;
 
-                    var nameToValueMap = GetPropNamesValues(type, ob);
+                var nameToValueMap = GetPropNamesValues(type, ob);
 
-                    Interlocked.Decrement(ref Depth);
+                    Depth--;
 
-                    var value = ValueMapToObject(nameToValueMap, actualObject, type);
-
-                    return value;
-                }
-                else throw new Exception("Max depth limit exceeded");
+                return ValueMapToObject(nameToValueMap, actualObject, type);         
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
+            else throw new Exception("Max depth limit exceeded");
         }
 
         private Dictionary<string, object> GetPropNamesValues(Type type, JsonNode ob)
         {
-            Dictionary<string, object> nameToValueMap = new Dictionary<string, object>();
+            Dictionary<string, object> keyValueMap = new Dictionary<string, object>();
 
             type?.GetProperties().ToList().ForEach(op =>
             {               
@@ -61,13 +51,13 @@ namespace Coppery
 
                 if (op.PropertyType.IsPrimitive)
                 {
-                    nameToValueMap.Add(op.Name.ToLower(), Convert.ChangeType(ob[path].ToString(), op.PropertyType));
+                    keyValueMap.Add(op.Name.ToLower(), Convert.ChangeType(ob[path].ToString(), op.PropertyType));
                     return;
                 }
 
                 if (op.PropertyType == typeof(string))
                 {
-                    nameToValueMap.Add(op.Name.ToLower(), (string)ob[path]);
+                    keyValueMap.Add(op.Name.ToLower(), (string)ob[path]);
                     return;
                 }
 
@@ -97,22 +87,22 @@ namespace Coppery
                         }
                     }
 
-                    nameToValueMap.Add(op.Name.ToLower(), values);
+                    keyValueMap.Add(op.Name.ToLower(), values);
                     return;
                 }
 
                 if (ob.AsObject().ContainsKey(path))
-                    nameToValueMap.Add(op.Name.ToLower(), GenerateObject(op.PropertyType, ob[path]));
+                    keyValueMap.Add(op.Name.ToLower(), GenerateObject(op.PropertyType, ob[path]));
                 
                 return;   
             });
 
-            return nameToValueMap;
+            return keyValueMap;
         }    
 
-        private dynamic ValueMapToObject(Dictionary<string, object> nameToValueMap, object actualObject, Type type)
+        private dynamic ValueMapToObject(Dictionary<string, object> keyValueMap, object actualObject, Type type)
         {
-            foreach (var prop in nameToValueMap)
+            foreach (var prop in keyValueMap)
             {
                 var actualObjProp = actualObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)?
                       .First(m =>
