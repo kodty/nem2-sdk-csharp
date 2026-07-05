@@ -27,19 +27,12 @@
             if (hexString.Length != 48 && hexString.Length != 50)
                 throw new Exception("decoded address is invalid length, must be 48 or 50 with padding.");
 
-            byte[] input = FromHex(hexString);
-
-            return EncodeAddress(input);
-        }
-
-        private static byte[] FromHex(string hexString)
-        {
             var bytes = new byte[25];
 
             for (int i = 0; i < hexString.Length / 2; i++)
                 bytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
 
-            return bytes;
+            return EncodeAddress(bytes);
         }
 
         public static byte[] DecodeAddress(string encodedAddress)

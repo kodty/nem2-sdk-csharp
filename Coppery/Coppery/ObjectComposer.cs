@@ -110,6 +110,7 @@ namespace Coppery
 
             return T;
         }
+
         private dynamic ValueMapToObject(Dictionary<string, object> keyValueMap, object actualObject, Type type)
         {
             foreach (var prop in keyValueMap)
