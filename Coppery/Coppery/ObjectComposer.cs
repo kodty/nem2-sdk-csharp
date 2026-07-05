@@ -77,10 +77,7 @@ namespace Coppery
                             }
                             else
                             {
-                                var T = GenerateObject(argType, item);
-
-                                if (Function != null)
-                                    T = Function(T, argType, this, item);
+                                var T = GenerateWithCustomPostProcessing(argType, item);
 
                                 values.Add(T);
                             }
@@ -92,14 +89,27 @@ namespace Coppery
                 }
 
                 if (ob.AsObject().ContainsKey(path))
-                    keyValueMap.Add(op.Name.ToLower(), GenerateObject(op.PropertyType, ob[path]));
-                
+                {
+                    var T = GenerateWithCustomPostProcessing(op.PropertyType, ob[path]);
+
+                    keyValueMap.Add(op.Name.ToLower(), T);    
+                }
+          
                 return;   
             });
 
             return keyValueMap;
         }    
 
+        private dynamic GenerateWithCustomPostProcessing(Type argType, JsonNode item)
+        {
+            var T = GenerateObject(argType, item);
+
+            if (Function != null)
+                T = Function(T, argType, this, item);
+
+            return T;
+        }
         private dynamic ValueMapToObject(Dictionary<string, object> keyValueMap, object actualObject, Type type)
         {
             foreach (var prop in keyValueMap)
