@@ -64,7 +64,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         internal IObservable<ExtendedHttpResponseMessege<T[]>> HttpPostAsync<T>(string[] path, HttpContent content)
             => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), content))
-                  .Select( e => FormResponse(ExtendResponse<T[]>(e)).Result);
+                  .Select( e => FormResponse(ExtendResponse<T[]>(e)));
 
         internal static ExtendedHttpResponseMessege<T> ExtendResponse<T>(HttpResponseMessage msg)
         {
@@ -75,7 +75,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             };
         }
        
-        internal async Task<ExtendedHttpResponseMessege<T[]>> FormResponse<T>(ExtendedHttpResponseMessege<T[]> extendedResponse)
+        internal ExtendedHttpResponseMessege<T[]> FormResponse<T>(ExtendedHttpResponseMessege<T[]> extendedResponse)
         {
             var objs = JsonNode.Parse(extendedResponse.Response.Content.ReadAsStringAsync().Result);
 
@@ -83,7 +83,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             
             for (var x = 0; x < objs.AsArray().Count;  x++)
             {
-                values[x] = await Composer.GenerateObject(typeof(T), objs.AsArray()[x]);
+                values[x] = Composer.GenerateObject<T>(objs.AsArray()[x]);
             }
 
             extendedResponse.ComposedResponse = values;
@@ -94,7 +94,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         internal ExtendedHttpResponseMessege<T> FormResponse<T>(ExtendedHttpResponseMessege<T> extendedResponse)
         {
             if (extendedResponse.Response.IsSuccessStatusCode)
-                extendedResponse.ComposedResponse = Composer.GenerateObject<T>(extendedResponse.Response.Content.ReadAsStringAsync().Result);
+                extendedResponse.ComposedResponse = Composer.GenerateObject<T>(JsonNode.Parse(extendedResponse.Response.Content.ReadAsStringAsync().Result));
 
             return extendedResponse;
         }

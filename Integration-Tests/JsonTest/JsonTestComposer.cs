@@ -306,7 +306,10 @@ namespace Integration_Tests.JsonTest
 
             var composer = new ObjectComposer();
 
-            var root = composer.GenerateObject<Root>(JsonNode.Parse(json).AsArray()[0].ToString());
+
+            var input = JsonNode.Parse(JsonNode.Parse(json).AsArray()[0].ToString());
+
+            var root = composer.GenerateObject<Root>(input);
 
             Assert.That(root.productId, Is.EqualTo(1001));
             Assert.That(root.Stock.available, Is.EqualTo(true));

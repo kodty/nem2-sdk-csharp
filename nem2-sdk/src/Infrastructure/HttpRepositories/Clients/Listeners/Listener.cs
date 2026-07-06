@@ -10,7 +10,6 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Text.Json.Nodes;
 
-
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
 {
     public class Listener : HttpRouter
@@ -52,7 +51,9 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
                     .GetAwaiter()
                     .GetResult();
 
-                Uid = Composer.GenerateObject<WebsocketUID>(ReadSocket().Result);
+                var input = JsonNode.Parse(ReadSocket().Result);
+
+                Uid = Composer.GenerateObject<WebsocketUID>(input);
 
                 LoopReads = Task.Run(() => LoopRead());
 
@@ -106,7 +107,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
         {
             SubscribeToChannel("block");
 
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "block")  
+            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(JsonNode.Parse(e)).Topic == "block")  
                .Select(ReturnSocketBlockResponse);         
         }
 
@@ -114,7 +115,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
         {
             SubscribeToChannel(string.Concat("confirmedAdded/", address.Plain));
 
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic ==  "confirmedAdded")
+            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "confirmedAdded")
                .Select(e => ReturnSocketTransactionResponse(e));         
             
         }
@@ -153,7 +154,9 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
 
         private BlockInfo ReturnSocketBlockResponse(string data)
         {
-            return Composer.GenerateObject<BlockInfo>(JsonNode.Parse(data)["data"].ToString()); 
+            var input = JsonNode.Parse(JsonNode.Parse(data)["data"].ToString());
+
+            return Composer.GenerateObject<BlockInfo>(input); 
         }
 
         private TransactionData ReturnSocketTransactionResponse(string data)
@@ -167,8 +170,8 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
         {
             SubscribeToChannel(string.Concat("status/", address.Plain));
 
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "status/" + address.Plain)         
-                .Select(e => Composer.GenerateObject<BroadcastStatus>(e));
+            return _subject.Where(e => Composer.GenerateObject<SocketTopic>( e).Topic == "status/" + address.Plain)         
+                .Select(e => (BroadcastStatus)Composer.GenerateObject(typeof(BroadcastStatus), e).Result);
         }
 
         public IObservable<CosignatureSignedTransaction> CosignatureAdded(Address address)
@@ -176,7 +179,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
             SubscribeToChannel(string.Concat("cosignature/", address.Plain));
 
             return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "cosignature")
-                .Select(e => Composer.GenerateObject<CosignatureSignedTransaction>(e));
+                .Select(e => (CosignatureSignedTransaction)Composer.GenerateObject(typeof(CosignatureSignedTransaction),e).Result);
         }
 
         private bool TransactionHasSignerOrReceptor(Transaction transaction, Address address)

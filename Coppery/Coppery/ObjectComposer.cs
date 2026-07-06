@@ -17,11 +17,12 @@ namespace Coppery
 
         public ObjectComposer()
         {
+
         }
 
-        public T GenerateObject<T>(string data)
+        public T GenerateObject<T>(JsonNode ob)
         {
-            return GenerateObject(typeof(T), JsonObject.Parse(data)).Result;
+            return (T)GenerateObject(typeof(T), ob).Result;
         }
 
         public Task<dynamic> GenerateObject(Type type, JsonNode ob)
@@ -33,17 +34,18 @@ namespace Coppery
                         Depth++;
 
                 return Task.Run(() =>
-                { 
+                {
                     var result = GetPropNamesValues(type, ob);
 
                         Depth--;
 
-                    return ValueMapToObject(result, actualObject, type);
-                });                
+                    return ValueMapToObject(result, actualObject);
+                });
             }
             else throw new Exception("Max depth limit exceeded");
         }
 
+        
         private Dictionary<string, object> GetPropNamesValues(Type type, JsonNode ob)
         {
             Dictionary<string, object> keyValueMap = new Dictionary<string, object>();
@@ -98,7 +100,7 @@ namespace Coppery
             return comp_o;
         }
 
-        private dynamic ValueMapToObject(Dictionary<string, object> keyValueMap, object actualObject, Type type)
+        private dynamic ValueMapToObject(Dictionary<string, object> keyValueMap, object actualObject)
         {
             foreach (var prop in keyValueMap)
             {
@@ -111,7 +113,7 @@ namespace Coppery
                 actualObjProp.SetValue(actualObject, prop.Value);
             }
 
-            return Convert.ChangeType(actualObject, type);
+            return actualObject;
         }     
     }
 }
