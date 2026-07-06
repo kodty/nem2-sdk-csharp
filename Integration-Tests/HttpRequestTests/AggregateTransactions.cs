@@ -35,15 +35,12 @@ namespace Integration_Tests.HttpRequests
             var response = await client.SearchConfirmedTransactions(qModel);
 
             Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
-
+            Debug.WriteLine(response.ComposedResponse.Count);
             response.ComposedResponse.ForEach(i =>
             {
-                ((Aggregate)i.Transaction).Transactions
-                    .ForEach(m =>
-                    {
-                        Debug.WriteLine(m.Transaction.Type);
+                Assert.That(((Aggregate)i.Transaction).Type, Is.EqualTo(16705));
+                Assert.That(((Aggregate)i.Transaction).TransactionsHash.Length, Is.EqualTo(64));
 
-                    });
             });
         }
     }

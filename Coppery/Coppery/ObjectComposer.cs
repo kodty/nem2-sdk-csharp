@@ -49,17 +49,8 @@ namespace Coppery
             {               
                 var path = char.ToLower(op.Name[0]) + op.Name.Substring(1);
 
-                if (op.PropertyType.IsPrimitive)
-                {
-                    keyValueMap.Add(op.Name.ToLower(), Convert.ChangeType(ob[path].ToString(), op.PropertyType));
+                if (!ob.AsObject().ContainsKey(path)) 
                     return;
-                }
-
-                if (op.PropertyType == typeof(string))
-                {
-                    keyValueMap.Add(op.Name.ToLower(), (string)ob[path]);
-                    return;
-                }
 
                 if (op.PropertyType.IsGenericType && op.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
@@ -67,48 +58,41 @@ namespace Coppery
 
                     var argType = op.PropertyType.GetGenericArguments().SingleOrDefault();
 
-                    if (ob.AsObject().ContainsKey(path))
-                    {
-                        foreach (var item in ob[path].AsArray())
-                        {
-                            if (argType.IsPrimitive || argType == typeof(string))
-                            {
-                                values.Add(Convert.ChangeType(item.ToString(), argType));
-                            }
-                            else
-                            {
-                                var T = GenerateWithCustomPostProcessing(argType, item);
-
-                                values.Add(T);
-                            }
-                        }
-                    }
-
+                    foreach (var item in ob[path].AsArray())
+                        values.Add(Convert_Compose(argType, item));
+                    
                     keyValueMap.Add(op.Name.ToLower(), values);
+
                     return;
                 }
-
-                if (ob.AsObject().ContainsKey(path))
-                {
-                    var T = GenerateWithCustomPostProcessing(op.PropertyType, ob[path]);
-
-                    keyValueMap.Add(op.Name.ToLower(), T);    
-                }
-          
+                
+                keyValueMap.Add(op.Name.ToLower(), Convert_Compose(op.PropertyType, ob[path]));    
+                     
                 return;   
             });
 
             return keyValueMap;
         }    
-
-        private dynamic GenerateWithCustomPostProcessing(Type argType, JsonNode item)
+        
+        private dynamic Convert_Compose(Type type, JsonNode ob)
         {
-            var T = GenerateObject(argType, item);
+            if (type.IsPrimitive || type == typeof(string))
+            {
+                return Convert.ChangeType(ob.ToString(), type);
+            }
+            else
+            {
+                 return GenerateWithCustomPostProcessing(type, ob);
+            }
+        }
+        private dynamic GenerateWithCustomPostProcessing(Type type, JsonNode item)
+        {
+            var comp_o = GenerateObject(type, item);
 
             if (Function != null)
-                T = Function(T, argType, this, item);
+                comp_o = Function(comp_o, type, this, item);
 
-            return T;
+            return comp_o;
         }
 
         private dynamic ValueMapToObject(Dictionary<string, object> keyValueMap, object actualObject, Type type)
