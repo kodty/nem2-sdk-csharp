@@ -17,7 +17,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
         public IObservable<ExtendedHttpResponseMessege<NodePeer[]>> GetNodePeers()
             => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "peers"])))
-                    .Select(e => FormResponse(ExtendResponse<NodePeer[]>(e)));  
+                    .Select(e => FormResponse(ExtendResponse<NodePeer[]>(e)).Result);  
 
         public IObservable<ExtendedHttpResponseMessege<NodeStorage>> GetNodeStorageInfo()
             => HttpGetAsync<NodeStorage>(["node", "storage"]);

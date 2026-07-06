@@ -133,9 +133,9 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 
             var type = TransactionTypes.GetTransactionType(data, embedded);
 
-            dynamic shell = Composer.GenerateObject(genType, tx.AsObject());
+            dynamic shell = Composer.GenerateObject(genType, tx.AsObject()).Result;
 
-            shell.Transaction = Composer.GenerateObject(type, tx["transaction"].AsObject());
+            shell.Transaction = Composer.GenerateObject(type, tx["transaction"].AsObject()).Result;
 
             return shell;
         }

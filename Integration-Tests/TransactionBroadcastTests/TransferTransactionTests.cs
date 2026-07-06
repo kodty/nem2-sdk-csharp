@@ -1,16 +1,12 @@
 ﻿using Coppery;
 using Integration_Tests;
-using io.nem2.sdk.Infrastructure.HttpRepositories;
-
-using io.nem2.sdk.src.Core.Utils;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
-using io.nem2.sdk.src.Model.Transactions;
 using System.Diagnostics;
 using System.Reactive.Linq;
-using TweetNaclSharp.Core.Extensions;
+
 
 
 namespace IntegrationTests.Infrastructure.Transactions
@@ -50,10 +46,9 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var s = listener.GetTransactionStatus(Address.CreateFromEncoded("TD4MZ66MVUX6ETNIXNLF6SA7YRTPU6C4X56ZJQA"))
              .Subscribe(e =>
-             {
-                 Debug.WriteLine("listener");
-                 Debug.WriteLine("e " + e.Data.Code);
-                 Debug.WriteLine("e " + e.Data.Deadline);
+             {         
+                    Debug.WriteLine("listener");
+                    Debug.WriteLine("e " + e.Status);           
              });
             
            

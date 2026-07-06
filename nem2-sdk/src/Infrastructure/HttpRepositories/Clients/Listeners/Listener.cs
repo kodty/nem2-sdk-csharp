@@ -10,6 +10,7 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Text.Json.Nodes;
 
+
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
 {
     public class Listener : HttpRouter
@@ -114,7 +115,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
             SubscribeToChannel(string.Concat("confirmedAdded/", address.Plain));
 
             return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic ==  "confirmedAdded")
-               .Select(ReturnSocketTransactionResponse);         
+               .Select(e => ReturnSocketTransactionResponse(e));         
             
         }
 
@@ -123,7 +124,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
             SubscribeToChannel(string.Concat("unconfirmedAdded/", address.Plain));
 
             return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "unconfirmedAdded")
-                 .Select(ReturnSocketTransactionResponse);
+                 .Select(e => ReturnSocketTransactionResponse(e));
         }
 
         public IObservable<TransactionData> UnconfirmedTransactionsRemoved(Address address)
@@ -131,7 +132,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
             SubscribeToChannel(string.Concat("unconfirmedRemoved/", address.Plain));
 
             return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "unconfirmedRemoved")
-                 .Select(ReturnSocketTransactionResponse);
+                 .Select(e => ReturnSocketTransactionResponse(e));
         }
 
         public IObservable<TransactionData> AggregateBondedAdded(Address address)
@@ -139,7 +140,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
             SubscribeToChannel(string.Concat("partialAdded/", address.Plain));
 
             return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "partialAdded")
-                .Select(ReturnSocketTransactionResponse);
+                .Select(e => ReturnSocketTransactionResponse(e));
         }
 
         public IObservable<TransactionData> AggregateBondedRemoved(Address address)
@@ -147,7 +148,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
             SubscribeToChannel(string.Concat("partialRemoved/", address.Plain));
 
             return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "partialRemoved")
-                 .Select(ReturnSocketTransactionResponse);
+                 .Select(e => ReturnSocketTransactionResponse(e));
         }
 
         private BlockInfo ReturnSocketBlockResponse(string data)
@@ -162,12 +163,12 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
             return TransactionHttpClient.ComposeTransaction(typeof(TransactionData), t);
         }
 
-        public IObservable<SocketTopic> GetTransactionStatus(Address address)
+        public IObservable<BroadcastStatus> GetTransactionStatus(Address address)
         {
             SubscribeToChannel(string.Concat("status/", address.Plain));
 
             return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "status/" + address.Plain)         
-                .Select(Composer.GenerateObject<SocketTopic>);
+                .Select(e => Composer.GenerateObject<BroadcastStatus>(e));
         }
 
         public IObservable<CosignatureSignedTransaction> CosignatureAdded(Address address)
@@ -175,7 +176,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
             SubscribeToChannel(string.Concat("cosignature/", address.Plain));
 
             return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "cosignature")
-                .Select(Composer.GenerateObject<CosignatureSignedTransaction>);
+                .Select(e => Composer.GenerateObject<CosignatureSignedTransaction>(e));
         }
 
         private bool TransactionHasSignerOrReceptor(Transaction transaction, Address address)

@@ -21,22 +21,25 @@ namespace Coppery
 
         public T GenerateObject<T>(string data)
         {
-            return (T)GenerateObject(typeof(T), JsonObject.Parse(data));
+            return GenerateObject(typeof(T), JsonObject.Parse(data)).Result;
         }
 
-        public dynamic GenerateObject(Type type, JsonNode ob)
+        public Task<dynamic> GenerateObject(Type type, JsonNode ob)
         {
             if (Depth < 64)
             {
                 var actualObject = Activator.CreateInstance(type);
 
-                    Depth++;
+                        Depth++;
 
-                var nameToValueMap = GetPropNamesValues(type, ob);
+                return Task.Run(() =>
+                { 
+                    var result = GetPropNamesValues(type, ob);
 
-                    Depth--;
+                        Depth--;
 
-                return ValueMapToObject(nameToValueMap, actualObject, type);         
+                    return ValueMapToObject(result, actualObject, type);
+                });                
             }
             else throw new Exception("Max depth limit exceeded");
         }
@@ -60,15 +63,14 @@ namespace Coppery
 
                     foreach (var item in ob[path].AsArray())
                         values.Add(Convert_Compose(argType, item));
-                    
+
                     keyValueMap.Add(op.Name.ToLower(), values);
 
                     return;
                 }
-                
-                keyValueMap.Add(op.Name.ToLower(), Convert_Compose(op.PropertyType, ob[path]));    
-                     
-                return;   
+
+                keyValueMap.Add(op.Name.ToLower(), Convert_Compose(op.PropertyType, ob[path]));
+                               
             });
 
             return keyValueMap;
@@ -85,9 +87,10 @@ namespace Coppery
                  return GenerateWithCustomPostProcessing(type, ob);
             }
         }
+
         private dynamic GenerateWithCustomPostProcessing(Type type, JsonNode item)
         {
-            var comp_o = GenerateObject(type, item);
+            var comp_o = GenerateObject(type, item).Result;
 
             if (Function != null)
                 comp_o = Function(comp_o, type, this, item);
