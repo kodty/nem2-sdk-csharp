@@ -171,7 +171,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
             SubscribeToChannel(string.Concat("status/", address.Plain));
 
             return _subject.Where(e => Composer.GenerateObject<SocketTopic>( e).Topic == "status/" + address.Plain)         
-                .Select(e => (BroadcastStatus)Composer.GenerateObject(typeof(BroadcastStatus), e).Result);
+                .Select(e => Composer.GenerateObject<BroadcastStatus>(e));
         }
 
         public IObservable<CosignatureSignedTransaction> CosignatureAdded(Address address)
@@ -179,7 +179,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
             SubscribeToChannel(string.Concat("cosignature/", address.Plain));
 
             return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "cosignature")
-                .Select(e => (CosignatureSignedTransaction)Composer.GenerateObject(typeof(CosignatureSignedTransaction),e).Result);
+                .Select(e => Composer.GenerateObject<CosignatureSignedTransaction>(e));
         }
 
         private bool TransactionHasSignerOrReceptor(Transaction transaction, Address address)
