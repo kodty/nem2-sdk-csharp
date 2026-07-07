@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Reflection;
 using System.Text.Json.Nodes;
 
 namespace Coppery
@@ -28,29 +27,27 @@ namespace Coppery
         public Task<dynamic> GenerateObject(Type type, JsonNode ob)
         {
             if (Depth < 64)
-            {
-                var actualObject = Activator.CreateInstance(type);
-
-                        Depth++;
+            {            
+                Depth++;
 
                 return Task.Run(() =>
                 {
-                    var result = GetPropNamesValues(type, ob);
+                    var actualObject = Activator.CreateInstance(type);
 
-                        Depth--;
+                    var result = GetPropNamesValues(actualObject, ob);
 
-                    return ValueMapToObject(result, actualObject);
+                Depth--;
+
+                    return result;
                 });
             }
             else throw new Exception("Max depth limit exceeded");
         }
 
         
-        private Dictionary<string, object> GetPropNamesValues(Type type, JsonNode ob)
-        {
-            Dictionary<string, object> keyValueMap = new Dictionary<string, object>();
-
-            type?.GetProperties().ToList().ForEach(op =>
+        private T GetPropNamesValues<T>(T? actualObject, JsonNode ob)
+        {      
+            actualObject.GetType().GetProperties().ToList().ForEach(op =>
             {               
                 var path = char.ToLower(op.Name[0]) + op.Name.Substring(1);
 
@@ -66,16 +63,15 @@ namespace Coppery
                     foreach (var item in ob[path].AsArray())
                         values.Add(Convert_Compose(argType, item));
 
-                    keyValueMap.Add(op.Name.ToLower(), values);
+                    op.SetValue(actualObject, values);
 
                     return;
                 }
 
-                keyValueMap.Add(op.Name.ToLower(), Convert_Compose(op.PropertyType, ob[path]));
-                               
+                op.SetValue(actualObject, Convert_Compose(op.PropertyType, ob[path]));                              
             });
 
-            return keyValueMap;
+            return actualObject;
         }    
         
         private dynamic Convert_Compose(Type type, JsonNode ob)
@@ -86,34 +82,13 @@ namespace Coppery
             }
             else
             {
-                 return GenerateWithCustomPostProcessing(type, ob);
+                var comp_o = GenerateObject(type, ob).Result;
+
+                if (Function != null)
+                    comp_o = Function(comp_o, type, this, ob);
+
+                return comp_o;
             }
-        }
-
-        private dynamic GenerateWithCustomPostProcessing(Type type, JsonNode item)
-        {
-            var comp_o = GenerateObject(type, item).Result;
-
-            if (Function != null)
-                comp_o = Function(comp_o, type, this, item);
-
-            return comp_o;
-        }
-
-        private dynamic ValueMapToObject(Dictionary<string, object> keyValueMap, object actualObject)
-        {
-            foreach (var prop in keyValueMap)
-            {
-                var actualObjProp = actualObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)?
-                      .First(m =>
-                      {
-                          return m.Name.ToLower() == prop.Key.ToLower();
-                      });
-
-                actualObjProp.SetValue(actualObject, prop.Value);
-            }
-
-            return actualObject;
-        }     
+        }    
     }
 }
