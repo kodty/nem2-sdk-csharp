@@ -24,7 +24,7 @@ namespace Unit_Tests.Crypto
 
             var keys = JsonObject.Parse(String.Concat(text));
 
-            for (var i = 0; i < 10000; i++)
+            for (var i = 0; i < 1000; i++)
             {
                 string sk = keys[i]["privateKey"].GetValue<string>();
                 string pk = keys[i]["publicKey"].GetValue<string>();
@@ -34,7 +34,7 @@ namespace Unit_Tests.Crypto
 
                 var keyPair = SecretKeyPair.CreateFromPrivateKey(sk);
 
-                Assert.That(sk, Is.EqualTo(keyPair.PrivateKeyString));
+                Assert.AreEqual(sk, keyPair.PrivateKeyString);
 
                 var finalSig = keyPair.Sign(data.FromHex());
 

@@ -12,7 +12,8 @@ namespace test.Model.AccountTest
         {
             var acc = Account.CreateFromPrivateKey("575DBB3062267EFF57C970A336EBBC8FBCFE12C5BD3ED7BC11EB0481D7704CED", NetworkType.Types.TEST_NET);
 
-            Assert.AreEqual("2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F", acc.KeyPair.PublicKeyString);             
+            Assert.AreEqual("2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F", acc.KeyPair.PublicKeyString);
+            Assert.AreEqual("575DBB3062267EFF57C970A336EBBC8FBCFE12C5BD3ED7BC11EB0481D7704CED", acc.KeyPair.PrivateKeyString);
         }
 
         [Test] 

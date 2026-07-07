@@ -49,7 +49,7 @@ public static class TransactionExtensions
         {
             Size = transaction.Size + 72,
             VerifiableEntityHeaderReserved = 0,
-            Signature = NaclFast.SignDetached(signingBytes, keyPair.PrivateKey.ToArray())
+            Signature = NaclFast.SignDetached(signingBytes, keyPair.SecretKey.ToArray())
         };
 
         var header = Serialize(typeof(VerifiableEntity), verifiableEntity, false, 72);
