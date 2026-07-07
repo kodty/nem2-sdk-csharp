@@ -1,8 +1,8 @@
 ﻿using Coppery;
-using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Transactions;
 using Org.BouncyCastle.Crypto.Digests;
+using TweetNaclSharp;
 using TweetNaclSharp.Core.Extensions;
 
 public static class TransactionExtensions
@@ -44,16 +44,14 @@ public static class TransactionExtensions
                                     .Concat(
                                        unverifiedTransactionData
                                      ).ToArray();
-       
-        var verifiableEntity = new VerifiableEntity()
+
+        var verifiableEntity = new VerifiableEntity
         {
             Size = transaction.Size + 72,
             VerifiableEntityHeaderReserved = 0,
-            Signature = new byte[64]
+            Signature = NaclFast.SignDetached(signingBytes, keyPair.PrivateKey.ToArray())
         };
 
-        Ed25519.crypto_sign2(verifiableEntity.Signature, signingBytes, keyPair.PrivateKey.Concat(keyPair.PublicKey).ToArray(), 32);
-        
         var header = Serialize(typeof(VerifiableEntity), verifiableEntity, false, 72);
 
         return new SignedTransaction()

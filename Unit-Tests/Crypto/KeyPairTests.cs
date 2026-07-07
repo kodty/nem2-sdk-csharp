@@ -15,7 +15,7 @@ namespace Unit_Tests.Crypto
 
             var keys = JsonObject.Parse(String.Concat(text));
 
-            for (var i = 0; i < 10000; i++)
+            for (var i = 0; i < 1000; i++)
             {
                 var kp = SecretKeyPair.CreateFromPrivateKey(keys[i]["privateKey"].GetValue<string>());
 

@@ -5,7 +5,6 @@ using System.Reactive.Linq;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
 using Unit_Tests.Model.Transactions;
-using io.nem2.sdk.Core.Crypto.Chaos.NaCl;
 using TweetNaclSharp;
 
 namespace Unit_Tests.Crypto
