@@ -21,32 +21,13 @@ namespace Coppery
 
         public T GenerateObject<T>(JsonNode ob)
         {
-            return (T)GenerateObject(typeof(T), ob).Result;
+            return (T)GenerateObject(typeof(T), ob);
         }
-
-        public Task<dynamic> GenerateObject(Type type, JsonNode ob)
-        {
-            if (Depth < 64)
-            {            
-                Depth++;
-
-                return Task.Run(() =>
-                {
-                    var actualObject = Activator.CreateInstance(type);
-
-                    var result = Populate(actualObject, ob);
-
-                Depth--;
-
-                    return result;
-                });
-            }
-            else throw new Exception("Max depth limit exceeded");
-        }
-
         
-        private T Populate<T>(T? actualObject, JsonNode ob)
-        {      
+        public dynamic GenerateObject(Type type, JsonNode ob)
+        {
+            var actualObject = Activator.CreateInstance(type);
+
             actualObject.GetType().GetProperties().ToList().ForEach(op =>
             {               
                 var path = char.ToLower(op.Name[0]) + op.Name.Substring(1);
@@ -67,8 +48,9 @@ namespace Coppery
 
                     return;
                 }
-
-                op.SetValue(actualObject, Convert_Compose(op.PropertyType, ob[path]));                              
+            
+                op.SetValue(actualObject, Convert_Compose(op.PropertyType, ob[path]));
+                                                           
             });
 
             return actualObject;
@@ -82,7 +64,7 @@ namespace Coppery
             }
             else
             {
-                var comp_o = GenerateObject(type, ob).Result;
+                var comp_o = GenerateObject(type, ob);
 
                 if (Function != null)
                     comp_o = Function(comp_o, type, this, ob);

@@ -55,7 +55,7 @@ namespace io.nem2.sdk.src.Model
             {
                 var t_type = GetTransactionType(item.ToString(), true);
                 
-                T.Transaction = composer.GenerateObject(t_type, item["transaction"].AsObject()).Result;
+                T.Transaction = composer.GenerateObject(t_type, item["transaction"].AsObject());
             }
 
             return T;
