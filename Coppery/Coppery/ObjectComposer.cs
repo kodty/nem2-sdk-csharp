@@ -34,7 +34,7 @@ namespace Coppery
                 {
                     var actualObject = Activator.CreateInstance(type);
 
-                    var result = GetPropNamesValues(actualObject, ob);
+                    var result = Populate(actualObject, ob);
 
                 Depth--;
 
@@ -45,7 +45,7 @@ namespace Coppery
         }
 
         
-        private T GetPropNamesValues<T>(T? actualObject, JsonNode ob)
+        private T Populate<T>(T? actualObject, JsonNode ob)
         {      
             actualObject.GetType().GetProperties().ToList().ForEach(op =>
             {               
