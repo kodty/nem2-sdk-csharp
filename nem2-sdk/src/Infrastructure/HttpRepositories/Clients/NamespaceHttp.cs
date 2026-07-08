@@ -22,24 +22,13 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             => HttpGetAsync<MerkleRoot>(["namespaces", namespaceId, "merkle"]);
 
         public IObservable<ExtendedHttpResponseMessege<NamespaceName[]>> GetNamespacesNames(List<string> namespaceIds)
-            => HttpPostAsync<NamespaceName>(["namespaces", "names"], 
-                new StringContent(
-                    JsonSerializer.Serialize(
-                        new Namespace_Ids(){
-                            namespaceIds = namespaceIds
-                        }), 
-                    Encoding.UTF8, 
-                    "application/json")
-                );
+            => HttpPostAsync<NamespaceName>(["namespaces", "names"], new { namespaceIds } );
 
         public IObservable<ExtendedHttpResponseMessege<Account_Names>> GetAccountNames(List<string> addresses)
             => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "account", "names"]),
                 new StringContent(
                     JsonSerializer.Serialize(
-                        new Account_Ids()
-                        {
-                            addresses = addresses
-                        }),
+                        new { addresses }),
                     Encoding.UTF8,
                     "application/json")
                 )).Select(e => FormResponse(ExtendResponse<Account_Names>(e)));
@@ -49,10 +38,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["namespaces", "mosaic", "names"]), 
                 new StringContent(
                     JsonSerializer.Serialize(
-                        new MosaicIds()
-                        {
-                            mosaicIds = mosaicIds
-                        }),
+                        new { mosaicIds }),
                     Encoding.UTF8,
                     "application/json")
                 )).Select(e => FormResponse(ExtendResponse<Mosaic_Names>(e)));

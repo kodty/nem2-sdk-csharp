@@ -41,8 +41,8 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["transactions", "partial", hash])))
                  .Select(FormTransactionResponse);
 
-        public IObservable<ExtendedHttpResponseMessege<ExtendedBroadcastStatus>> GetTransactionStatus(string hash)
-            => HttpGetAsync<ExtendedBroadcastStatus>(["transactionStatus", hash]); 
+        public IObservable<ExtendedHttpResponseMessege<ExtendedBroadcastStatus[]>> GetTransactionStatus(string[] hashes)
+            => HttpPostAsync<ExtendedBroadcastStatus>(["transactionStatus"], new { hashes }); 
 
         public IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> GetConfirmedTransactions(string[] transactionIds)
              => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(["transactions", "confirmed"]), 
@@ -67,20 +67,17 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
                  )).Select(r => { return FormTransactionResponse(r, null); });
         
 
-        public class _Payload
-        {
-            public string payload { get; set; }
-        }
+
 
         public IObservable<TransactionAnnounceResponse> Announce(SignedTransaction signedTransaction)
         {
-            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new _Payload() { payload = signedTransaction.Payload.ToHex() }), Encoding.UTF8, "application/json")))
+            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new { payload = signedTransaction.Payload.ToHex() }), Encoding.UTF8, "application/json")))
                 .Select(i =>  new TransactionAnnounceResponse() { Message = JsonNode.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
         }
 
         public IObservable<TransactionAnnounceResponse> Announce(Payload payload)
         {
-            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new _Payload() { payload = payload.payload.ToHex() }), Encoding.UTF8, "application/json")))
+            return Observable.FromAsync(async ar => await Client.PutAsync(GetUri(["transactions"]), new StringContent(JsonSerializer.Serialize(new { payload = payload.payload.ToHex() }), Encoding.UTF8, "application/json")))
                 .Select(i => new TransactionAnnounceResponse() { Message = JsonNode.Parse(i.Content.ReadAsStringAsync().Result)["message"].ToString() });
         }
 

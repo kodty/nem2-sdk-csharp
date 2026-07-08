@@ -1,8 +1,9 @@
 ﻿using Coppery;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Model;
 using System.Diagnostics;
 using System.Reactive.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
@@ -62,12 +63,20 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(path, queryModel)))
                  .Select(e => FormResponse(ExtendResponse<T>(e)));
 
-        internal IObservable<ExtendedHttpResponseMessege<T[]>> HttpPostAsync<T>(string[] path, HttpContent content)
-            => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), content))
+        internal IObservable<ExtendedHttpResponseMessege<T[]>> HttpPostAsync<T>(string[] path, object content)
+            => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), new StringContent(
+                    JsonSerializer.Serialize(content),
+                    Encoding.UTF8,
+                    "application/json")))
                   .Select( e => FormResponse(ExtendResponse<T[]>(e)));
 
         internal static ExtendedHttpResponseMessege<T> ExtendResponse<T>(HttpResponseMessage msg)
         {
+            if (!msg.IsSuccessStatusCode)
+            {
+                throw new Exception(msg.Content.ReadAsStringAsync().Result);
+            }
+
             return new ExtendedHttpResponseMessege<T>()
             {
                 Response = msg
