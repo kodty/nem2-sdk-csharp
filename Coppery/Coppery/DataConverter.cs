@@ -55,7 +55,7 @@
 
             for (int i = 0; i < 4; i++)
             {
-                p[i] = (byte)(value >> (/*8 - 1 - */i) * 8);
+                p[i] = (byte)(value >> (/*4 - 1 - */i) * 8);
             }
 
             return p;
@@ -67,7 +67,7 @@
 
             for (int i = 0; i < 2; i++)
             {
-                p[i] = (byte)(value >> (/*8 - 1 - */i) * 8);
+                p[i] = (byte)(value >> (/*2 - 1 - */i) * 8);
             }
 
             return p;
