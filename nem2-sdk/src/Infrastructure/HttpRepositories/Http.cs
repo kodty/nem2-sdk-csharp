@@ -70,6 +70,13 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     "application/json")))
                   .Select( e => FormResponse(ExtendResponse<T[]>(e)));
 
+        internal IObservable<ExtendedHttpResponseMessege<T>> HttpPostAsync<T>(Func<HttpResponseMessage, ExtendedHttpResponseMessege<T>> func, string[] path, object content)
+            => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), new StringContent(
+                    JsonSerializer.Serialize(content),
+                    Encoding.UTF8,
+                    "application/json")))
+                  .Select(e => FormResponse(func(e)));
+
         internal static ExtendedHttpResponseMessege<T> ExtendResponse<T>(HttpResponseMessage msg)
         {
             if (!msg.IsSuccessStatusCode)
