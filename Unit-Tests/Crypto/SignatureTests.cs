@@ -6,11 +6,30 @@ using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
 using Unit_Tests.Model.Transactions;
 using TweetNaclSharp;
+using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 
 namespace Unit_Tests.Crypto
 {
     internal class SignatureTests
     {
+
+        [Test, Timeout(20000)]
+        public void TestSignVerify()
+        {
+            var privateKey = "2DA2A0AAE0F37235957B51D15843EDDE348A559692D8FA87B94848459899FC27";
+            var data = "D2488E854DBCDFDB2C9D16C8C0B2FDBC0ABB6BAC991BFE2B14D359A6BC99D66C00FD60D731AE06D0";
+            var sigVectorData = "7AF2F0D9B30DE3B6C40605FDD4EBA93ECE39FA7458B300D538EC8D0ABAC1756DEFC0CA84C8A599954313E58CE36EFBA4C24A82FD6BB8127023A58EFC52A8410A";
+
+            var keyPair = SecretKeyPair.CreateFromPrivateKey(privateKey);
+
+            var result = keyPair.Sign(data.FromHex());
+
+            Assert.AreEqual(sigVectorData, result.ToHex());
+
+            Assert.IsTrue(data == keyPair.SignOpen(sigVectorData.FromHex().Concat(data.FromHex()).ToArray()).ToHex());
+            Assert.IsTrue(keyPair.SignDetachedVerify(data.FromHex(), sigVectorData.FromHex()));
+        }
+
         [Test, Timeout(20000)]
         public async Task TestSignature()
         {

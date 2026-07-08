@@ -68,5 +68,17 @@ namespace io.nem2.sdk.src.Model
 
             return NaclFast.SignDetached(data, SecretKey);
         }
+
+        public bool SignDetachedVerify(byte[] msg, byte[] signature)
+        {
+            return NaclFast.SignDetachedVerify(msg, signature, PublicKey);
+        }
+
+        public byte[] SignOpen(byte[] data)
+        {
+            if (data == null) throw new ArgumentNullException(nameof(data));
+
+            return NaclFast.SignOpen(data, PublicKey);
+        }
     }
 }
