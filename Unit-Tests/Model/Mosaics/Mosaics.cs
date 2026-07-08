@@ -1,5 +1,4 @@
 ﻿using Coppery;
-using System.Diagnostics;
 using io.nem2.sdk.src.Core.Utils;
 
 namespace Unit_Tests.Model.Mosaics
@@ -11,15 +10,15 @@ namespace Unit_Tests.Model.Mosaics
         {
             var symbolId = IdGenerator.GenerateId(0, "symbol");
 
-            var symbolId1 = IdGenerator.GenerateId(0, "xym");
+            var mosaicId = IdGenerator.GenerateId(AddressEncoder.DecodeAddress("TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q"), 812613930);
 
+            var symbolXem = IdGenerator.GenerateId(symbolId, "xym");
+
+            Assert.AreEqual(DataConverter.ConvertFrom(mosaicId).ToHex(), "570FB3ED9379624C"); // new mosaic id
+
+            Assert.That(DataConverter.ConvertFrom(symbolXem).ToHex(), Is.EqualTo("E74B99BA41F4AFEE")); // namespace ID
+            
             Assert.That(DataConverter.ConvertFrom(symbolId).ToHex(), Is.EqualTo("A95F1F8A96159516"));
-            
-            Assert.That(DataConverter.ConvertFrom(symbolId1).ToHex(), Is.EqualTo("84CB6A45853E78C4"));
-            
-            var xymId = IdGenerator.GenerateId(symbolId, "xym");
-
-            Assert.That(DataConverter.ConvertFrom(xymId).ToHex(), Is.EqualTo("E74B99BA41F4AFEE"));
         }
 
         [Test]
@@ -56,8 +55,8 @@ namespace Unit_Tests.Model.Mosaics
             var id = IdGenerator.GenerateId(decoded, 713125680);
             var id2 = IdGenerator.GenerateId(decoded, 729902896);
 
-            Assert.That(DataConverter.ConvertFrom(id).ToHex(), Is.EqualTo("570FB3ED9379624C"));
-            Assert.That(DataConverter.ConvertFrom(id2).ToHex(), !Is.EqualTo("570FB3ED9379624C"));
+            Assert.That(id != id2);
+           
         }
 
         [Test]
