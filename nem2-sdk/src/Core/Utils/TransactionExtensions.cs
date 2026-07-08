@@ -45,23 +45,31 @@ public static class TransactionExtensions
                                        unverifiedTransactionData
                                      ).ToArray();
 
-        var verifiableEntity = new VerifiableEntity
-        {
-            Size = transaction.Size + 72,
-            VerifiableEntityHeaderReserved = 0,
-            Signature = NaclFast.SignDetached(signingBytes, keyPair.SecretKey.ToArray())
-        };
 
-        var header = Serialize(typeof(VerifiableEntity), verifiableEntity, false, 72);
+        var sig = NaclFast.SignDetached(signingBytes, keyPair.SecretKey.ToArray());
 
-        return new SignedTransaction()
+        if (NaclFast.SignDetachedVerify(signingBytes, sig, keyPair.PublicKey))
         {
-            Payload = header.Concat(body).ToArray(),
-            SignedBytes = signingBytes,
-            Signer = keyPair.PublicKeyString,
-            Signature = verifiableEntity.Signature.ToHex(),
-            Hash = HashTransaction(verifiableEntity.Signature, keyPair.PublicKey, genHashBytes, unverifiedTransactionData)
-        };
+            var verifiableEntity = new VerifiableEntity
+            {
+                Size = transaction.Size + 72,
+                VerifiableEntityHeaderReserved = 0,
+                Signature = sig
+            };
+
+            var header = Serialize(typeof(VerifiableEntity), verifiableEntity, false, 72);
+
+            return new SignedTransaction()
+            {
+                Payload = header.Concat(body).ToArray(),
+                SignedBytes = signingBytes,
+                Signer = keyPair.PublicKeyString,
+                Signature = verifiableEntity.Signature.ToHex(),
+                Hash = HashTransaction(verifiableEntity.Signature, keyPair.PublicKey, genHashBytes, unverifiedTransactionData)
+            };
+        }
+        else throw new Exception("signature error");
+        
     }
 
     public static string HashTransaction(byte[] signature, byte[] signer, byte[] genHash, byte[] unverifiedTransactionData)
