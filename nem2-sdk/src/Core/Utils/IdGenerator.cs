@@ -16,7 +16,7 @@ namespace io.nem2.sdk.src.Core.Utils
 
         public static ulong GenerateId(byte[] hexAddress, uint nonce)
         {
-            return ReturnId(hexAddress, DataConverter.ConvertFrom(nonce).Reverse().ToArray());
+            return ReturnId(hexAddress, DataConverter.ConvertFrom(nonce));
         }
 
         
@@ -27,7 +27,7 @@ namespace io.nem2.sdk.src.Core.Utils
             return ReturnId(n, DataConverter.ConvertFrom(parentId).Reverse().ToArray(), true);
         }
 
-        private static ulong ReturnId(byte[] n, byte[] p, bool nsFlag = false)
+        public static ulong ReturnId(byte[] n, byte[] p, bool nsFlag = false)
         {
             var hash = new Sha3Digest(256);
 
