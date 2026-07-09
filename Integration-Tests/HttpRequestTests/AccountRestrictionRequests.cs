@@ -42,9 +42,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Data.Count, Is.GreaterThan(0));
 
-            response.ComposedResponse.ForEach(i =>
+            response.ComposedResponse.Data.ForEach(i =>
             {
 
                 var tx = (AccountOperationRestriction)i.Transaction;
@@ -77,12 +77,12 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.ComposedResponse[0].Meta, !Is.EqualTo(null));
-            Assert.IsTrue(response.ComposedResponse[0].Meta.Hash.IsHex(64));
-            Assert.IsTrue(response.ComposedResponse[0].Id.IsHex(24));
-            Assert.That(response.ComposedResponse.Count, Is.EqualTo(2));
+            Assert.That(response.ComposedResponse.Data[0].Meta, !Is.EqualTo(null));
+            Assert.IsTrue(response.ComposedResponse.Data[0].Meta.Hash.IsHex(64));
+            Assert.IsTrue(response.ComposedResponse.Data[0].Id.IsHex(24));
+            Assert.That(response.ComposedResponse.Data.Count, Is.EqualTo(2));
 
-            var tx1 = (AccountRestriction)response.ComposedResponse[0].Transaction;
+            var tx1 = (AccountRestriction)response.ComposedResponse.Data[0].Transaction;
 
             Assert.IsTrue(tx1.SignerPublicKey.IsHex(64));
             Assert.That(tx1.Version, Is.EqualTo(1));
@@ -90,7 +90,7 @@ namespace Integration_Tests.HttpRequests
             Assert.IsTrue(tx1.RestrictionAdditions[0].IsHex(16));
             Assert.That(tx1.RestrictionDeletions.Count, Is.EqualTo(0));
 
-            var tx2 = (AccountRestriction)response.ComposedResponse[1].Transaction;
+            var tx2 = (AccountRestriction)response.ComposedResponse.Data[1].Transaction;
 
             Assert.IsTrue(tx2.SignerPublicKey.IsHex(64));
          

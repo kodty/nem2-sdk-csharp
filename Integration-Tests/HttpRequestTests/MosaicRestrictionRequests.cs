@@ -66,9 +66,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Data.Count, Is.GreaterThan(0));
 
-            response.ComposedResponse.ForEach(i =>
+            response.ComposedResponse.Data.ForEach(i =>
             {
 
                 var tx = (MosaicAddressRestriction)i.Transaction;

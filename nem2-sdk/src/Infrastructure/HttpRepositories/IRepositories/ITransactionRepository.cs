@@ -7,9 +7,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
     interface ITransactionRepository
     {
         // Get     
-        IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> SearchConfirmedTransactions(QueryModel queryModel);
-        IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> SearchUnconfirmedTransactions(QueryModel queryModel);
-        IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> SearchPartialTransactions(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessege<Datum<TransactionData>>> SearchConfirmedTransactions(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessege<Datum<TransactionData>>> SearchUnconfirmedTransactions(QueryModel queryModel);
+        IObservable<ExtendedHttpResponseMessege<Datum<TransactionData>>> SearchPartialTransactions(QueryModel queryModel);
         IObservable<ExtendedHttpResponseMessege<TransactionData>> GetConfirmedTransaction(string hash);
         IObservable<ExtendedHttpResponseMessege<TransactionData>> GetUnconfirmedTransaction(string hash);
         IObservable<ExtendedHttpResponseMessege<TransactionData>> GetPartialTransaction(string hash);

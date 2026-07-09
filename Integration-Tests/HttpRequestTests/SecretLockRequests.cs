@@ -31,9 +31,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await hashClient.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.Data.Count, Is.GreaterThan(0));
 
-            response.ComposedResponse.ForEach(i =>
+            response.ComposedResponse.Data.ForEach(i =>
             {
                 if (i.Transaction.Type == 16722)
                 {

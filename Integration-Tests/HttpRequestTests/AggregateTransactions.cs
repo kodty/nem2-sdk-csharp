@@ -2,7 +2,6 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using Coppery;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Diagnostics;
 using System.Reactive.Linq;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
@@ -34,9 +33,9 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
-            Assert.That(response.ComposedResponse.Count, Is.GreaterThan(0));
-            Debug.WriteLine(response.ComposedResponse.Count);
-            response.ComposedResponse.ForEach(i =>
+            Assert.That(response.ComposedResponse.Data.Count, Is.GreaterThan(0));
+
+            response.ComposedResponse.Data.ForEach(i =>
             {
                 Assert.That(((Aggregate)i.Transaction).Type, Is.EqualTo(16705));
                 Assert.That(((Aggregate)i.Transaction).TransactionsHash.Length, Is.EqualTo(64));
