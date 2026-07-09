@@ -7,18 +7,6 @@ namespace io.nem2.sdk.src.Model
 {
     public static class TransactionTypes
     {       
-        internal static List<Types> SetTypes(this List<ushort> types)
-        {
-            var txTypes = new List<Types>();   
-
-            foreach(var t in types)
-            {
-                txTypes.Add(t.GetRawValue());
-            }
-
-            return txTypes;
-            
-        }
         public enum Types
         {
             ACCOUNT_KEY_LINK = 0x414C, 
@@ -63,7 +51,7 @@ namespace io.nem2.sdk.src.Model
                 actual.Transaction = composer.GenerateObject(t_type, item["transaction"]);
             }
 
-            return T;
+            return actual;
         }
 
         internal static Type GetTransactionType(JsonNode t, bool embedded = false)
