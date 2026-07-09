@@ -1,6 +1,7 @@
 ﻿using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Security;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using TweetNaclSharp;
@@ -143,9 +144,21 @@ namespace io.nem2.sdk.Core.Crypto
             var p = new[] { new long[16], new long[16], new long[16], new long[16] };
             var q = new[] { new long[16], new long[16], new long[16], new long[16] };
 
-            NaclFast.Unpackneg(q, publicKey); // returning -1 invalid signature
-            NaclFast.Scalarmult(p, q, shortKeyHash);
-            NaclFast.Pack(shared, p);
+            var unpackneg = typeof(NaclFast).GetMethod("Unpackneg", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+            var unpacknegResult = (int)unpackneg.Invoke(null, [ q, publicKey ])!;
+
+            var scalarmult = typeof(NaclFast).GetMethod("Scalarmult", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+            scalarmult.Invoke(null, [ p, q, shortKeyHash ]);
+
+            var packMethod = typeof(NaclFast).GetMethod("Pack", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+            packMethod.Invoke(null, [ shared, p ]);
+
+            //NaclFast.Unpackneg(q, publicKey); // returning -1 invalid signature
+            //NaclFast.Scalarmult(p, q, shortKeyHash);
+            //NaclFast.Pack(shared, p);
 
             // for some reason the most significant bit of the last byte needs to be flipped.
             // doesnt seem to be any corrosponding action in nano/nem.core, so this may be an issue in one of the above 3 functions. i have no idea.
