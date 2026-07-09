@@ -23,6 +23,16 @@ namespace IntegrationTests.Infrastructure.Transactions
         }
 
         [Test, Timeout(30000)]
+        public async Task TestStatus()
+        {
+            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+                   
+            var status = await client.GetTransactionStatus("36EC6AAE357E30BEACABA717061A30B6F7F316907D6CB6DE1D2D0ECFFCBC6F3C");
+
+            Assert.That(status.ComposedResponse.Code == "Success");
+        }
+
+        [Test, Timeout(30000)]
         public async Task TestNewTransactionFunctions()
         {
             var keys = SecretKeyPair.CreateFromPrivateKey("98AA70CA43E5D3B95CD303A57892D0BA953C204A4D937AF4386ED658A8FA555D");
@@ -30,7 +40,7 @@ namespace IntegrationTests.Infrastructure.Transactions
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateTransferTransaction(
                     "TB3LCAYOKFB7S552N7UQIVHZZL6EUXTO2OPBJGY", 
-                    "", 
+                    "hello", 
                     new Tuple<string, ulong>("72C0212E67A08BCE", 100),
                     100,
                     false
@@ -50,14 +60,13 @@ namespace IntegrationTests.Infrastructure.Transactions
                     Debug.WriteLine("listener");
                     Debug.WriteLine("e " + e.Status);           
              });
-            
-           
+                    
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            Debug.WriteLine(st.Payload.ToHex());
+
             var a = await client.Announce(st);
-            Debug.WriteLine(a.Message);
-            var status = await client.GetTransactionStatus(st.Hash);
-           
+
+            var status = await client.GetTransactionStatus([st.Hash]);
+
             var listenerStatus = await listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(transfer.EntityBody.Signer.ToHex(), NetworkType.Types.TEST_NET)).Take(1);
 
             Thread.Sleep(80000);
