@@ -1,7 +1,6 @@
 ﻿using Coppery;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.src.Model
@@ -49,24 +48,30 @@ namespace io.nem2.sdk.src.Model
             TRANSFER = 0x4154
         }
 
-        internal static dynamic ComposeEmbeddedTransaction(dynamic T, Type genType, ObjectComposer composer, JsonNode item)
+        internal static dynamic CustomFunction(dynamic actual, Type genType, ObjectComposer composer, JsonNode item)
         {
-            if (genType.Name == "EmbeddedTransactionData")
+            if(genType.Name == "BaseTransaction" || genType.Name == "EmbeddedBaseTransaction")
             {
-                var t_type = GetTransactionType(item.ToString(), true);
-                
-                T.Transaction = composer.GenerateObject(t_type, item["transaction"].AsObject());
+                var t_type = GetTransactionType(item, embedded: genType.Name == "EmbeddedBaseTransaction");
+
+                actual = composer.GenerateObject(t_type, item);
+            }
+            if (genType.Name == "TransactionData" || genType.Name == "EmbeddedTransactionData")
+            {
+                var t_type = GetTransactionType(item["transaction"], embedded: genType.Name == "EmbeddedTransactionData");
+
+                actual.Transaction = composer.GenerateObject(t_type, item["transaction"]);
             }
 
             return T;
         }
 
-        internal static Type GetTransactionType(string t, bool embedded = false)
+        internal static Type GetTransactionType(JsonNode t, bool embedded = false)
         {
-            var type = (ushort)JsonObject.Parse(t).AsObject()["transaction"]["type"];
+            var type = (ushort)t["type"];
 
             if (type == 16718)
-                type += (ushort)JsonObject.Parse(t).AsObject()["transaction"]["registrationType"];
+                type += (ushort)t["registrationType"];
 
             return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
         }

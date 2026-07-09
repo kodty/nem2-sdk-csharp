@@ -15,9 +15,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         IObservable<ExtendedHttpResponseMessege<TransactionData>> GetPartialTransaction(string hash);
 
         // Post
-        IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> GetConfirmedTransactions(string[] transactionIds);
-        IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> GetUnconfirmedTransactions(string[] transactionIds);
-        IObservable<ExtendedHttpResponseMessege<List<TransactionData>>> GetPartialTransactions(string[] transactionIds);
+        IObservable<ExtendedHttpResponseMessege<TransactionData[]>> GetConfirmedTransactions(string[] transactionIds);
+        IObservable<ExtendedHttpResponseMessege<TransactionData[]>> GetUnconfirmedTransactions(string[] transactionIds);
+        IObservable<ExtendedHttpResponseMessege<TransactionData[]>> GetPartialTransactions(string[] transactionIds);
 
         // Put
         IObservable<TransactionAnnounceResponse> Announce(SignedTransaction payload);

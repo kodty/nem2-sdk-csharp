@@ -38,7 +38,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
 
         public Listener(string domain, int port = 3000) : base(domain, port)
         {
-            base.Composer.Function = TransactionTypes.ComposeEmbeddedTransaction;
+            base.Composer.Function = TransactionTypes.CustomFunction;
 
             ClientSocket = new ClientWebSocket();
 		}
@@ -163,7 +163,7 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
         {
             var t = JsonNode.Parse(data)["data"].ToString();
 
-            return TransactionHttpClient.ComposeTransaction(t);
+            return Composer.GenerateObject(typeof(TransactionData), t);
         }
 
         public IObservable<BroadcastStatus> GetTransactionStatus(Address address)
