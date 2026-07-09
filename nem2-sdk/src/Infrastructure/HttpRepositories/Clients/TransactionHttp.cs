@@ -35,6 +35,9 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
         public IObservable<ExtendedHttpResponseMessege<TransactionData>> GetPartialTransaction(string hash)
             => HttpGetAsync<TransactionData>(["transactions", "partial", hash]);
 
+        public IObservable<ExtendedHttpResponseMessege<ExtendedBroadcastStatus>> GetTransactionStatus(string hash)
+           => HttpGetAsync<ExtendedBroadcastStatus>(["transactionStatus", hash]);
+
         public IObservable<ExtendedHttpResponseMessege<ExtendedBroadcastStatus[]>> GetTransactionStatus(string[] hashes)
             => HttpPostAsync<ExtendedBroadcastStatus>(["transactionStatus"], new { hashes }); 
 
