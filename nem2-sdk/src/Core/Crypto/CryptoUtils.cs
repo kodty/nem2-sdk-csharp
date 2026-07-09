@@ -11,41 +11,6 @@ namespace io.nem2.sdk.Core.Crypto
 {
     public static class CryptoUtils
     {
-        /// <summary>
-        /// Hash an array of bytes using Sha3 512 algorithm.
-        /// </summary>
-        /// <param name="bytes">The bytes.</param>
-        /// <returns>System.Byte[].</returns>
-        public static byte[] Sha3_512(byte[] bytes)
-        {
-            var temp = new byte[64];
-            var digest = new Sha3Digest(512);
-            digest.BlockUpdate(bytes, 0, bytes.Length);
-            digest.DoFinal(temp, 0);
-            return temp;
-        }
-
-        /// <summary>
-        /// Hash an array of bytes using Sha3 256 algorithm.
-        /// </summary>
-        /// <param name="bytes">The bytes.</param>
-        /// <returns>System.Byte[].</returns>
-        public static byte[] Sha3_256(byte[] bytes)
-        {
-            var temp = new byte[32];
-            var digest = new Sha3Digest(256);
-            digest.BlockUpdate(bytes, 0, bytes.Length);
-            digest.DoFinal(temp, 0);
-            return temp;
-        }
-
-        /// <summary>
-        /// Encodes the specified text.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="secretKey">The secret key.</param>
-        /// <param name="publicKey">The public key.</param>
-        /// <returns>System.String.</returns>
         public static string Encode(string text, string secretKey, string publicKey)
         {
             var random = new SecureRandom();
@@ -64,13 +29,6 @@ namespace io.nem2.sdk.Core.Crypto
                 salt);
         }
 
-        /// <summary>
-        /// Decodes the specified text.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="secretKey">The secret key.</param>
-        /// <param name="publicKey">The public key.</param>
-        /// <returns>System.String.</returns>
         public static string Decode(byte[] text, string secretKey, string publicKey)
         {
             return _Decode(
@@ -79,14 +37,6 @@ namespace io.nem2.sdk.Core.Crypto
                 text);
         }
 
-        /// <summary>
-        /// Derive a private key from a password using count iterations of SHA3-256
-        /// </summary>
-        /// <param name="password">The password.</param>
-        /// <param name="count">The count.</param>
-        /// <returns>System.String.</returns>
-        /// <exception cref="ArgumentNullException">password</exception>
-        /// <exception cref="ArgumentOutOfRangeException">count - must be positive</exception>
         internal static string DerivePassSha(byte[] password, int count)
         {
             if (password == null) throw new ArgumentNullException(nameof(password));
@@ -108,15 +58,6 @@ namespace io.nem2.sdk.Core.Crypto
             return hash.ToHex();
         }
 
-        /// <summary>
-        /// Encodes the specified private key.
-        /// </summary>
-        /// <param name="privateKey">The private key.</param>
-        /// <param name="publicKey">The pub key.</param>
-        /// <param name="msg">The MSG.</param>
-        /// <param name="iv">The iv.</param>
-        /// <param name="salt">The salt.</param>
-        /// <returns>System.String.</returns>
         internal static string _Encode(byte[] privateKey, byte[] publicKey, string msg, byte[] iv, byte[] salt)
         {
             var shared = new byte[32];
@@ -178,13 +119,6 @@ namespace io.nem2.sdk.Core.Crypto
             return salt.ToHex() + AesEncryptor(shared, iv, msg);        
         }
 
-        /// <summary>
-        /// Decodes the specified priv key.
-        /// </summary>
-        /// <param name="privateKey">The priv key.</param>
-        /// <param name="publicKey">The pub key.</param>
-        /// <param name="data">The data.</param>
-        /// <returns>System.String.</returns>
         internal static string _Decode(byte[] privateKey, byte[] publicKey, byte[] data)
         {
             var salt = data.SubArray(0, 32).ToArray();
