@@ -22,10 +22,10 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             => HttpPostAsync<NamespaceName>(["namespaces", "names"], new { namespaceIds } );
 
         public IObservable<ExtendedHttpResponseMessege<Account_Names>> GetAccountNames(List<string> addresses)
-             => HttpPostAsync(ExtendResponse<Account_Names>, ["namespaces", "account", "names"], new { addresses } );
+             => HttpPostAsync1<Account_Names>(["namespaces", "account", "names"], new { addresses } );
             
 
         public IObservable<ExtendedHttpResponseMessege<Mosaic_Names>> GetMosaicNames(List<string> mosaicIds)
-            => HttpPostAsync(ExtendResponse<Mosaic_Names>, ["namespaces", "mosaic", "names"], new { mosaicIds });
+            => HttpPostAsync1<Mosaic_Names>(["namespaces", "mosaic", "names"], new { mosaicIds });
     }
 }

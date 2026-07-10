@@ -43,7 +43,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
         internal Uri GetUri(string[] segs, QueryModel queryModel)
         {
-           var uri = new UriBuilder(Host)
+            var uri = new UriBuilder(Host)
             {
                 Port = Port,
                 Path = "/" + String.Join("/", segs),
@@ -54,6 +54,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             return uri.Uri;
         }
+
+        internal IObservable<ExtendedHttpResponseMessege<T[]>> HttpGetAsyncArray<T>(object[] path)
+            => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(path)))
+                 .Select(e => FormResponse(ExtendResponse<T[]>(e)));
 
         internal IObservable<ExtendedHttpResponseMessege<T>> HttpGetAsync<T>(object[] path)
             => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(path)))
@@ -70,12 +74,12 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     "application/json")))
                   .Select( e => FormResponse(ExtendResponse<T[]>(e)));
 
-        internal IObservable<ExtendedHttpResponseMessege<T>> HttpPostAsync<T>(Func<HttpResponseMessage, ExtendedHttpResponseMessege<T>> func, string[] path, object content)
+        internal IObservable<ExtendedHttpResponseMessege<T>> HttpPostAsync1<T>(string[] path, object content)
             => Observable.FromAsync(async ar => await Client.PostAsync(GetUri(path), new StringContent(
                     JsonSerializer.Serialize(content),
                     Encoding.UTF8,
                     "application/json")))
-                  .Select(e => FormResponse(func(e)));
+                  .Select(e => FormResponse(ExtendResponse<T>(e)));
 
         internal static ExtendedHttpResponseMessege<T> ExtendResponse<T>(HttpResponseMessage msg)
         {

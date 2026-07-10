@@ -40,9 +40,9 @@
             {
                 case 144:
                     return Types.MIJIN_TEST;
-                case 142:
-                    return Types.MIJIN;
                 case 96:
+                    return Types.MIJIN;
+                case 152:
                     return Types.TEST_NET;
                 case 104:
                     return Types.MAIN_NET;

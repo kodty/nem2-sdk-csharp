@@ -1,7 +1,6 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.IRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Reactive.Linq;
 
 namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
 {
@@ -16,11 +15,11 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients
             => HttpGetAsync<NodeInfo>(["node", "info"]);
 
         public IObservable<ExtendedHttpResponseMessege<NodePeer[]>> GetNodePeers()
-            => Observable.FromAsync(async ar => await Client.GetAsync(GetUri(["node", "peers"])))
-                    .Select(e => FormResponse(ExtendResponse<NodePeer[]>(e)));  
+            => HttpGetAsyncArray<NodePeer>(["node", "peers"]);
 
         public IObservable<ExtendedHttpResponseMessege<NodeStorage>> GetNodeStorageInfo()
-            => HttpGetAsync<NodeStorage>(["node", "storage"]);
+             => HttpGetAsync<NodeStorage>(["node", "storage"]);
+
 
         public IObservable<ExtendedHttpResponseMessege<NodeTime>> GetNodeTime()
             => HttpGetAsync<NodeTime>(["node", "time"]);
