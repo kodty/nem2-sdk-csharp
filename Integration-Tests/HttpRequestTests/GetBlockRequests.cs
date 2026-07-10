@@ -39,7 +39,7 @@ namespace Integration_Tests.HttpRequests
                 Assert.IsTrue(i.Block.Signature.IsHex(128));
                 Assert.That(i.Block.ProofGamma.Length, Is.EqualTo(64));
                 Assert.That(i.Block.ProofScalar.Length, Is.EqualTo(64));
-                Assert.IsTrue(i.Block.ProofVerificationHash.IsHex(32)); // check why 32
+                Assert.IsTrue(i.Block.ProofVerificationHash.IsHex(32));
                 Assert.That(i.Block.Timestamp, Is.GreaterThanOrEqualTo(0));
                 Assert.That(i.Block.Difficulty, Is.GreaterThanOrEqualTo(1));
                 Assert.IsTrue(i.Block.PreviousBlockHash.IsHex(64));

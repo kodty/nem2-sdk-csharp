@@ -467,12 +467,12 @@ namespace Integration_Tests.HttpRequests
             });
 
             Assert.IsTrue(aggTx1.Transactions[1].Transaction.SignerPublicKey.IsHex(64));
-            Assert.That(aggTx1.Transactions[1].Transaction.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET)); // network shouldnt be twice - check why
+            Assert.That(aggTx1.Transactions[1].Transaction.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(aggTx1.Transactions[1].Transaction.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.TRANSFER));
             Assert.That(aggTx1.Transactions[1].Transaction.Version, Is.EqualTo(1));
 
             Assert.IsTrue(aggTx2.Transactions[0].Transaction.SignerPublicKey.IsHex(64));
-            Assert.That(aggTx2.Transactions[0].Transaction.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET)); // network shouldnt be twice - check why
+            Assert.That(aggTx2.Transactions[0].Transaction.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(aggTx2.Transactions[0].Transaction.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION));
             Assert.That(aggTx2.Transactions[0].Transaction.Version, Is.EqualTo(1));
 
@@ -534,7 +534,7 @@ namespace Integration_Tests.HttpRequests
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
 
             Assert.IsTrue(tx.Transactions[0].Transaction.SignerPublicKey.IsHex(64));
-            Assert.That(tx.Transactions[0].Transaction.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET)); // network shouldnt be twice - check why
+            Assert.That(tx.Transactions[0].Transaction.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
             Assert.That(tx.Transactions[0].Transaction.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION));
             Assert.That(tx.Transactions[0].Transaction.Version, Is.EqualTo(1));
 

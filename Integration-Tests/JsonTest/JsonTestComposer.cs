@@ -33,8 +33,8 @@ namespace Integration_Tests.JsonTest
                       "quantity": 50
                     },
                     "images": [
-                      "https://example.com/products/1001/main.jpg",
-                      "https://example.com/products/1001/side.jpg"
+                      "wwww.testuri.io.com.world",
+                      "wwww.testuri.io.com.world"
                     ],
                     "variants": [
                       {
@@ -90,8 +90,8 @@ namespace Integration_Tests.JsonTest
                       "quantity": 200
                     },
                     "images": [
-                      "https://example.com/products/1002/main.jpg",
-                      "https://example.com/products/1002/back.jpg"
+                      "wwww.testuri.io.com.world",
+                      "wwww.testuri.io.com.world"
                     ],
                     "variants": [
                       {
@@ -147,8 +147,8 @@ namespace Integration_Tests.JsonTest
                       "quantity": 30
                     },
                     "images": [
-                      "https://example.com/products/1003/main.jpg",
-                      "https://example.com/products/1003/side.jpg"
+                      "wwww.testuri.io.com.world",
+                      "wwww.testuri.io.com.world"
                     ],
                     "variants": [
                       {
@@ -198,8 +198,8 @@ namespace Integration_Tests.JsonTest
                       "quantity": 100
                     },
                     "images": [
-                      "https://example.com/products/1004/main.jpg",
-                      "https://example.com/products/1004/side.jpg"
+                      "wwww.testuri.io.com.world",
+                      "wwww.testuri.io.com.world"
                     ],
                     "variants": [
                       {
@@ -255,8 +255,8 @@ namespace Integration_Tests.JsonTest
                       "quantity": 80
                     },
                     "images": [
-                      "https://example.com/products/1005/main.jpg",
-                      "https://example.com/products/1005/back.jpg"
+                      "wwww.testuri.io.com.world",
+                      "wwww.testuri.io.com.world"
                     ],
                     "variants": [
                       {

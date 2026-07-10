@@ -375,8 +375,6 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetTransferTransaction()
         {
-            //2AC16BC578E3A1C7BF731A3040465C320786987E2C782D4FA709C8E5992247AB
-
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetConfirmedTransaction("2AC16BC578E3A1C7BF731A3040465C320786987E2C782D4FA709C8E5992247AB");

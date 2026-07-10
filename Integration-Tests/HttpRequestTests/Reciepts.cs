@@ -60,7 +60,7 @@ namespace Integration_Tests.HttpRequests
             Assert.That(response.ComposedResponse.Data[3].Meta.Timestamp, Is.EqualTo(0));
             Assert.That(response.ComposedResponse.Data[3].Statement.Height, Is.EqualTo(1));
             Assert.IsTrue(response.ComposedResponse.Data[3].Statement.Receipts[0].MosaicId.IsHex(16));
-            Assert.That(response.ComposedResponse.Data[3].Statement.Receipts[0].Type, Is.EqualTo(4942)); // flag
+            Assert.That(response.ComposedResponse.Data[3].Statement.Receipts[0].Type, Is.EqualTo(4942));
             // https://docs.symbol.dev/concepts/receipt.html#recorded-receipts
 
             Assert.That(response.ComposedResponse.Data[3].Statement.Receipts[0].Version, Is.EqualTo(1));
