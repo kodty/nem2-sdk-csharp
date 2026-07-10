@@ -17,7 +17,6 @@ namespace io.nem2.sdk.src.Model.Transactions
             Size += (uint)Cosignatures.Length;
             Size += 4;
 
-            EntityBody.Version = 0x01;
             Type = type.GetValue();
         }
 

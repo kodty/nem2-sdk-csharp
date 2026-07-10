@@ -20,7 +20,7 @@
             AddressAdditions = addressAdditions;
             AddressDeletions = addressDeletions;
 
-            EntityBody.Version = 0x01;
+            
             Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION.GetValue();        
         }
     }

@@ -46,7 +46,7 @@ namespace io.nem2.sdk.src.Model.Transactions
             Reserved_2 = 0;
             Size += 5;
 
-            EntityBody.Version = 0x01;
+            
             Type = TransactionTypes.Types.TRANSFER.GetValue();
         }
 

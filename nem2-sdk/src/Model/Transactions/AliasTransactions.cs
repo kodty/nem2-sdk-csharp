@@ -9,7 +9,7 @@ namespace io.nem2.sdk.src.Model.Transactions
             AliasAction = aliasAction;
             NamespaceId = namespaceId;
 
-            EntityBody.Version = 0x01;
+            
         }
 
         public ulong NamespaceId { get; set; }

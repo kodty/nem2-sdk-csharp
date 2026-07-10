@@ -39,7 +39,7 @@ namespace io.nem2.sdk.src.Model.Transactions.MosaicRestrictions
             PreviousRestrictionValue = previousRestrictionValue.FromHex();
             NewRestrictionValue = newRestrictionValue.FromHex();
 
-            EntityBody.Version = 0x01;
+            
         }
 
         public byte[] MosaicID { get; set; }

@@ -11,8 +11,6 @@ namespace io.nem2.sdk.src.Model.Transactions.KeyLinkTransactions
             LinkedPublicKey = linkedPublicKey.FromHex();
             LinkAction = linkAction;
             Size += 33;
-
-            EntityBody.Version = 0x01;
         }
         public byte[] LinkedPublicKey { get; set; }
         public byte LinkAction { get; set; }

@@ -16,7 +16,7 @@ namespace io.nem2.sdk.src.Model.Transactions.CrossChainTransactions
             TransactionHash = transactionHash.FromHex();
             Size += 56;
 
-            EntityBody.Version = 0x01;
+            
             Type = TransactionTypes.Types.HASH_LOCK.GetValue();
         }
 

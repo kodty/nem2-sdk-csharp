@@ -16,7 +16,7 @@ namespace io.nem2.sdk.src.Model.Transactions.MetadataTransactions
             ValueSize = valueSize;
             Value = value;
 
-            EntityBody.Version = 0x01;
+            
             Type = TransactionTypes.Types.ACCOUNT_METADATA.GetValue();
         }
 

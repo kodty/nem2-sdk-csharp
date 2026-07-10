@@ -17,7 +17,7 @@ namespace io.nem2.sdk.src.Model.Transactions.CrossChainTransactions
                       ? AddressEncoder.DecodeAddress(recipient) 
                       : recipient.FromHex();
 
-            EntityBody.Version = 0x01;
+            
             Type = TransactionTypes.Types.SECRET_LOCK.GetValue();
         }
 

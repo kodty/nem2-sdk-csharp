@@ -13,7 +13,7 @@ namespace io.nem2.sdk.src.Model.Transactions.MetadataTransactions
             ValueSizeDelta = valueSize;
             ValueSize = valueSize;
 
-            EntityBody.Version = 0x01;
+            
             Type = TransactionTypes.Types.NAMESPACE_METADATA.GetValue();
         }
 

@@ -19,7 +19,7 @@ namespace io.nem2.sdk.src.Model.Transactions
             NameSize = (byte)Name.Length;
             Size += 18 +  (uint)Name.Length;
 
-            EntityBody.Version = 0x01;
+            
             Type = TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue();
         }
 

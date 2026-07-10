@@ -15,7 +15,7 @@ namespace io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions
             MosaicId = mosaicId.FromHex();
             Properties = properties.GetFlags();
 
-            EntityBody.Version = 0x01;
+            
             Type = TransactionTypes.Types.MOSAIC_DEFINITION.GetValue();
         }
 

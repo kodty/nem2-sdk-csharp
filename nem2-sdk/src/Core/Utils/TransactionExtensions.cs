@@ -20,13 +20,13 @@ public static class TransactionExtensions
     {
         transaction.EntityBody.Signer = publicKey.FromHex();
 
-        byte[] body = Serialize(transaction.GetType(), transaction, true, transaction.Size - 8);
+        byte[] body = Serialize(transaction.GetType(), transaction, true, transaction.Size);
 
         byte[] reserved = new byte[4];
 
         return new UnsignedTransaction()
         {
-            Payload = DataConverter.ConvertFrom(transaction.Size).Concat(reserved).Concat(body).ToArray()
+            Payload = DataConverter.ConvertFrom(transaction.Size + 4 + 4).Concat(reserved).Concat(body).ToArray()
         };
     }
 
