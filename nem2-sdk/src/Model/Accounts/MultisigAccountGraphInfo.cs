@@ -1,6 +1,6 @@
 ﻿using io.nem2.sdk.src.Model.Accounts;
 
-namespace io.nem2.sdk.src.Model2.Accounts
+namespace io.nem2.sdk.src.Model.Accounts
 {
     public class MultisigAccountGraphInfo
     {
