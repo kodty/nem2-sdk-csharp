@@ -9,6 +9,8 @@ namespace io.nem2.sdk.src.Model.Transactions.MetadataTransactions
         public MosaicMetadataTransaction(string targetAddress, string targetMosaicId, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value, bool embedded) : base(targetAddress,  scopedKey,  valueSizeDelta,  valueSize, value,  embedded)
         {
             TargetMosaicId = targetMosaicId.FromHex();
+
+            Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue();
         }
 
         public byte[] TargetMosaicId { get; set; }

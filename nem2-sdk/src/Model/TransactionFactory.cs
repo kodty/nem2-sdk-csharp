@@ -14,12 +14,6 @@ namespace io.nem2.sdk.src.Model
     {
         internal NetworkType.Types NetworkType { get; set; }
 
-        internal EntityBody DefaultEntityBody { get; set;}
-
-        internal TransactionTypes.Types TransactionType { get; set; }
-
-        internal byte Version { get; set; }
-
         internal ulong DefaultDeadline { get; set; }
 
         internal ulong Fee { get; set; }
@@ -33,28 +27,11 @@ namespace io.nem2.sdk.src.Model
             NetworkType = type;
             Node = node;
             Port = port;
-
-            DefaultEntityBody = new EntityBody()
-            {
-                Signer = null,
-                Entity_body_reserved_1 = 0,
-                Version = 0x01,
-                Network = NetworkType.GetNetworkByte()
-            };
         }
 
-        public TransactionFactory(NetworkType.Types networkType, TransactionTypes.Types transactionType, byte version, ulong deadline, ulong fee, string node, int port)
+        public TransactionFactory(NetworkType.Types networkType, ulong deadline, ulong fee, string node, int port)
         {
-            DefaultEntityBody = new EntityBody()
-            {
-                Signer = null,
-                Entity_body_reserved_1 = 0,
-                Version = 0x01,
-                Network = NetworkType.GetNetworkByte()
-            };
-
             NetworkType = networkType;
-            TransactionType = transactionType;
             Fee = fee;
             DefaultDeadline = deadline;
             Node = node;
@@ -65,8 +42,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new MosaicSupplyChangeTransaction(delta, mosaicId, supplyType, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -76,8 +57,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new NamespaceMetadataTransaction(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -87,8 +72,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new AccountMetadataTransaction(targetAddress, scopedKey, valueSizeDelta, valueSize, value, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -98,8 +87,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new MosaicMetadataTransaction(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -109,8 +102,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new MosaicDefinitionTransaction(mosaicName, namespaceId, mosaicId, properties, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_DEFINITION.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -120,8 +117,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new LockFundsTransaction(mosaic, duration, transactionHash, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.HASH_LOCK.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -131,8 +132,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new SecretLockTransaction(mosaic, duration, secret, hashAlgo, recipient, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.SECRET_LOCK.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -143,8 +148,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new SecretProofTransaction(recipientAddress, secret, hashAlgo, proof, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.SECRET_PROOF.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)           
             };
@@ -154,8 +163,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new RegisterNamespace(duration, parentId, id, type, name, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -165,8 +178,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.VOTING_KEY_LINK.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -176,7 +193,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new KeyLinkTransaction(linkedPublicKey, linkAction, embedded)
             {
-                EntityBody = DefaultEntityBody,
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Type = type.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
@@ -187,8 +209,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new TransferTransaction_V1(address, messege, mosaic, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.TRANSFER.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -198,7 +224,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new AccountRestrictionsTransaction(type, restrictionFlags, additions, deletions, embedded)
             {
-                EntityBody = DefaultEntityBody,
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Type = type.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
@@ -209,8 +240,13 @@ namespace io.nem2.sdk.src.Model
         {
             return new MosaicAddressRestrictionTransaction(targetAddress, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
+
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -220,8 +256,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -231,8 +271,12 @@ namespace io.nem2.sdk.src.Model
         {
             return new AddressAliasTransaction(address, namepaceId, aliasAction, embedded)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.ADDRESS_ALIAS.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -242,19 +286,27 @@ namespace io.nem2.sdk.src.Model
         {
             return new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction, embedded) 
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MOSAIC_ALIAS.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
-        public MultisigAccountModificationTransaction CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions, ulong fee, bool embedded)
+        public MultisigAccountModificationTransaction CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions, ulong fee)
         {
-            return new MultisigAccountModificationTransaction(minApproval, minRemoval, addressAdditions, addressDeletions, embedded)
+            return new MultisigAccountModificationTransaction(minApproval, minRemoval, addressAdditions, addressDeletions)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -262,21 +314,29 @@ namespace io.nem2.sdk.src.Model
 
         public AggregateTransaction CreateAggregateComplete(string txsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, ulong fee, bool embedded)
         {
-            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE, embedded)
+            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
-        public AggregateTransaction CreateAggregateBonded(string txsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, ulong fee, bool embedded)
+        public AggregateTransaction CreateAggregateBonded(string txsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, ulong fee)
         {
-            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED, embedded)
+            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
             {
-                EntityBody = DefaultEntityBody,
-                Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),
+                EntityBody = new EntityBody()
+                {
+                    Signer = null,
+                    Entity_body_reserved_1 = 0,
+                    Network = NetworkType.GetNetworkByte()
+                },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),               
                 Fee = DataConverter.ConvertFrom(fee)
             };

@@ -8,6 +8,8 @@ namespace io.nem2.sdk.src.Model.Transactions
         {
             AliasAction = aliasAction;
             NamespaceId = namespaceId;
+
+            EntityBody.Version = 0x01;
         }
 
         public ulong NamespaceId { get; set; }
@@ -21,7 +23,9 @@ namespace io.nem2.sdk.src.Model.Transactions
         {
             Address = address.IsBase32()
                       ? AddressEncoder.DecodeAddress(address)
-                      : address.FromHex();  
+                      : address.FromHex();
+
+            Type = TransactionTypes.Types.ADDRESS_ALIAS.GetValue();
         }
 
         public byte[] Address { get; set; }      
@@ -32,6 +36,8 @@ namespace io.nem2.sdk.src.Model.Transactions
         public MosaicAliasTransaction(string mosaicId, ulong namespaceId, byte aliasAction, bool embedded) : base(namespaceId, aliasAction, embedded)
         {
             MosaicId = DataConverter.ConvertTo<ulong>(mosaicId.FromHex());
+
+            Type = TransactionTypes.Types.MOSAIC_ALIAS.GetValue();
         }
 
         public ulong MosaicId { get; set; }

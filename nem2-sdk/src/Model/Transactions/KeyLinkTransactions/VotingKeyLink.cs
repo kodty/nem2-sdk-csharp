@@ -11,6 +11,9 @@ namespace io.nem2.sdk.src.Model.Transactions.KeyLinkTransactions
             EndEpoch = endEpoch;
             LinkAction = linkAction;
             Size += 16 + 33;
+
+            EntityBody.Version = 0x01;
+            Type = TransactionTypes.Types.VOTING_KEY_LINK.GetValue();
         }
 
         public byte[] LinkedPublicKey { get; set; }

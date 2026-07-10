@@ -53,9 +53,9 @@
         {
             Embedded = embedded;
 
-            Size += 48;
+            Size += 56 - 16;
             if (!embedded)
-                Size += 8;
+                Size += 16;
         }
 
         public Transaction(TransactionTypes.Types type, bool embedded)
@@ -63,9 +63,9 @@
             Embedded = embedded;
             Type = type.GetValue();
 
-            Size += 48;
+            Size += 56 - 16;
             if (!embedded)
-                Size += 8;
+                Size += 16;
         }
 
         public UnsignedTransaction Embed(string account)

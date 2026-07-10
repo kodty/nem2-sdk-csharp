@@ -15,6 +15,9 @@ namespace io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions
             Delta = delta;
             SupplyType = supplyType.GetValue();
             Size += 17;
+
+            EntityBody.Version = 0x01;
+            Type = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE.GetValue();
         }
 
         public byte[] MosaicId { get; set; }

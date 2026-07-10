@@ -152,6 +152,36 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
                  .Select(e => ReturnSocketTransactionResponse(e));
         }
 
+        /*
+        {
+            "topic": "block",
+            "data": {
+                "block": {
+                    "signature": "491133FB93B7CC54E8779F6CA2C1090C886A089795C2501575369242F33D6B28B809E2FB74C73E46A0E304971675C191783962F9035FFBF0E6F24B660A18950C",
+                    "signerPublicKey": "56FDD71F89193034761E5CBFB571491B1B72A7A6E72C5294493F0EFBFE170CBA",
+                    "version": 1,
+                    "network": 152,
+                    "type": 33091,
+                    "height": "3538061",
+                    "timestamp": "116446812553",
+                    "difficulty": "10025721356315",
+                    "previousBlockHash": "C51A42682D2F996346C07FDA00B2C48A8777D88B736FE1380E6D2FB3829DC77C",
+                    "transactionsHash": "0000000000000000000000000000000000000000000000000000000000000000",
+                    "receiptsHash": "1CBA61DFBC8316FAEFB87D49CC98A69E6C386A9EBA9B5B8FDDEC526D2527FCED",
+                    "stateHash": "BDD8FB8DDAEF036E417DEC3F5BE3603155324D52E85CE8001B36721DE7F93EF0",
+                    "beneficiaryAddress": "9860B7FE54FD99456EF8621397D913D1D3B7CEA97D8A96A6",
+                    "feeMultiplier": 0,
+                    "proofGamma": "365A9A462D3345F89B9AF2C65B8663DBB63DA2D6B7DA1AB670564E52DC74E2DF",
+                    "proofVerificationHash": "B711FFD039C0AD63DB23382EA443F687",
+                    "proofScalar": "60258283DF63C5DC86939995F35D2F1484168FC963A42B4BD2C2B40D1522BE0D"
+                },
+                "meta": {
+                    "hash": "82E7E10FCB0818A1581192EFE9D1544DFF0A91320D52469FB4238072D7B6A96A",
+                    "generationHash": "C8E2736D88935DEC737496B426F7B7C93BF221A46078283E0AB9A968EDBD73F6"
+                }
+            }
+        }
+         */
         private BlockInfo ReturnSocketBlockResponse(string data)
         {
             var input = JsonNode.Parse(JsonNode.Parse(data)["data"].ToString());

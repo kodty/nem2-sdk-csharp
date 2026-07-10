@@ -12,6 +12,9 @@ namespace io.nem2.sdk.src.Model.Transactions.MetadataTransactions
             ScopedMetadataKey = scopedKey.FromHex();
             ValueSizeDelta = valueSize;
             ValueSize = valueSize;
+
+            EntityBody.Version = 0x01;
+            Type = TransactionTypes.Types.NAMESPACE_METADATA.GetValue();
         }
 
         public byte[] TargetAddress { get; set; }

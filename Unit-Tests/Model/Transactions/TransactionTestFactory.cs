@@ -253,9 +253,9 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public MultisigAccountModificationTransaction CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions, bool embedded)
+        public MultisigAccountModificationTransaction CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions)
         {
-            return new MultisigAccountModificationTransaction(minApproval, minRemoval, addressAdditions, addressDeletions, embedded)
+            return new MultisigAccountModificationTransaction(minApproval, minRemoval, addressAdditions, addressDeletions)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION.GetValue(),
@@ -266,7 +266,7 @@ namespace Unit_Tests.Model.Transactions
 
         public AggregateTransaction CreateAggregateComplete(string txsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, bool embedded)
         {
-            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE, embedded)
+            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),
@@ -275,9 +275,9 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public AggregateTransaction CreateAggregateBonded(string txsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, bool embedded)
+        public AggregateTransaction CreateAggregateBonded(string txsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures)
         {
-            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED, embedded)
+            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
             {
                 EntityBody = DefaultEntityBody,
                 Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),

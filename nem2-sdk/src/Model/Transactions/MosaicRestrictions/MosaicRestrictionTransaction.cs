@@ -9,6 +9,7 @@ namespace io.nem2.sdk.src.Model.Transactions.MosaicRestrictions
         public MosaicAddressRestrictionTransaction(string targetAddress, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded) : base(mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
         {
             TargetAddress = targetAddress.IsBase32() ? AddressEncoder.DecodeAddress(targetAddress) : targetAddress.FromHex();
+            Type = TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION.GetValue();
         }
 
         public byte[] TargetAddress { get; set; }
@@ -21,6 +22,7 @@ namespace io.nem2.sdk.src.Model.Transactions.MosaicRestrictions
         public MosaicGlobalRestrictionTransaction(string mosaicID, string referenceMosaicId, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded) : base(mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
         {
             ReferenceMosaicId = referenceMosaicId.FromHex();
+            Type = TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION.GetValue();
         }
 
         public byte[] ReferenceMosaicId { get; set; }
@@ -36,7 +38,8 @@ namespace io.nem2.sdk.src.Model.Transactions.MosaicRestrictions
             RestrictionKey = restrictionKey.FromHex();
             PreviousRestrictionValue = previousRestrictionValue.FromHex();
             NewRestrictionValue = newRestrictionValue.FromHex();
-            
+
+            EntityBody.Version = 0x01;
         }
 
         public byte[] MosaicID { get; set; }

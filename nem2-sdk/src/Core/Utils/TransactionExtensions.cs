@@ -33,7 +33,7 @@ public static class TransactionExtensions
     internal static SignedTransaction PrepareVerified(this Transaction transaction, SecretKeyPair keyPair, string genHash)
     {
         transaction.EntityBody.Signer = keyPair.PublicKey;
-        
+
         var body = Serialize(transaction.GetType(), transaction, false, transaction.Size);
 
         var unverifiedTransactionData = body.SubArray(32 + 4, body.Length - (32 + 4));
@@ -45,14 +45,13 @@ public static class TransactionExtensions
                                        unverifiedTransactionData
                                      ).ToArray();
 
-
         var sig = NaclFast.SignDetached(signingBytes, keyPair.SecretKey.ToArray());
 
         if (NaclFast.SignDetachedVerify(signingBytes, sig, keyPair.PublicKey))
         {
             var verifiableEntity = new VerifiableEntity
             {
-                Size = transaction.Size + 72,
+                Size = (uint)transaction.Size + 72,
                 VerifiableEntityHeaderReserved = 0,
                 Signature = sig
             };
@@ -68,8 +67,7 @@ public static class TransactionExtensions
                 Hash = HashTransaction(verifiableEntity.Signature, keyPair.PublicKey, genHashBytes, unverifiedTransactionData)
             };
         }
-        else throw new Exception("signature error");
-        
+        else throw new Exception("signature error");       
     }
 
     public static string HashTransaction(byte[] signature, byte[] signer, byte[] genHash, byte[] unverifiedTransactionData)

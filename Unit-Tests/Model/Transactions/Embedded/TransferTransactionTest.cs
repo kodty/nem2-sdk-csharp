@@ -61,8 +61,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
                     transfer.Embed(keys.PublicKeyString), 
                     supplyChange.Embed(keys.PublicKeyString)
                 ], 
-                new byte[] { }, 
-                false);
+                new byte[] { });
 
             var aggPayload = aggTx.WrapVerified(keys, HttpSetUp.genHash);
 

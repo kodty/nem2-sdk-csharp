@@ -16,6 +16,9 @@ namespace io.nem2.sdk.src.Model.Transactions.CrossChainTransactions
             Recipient = recipient.IsBase32() 
                       ? AddressEncoder.DecodeAddress(recipient) 
                       : recipient.FromHex();
+
+            EntityBody.Version = 0x01;
+            Type = TransactionTypes.Types.SECRET_LOCK.GetValue();
         }
 
         public Tuple<string, ulong> Mosaic { get; set; }
