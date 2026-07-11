@@ -49,11 +49,9 @@ namespace Coppery
         {
             if (type == typeof(byte))
             {
-                var source = new byte[1] { (byte)ob };
+                _Buffer[_offset] = (byte)ob;
 
-                Buffer.BlockCopy(source, 0, _Buffer, _offset, source.Length);
-
-                _offset += source.Length;
+                _offset += 1;
 
                 return;
             }      
