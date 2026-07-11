@@ -19,15 +19,11 @@ namespace Coppery
 
         private void FilterProperties(object obj, PropertyInfo op, bool embedded)
         {
-            if (IsNativeProperty(op))
-            {
+            if (op.PropertyType.IsPrimitive || op.PropertyType == typeof(byte[]))
                 SerializeProperty(op.GetValue(obj), op.PropertyType);
-            }
-
-            else if (!IsNativeProperty(op))
-            {
+            
+            if (!op.PropertyType.IsPrimitive && op.PropertyType != typeof(byte[]))
                 Serialize(op.PropertyType, op.GetValue(obj), embedded);
-            }
         }
 
         public void Serialize(Type type, object obj, bool embedded)
@@ -37,12 +33,6 @@ namespace Coppery
 
             foreach (var item in type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(e => e.DeclaringType != type.BaseType))
                 FilterProperties(obj, item, embedded);
-        }
-
-        internal bool IsNativeProperty(PropertyInfo op)
-        {
-            if (op.PropertyType.IsPrimitive || op.PropertyType == typeof(byte[])) { return true; }
-            else return false;
         }
 
         private void SerializeProperty(object ob, Type type)
