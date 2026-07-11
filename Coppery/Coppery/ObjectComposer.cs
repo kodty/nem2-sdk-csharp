@@ -19,6 +19,11 @@ namespace Coppery
 
         }
 
+        public T GenerateObject<T>(string ob)
+        {
+            return (T)GenerateObject(typeof(T), JsonNode.Parse(ob));
+        }
+
         public T GenerateObject<T>(JsonNode ob)
         {
             return (T)GenerateObject(typeof(T), ob);

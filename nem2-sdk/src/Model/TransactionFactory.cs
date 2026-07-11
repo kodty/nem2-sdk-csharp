@@ -22,9 +22,9 @@ namespace io.nem2.sdk.src.Model
 
         internal int Port { get; set; }
 
-        public TransactionFactory(NetworkType.Types type, string node, int port)
+        public TransactionFactory(NetworkType.Types networkType, string node, int port)
         {
-            NetworkType = type;
+            NetworkType = networkType;
             Node = node;
             Port = port;
         }
@@ -223,10 +223,12 @@ namespace io.nem2.sdk.src.Model
                 {
                     Signer = null,
                     Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte()
+                    Network = NetworkType.GetNetworkByte(),
+                    Version = 0x01
                 },
+                Type = TransactionTypes.Types.TRANSFER.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee =  DataConverter.ConvertFrom(fee)
+                Fee = DataConverter.ConvertFrom(fee)
             };
         }
 

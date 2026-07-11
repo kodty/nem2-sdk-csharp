@@ -62,13 +62,15 @@ namespace IntegrationTests.Infrastructure.Transactions
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var a = await client.Announce(st);
+            Debug.WriteLine(a.Message);
 
             Thread.Sleep(1000);
             var status = await client.GetTransactionStatus(st.Hash);
 
+            Debug.WriteLine(status.ComposedResponse.Code);
             var listenerStatus = await listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(transfer.EntityBody.Signer.ToHex(), NetworkType.Types.TEST_NET)).Take(1);
 
-            Assert.AreEqual(keys.PublicKeyString, listenerStatus.Transaction.SignerPublicKey);
+            Assert.AreEqual(keys.PublicKeyString, "");
 
         }
     }

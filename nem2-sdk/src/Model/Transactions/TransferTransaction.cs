@@ -45,9 +45,6 @@ namespace io.nem2.sdk.src.Model.Transactions
             Reserved_1 = 0;
             Reserved_2 = 0;
             Size += 5;
-
-            
-            Type = TransactionTypes.Types.TRANSFER.GetValue();
         }
 
         public byte[] Address { get; set; }

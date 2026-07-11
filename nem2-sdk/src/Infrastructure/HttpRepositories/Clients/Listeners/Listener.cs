@@ -28,7 +28,6 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
         public class SocketTopic
         {
             public string Topic { get; set; }
-            public ExtendedBroadcastStatus Data { get; set; }
         }
 
         public class WebsocketUID
@@ -106,8 +105,8 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
         public IObservable<BlockInfo> NewBlock()
         {
             SubscribeToChannel("block");
-
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(JsonNode.Parse(e)).Topic == "block")  
+            
+            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "block")  
                .Select(ReturnSocketBlockResponse);         
         }
 
@@ -200,8 +199,8 @@ namespace io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners
         {
             SubscribeToChannel(string.Concat("status/", address.Plain));
 
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>( e).Topic == "status/" + address.Plain)         
-                .Select(e => Composer.GenerateObject<BroadcastStatus>(e));
+            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "status/" + address.Plain)
+                .Select(e => Composer.GenerateObject<BroadcastStatus>(JsonNode.Parse(e)["data"].ToString()));
         }
 
         public IObservable<CosignatureSignedTransaction> CosignatureAdded(Address address)
