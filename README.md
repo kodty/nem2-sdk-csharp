@@ -8,4 +8,4 @@
 ## Dependencies
 
 - BouncyCastle.Cryptography: [Link](https://www.bouncycastle.org/) [Source](https://github.com/bcgit/bc-csharp)
-- weetNaClSharp.Fast: [Link](https://tweetnacl.cr.yp.to/) [Port source](https://github.com/XeroXP/TweetNaclSharp) 
+- TweetNaClSharp.Fast: [Link](https://tweetnacl.cr.yp.to/) [Port source](https://github.com/XeroXP/TweetNaclSharp) 
