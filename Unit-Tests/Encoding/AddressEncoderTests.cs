@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using io.nem2.sdk.src.Core.Utils;
 using System.Diagnostics;
 
 namespace Unit_Tests.Encoding

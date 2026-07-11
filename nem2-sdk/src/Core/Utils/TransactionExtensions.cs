@@ -5,6 +5,9 @@ using Org.BouncyCastle.Crypto.Digests;
 using TweetNaclSharp;
 using TweetNaclSharp.Core.Extensions;
 
+namespace io.nem2.sdk.src.Core.Utils
+{
+
 public static class TransactionExtensions
 {
     private static byte[] Serialize(Type type, object obj, bool embedded, uint size)
@@ -84,4 +87,6 @@ public static class TransactionExtensions
 
         return hash.ToHex();
     }
+}
+
 }

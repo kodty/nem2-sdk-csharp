@@ -5,37 +5,6 @@
         public static byte[] FromHex(this string hexString) => Convert.FromHexString(hexString); 
 
         public static string ToHex(this byte[] data) => Convert.ToHexString(data);
-        public static byte[] ConvertFrom(this string[] value)
-        {
-            int len = 0;
-
-            foreach (var item in value)
-            {
-                if (item.IsHex()) len += item.Length / 2;
-                if (item.IsBase32()) len += 24;
-            }
-
-            byte[] bitValues = new byte[len];
-
-            int offset = 0;
-
-            foreach (var item in value)
-            {
-                byte[] decoded = new byte[24];
-
-                if (item.IsBase32())
-                    decoded = AddressEncoder.DecodeAddress(item);
-
-                if (item.IsHex())
-                    decoded = item.FromHex();
-
-                Buffer.BlockCopy(decoded, 0, bitValues, offset, decoded.Length);
-
-                offset += decoded.Length;
-            }
-
-            return bitValues;
-        }
 
         public static byte[] ConvertFrom(ulong value)
         {

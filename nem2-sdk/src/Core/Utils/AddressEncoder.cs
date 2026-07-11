@@ -1,4 +1,4 @@
-﻿namespace Coppery
+﻿namespace io.nem2.sdk.src.Core.Utils
 {
     public static class AddressEncoder
     {

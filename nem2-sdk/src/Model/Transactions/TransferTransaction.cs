@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using io.nem2.sdk.src.Core.Utils;
 using io.nem2.sdk.src.Model.Accounts;
 using io.nem2.sdk.src.Model.Articles;
 using io.nem2.sdk.src.Model.Transactions.Messages;

@@ -1,9 +1,6 @@
 ﻿using Coppery;
+using io.nem2.sdk.src.Core.Utils;
 using Org.BouncyCastle.Crypto.Digests;
-using System.Diagnostics;
-using System.Linq;
-using System.Xml.Linq;
-using TweetNaclSharp.Core.Extensions;
 
 namespace Unit_Tests.Crypto
 {

@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using io.nem2.sdk.src.Core.Utils;
 
 namespace io.nem2.sdk.src.Model.Transactions.AccountRestrictions
 {
@@ -31,7 +32,39 @@ namespace io.nem2.sdk.src.Model.Transactions.AccountRestrictions
         public byte[] _RestrictionAdditions{ get; set; }
         public byte[] _RestrictionDeletions{ get; set; }       
 
-        private string[]? RestrictionDeletions { get { return null; } set => _RestrictionDeletions = value.ConvertFrom(); }
-        private string[]? RestrictionAdditions { get { return null; } set => _RestrictionAdditions = value.ConvertFrom(); }     
+        private string[]? RestrictionDeletions { get { return null; } set => _RestrictionDeletions = ConvertFrom(value); }
+        private string[]? RestrictionAdditions { get { return null; } set => _RestrictionAdditions = ConvertFrom(value); }
+
+        private static byte[] ConvertFrom(string[] value)
+        {
+            int len = 0;
+
+            foreach (var item in value)
+            {
+                if (item.IsHex()) len += item.Length / 2;
+                if (item.IsBase32()) len += 24;
+            }
+
+            byte[] bitValues = new byte[len];
+
+            int offset = 0;
+
+            foreach (var item in value)
+            {
+                byte[] decoded = new byte[24];
+
+                if (item.IsBase32())
+                    decoded = AddressEncoder.DecodeAddress(item);
+
+                if (item.IsHex())
+                    decoded = item.FromHex();
+
+                Buffer.BlockCopy(decoded, 0, bitValues, offset, decoded.Length);
+
+                offset += decoded.Length;
+            }
+
+            return bitValues;
+        }
     }
 }
