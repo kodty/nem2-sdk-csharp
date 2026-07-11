@@ -41,10 +41,7 @@ namespace Coppery
 
         internal bool IsNativeProperty(PropertyInfo op)
         {
-            if (op.PropertyType.IsPrimitive
-             || op.PropertyType == typeof(byte[])
-             || op.PropertyType == typeof(Tuple<byte[], ulong>))
-            { return true; }
+            if (op.PropertyType.IsPrimitive || op.PropertyType == typeof(byte[])) { return true; }
             else return false;
         }
 
@@ -57,18 +54,18 @@ namespace Coppery
                 _offset += BlockCopy(ref source, _offset);
 
                 return;
-            }
-            if (type == typeof(uint))
+            }      
+            if (type == typeof(ushort))
             {
-                var source = DataConverter.ConvertFrom((uint)ob);
+                var source = DataConverter.ConvertFrom((ushort)ob);
 
                 _offset += BlockCopy(ref source, _offset);
 
                 return;
             }
-            if (type == typeof(ushort))
+            if (type == typeof(uint))
             {
-                var source = DataConverter.ConvertFrom((ushort)ob);
+                var source = DataConverter.ConvertFrom((uint)ob);
 
                 _offset += BlockCopy(ref source, _offset);
 
@@ -95,18 +92,6 @@ namespace Coppery
                 var source = (byte[])ob;
 
                 _offset += BlockCopy(ref source, _offset);
-
-                return;
-            }
-            if (type == typeof(Tuple<byte[], ulong>))
-            {
-                var source = ((Tuple<byte[], ulong>)ob).Item1;
-
-                _offset += BlockCopy(ref source, _offset);
-
-                var source2 = DataConverter.ConvertFrom(((Tuple<byte[], ulong>)ob).Item2);
-
-                _offset += BlockCopy(ref source2, _offset);
 
                 return;
             }
