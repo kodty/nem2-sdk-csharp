@@ -3,6 +3,7 @@ using Integration_Tests;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
 using io.nem2.sdk.src.Model.Articles;
+using io.nem2.sdk.src.Model.Transactions.Messages;
 
 namespace Unit_Tests.Model.Transactions.Embedded
 {
@@ -40,9 +41,9 @@ namespace Unit_Tests.Model.Transactions.Embedded
             var factory = new TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var transfer = factory.CreateTransferTransaction(
-                    "TBA6LOHEA6A465G2X5MSQF66JBYR254GJDPK7MQ",
-                    "",
-                    new Tuple<string, ulong>("672B0000CE560000", 101),
+                    Address.CreateFromEncoded("TBA6LOHEA6A465G2X5MSQF66JBYR254GJDPK7MQ"),
+                    EmptyMessage.Create(),
+                    Mosaic.CreateFromHexIdentifier("672B0000CE560000", 101),
                     true
                 );
 

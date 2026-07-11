@@ -1,10 +1,12 @@
 ﻿using Coppery;
 using io.nem2.sdk.src.Model;
+using io.nem2.sdk.src.Model.Accounts;
 using io.nem2.sdk.src.Model.Articles;
 using io.nem2.sdk.src.Model.Transactions;
 using io.nem2.sdk.src.Model.Transactions.AccountRestrictions;
 using io.nem2.sdk.src.Model.Transactions.CrossChainTransactions;
 using io.nem2.sdk.src.Model.Transactions.KeyLinkTransactions;
+using io.nem2.sdk.src.Model.Transactions.Messages;
 using io.nem2.sdk.src.Model.Transactions.MetadataTransactions;
 using io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions;
 using io.nem2.sdk.src.Model.Transactions.MosaicRestrictions;
@@ -214,7 +216,7 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public TransferTransaction_V1 CreateTransferTransaction(string address, string messege, Tuple<string, ulong> mosaic, bool embedded)
+        public TransferTransaction_V1 CreateTransferTransaction(Address address, IMessage messege, Mosaic mosaic, bool embedded)
         {
             return new TransferTransaction_V1(address, messege, mosaic, embedded)
             {

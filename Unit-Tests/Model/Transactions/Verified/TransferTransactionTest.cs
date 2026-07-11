@@ -1,7 +1,9 @@
 ﻿using Coppery;
 using Integration_Tests;
 using io.nem2.sdk.src.Model;
-using System.Diagnostics;
+using io.nem2.sdk.src.Model.Accounts;
+using io.nem2.sdk.src.Model.Articles;
+using io.nem2.sdk.src.Model.Transactions.Messages;
 
 namespace Unit_Tests.Model.Transactions.Verified
 {
@@ -14,9 +16,9 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var accountRestriction = new TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateTransferTransaction(
-                    "TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA",
-                    "",
-                    new Tuple<string, ulong>("72C0212E67A08BCE", 101),
+                    Address.CreateFromEncoded("TDMYA6WCKAMY5JL5NCNHEOO7UO2S4FIGUP3R7XA"),
+                    EmptyMessage.Create(),
+                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 101),
                     false
                 );
 

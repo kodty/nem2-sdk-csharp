@@ -4,6 +4,8 @@ using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners;
 using io.nem2.sdk.src.Model;
 using io.nem2.sdk.src.Model.Accounts;
+using io.nem2.sdk.src.Model.Articles;
+using io.nem2.sdk.src.Model.Transactions.Messages;
 using System.Diagnostics;
 using System.Reactive.Linq;
 
@@ -37,9 +39,9 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateTransferTransaction(
-                    "TB3LCAYOKFB7S552N7UQIVHZZL6EUXTO2OPBJGY", 
-                    "hello", 
-                    new Tuple<string, ulong>("72C0212E67A08BCE", 200),
+                    Address.CreateFromEncoded("TB3LCAYOKFB7S552N7UQIVHZZL6EUXTO2OPBJGY"), 
+                    PlainMessage.Create("hello"), 
+                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 200),
                     50,
                     false
                 );

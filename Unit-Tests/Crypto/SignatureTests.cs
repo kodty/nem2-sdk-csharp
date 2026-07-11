@@ -7,6 +7,8 @@ using io.nem2.sdk.src.Model.Accounts;
 using Unit_Tests.Model.Transactions;
 using TweetNaclSharp;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using io.nem2.sdk.src.Model.Transactions.Messages;
+using io.nem2.sdk.src.Model.Articles;
 
 namespace Unit_Tests.Crypto
 {
@@ -40,7 +42,7 @@ namespace Unit_Tests.Crypto
 
             var factory = new TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            var tx = factory.CreateTransferTransaction(address.Plain, "hello", new Tuple<string, ulong>("72C0212E67A08BCE", 1000), false);
+            var tx = factory.CreateTransferTransaction(address, PlainMessage.Create("hello"), Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000), false);
             
             var st = tx.WrapVerified(keyPair, HttpSetUp.genHash);
 

@@ -1,9 +1,11 @@
 ﻿using Coppery;
+using io.nem2.sdk.src.Model.Accounts;
 using io.nem2.sdk.src.Model.Articles;
 using io.nem2.sdk.src.Model.Transactions;
 using io.nem2.sdk.src.Model.Transactions.AccountRestrictions;
 using io.nem2.sdk.src.Model.Transactions.CrossChainTransactions;
 using io.nem2.sdk.src.Model.Transactions.KeyLinkTransactions;
+using io.nem2.sdk.src.Model.Transactions.Messages;
 using io.nem2.sdk.src.Model.Transactions.MetadataTransactions;
 using io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions;
 using io.nem2.sdk.src.Model.Transactions.MosaicRestrictions;
@@ -215,7 +217,7 @@ namespace io.nem2.sdk.src.Model
             };
         }
 
-        public TransferTransaction_V1 CreateTransferTransaction(string address, string messege, Tuple<string, ulong> mosaic, ulong fee, bool embedded)
+        public TransferTransaction_V1 CreateTransferTransaction(Address address, IMessage messege, Mosaic mosaic, ulong fee, bool embedded)
         {
             return new TransferTransaction_V1(address, messege, mosaic, embedded)
             {
@@ -223,8 +225,8 @@ namespace io.nem2.sdk.src.Model
                 {
                     Signer = null,
                     Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
+                    Network = NetworkType.GetNetworkByte()
+                    //Version = 0x01
                 },
                 Type = TransactionTypes.Types.TRANSFER.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
