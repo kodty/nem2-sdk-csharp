@@ -51,7 +51,9 @@ namespace Coppery
             {
                 var source = new byte[1] { (byte)ob };
 
-                _offset += BlockCopy(ref source, _offset);
+                Buffer.BlockCopy(source, 0, _Buffer, _offset, source.Length);
+
+                _offset += source.Length;
 
                 return;
             }      
@@ -59,7 +61,9 @@ namespace Coppery
             {
                 var source = DataConverter.ConvertFrom((ushort)ob);
 
-                _offset += BlockCopy(ref source, _offset);
+                Buffer.BlockCopy(source, 0, _Buffer, _offset, source.Length);
+
+                _offset += source.Length;
 
                 return;
             }
@@ -67,7 +71,9 @@ namespace Coppery
             {
                 var source = DataConverter.ConvertFrom((uint)ob);
 
-                _offset += BlockCopy(ref source, _offset);
+                Buffer.BlockCopy(source, 0, _Buffer, _offset, source.Length);
+
+                _offset += source.Length;
 
                 return;
             }
@@ -75,7 +81,9 @@ namespace Coppery
             {
                 var source = DataConverter.ConvertFrom((ulong)ob);
 
-                _offset += BlockCopy(ref source, _offset);
+                Buffer.BlockCopy(source, 0, _Buffer, _offset, source.Length);
+
+                _offset += source.Length;
 
                 return;
             }
@@ -83,7 +91,9 @@ namespace Coppery
             {
                 var source = new byte[1] { (byte)ob };
 
-                _offset += BlockCopy(ref source, _offset);
+                Buffer.BlockCopy(source, 0, _Buffer, _offset, source.Length);
+
+                _offset += source.Length;
 
                 return;
             }
@@ -91,18 +101,13 @@ namespace Coppery
             {
                 var source = (byte[])ob;
 
-                _offset += BlockCopy(ref source, _offset);
+                Buffer.BlockCopy(source, 0, _Buffer, _offset, source.Length);
+
+                _offset += source.Length;
 
                 return;
             }
             else throw new NotImplementedException("Type " + type.ToString() + "unsupported");
-        }
-
-        public int BlockCopy(ref byte[] src, int offset)
-        {
-            Buffer.BlockCopy(src, 0, _Buffer, offset, src.Length);
-
-            return src.Length;
         }
     }
 }
