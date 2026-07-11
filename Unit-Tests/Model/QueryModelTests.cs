@@ -1,5 +1,6 @@
 ﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
 using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
+using io.nem2.sdk.src.Model;
 
 
 namespace Unit_Tests.Model
@@ -22,7 +23,7 @@ namespace Unit_Tests.Model
                                     new QueryModel(QueryModel.DefineRequest.SearchMosaics),
                                     new QueryModel(QueryModel.DefineRequest.SearchNamespaces),
                                     new QueryModel(QueryModel.DefineRequest.SearchPartialTransactions),
-                                    new QueryModel(QueryModel.DefineRequest.SearchSecretLockTransactions),
+                                    new QueryModel(QueryModel.DefineRequest.SearchSecretLockEntries),
                                     new QueryModel(QueryModel.DefineRequest.SearchTransactionStatements),
                                     new QueryModel(QueryModel.DefineRequest.SearchUnconfirmedTransactions)};
 
@@ -58,7 +59,7 @@ namespace Unit_Tests.Model
             queryModelArray[4].SetParam(QueryModel.DefinedParams.order, QueryModel.Order.Asc);
             queryModelArray[4].SetParam(QueryModel.DefinedParams.orderBy, QueryModel.OrderBy.Id);
             
-            //queryModelArray[5].SetParam(QueryModel.DefinedParams.address, ""); // cant be used with recipient address or signer public key
+            queryModelArray[5].SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.TRANSFER.GetValue()); // cant be used with recipient address or signer public key
             queryModelArray[5].SetParam(QueryModel.DefinedParams.recipientAddress, "68F35B3CA84DB724B948E7A6B2DAB065E2FD4D51139BA3A6"); // api has a bullshit typo that shouldn't be there.
             queryModelArray[5].SetParam(QueryModel.DefinedParams.signerPublicKey, "90E1D2A533D6715235CB49CFBD69EE0A69B8F89C8FD74C02546E5A9E54498F80");
             queryModelArray[5].SetParam(QueryModel.DefinedParams.height, 79760);
@@ -109,7 +110,7 @@ namespace Unit_Tests.Model
             queryModelArray[12].SetParam(QueryModel.DefinedParams.address, "NAQZ4CPADSXKME3DHE2FC5655VNIAJ5C6VF36QA");
             queryModelArray[12].SetParam(QueryModel.DefinedParams.secret, "667D02900CC929ABDF56174E227E876F5E189BD0BDD3DD818F077C51FBC83C1A");
 
-            queryModelArray[13].SetParam(QueryModel.DefinedParams.type, 4942);
+            queryModelArray[13].SetParam(QueryModel.DefinedParams.receiptType, 4942);
             queryModelArray[13].SetParam(QueryModel.DefinedParams.recipientAddress, "NBDTBUD6R32ZYJWDEWLJM4YMOX3OOILHGDUMTSA");
             queryModelArray[13].SetParam(QueryModel.DefinedParams.senderAddress, "NAQZ4CPADSXKME3DHE2FC5655VNIAJ5C6VF36QA");
 
@@ -123,7 +124,7 @@ namespace Unit_Tests.Model
             Assert.That(queryModelArray[2].ReturnPathParams(), Is.EqualTo("address=6808E6B1F56C7EA1409924467213B9CA7EDBD4ED05F0DCD3&pageSize=10&pageNumber=1&order=Asc"));
             Assert.That(queryModelArray[3].ReturnPathParams(), Is.EqualTo("pageSize=10&pageNumber=20&offset=680AB31563DB1818A9725C28&order=Asc&orderBy=Id&mosaicId=6BED913FA20223F8"));
             Assert.That(queryModelArray[4].ReturnPathParams(), Is.EqualTo("signerPublicKey=BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F&beneficiaryAddress=NASYMBOLLK6FSL7GSEMQEAWN7VW55ZSZU25TBOA&pageSize=10&pageNumber=1&order=Asc&orderBy=Id"));
-            Assert.That(queryModelArray[5].ReturnPathParams(), Is.EqualTo("recipientAddress=68F35B3CA84DB724B948E7A6B2DAB065E2FD4D51139BA3A6&signerPublicKey=90E1D2A533D6715235CB49CFBD69EE0A69B8F89C8FD74C02546E5A9E54498F80&height=79760&fromHeight=79760&toHeight=79760&pageNumber=1&pageSize=10"));
+            Assert.That(queryModelArray[5].ReturnPathParams(), Is.EqualTo("type=16724&recipientAddress=68F35B3CA84DB724B948E7A6B2DAB065E2FD4D51139BA3A6&signerPublicKey=90E1D2A533D6715235CB49CFBD69EE0A69B8F89C8FD74C02546E5A9E54498F80&height=79760&fromHeight=79760&toHeight=79760&pageNumber=1&pageSize=10"));
             Assert.That(queryModelArray[6].ReturnPathParams(), Is.EqualTo("address=NASYMBOLLK6FSL7GSEMQEAWN7VW55ZSZU25TBOA&pageSize=10&pageNumber=1&order=Asc")); // see why receipt height at 923
             Assert.That(queryModelArray[7].ReturnPathParams(), Is.EqualTo("sourceAddress=68D59ED4096C5CF366F65E554C7BC0FABEA0E60D4B28FB4A&targetAddress=68D59ED4096C5CF366F65E554C7BC0FABEA0E60D4B28FB4A&scopedMetadataKey=501EA9C5BF005AE1&targetId=0A795B69698C01D6&metadataType=1"));
             Assert.That(queryModelArray[8].ReturnPathParams(), Is.EqualTo("mosaicId=613E6D0FC11F4530&entryType=0&targetAddress=NAT6KCGFXOBBVK2FIFKH2AYHE6G6G6EENK4CJVY&pageSize=1&pageNumber=1&order=Asc"));
@@ -131,7 +132,7 @@ namespace Unit_Tests.Model
             Assert.That(queryModelArray[10].ReturnPathParams(), Is.EqualTo("ownerAddress=NASYMBOLLK6FSL7GSEMQEAWN7VW55ZSZU25TBOA&registrationType=0&level0=A95F1F8A96159516&aliasType=0&pageSize=1&pageNumber=1"));
             Assert.That(queryModelArray[11].ReturnPathParams(), Is.EqualTo("embedded=true&fromHeight=0&toHeight=1&height=0"));
             Assert.That(queryModelArray[12].ReturnPathParams(), Is.EqualTo("address=NAQZ4CPADSXKME3DHE2FC5655VNIAJ5C6VF36QA&secret=667D02900CC929ABDF56174E227E876F5E189BD0BDD3DD818F077C51FBC83C1A"));
-            Assert.That(queryModelArray[13].ReturnPathParams(), Is.EqualTo("type=4942&recipientAddress=NBDTBUD6R32ZYJWDEWLJM4YMOX3OOILHGDUMTSA&senderAddress=NAQZ4CPADSXKME3DHE2FC5655VNIAJ5C6VF36QA"));
+            Assert.That(queryModelArray[13].ReturnPathParams(), Is.EqualTo("receiptType=4942&recipientAddress=NBDTBUD6R32ZYJWDEWLJM4YMOX3OOILHGDUMTSA&senderAddress=NAQZ4CPADSXKME3DHE2FC5655VNIAJ5C6VF36QA"));
             // 14 todo
         }
     }

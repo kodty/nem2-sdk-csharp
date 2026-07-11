@@ -66,7 +66,7 @@ namespace Integration_Tests.HttpRequests
         {
             var nodeClient = new SecretLockHttp(HttpSetUp.Node, HttpSetUp.Port);
 
-            QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockTransactions);
+            QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockEntries);
 
             var response = await nodeClient.SearchSecretLocks(queryModel);
 
@@ -82,7 +82,7 @@ namespace Integration_Tests.HttpRequests
         {
             var nodeClient = new SecretLockHttp(HttpSetUp.Node, HttpSetUp.Port);
 
-            QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockTransactions);
+            QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockEntries);
 
             var response = await nodeClient.GetSecretLock("909C0B561BE914BC765CEF10DA7C3E69E65804F289AB212E491EE8CDFCF9683C");
 
@@ -102,7 +102,7 @@ namespace Integration_Tests.HttpRequests
         {
             var nodeClient = new SecretLockHttp(HttpSetUp.Node, HttpSetUp.Port);
 
-            QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockTransactions);
+            QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockEntries);
 
             var response = await nodeClient.GetSecretLockMerkle("8381CE9DCDDB13FB8095C8E0A29DE893D337443822A1AA9DD515644092BD52DA");
 

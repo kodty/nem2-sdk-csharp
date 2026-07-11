@@ -17,7 +17,7 @@ namespace Integration_Tests.HttpRequests
         {
             var client = new MetadataHttp(HttpSetUp.Node, HttpSetUp.Port);
 
-            var queryModel = new QueryModel();
+            var queryModel = new QueryModel(QueryModel.DefineRequest.SearchMetaDataEntries);
             queryModel.SetParam(QueryModel.DefinedParams.pageNumber, 2);
 
             var response = await client.SearchMetadataEntries(queryModel);
