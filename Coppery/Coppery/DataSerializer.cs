@@ -49,17 +49,16 @@ namespace Coppery
         {
             if (type == typeof(byte))
             {
-                _Buffer[_offset] = (byte)ob;
-
-                _offset += 1;
-
+                _Buffer[_offset++] = (byte)ob;
+                
                 return;
             }      
             if (type == typeof(ushort))
             {
                 var source = DataConverter.ConvertFrom((ushort)ob);
 
-                Buffer.BlockCopy(source, 0, _Buffer, _offset, source.Length);
+                for (var x = 0; x < 2; x++)
+                    _Buffer[_offset + x] = source[x];
 
                 _offset += source.Length;
 
@@ -69,7 +68,8 @@ namespace Coppery
             {
                 var source = DataConverter.ConvertFrom((uint)ob);
 
-                Buffer.BlockCopy(source, 0, _Buffer, _offset, source.Length);
+                for (var x = 0; x < 4; x++)
+                    _Buffer[_offset + x] = source[x];
 
                 _offset += source.Length;
 
@@ -79,19 +79,16 @@ namespace Coppery
             {
                 var source = DataConverter.ConvertFrom((ulong)ob);
 
-                Buffer.BlockCopy(source, 0, _Buffer, _offset, source.Length);
-
+                for(var x = 0; x < 8; x++)
+                    _Buffer[_offset + x] = source[x];
+                
                 _offset += source.Length;
 
                 return;
             }
             if (type == typeof(bool))
             {
-                var source = new byte[1] { (byte)ob };
-
-                Buffer.BlockCopy(source, 0, _Buffer, _offset, source.Length);
-
-                _offset += source.Length;
+                _Buffer[_offset++] = (byte)ob;
 
                 return;
             }
@@ -99,7 +96,8 @@ namespace Coppery
             {
                 var source = (byte[])ob;
 
-                Buffer.BlockCopy(source, 0, _Buffer, _offset, source.Length);
+                for (var x = 0; x < source.Length; x++)
+                    _Buffer[_offset + x] = source[x];
 
                 _offset += source.Length;
 
