@@ -5,7 +5,6 @@ using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions;
-
 using io.nem2.sdk.Utils;
 using System.Net.WebSockets;
 using System.Reactive.Linq;
