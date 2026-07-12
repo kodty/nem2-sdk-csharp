@@ -1,16 +1,10 @@
 ﻿using Coppery;
 using Integration_Tests;
-using io.nem2.sdk.src.Model;
-using io.nem2.sdk.src.Model.Articles;
-using io.nem2.sdk.src.Model.Transactions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using io.nem2.sdk.Model;
+using io.nem2.sdk.Model.Articles;
+using io.nem2.sdk.Model.Transactions;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 using Unit_Tests.Model.Transactions;
-using Unit_Tests.Model.Transactions.Verified;
 
 namespace Unit_Tests.Crypto
 {

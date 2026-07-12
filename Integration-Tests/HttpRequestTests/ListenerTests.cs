@@ -1,5 +1,5 @@
 ﻿using System.Reactive.Linq;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners;
+using io.nem2.sdk.Infrastructure;
 
 namespace Integration_Tests.HttpRequests
 {

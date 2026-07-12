@@ -1,5 +1,5 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Core.Utils;
+using io.nem2.sdk.Utils;
 
 namespace Unit_Tests.Model.Mosaics
 {

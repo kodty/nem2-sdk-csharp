@@ -1,12 +1,9 @@
-﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using Coppery;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Diagnostics;
+﻿using Coppery;
+using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
-using System.Text.RegularExpressions;
-using io.nem2.sdk.src.Model;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Model;
+using io.nem2.sdk.Infrastructure;
+using io.nem2.sdk.Infrastructure.Responses;
 
 namespace Integration_Tests.HttpRequests
 {
@@ -63,7 +60,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task SearchNamespaces()
         {
-            var client = new NamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var queryModel = new QueryModel(QueryModel.DefineRequest.SearchNamespaces);
 
@@ -93,7 +90,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetNamespace()
         {
-            var client = new NamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetNamespace("A95F1F8A96159516");
 
@@ -114,7 +111,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetNamespaceMerkle()
         {
-            var client = new NamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetNamespaceMerkle("A95F1F8A96159516");
 
@@ -126,7 +123,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetNamespaceNames()
         {
-            var client = new NamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetNamespacesNames(new List<string> { "A95F1F8A96159516" });
 
@@ -138,7 +135,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetAccountNames()
         {
-            var client = new NamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetAccountNames(new List<string> { "NBCXLKLGGDWGYC47X42AQADSCMZBV7YHU6BX4UA" });
 
@@ -151,7 +148,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetMosaicNames()
         {
-            var client = new NamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetMosaicNames(new List<string> { "6BED913FA20223F8" });
 

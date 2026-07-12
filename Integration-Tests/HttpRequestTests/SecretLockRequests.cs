@@ -1,9 +1,9 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
-using io.nem2.sdk.src.Model;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Model;
+using io.nem2.sdk.Infrastructure;
+using io.nem2.sdk.Infrastructure.Responses;
 
 namespace Integration_Tests.HttpRequests
 {
@@ -64,7 +64,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task SearchSecretLocks()
         {
-            var nodeClient = new SecretLockHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var nodeClient = new LockHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockEntries);
 
@@ -80,7 +80,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetSecretLock()
         {
-            var nodeClient = new SecretLockHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var nodeClient = new LockHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockEntries);
 
@@ -100,7 +100,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetSecretLockMerkle()
         {
-            var nodeClient = new SecretLockHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var nodeClient = new LockHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             QueryModel queryModel = new QueryModel(QueryModel.DefineRequest.SearchSecretLockEntries);
 

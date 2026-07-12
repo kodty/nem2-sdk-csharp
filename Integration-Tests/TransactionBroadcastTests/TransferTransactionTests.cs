@@ -1,13 +1,13 @@
 ﻿using Coppery;
 using Integration_Tests;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients.Listeners;
-using io.nem2.sdk.src.Model;
-using io.nem2.sdk.src.Model.Accounts;
-using io.nem2.sdk.src.Model.Articles;
-using io.nem2.sdk.src.Model.Transactions.Messages;
+using io.nem2.sdk.Model;
+using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.Model.Articles;
+using io.nem2.sdk.Model.Transactions.Messages;
+using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Diagnostics;
 using System.Reactive.Linq;
+using io.nem2.sdk.Infrastructure;
 
 namespace IntegrationTests.Infrastructure.Transactions
 {

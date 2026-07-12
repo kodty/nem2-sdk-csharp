@@ -1,14 +1,12 @@
 ﻿using Integration_Tests;
 using Coppery;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
 using System.Reactive.Linq;
-using io.nem2.sdk.src.Model;
-using io.nem2.sdk.src.Model.Accounts;
 using Unit_Tests.Model.Transactions;
 using TweetNaclSharp;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.src.Model.Transactions.Messages;
-using io.nem2.sdk.src.Model.Articles;
+using io.nem2.sdk.Model;
+using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.Model.Articles;
+using io.nem2.sdk.Model.Transactions.Messages;
 
 namespace Unit_Tests.Crypto
 {

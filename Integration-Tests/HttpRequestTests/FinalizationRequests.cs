@@ -1,5 +1,5 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
+using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests
@@ -14,7 +14,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetFinalizationProof()
         {
-            var client = new FinalizationHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new BlockchainHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetFinalizationProofByHeight(1);
 
@@ -29,7 +29,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetFinalizationProofByEpoch()
         {
-            var client = new FinalizationHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new BlockchainHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetFinalizationProofByEpoch(10);
 

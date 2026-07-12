@@ -1,5 +1,5 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Core.Utils;
+using io.nem2.sdk.Utils;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace Unit_Tests.Crypto

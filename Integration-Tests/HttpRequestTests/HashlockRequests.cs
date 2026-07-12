@@ -1,7 +1,7 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using io.nem2.sdk.src.Model;
+﻿using io.nem2.sdk.Infrastructure;
+using io.nem2.sdk.Infrastructure.Responses;
+using io.nem2.sdk.Model;
+using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests
@@ -18,7 +18,7 @@ namespace Integration_Tests.HttpRequests
         {
             string hash = "526262DEBE21A5A37CBFAF39907AB1C30D34BDD959148181B7EFCA8E67D4CBBF";
 
-            var client = new HashLockHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new LockHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var result = await client.GetHashLockInfo(hash);
 
@@ -30,7 +30,7 @@ namespace Integration_Tests.HttpRequests
         {
             string hash = "526262DEBE21A5A37CBFAF39907AB1C30D34BDD959148181B7EFCA8E67D4CBBF";
 
-            var client = new HashLockHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new LockHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var result = await client.GetHashLockMerkleInfo(hash);
 

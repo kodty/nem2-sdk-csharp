@@ -8,19 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="src\Export\**" />
-    <EmbeddedResource Remove="src\Export\**" />
-    <None Remove="src\Export\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
     <PackageReference Include="TweetNaclSharp.Fast" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="src\Model\Articles\Distinct\Symbol\" />
+    <Folder Include="Model\Articles\Distinct\Symbol\" />
   </ItemGroup>
 
   <ItemGroup>

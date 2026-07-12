@@ -1,11 +1,9 @@
-﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using Coppery;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
-using System.Diagnostics;
+﻿using Coppery;
+using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
-using io.nem2.sdk.src.Model;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Model;
+using io.nem2.sdk.Infrastructure;
+using io.nem2.sdk.Infrastructure.Responses;
 
 namespace Integration_Tests.HttpRequests
 {
@@ -19,7 +17,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task SearchMosaicRestriction()
         {
-            var client = new MosaicHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var queryModel = new QueryModel(QueryModel.DefineRequest.SearchMosaicRestrictions);
             queryModel.SetParam(QueryModel.DefinedParams.pageNumber, 2);
@@ -38,7 +36,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetMosaicRestriction()
         {
-            var client = new MosaicHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetMosaicRestriction("048113BBAE7C5739F71C474FBD92EB911D4048170FC05EDEF28C4EDF8C665F52");
 
@@ -88,7 +86,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetMosaicRestrictionMerkle()
         {
-            var client = new MosaicHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetMosaicRestrictionMerkle("048113BBAE7C5739F71C474FBD92EB911D4048170FC05EDEF28C4EDF8C665F52");
 

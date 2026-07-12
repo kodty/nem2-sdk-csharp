@@ -1,7 +1,5 @@
 ﻿using Integration_Tests;
-using io.nem2.sdk.src.Model;
-using Newtonsoft.Json;
-using System.Diagnostics;
+using io.nem2.sdk.Model;
 using System.Text.Json.Nodes;
 
 namespace Unit_Tests.Crypto

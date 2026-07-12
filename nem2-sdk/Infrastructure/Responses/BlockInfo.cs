@@ -1,0 +1,86 @@
+﻿namespace io.nem2.sdk.Infrastructure.Responses
+{
+    public class ExtendedBlocksInfoData
+    {
+        public List<ExtendedBlockInfo> Data { get; set; }
+        public Pagination Pagination { get; set; }
+
+    }
+
+    public class ExtendedBlockInfo
+    {
+        public ExtendedBlockInfoMetadata Meta { get; set; }
+
+        public Block Block { get; set; }
+
+        public string Id { get; set; }
+    }
+
+    public class BlockInfo
+    {
+        public BlockInfoMetadata Meta { get; set; }
+
+        public Block Block { get; set; }
+    }
+
+    public class Block
+    {
+        public string Signature { get; set; }
+
+        public string SignerPublicKey { get; set; }
+
+        public int Version { get; set; }
+
+        public byte Network { get; set; }
+
+        public int Type { get; set; }
+     
+        public ulong Height { get; set; }
+   
+        public ulong Timestamp { get; set; }
+
+        public ulong Difficulty { get; set; }
+
+        public string ProofGamma { get; set; }
+
+        public string ProofVerificationHash { get; set; }
+
+        public string ProofScalar { get; set; }
+
+        public string PreviousBlockHash { get; set; }
+
+        public string TransactionsHash { get; set; }
+
+        public string ReceiptsHash { get; set; }
+
+        public string StateHash { get; set; }
+
+        public string BeneficiaryAddress { get; set; }
+
+        public int FeeMultiplier { get; set; }
+    }
+
+    public class BlockInfoMetadata
+    {
+        public string Hash { get; set; }
+
+        public string GenerationHash { get; set; }
+    }
+
+    public class ExtendedBlockInfoMetadata
+    {
+        public string Hash { get; set; }
+
+        public string GenerationHash { get; set; }
+
+        public ulong TotalFee { get; set; }
+
+        public int TotalTransactionsCount { get; set; }
+
+        public List<string> StateHashSubCacheMerkleRoots { get; set; }
+
+        public int TransactionsCount { get; set; }
+
+        public int StatementsCount { get; set; }
+    }
+}

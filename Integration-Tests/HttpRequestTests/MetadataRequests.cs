@@ -1,6 +1,6 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
+using io.nem2.sdk.Infrastructure;
+using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests

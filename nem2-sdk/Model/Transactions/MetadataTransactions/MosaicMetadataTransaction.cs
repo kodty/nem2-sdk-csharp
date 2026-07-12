@@ -1,0 +1,18 @@
+﻿using Coppery;
+
+namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
+{
+    public class MosaicMetadataTransaction : AccountMetadataTransaction
+    {
+        public MosaicMetadataTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
+
+        public MosaicMetadataTransaction(string targetAddress, string targetMosaicId, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value, bool embedded) : base(targetAddress,  scopedKey,  valueSizeDelta,  valueSize, value,  embedded)
+        {
+            TargetMosaicId = targetMosaicId.FromHex();
+
+            Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue();
+        }
+
+        public byte[] TargetMosaicId { get; set; }
+    }
+}

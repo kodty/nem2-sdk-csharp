@@ -1,9 +1,8 @@
-﻿using io.nem2.sdk.Infrastructure.HttpRepositories;
-using Coppery;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
+﻿using Coppery;
+using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
-using io.nem2.sdk.src.Model.Accounts;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
+using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.Infrastructure;
 
 namespace Integration_Tests.HttpRequests
 {
@@ -19,7 +18,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task SearchMosaics()
         {
-            var client = new MosaicHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var queryModel = new QueryModel(QueryModel.DefineRequest.SearchMosaics);
             queryModel.SetParam(QueryModel.DefinedParams.ownerAddress, Address.CreateFromHex("68258605CB5ABC592FE691190202CDFD6DDEE659A6BB30B8").Plain);
@@ -40,7 +39,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task SearchMosaic()
         {
-            var client = new MosaicHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var queryModel = new QueryModel(QueryModel.DefineRequest.SearchMosaics);
             queryModel.SetParam(QueryModel.DefinedParams.ownerAddress, Address.CreateFromHex("68258605CB5ABC592FE691190202CDFD6DDEE659A6BB30B8").Plain);
@@ -61,7 +60,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetMosaics()
         {
-            var client = new MosaicHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetMosaics(new List<string> { "63078E73FBCC2CAC", "6BED913FA20223F8" });
 
@@ -88,7 +87,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetMosaicMerkle()
         {
-            var client = new MosaicHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new MosaicNamespaceHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetMosaicMerkle("6BED913FA20223F8");
 

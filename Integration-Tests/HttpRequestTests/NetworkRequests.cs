@@ -1,5 +1,4 @@
-﻿using io.nem2.sdk.src;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
+﻿using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests
@@ -14,7 +13,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetNetwork()
         {
-            var client = new NetworkHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new NetworkNodeHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetNetwork();
 
@@ -26,7 +25,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetNetworkRentalFees()
         {
-            var client = new NetworkHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new NetworkNodeHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetRentalFees();
 
@@ -38,7 +37,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetNetworkTransactionFees()
         {
-            var client = new NetworkHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new NetworkNodeHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetTransactionFees();
 
@@ -53,7 +52,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetNetworkProperties()
         {
-            var client = new NetworkHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new NetworkNodeHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var response = await client.GetNetworkProperties();
 

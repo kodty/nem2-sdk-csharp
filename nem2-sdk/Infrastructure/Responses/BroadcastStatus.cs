@@ -1,0 +1,16 @@
+﻿namespace io.nem2.sdk.Infrastructure.Responses
+{
+    public class BroadcastStatus
+    {
+        public string Status { get; set; }
+    }
+
+    public class ExtendedBroadcastStatus
+    {
+        public string Group { get; set; }
+        public string Code { get; set; }
+        public string Hash { get; set; }
+        public string Deadline { get; set; }
+        public string Height { get; set; }
+    }
+}

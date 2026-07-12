@@ -1,0 +1,61 @@
+﻿using Coppery;
+using System.Text.RegularExpressions;
+using TweetNaclSharp;
+
+namespace io.nem2.sdk.Model.Transactions
+{
+    public class UnsignedTransaction
+    {
+        public byte[] Payload { get; set; }
+    }
+
+    public class SignedTransaction : UnsignedTransaction
+    {
+        public string Hash { get; set; }
+
+        public string Signer { get; set; }
+
+        public string Signature { get; set; }
+
+        internal byte[] SignedBytes { get; set; }
+
+        public TransactionTypes.Types TransactionType { get; }
+
+        internal SignedTransaction()
+        {
+
+        }
+
+        internal SignedTransaction(string payload, byte[] signedBytes, string hash, string signer, string signature, TransactionTypes.Types transactionType)
+        {
+            if (hash.Length != 64 || !Regex.IsMatch(hash, @"\A\b[0-9a-fA-F]+\b\Z")) throw new ArgumentException("Invalid hash.");
+            TransactionType = transactionType;
+            Payload = payload.FromHex();
+            Hash = hash;
+            Signer = signer;
+            Signature = signature;
+            SignedBytes = signedBytes;
+        }
+
+        public static SignedTransaction Create(byte[] payload, byte[] signedBytes, byte[] hash, byte[] signer, byte[] signature, TransactionTypes.Types transactionType)
+        {
+            if (payload == null) throw new ArgumentNullException(nameof(payload));
+            if (hash == null) throw new ArgumentNullException(nameof(hash));
+            if (hash.Length != 32) throw new ArgumentException("invalid hash length");
+            if (signer == null) throw new ArgumentNullException(nameof(signer));
+            if (signer.Length != 32) throw new ArgumentException("invalid signer length");
+
+            return new SignedTransaction(payload.ToHex(), signedBytes, hash.ToHex(), signer.ToHex(), signature.ToHex(), transactionType);
+        }
+
+        public bool VerifySignature()
+        {
+            return NaclFast.SignDetachedVerify(SignedBytes, Signature.FromHex(), Signer.FromHex());
+        }
+
+        public static bool VerifySignature(byte[] signedBytes, string signature, string signer)
+        {
+            return NaclFast.SignDetachedVerify(signedBytes, signature.FromHex(), signer.FromHex());
+        }    
+    }
+}

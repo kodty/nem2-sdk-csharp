@@ -1,5 +1,5 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Responses;
+﻿using io.nem2.sdk.Infrastructure.Responses;
+using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
 
 namespace Integration_Tests
@@ -14,7 +14,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeHealth()
         {
-            var client = new NodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            var client = new NetworkNodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var response = await client.GetNodeHealth();
             Assert.That(response, Is.Not.Null);
@@ -31,7 +31,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodePeers()
         {
-            var client = new NodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            var client = new NetworkNodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var response = await client.GetNodePeers();
 
@@ -48,7 +48,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeStorage()
         {
-            var client = new NodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            var client = new NetworkNodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var response = await client.GetNodeStorageInfo();
 
@@ -60,7 +60,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeTime()
         {
-            var client = new NodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            var client = new NetworkNodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var response = await client.GetNodeTime();
 
@@ -72,7 +72,7 @@ namespace Integration_Tests
         [Test, Timeout(20000)]
         public async Task GetNodeRESTVersion()
         {
-            var client = new NodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            var client = new NetworkNodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var response = await client.GetNodeRESTVersion();
 

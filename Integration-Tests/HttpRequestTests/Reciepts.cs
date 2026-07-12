@@ -1,7 +1,6 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Infrastructure.HttpRepositories.Clients;
-using System.Diagnostics;
+using io.nem2.sdk.Infrastructure;
+using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
 
 namespace Integration_Tests.HttpRequests
@@ -16,7 +15,7 @@ namespace Integration_Tests.HttpRequests
         [Test]
         public async Task AddressStatements()
         {
-            var client = new BlockReceiptsHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new BlockchainHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.GetRecieptsAddressResolutionStatements);
             qModel.SetParam(QueryModel.DefinedParams.height, 923);
@@ -34,7 +33,7 @@ namespace Integration_Tests.HttpRequests
         [Test]
         public async Task MosaicStatements()
         {
-            var client = new BlockReceiptsHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new BlockchainHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.GetRecieptsAddressResolutionStatements);
 
@@ -51,7 +50,7 @@ namespace Integration_Tests.HttpRequests
         [Test]
         public async Task TransactionStatements()
         {
-            var client = new BlockReceiptsHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new BlockchainHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var qModel = new QueryModel(QueryModel.DefineRequest.SearchTransactionStatements);
 

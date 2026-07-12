@@ -1,15 +1,15 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Model;
-using io.nem2.sdk.src.Model.Accounts;
-using io.nem2.sdk.src.Model.Articles;
-using io.nem2.sdk.src.Model.Transactions;
-using io.nem2.sdk.src.Model.Transactions.AccountRestrictions;
-using io.nem2.sdk.src.Model.Transactions.CrossChainTransactions;
-using io.nem2.sdk.src.Model.Transactions.KeyLinkTransactions;
-using io.nem2.sdk.src.Model.Transactions.Messages;
-using io.nem2.sdk.src.Model.Transactions.MetadataTransactions;
-using io.nem2.sdk.src.Model.Transactions.MosaicPropertiesTransactions;
-using io.nem2.sdk.src.Model.Transactions.MosaicRestrictions;
+using io.nem2.sdk.Model;
+using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.Model.Articles;
+using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.Model.Transactions.AccountRestrictions;
+using io.nem2.sdk.Model.Transactions.CrossChainTransactions;
+using io.nem2.sdk.Model.Transactions.KeyLinkTransactions;
+using io.nem2.sdk.Model.Transactions.Messages;
+using io.nem2.sdk.Model.Transactions.MetadataTransactions;
+using io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions;
+using io.nem2.sdk.Model.Transactions.MosaicRestrictions;
 
 namespace Unit_Tests.Model.Transactions
 {

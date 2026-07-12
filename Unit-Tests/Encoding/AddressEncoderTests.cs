@@ -1,6 +1,5 @@
 ﻿using Coppery;
-using io.nem2.sdk.src.Core.Utils;
-using System.Diagnostics;
+using io.nem2.sdk.Utils;
 
 namespace Unit_Tests.Encoding
 {

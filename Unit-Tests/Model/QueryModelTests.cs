@@ -1,5 +1,5 @@
-﻿using io.nem2.sdk.src.Infrastructure.HttpRepositories;
-using io.nem2.sdk.src.Model;
+﻿using io.nem2.sdk.Infrastructure;
+using io.nem2.sdk.Model;
 
 namespace Unit_Tests.Model
 {
