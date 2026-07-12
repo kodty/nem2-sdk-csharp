@@ -14,7 +14,7 @@ namespace io.nem2.sdk.Model.Transactions
             Size += (uint)Address.Length;
 
             Size += 16;
-            MosaicId = DataConverter.ConvertFrom(mosaic.MosaicId.Id);
+            MosaicId = DataConverter.ConvertFrom(mosaic.MosaicId.Id).Reverse().ToArray();
             MosaicAmount = mosaic.Amount;
             MosaicsCount = 1;
             Size += 1;

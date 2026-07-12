@@ -10,11 +10,11 @@ namespace io.nem2.sdk.Utils
 
 public static class TransactionExtensions
 {
-    private static byte[] Serialize(Type type, object obj, bool embedded, uint size)
+    private static byte[] Serialize(object obj, Type type,  uint size)
     {
         DataSerializer serializer = new DataSerializer(size);
 
-        serializer.Serialize(type, obj, embedded);
+        serializer.Serialize(obj, type);
 
         return serializer.GetBytes();
     }
@@ -23,7 +23,7 @@ public static class TransactionExtensions
     {
         transaction.EntityBody.Signer = publicKey.FromHex();
 
-        byte[] body = Serialize(transaction.GetType(), transaction, true, transaction.Size);
+        byte[] body = Serialize(transaction, transaction.GetType(),  transaction.Size);
 
         byte[] reserved = new byte[4];
 
@@ -37,7 +37,7 @@ public static class TransactionExtensions
     {
         transaction.EntityBody.Signer = keyPair.PublicKey;
 
-        var body = Serialize(transaction.GetType(), transaction, false, transaction.Size);
+        var body = Serialize(transaction, transaction.GetType(), transaction.Size);
 
         var unverifiedTransactionData = body.SubArray(32 + 4, body.Length - (32 + 4));
 
@@ -54,12 +54,12 @@ public static class TransactionExtensions
         {
             var verifiableEntity = new VerifiableEntity
             {
-                Size = (uint)transaction.Size + 72,
+                Size = transaction.Size + 72,
                 VerifiableEntityHeaderReserved = 0,
                 Signature = sig
             };
 
-            var header = Serialize(typeof(VerifiableEntity), verifiableEntity, false, 72);
+            var header = Serialize(verifiableEntity, typeof(VerifiableEntity), 72);
 
             return new SignedTransaction()
             {

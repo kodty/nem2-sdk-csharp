@@ -43,7 +43,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 .CreateTransferTransaction(
                     Address.CreateFromEncoded("TBEAFD6ZBP2J7LTUUWYC2A2ZLXONTWU2ABVCIBA"), 
                     PlainMessage.Create("hello"),
-                    Mosaic.CreateFromIdentifierParts(["symbol", "xym"], 1000000),
+                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
                     1000000,
                     false
                 );

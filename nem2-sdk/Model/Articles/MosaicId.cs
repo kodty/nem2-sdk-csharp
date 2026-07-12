@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Articles
 {
@@ -34,16 +35,16 @@ namespace io.nem2.sdk.Model.Articles
         {
             if (identifierParts.Count() > 3)
                 throw new Exception("too many parts");
-
-            var namespaceName = identifierParts[0];
+            
             MosaicName = identifierParts[1];
+
             FullName = string.Join(':', identifierParts);
 
-            Id = 0;     
-            HexId = "";
+            Id = IdGenerator.GenerateId(IdGenerator.GenerateId(0, identifierParts[0]), identifierParts[1]); //
+          
+            HexId = DataConverter.ConvertFrom(Id).ToHex();
         }
-
-        
+       
         public static MosaicId CreateFromHexMosaicIdentifier(string identifier)
         {
             return new MosaicId(identifier);
