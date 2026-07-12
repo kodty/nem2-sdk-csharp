@@ -225,8 +225,8 @@ namespace io.nem2.sdk.src.Model
                 {
                     Signer = null,
                     Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte()
-                    //Version = 0x01
+                    Network = NetworkType.GetNetworkByte(),
+                    Version = 0x01
                 },
                 Type = TransactionTypes.Types.TRANSFER.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),

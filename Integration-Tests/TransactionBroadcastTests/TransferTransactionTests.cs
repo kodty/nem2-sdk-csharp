@@ -37,12 +37,14 @@ namespace IntegrationTests.Infrastructure.Transactions
         {
             var keys = SecretKeyPair.CreateFromPrivateKey("98AA70CA43E5D3B95CD303A57892D0BA953C204A4D937AF4386ED658A8FA555D");
 
+            var acc = new AccountHttp(HttpSetUp.TestnetNode, HttpSetUp.Port).GetAccount(keys.PublicKeyString).Wait();
+
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateTransferTransaction(
-                    Address.CreateFromEncoded("TB3LCAYOKFB7S552N7UQIVHZZL6EUXTO2OPBJGY"), 
-                    PlainMessage.Create("hello"), 
-                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 200),
-                    50,
+                    Address.CreateFromEncoded("TBEAFD6ZBP2J7LTUUWYC2A2ZLXONTWU2ABVCIBA"), 
+                    PlainMessage.Create("hello"),
+                    Mosaic.CreateFromIdentifierParts(["symbol", "xym"], 1000000),
+                    1000000,
                     false
                 );
 

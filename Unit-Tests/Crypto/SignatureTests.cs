@@ -62,6 +62,23 @@ namespace Unit_Tests.Crypto
            
             Assert.AreEqual(sig.ToHex(), signature);
             Assert.True(NaclFast.SignDetachedVerify(data.FromHex(), signature.FromHex(), pair.PublicKey));
-        }      
+        }
+
+
+        [Test, Timeout(20000)]
+        public async Task VectorSignTest()
+        {
+            string privKey = "ABF4CF55A2B3F742D7543D9CC17F50447B969E6E06F5EA9195D428AB12B7318D";
+            string publicKey = "4DB881D07086498C3626F1F84EF89D7E08E5D8293298400F27CA98C92AB2D271";
+            string signature = "31D272F0662915CAC43AB7D721CAF65D8601F52B2E793EA1533E7BC20E04EA97B74859D9209A7B18DFECFD2C4A42D6957628F5357E3FB8B87CF6A888BAB4280E";
+            string data = "8CE03CD60514233B86789729102EA09E867FC6D964DEA8C2018EF7D0A2E0E24BF7E348E917116690B9";
+
+            var pair = SecretKeyPair.CreateFromPrivateKey(privKey);
+
+            var sig = pair.Sign(data.FromHex());
+
+            Assert.AreEqual(sig.ToHex(), signature);
+            Assert.True(NaclFast.SignDetachedVerify(data.FromHex(), signature.FromHex(), pair.PublicKey));
+        }
     }
 }
