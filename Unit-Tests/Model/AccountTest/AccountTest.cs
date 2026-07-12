@@ -4,7 +4,6 @@ using io.nem2.sdk.src.Model.Accounts;
 
 namespace test.Model.AccountTest
 {
-
     public class AccountTest
     {
         [Test]

@@ -1,5 +1,4 @@
-﻿using Coppery;
-using Org.BouncyCastle.Crypto.Digests;
+﻿using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Security;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -22,8 +21,8 @@ namespace io.nem2.sdk.Core.Crypto
             random.NextBytes(ivData);
 
             return _Encode(
-                secretKey.FromHex(),
-                publicKey.FromHex(),
+                Convert.FromHexString(secretKey),
+                Convert.FromHexString(publicKey),
                 text,
                 ivData,
                 salt);
@@ -32,8 +31,8 @@ namespace io.nem2.sdk.Core.Crypto
         public static string Decode(byte[] text, string secretKey, string publicKey)
         {
             return _Decode(
-                secretKey.FromHex(),
-                publicKey.FromHex(),
+                Convert.FromHexString(secretKey),
+                Convert.FromHexString(publicKey),
                 text);
         }
 
@@ -55,7 +54,7 @@ namespace io.nem2.sdk.Core.Crypto
                 sha3Hasher.DoFinal(hash, 0);
             }
 
-            return hash.ToHex();
+            return Convert.ToHexString(hash);
         }
 
         internal static string _Encode(byte[] privateKey, byte[] publicKey, string msg, byte[] iv, byte[] salt)
@@ -116,7 +115,7 @@ namespace io.nem2.sdk.Core.Crypto
             digestSha3Two.BlockUpdate(shared, 0, 32);
             digestSha3Two.DoFinal(shared, 0);
 
-            return salt.ToHex() + AesEncryptor(shared, iv, msg);        
+            return Convert.ToHexString(salt) + AesEncryptor(shared, iv, msg);        
         }
 
         internal static string _Decode(byte[] privateKey, byte[] publicKey, byte[] data)
@@ -156,7 +155,7 @@ namespace io.nem2.sdk.Core.Crypto
                             swEncrypt.Write(msg);
                         }
 
-                        return iv.ToHex() + msEncrypt.ToArray().ToHex();
+                        return Convert.ToHexString(iv) + Convert.ToHexString(msEncrypt.ToArray());
                     }
                 }
             }
