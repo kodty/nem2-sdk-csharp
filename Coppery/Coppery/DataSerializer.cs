@@ -17,35 +17,35 @@ namespace Coppery
             return _Buffer;
         }
 
-        private void FilterProperties(object obj, PropertyInfo op, bool embedded)
+        public void Serialize(object obj, Type type)
+        {
+            foreach (var item in type.BaseType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                FilterProperties(obj, item);
+
+            foreach (var item in type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(e => e.DeclaringType != type.BaseType))
+                FilterProperties(obj, item);
+        }
+
+        private void FilterProperties(object obj, PropertyInfo op)
         {
             if (op.PropertyType.IsPrimitive || op.PropertyType == typeof(byte[]))
                 SerializeProperty(op.GetValue(obj), op.PropertyType);
             
             if (!op.PropertyType.IsPrimitive && op.PropertyType != typeof(byte[]))
-                Serialize(op.PropertyType, op.GetValue(obj), embedded);
+                Serialize(op.GetValue(obj), op.PropertyType);
         }
-
-        public void Serialize(Type type, object obj, bool embedded)
-        {
-            foreach (var item in type.BaseType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                FilterProperties(obj, item, embedded);
-
-            foreach (var item in type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(e => e.DeclaringType != type.BaseType))
-                FilterProperties(obj, item, embedded);
-        }
-
-        private void SerializeProperty(object ob, Type type)
+    
+        private void SerializeProperty(object value, Type type)
         {
             if (type == typeof(byte))
             {
-                _Buffer[_offset++] = (byte)ob;
+                _Buffer[_offset++] = (byte)value;
                 
                 return;
             }      
             if (type == typeof(ushort))
             {
-                var source = DataConverter.ConvertFrom((ushort)ob);
+                var source = DataConverter.ConvertFrom((ushort)value);
 
                 for (var x = 0; x < 2; x++)
                     _Buffer[_offset + x] = source[x];
@@ -56,7 +56,7 @@ namespace Coppery
             }
             if (type == typeof(uint))
             {
-                var source = DataConverter.ConvertFrom((uint)ob);
+                var source = DataConverter.ConvertFrom((uint)value);
 
                 for (var x = 0; x < 4; x++)
                     _Buffer[_offset + x] = source[x];
@@ -67,7 +67,7 @@ namespace Coppery
             }
             if (type == typeof(ulong))
             {
-                var source = DataConverter.ConvertFrom((ulong)ob);
+                var source = DataConverter.ConvertFrom((ulong)value);
 
                 for(var x = 0; x < 8; x++)
                     _Buffer[_offset + x] = source[x];
@@ -78,13 +78,13 @@ namespace Coppery
             }
             if (type == typeof(bool))
             {
-                _Buffer[_offset++] = (byte)ob;
+                _Buffer[_offset++] = (byte)value;
 
                 return;
             }
             if (type == typeof(byte[]))
             {
-                var source = (byte[])ob;
+                var source = (byte[])value;
 
                 for (var x = 0; x < source.Length; x++)
                     _Buffer[_offset + x] = source[x];
