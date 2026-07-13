@@ -10,12 +10,16 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 
         }
 
-        public LockFundsTransaction(Mosaic mosaic, ulong duration, string transactionHash, bool embedded) : base(embedded)
+        public LockFundsTransaction(string mosaic, ulong duration, string transactionHash, bool embedded) : base(embedded)
         {
-            Mosaic = mosaic.MosaicId.HexId.FromHex();
+            Mosaic = mosaic.FromHex();
+            Size += (uint)Mosaic.Length;
+
             Duration = duration;
+            Size += 8;
+
             TransactionHash = transactionHash.FromHex();
-            Size += 56;
+            Size += 32;
         }
 
         public byte[] Mosaic { get; set; }

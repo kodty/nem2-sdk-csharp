@@ -55,7 +55,7 @@ namespace io.nem2.sdk.Model.Transactions
         {
             Embedded = embedded;
 
-            Size += 56 - 16;
+            Size += 40;
             if (!embedded)
                 Size += 16;
         }
@@ -65,7 +65,7 @@ namespace io.nem2.sdk.Model.Transactions
             Embedded = embedded;
             Type = type.GetValue();
 
-            Size += 56 - 16;
+            Size += 40;
             if (!embedded)
                 Size += 16;
         }

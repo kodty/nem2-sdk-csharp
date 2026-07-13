@@ -117,7 +117,7 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public LockFundsTransaction CreateLockFundsTransaction(Tuple<string, ulong> mosaic, ulong duration, string transactionHash, bool embedded)
+        public LockFundsTransaction CreateLockFundsTransaction(string mosaic, ulong duration, string transactionHash, bool embedded)
         {
             return new LockFundsTransaction(mosaic, duration, transactionHash, embedded)
             {
@@ -128,12 +128,13 @@ namespace Unit_Tests.Model.Transactions
                     Network = NetworkType.GetNetworkByte(),
                     Version = 0x01
                 },
+                Type = TransactionTypes.Types.HASH_LOCK.GetValue(),
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
         }
 
-        public SecretLockTransaction CreateSecretLockTransaction(Tuple<string, ulong> mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded)
+        public SecretLockTransaction CreateSecretLockTransaction(string mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded)
         {
             return new SecretLockTransaction(mosaic, duration, secret, hashAlgo, recipient, embedded)
             {
@@ -144,6 +145,7 @@ namespace Unit_Tests.Model.Transactions
                     Network = NetworkType.GetNetworkByte(),
                     Version = 0x01
                 },
+                Type = TransactionTypes.Types.SECRET_LOCK.GetValue(),
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };

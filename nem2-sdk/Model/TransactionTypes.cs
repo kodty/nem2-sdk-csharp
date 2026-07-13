@@ -77,37 +77,21 @@ namespace io.nem2.sdk.Model
             switch (type)
             {
                 case 0x4154:
-                    return Types.TRANSFER; 
-                case 0x414e:
-                    return Types.NAMESPACE_REGISTRATION;
-                case 0x414d:
-                    return Types.MOSAIC_DEFINITION;
-                case 0x424d:
-                    return Types.MOSAIC_SUPPLY_CHANGE;
-                case 0x434D:
-                    return Types.MOSAIC_SUPPLY_REVOCATION;
-                case 0x4155:
-                    return Types.MULTISIG_ACCOUNT_MODIFICATION;
-                case 0x4141:
-                    return Types.AGGREGATE_COMPLETE;
-                case 0x4241:
-                    return Types.AGGREGATE_BONDED;
+                    return Types.TRANSFER;           
                 case 0x4148:
                     return Types.HASH_LOCK;
-                case 0x4152:
-                    return Types.SECRET_LOCK;
-                case 0x4252:
-                    return Types.SECRET_PROOF;
+                case 0x4241:
+                    return Types.AGGREGATE_BONDED;
+                case 0x4141:
+                    return Types.AGGREGATE_COMPLETE;
+                case 0x4155:
+                    return Types.MULTISIG_ACCOUNT_MODIFICATION;
                 case 0x4150:
                     return Types.ACCOUNT_ADDRESS_RESTRICTION;
                 case 0x4250:
                     return Types.ACCOUNT_MOSAIC_RESTRICTION;
                 case 0x4350:
                     return Types.ACCOUNT_OPERATION_RESTRICTION;
-                case 0x4251:
-                    return Types.MOSAIC_ADDRESS_RESTRICTION;
-                case 0x4151:
-                    return Types.MOSAIC_GLOBAL_RESTRICTION;
                 case 0x414C:
                     return Types.ACCOUNT_KEY_LINK;
                 case 0x424C:
@@ -118,14 +102,30 @@ namespace io.nem2.sdk.Model
                     return Types.VRF_KEY_LINK;
                 case 0x424E:
                     return Types.ADDRESS_ALIAS;
-                case 0x434E:
-                    return Types.MOSAIC_ALIAS;
                 case 0x4144:
                     return Types.ACCOUNT_METADATA;
+                case 0x434E:
+                    return Types.MOSAIC_ALIAS;
                 case 0x4244:
                     return Types.MOSAIC_METADATA;
+                case 0x414e:
+                    return Types.NAMESPACE_REGISTRATION;
                 case 0x4344:
                     return Types.NAMESPACE_METADATA;
+                case 0x414d:
+                    return Types.MOSAIC_DEFINITION;                        
+                case 0x4251:
+                    return Types.MOSAIC_ADDRESS_RESTRICTION;
+                case 0x4151:
+                    return Types.MOSAIC_GLOBAL_RESTRICTION;
+                case 0x424d:
+                    return Types.MOSAIC_SUPPLY_CHANGE;
+                case 0x434D:
+                    return Types.MOSAIC_SUPPLY_REVOCATION;           
+                case 0x4152:
+                    return Types.SECRET_LOCK;
+                case 0x4252:
+                    return Types.SECRET_PROOF;
                 default:
                     throw new ArgumentException("invalid transaction type.");
             }

@@ -25,6 +25,20 @@ namespace io.nem2.sdk.Model.Transactions
             Type = TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue();
         }
 
+        public RegisterNamespace(ulong duration, string parentId, string id, NamespaceTypes.Types type, string name, bool embedded) : base(embedded)
+        {
+            _Duration = duration;
+
+            if (type.GetValue() == 0x01)
+                _ParentId = DataConverter.ConvertTo<ulong>(parentId.FromHex());
+
+            Id = DataConverter.ConvertTo<ulong>(id.FromHex()); ;
+            RegistrationType = type.GetValue();
+            Name = Encoding.UTF8.GetBytes(name);
+            NameSize = (byte)Name.Length;
+            Size += 18 + (uint)Name.Length;
+        }
+
         internal ulong _Duration { get; set; }
 
         public byte[] Duration
@@ -33,12 +47,14 @@ namespace io.nem2.sdk.Model.Transactions
             {
                 if (RegistrationType == 0)
                     return DataConverter.ConvertFrom(_Duration);
-                
-                else if (RegistrationType == 0x1) 
+
+                else if (RegistrationType == 0x1)
                     return new byte[] { };
                 else
                     throw new Exception("invalid registration type");
             }
+
+            set => DataConverter.ConvertFrom(_Duration);
         }
 
         internal ulong _ParentId { get; set; }
