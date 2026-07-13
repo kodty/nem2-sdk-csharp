@@ -2,19 +2,19 @@
 {
     public class Xem : Mosaic
      {
-        public static  int Divisibility = 6;
+        public static int Divisibility = 6;
 
-        public static  ulong InitialSupply = 8999999999;
+        public static ulong InitialSupply = 8999999999;
 
-        public static  bool  IsTransferable = true;
+        public static bool  IsTransferable = true;
 
-        public static  bool IsSupplyMutable = false;
+        public static bool IsSupplyMutable = false;
 
         public static bool IsLevyMutable = false;
 
-        public static  string NamespaceId = "nem";
+        public static string NamespaceId = "nem";
 
-        public static  MosaicId Id = new MosaicId("nem:xem");
+        public static MosaicId Id = new MosaicId("nem:xem");
 
         public Xem(ulong amount) : base(new MosaicId(Id.Id), amount)
         {

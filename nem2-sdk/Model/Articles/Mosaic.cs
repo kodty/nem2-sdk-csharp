@@ -19,7 +19,6 @@
 
         public static Mosaic CreateFromHexIdentifier(string hexId, ulong amount)
         {
-
             return new Mosaic(new MosaicId(hexId), amount);
         }
     }

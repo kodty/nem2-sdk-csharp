@@ -120,7 +120,7 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public LockFundsTransaction CreateLockFundsTransaction(Tuple<string, ulong> mosaic, ulong duration, string transactionHash, ulong fee, bool embedded)
+        public LockFundsTransaction CreateHashLockTransaction(Mosaic mosaic, ulong duration, string transactionHash, ulong fee, bool embedded)
         {
             return new LockFundsTransaction(mosaic, duration, transactionHash, embedded)
             {
@@ -131,12 +131,13 @@ namespace io.nem2.sdk.Model
                     Network = NetworkType.GetNetworkByte(),
                     Version = 0x01
                 },
+                Type = TransactionTypes.Types.HASH_LOCK.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
         }
 
-        public SecretLockTransaction CreateSecretLockTransaction(Tuple<string, ulong> mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, ulong fee, bool embedded)
+        public SecretLockTransaction CreateSecretLockTransaction(Mosaic mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, ulong fee, bool embedded)
         {
             return new SecretLockTransaction(mosaic, duration, secret, hashAlgo, recipient, embedded)
             {

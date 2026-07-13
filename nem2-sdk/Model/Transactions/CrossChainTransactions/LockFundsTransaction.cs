@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using io.nem2.sdk.Model.Articles;
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 {
@@ -9,18 +10,15 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 
         }
 
-        public LockFundsTransaction(Tuple<string, ulong> mosaic, ulong duration, string transactionHash, bool embedded) : base(embedded)
+        public LockFundsTransaction(Mosaic mosaic, ulong duration, string transactionHash, bool embedded) : base(embedded)
         {
-            Mosaic = new Tuple<byte[], ulong>(mosaic.Item1.FromHex(), mosaic.Item2);
+            Mosaic = mosaic.MosaicId.HexId.FromHex();
             Duration = duration;
             TransactionHash = transactionHash.FromHex();
             Size += 56;
-
-            
-            Type = TransactionTypes.Types.HASH_LOCK.GetValue();
         }
 
-        public Tuple<byte[], ulong> Mosaic { get; set; }
+        public byte[] Mosaic { get; set; }
 
         public ulong Duration { get; set; }
 

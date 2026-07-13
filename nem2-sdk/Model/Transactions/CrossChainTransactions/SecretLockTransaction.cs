@@ -1,5 +1,6 @@
 ﻿
 using Coppery;
+using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
@@ -8,7 +9,7 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
     {
         public SecretLockTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 
-        public SecretLockTransaction(Tuple<string, ulong> mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded) : base(embedded)
+        public SecretLockTransaction(Mosaic mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded) : base(embedded)
         {
             Mosaic = mosaic;
             Duration = duration;

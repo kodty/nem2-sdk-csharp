@@ -44,7 +44,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
             var transfer = factory.CreateTransferTransaction(
                     Address.CreateFromEncoded("TBA6LOHEA6A465G2X5MSQF66JBYR254GJDPK7MQ"),
                     EmptyMessage.Create(),
-                    Mosaic.CreateFromHexIdentifier("672B0000CE560000", 101),
+                    Mosaic.CreateFromHexIdentifier("000056CE00002B67", 101),
                     true
                 );
 

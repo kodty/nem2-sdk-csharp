@@ -33,15 +33,13 @@ namespace IntegrationTests.Infrastructure.Transactions
         }
 
         [Test, Timeout(30000)]
-        public async Task TestNewTransactionFunctions()
+        public async Task CreateTransferTransaction()
         {
-            var keys = SecretKeyPair.CreateFromPrivateKey("98AA70CA43E5D3B95CD303A57892D0BA953C204A4D937AF4386ED658A8FA555D");
-
-            var acc = new AccountHttp(HttpSetUp.TestnetNode, HttpSetUp.Port).GetAccount(keys.PublicKeyString).Wait();
+            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateTransferTransaction(
-                    Address.CreateFromEncoded("TBEAFD6ZBP2J7LTUUWYC2A2ZLXONTWU2ABVCIBA"), 
+                    Address.CreateFromEncoded(HttpSetUp.Recipient), 
                     PlainMessage.Create("hello"),
                     Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
                     1000000,
@@ -49,33 +47,89 @@ namespace IntegrationTests.Infrastructure.Transactions
                 );
 
             var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+   
+            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            var bl = listener.NewBlock().Subscribe(e =>
-            {
-                Debug.WriteLine("block");
-                Debug.WriteLine("e " + e.Block.Height);
-            });
+            //var a = await client.Announce(st);
 
-            var s = listener.GetTransactionStatus(Address.CreateFromEncoded("TD4MZ66MVUX6ETNIXNLF6SA7YRTPU6C4X56ZJQA"))
-             .Subscribe(e =>
-             {         
-                    Debug.WriteLine("listener");
-                    Debug.WriteLine("e " + e.Status);           
-             });
-                    
+            var status = await client.GetTransactionStatus(st.Hash);
+
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
+        }
+
+        [Test, Timeout(30000)]
+        public async Task CreateHashLockTransaction()
+        {          
+            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+
+            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+                .CreateHashLockTransaction(
+                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 0),
+                    1440,
+                    "A7D03C0D84B99E6253FF48976084194FBA858B85D37E812790A0CEB65E102402",
+                    1000000,
+                    false    
+                );
+
+            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var a = await client.Announce(st);
-            Debug.WriteLine(a.Message);
 
-            Thread.Sleep(1000);
             var status = await client.GetTransactionStatus(st.Hash);
 
-            Debug.WriteLine(status.ComposedResponse.Code);
-            var listenerStatus = await listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(transfer.EntityBody.Signer.ToHex(), NetworkType.Types.TEST_NET)).Take(1);
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
+        }
 
-            Assert.AreEqual(keys.PublicKeyString, "");
+        [Test, Timeout(30000)]
+        public async Task CreateSecretLockTransaction()
+        {
+            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
+            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+                .CreateSecretLockTransaction(
+                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 0),
+                    1440,
+                    "secret",
+                    HashType.Types.SHA3_512,
+                    HttpSetUp.Recipient,
+                    1000000,
+                    false);
+
+            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+
+            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+
+            var a = await client.Announce(st);
+
+            var status = await client.GetTransactionStatus(st.Hash);
+
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
+        }
+
+        [Test, Timeout(30000)]
+        public async Task CreateMosaicSupplyChangeTransaction()
+        {
+            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+
+            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+                .CreateMosaicSupplyChangeTransaction(
+                    1000000000,
+                    "72C0212E67A08BCE",
+                    MosaicSupplyType.Type.INCREASE,
+                    1000000,
+                    false);
+
+            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+
+            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+
+            var a = await client.Announce(st);
+
+            var status = await client.GetTransactionStatus(st.Hash);
+
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
     }
 }
