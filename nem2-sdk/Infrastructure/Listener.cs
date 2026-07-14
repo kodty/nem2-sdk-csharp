@@ -213,7 +213,7 @@ namespace io.nem2.sdk.Infrastructure
                 .Select(e => Composer.GenerateObject<CosignatureSignedTransaction>(e));
         }
 
-        private bool TransactionHasSignerOrReceptor(Transaction transaction, Address address)
+        private bool TransactionHasSignerOrReceptor(VerifiableTransaction transaction, Address address)
         {
             var isReceptor = false;
 

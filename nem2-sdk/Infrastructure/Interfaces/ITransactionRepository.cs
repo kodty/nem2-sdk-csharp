@@ -1,5 +1,5 @@
 ﻿using io.nem2.sdk.Infrastructure.Responses;
-using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.Model;
 
 namespace io.nem2.sdk.Infrastructure.Interfaces
 {

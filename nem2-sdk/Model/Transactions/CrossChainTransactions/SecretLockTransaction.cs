@@ -6,7 +6,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 {
-    public class SecretLockTransaction : Transaction
+    public class SecretLockTransaction : VerifiableTransaction
     {
         public SecretLockTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 

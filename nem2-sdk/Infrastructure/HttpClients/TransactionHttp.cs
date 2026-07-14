@@ -2,7 +2,6 @@
 using io.nem2.sdk.Infrastructure.Interfaces;
 using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model;
-using io.nem2.sdk.Model.Transactions;
 using System.Reactive.Linq;
 using System.Text;
 using System.Text.Json;

@@ -3,7 +3,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 {
-    public class AccountMetadataTransaction : Transaction
+    public class AccountMetadataTransaction : VerifiableTransaction
     {
         public AccountMetadataTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 

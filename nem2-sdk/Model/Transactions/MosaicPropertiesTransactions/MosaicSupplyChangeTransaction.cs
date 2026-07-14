@@ -6,7 +6,7 @@ using io.nem2.sdk.Model.Transactions;
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {
     
-    public class MosaicSupplyChangeTransaction : Transaction
+    public class MosaicSupplyChangeTransaction : VerifiableTransaction
     {
         public MosaicSupplyChangeTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 

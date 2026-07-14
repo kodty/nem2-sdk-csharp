@@ -3,7 +3,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public class AliasTransaction : Transaction
+    public class AliasTransaction : VerifiableTransaction
     {
         public AliasTransaction(ulong namespaceId, byte aliasAction, bool embedded) : base(embedded)
         {

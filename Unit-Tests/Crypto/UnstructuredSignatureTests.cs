@@ -2,7 +2,6 @@
 using Integration_Tests;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Articles;
-using io.nem2.sdk.Model.Transactions;
 using System.Text.Json.Nodes;
 using Unit_Tests.Model.Transactions;
 

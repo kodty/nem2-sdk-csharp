@@ -4,7 +4,7 @@ using System.Text;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {
-    public class MosaicDefinitionTransaction : Transaction
+    public class MosaicDefinitionTransaction : VerifiableTransaction
     {
         public MosaicDefinitionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 

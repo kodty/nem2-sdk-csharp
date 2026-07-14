@@ -2,7 +2,7 @@
 
 namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
 {
-    public class VotingKeyLinkTransaction : Transaction
+    public class VotingKeyLinkTransaction : VerifiableTransaction
     {
         public VotingKeyLinkTransaction(ulong startEpoch, ulong endEpoch, string linkedPublicKey, byte linkAction, bool embedded) : base (embedded)
         {

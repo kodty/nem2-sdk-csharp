@@ -6,38 +6,54 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public class TransferTransaction_V1 : Transaction
+    public class TransferTransaction_V1 : VerifiableTransaction
     {
-        public TransferTransaction_V1(Address address, IMessage messege, Mosaic mosaic, bool embedded) : base(embedded)
+        [Order(12)]
+        public byte[] Address { get; set; }
+
+        [Order(13)]
+        public ushort MessegeSize { get; set; }
+
+        [Order(14)]
+        public byte MosaicsCount { get; set; }
+
+        [Order(15)]
+        public byte Reserved_1 { get; set; }
+
+        [Order(16)]
+        public uint Reserved_2 { get; set; }
+
+        [Order(17)]
+        public byte[] MosaicId { get; set; }
+
+        [Order(18)]
+        public ulong MosaicAmount { get; set; }
+
+        [Order(19)]
+        public byte[] Message { get; set; }
+
+        public TransferTransaction_V1(Address address, IMessage messege, Mosaic mosaic, bool embedded) : base(TransactionTypes.Types.TRANSFER, embedded)
         {
             Address = AddressEncoder.DecodeAddress(address.Plain);
-            Size += (uint)Address.Length;
-
-            Size += 16;
+            VerifiableEntity.Size += (uint)Address.Length;
+            
             MosaicId = DataConverter.ConvertFrom(mosaic.MosaicId.Id).Reverse().ToArray();
+            VerifiableEntity.Size += 8;
+
             MosaicAmount = mosaic.Amount;
+            VerifiableEntity.Size += 8;
+
             MosaicsCount = 1;
-            Size += 1;
+            VerifiableEntity.Size += 1;
 
             Message = messege.GetPayload();    
-            MessegeSize = messege.GetLength();
-            Size += MessegeSize;
-            Size += 2;
+            MessegeSize = (ushort)Message.Length;
+            VerifiableEntity.Size += MessegeSize;
+            VerifiableEntity.Size += 2;
 
             Reserved_1 = 0;
             Reserved_2 = 0;
-            Size += 5;
-
-            Type = TransactionTypes.Types.TRANSFER.GetValue();
+            VerifiableEntity.Size += 5;
         }
-
-        public byte[] Address { get; set; }
-        public ushort MessegeSize { get; set; }
-        public byte MosaicsCount { get; set; }
-        public byte Reserved_1 { get; set; }
-        public uint Reserved_2 { get; set; }
-        public byte[] MosaicId { get; set; }
-        public ulong MosaicAmount { get; set; }
-        public byte[] Message { get; set; }
     }
 }

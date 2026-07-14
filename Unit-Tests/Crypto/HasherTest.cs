@@ -1,6 +1,6 @@
 ﻿using Coppery;
-using io.nem2.sdk.Utils;
 using Org.BouncyCastle.Crypto.Digests;
+using io.nem2.sdk.Model.Transactions;
 
 namespace Unit_Tests.Crypto
 {
@@ -64,7 +64,7 @@ namespace Unit_Tests.Crypto
             string actualHash = "EC91D6E9ECB3BD4663AAB29A9AC589983C50A1D7FE6338F37026CF82D55FDB80";
 
             
-            var final = TransactionExtensions.HashTransaction(signature, signer.FromHex(), genHash.FromHex(), payload.FromHex());
+            var final = VerifiableTransaction.HashTransaction(signature, signer.FromHex(), genHash.FromHex().Concat(payload.FromHex()).ToArray());
 
             Assert.AreEqual(final, actualHash);
         }

@@ -2,7 +2,7 @@
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public class AggregateTransaction : Transaction
+    public class AggregateTransaction : VerifiableTransaction
     {
         public AggregateTransaction(string transactionsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type) : base(type, false)
         {

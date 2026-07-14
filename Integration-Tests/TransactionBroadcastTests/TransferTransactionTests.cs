@@ -49,12 +49,12 @@ namespace IntegrationTests.Infrastructure.Transactions
    
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            //// var a = await client.Announce(st);
-            //
-            //Thread.Sleep(3210);
-            //var status = await client.GetTransactionStatus(st.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
+            var a = await client.Announce(st);
+            
+            Thread.Sleep(3210);
+            var status = await client.GetTransactionStatus(st.Hash);
+            
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
         [Test, Timeout(30000)]

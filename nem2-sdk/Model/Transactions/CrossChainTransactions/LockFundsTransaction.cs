@@ -3,7 +3,7 @@ using io.nem2.sdk.Model.Articles;
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 {
-    public class LockFundsTransaction : Transaction
+    public class LockFundsTransaction : VerifiableTransaction
     {
         public LockFundsTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded)
         {

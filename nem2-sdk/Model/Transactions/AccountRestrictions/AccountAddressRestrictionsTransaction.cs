@@ -4,7 +4,7 @@ using io.nem2.sdk.Utils;
 namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
 {
     //AccountMosaic, AccountAddress, AccountOperation
-    public class AccountRestrictionsTransaction : Transaction
+    public class AccountRestrictionsTransaction : VerifiableTransaction
     {
         public AccountRestrictionsTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded)
         {

@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions;
@@ -51,7 +52,7 @@ namespace io.nem2.sdk.Model
                     Network = NetworkType.GetNetworkByte(),
                     Version = 0x01
                 },
-                Type = TransactionTypes.Types.TRANSFER.GetValue(),
+
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };

@@ -5,7 +5,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 {
-    public class NamespaceMetadataTransaction : Transaction
+    public class NamespaceMetadataTransaction : VerifiableTransaction
     {
         public NamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, ushort valueSizeDelta, ushort valueSize, byte[] value, bool embedded) : base(embedded) 
         {

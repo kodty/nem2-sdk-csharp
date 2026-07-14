@@ -6,7 +6,7 @@ using System.Text;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public class RegisterNamespace : Transaction
+    public class RegisterNamespace : VerifiableTransaction
     {
         public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, bool embedded) : base(embedded)
         {

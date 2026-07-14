@@ -3,7 +3,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 {
-    public class SecretProofTransaction : Transaction
+    public class SecretProofTransaction : VerifiableTransaction
     {
         public SecretProofTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) {}
 

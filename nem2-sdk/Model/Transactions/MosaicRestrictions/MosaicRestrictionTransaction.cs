@@ -29,7 +29,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
         public byte[] ReferenceMosaicId { get; set; }
     }
 
-    public class MosaicRestrictionTransaction : Transaction
+    public class MosaicRestrictionTransaction : VerifiableTransaction
     {
         public MosaicRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 

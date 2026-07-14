@@ -1,6 +1,6 @@
 ﻿namespace io.nem2.sdk.Model.Transactions
 {
-    public class MultisigAccountModificationTransaction : Transaction
+    public class MultisigAccountModificationTransaction : VerifiableTransaction
     {
         public byte MinApprovalDelta { get; set; }
         public byte MinRemovalDelta { get; set; }

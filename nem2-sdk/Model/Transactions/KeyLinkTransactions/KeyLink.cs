@@ -2,7 +2,7 @@
 
 namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
 {
-    public class KeyLinkTransaction : Transaction
+    public class KeyLinkTransaction : VerifiableTransaction
     {
         public KeyLinkTransaction(TransactionTypes.Types type, bool embedded) : base (type, embedded) { }
 

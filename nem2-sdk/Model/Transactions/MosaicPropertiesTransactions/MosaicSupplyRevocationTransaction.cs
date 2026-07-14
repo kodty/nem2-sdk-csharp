@@ -3,7 +3,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {
-    public class MosaicSupplyRevocationTransaction : Transaction
+    public class MosaicSupplyRevocationTransaction : VerifiableTransaction
     {
         public MosaicSupplyRevocationTransaction(string issuerAddress, Tuple<string, ulong> revokedMosaicAmount, bool embedded) : base (embedded)
         {
