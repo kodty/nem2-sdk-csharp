@@ -52,7 +52,6 @@ namespace io.nem2.sdk.Model
                     Network = NetworkType.GetNetworkByte(),
                     Version = 0x01
                 },
-
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -191,9 +190,9 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public AccountMetadataTransaction CreateAccountMetadataTransaction(string targetAddress, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee, bool embedded)
+        public AccountMetadataTransaction CreateAccountMetadataTransaction(string targetAddress, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee)
         {
-            return new AccountMetadataTransaction(targetAddress, scopedKey, valueSizeDelta, valueSize, value, embedded)
+            return new AccountMetadataTransaction(targetAddress, scopedKey, valueSizeDelta, valueSize, value)
             {
                 EntityBody = new EntityBody()
                 {
@@ -202,7 +201,6 @@ namespace io.nem2.sdk.Model
                     Network = NetworkType.GetNetworkByte(),
                     Version = 0x01
                 },
-                Type = TransactionTypes.Types.ACCOUNT_METADATA.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -225,9 +223,9 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public MosaicMetadataTransaction CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, string targetMosaicId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee, bool embedded)
+        public MosaicMetadataTransaction CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, string targetMosaicId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee)
         {
-            return new MosaicMetadataTransaction(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value, embedded)
+            return new MosaicMetadataTransaction(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value)
             {
                 EntityBody = new EntityBody()
                 {
@@ -236,7 +234,6 @@ namespace io.nem2.sdk.Model
                     Network = NetworkType.GetNetworkByte(),
                     Version = 0x01
                 },
-                Type = TransactionTypes.Types.MOSAIC_METADATA.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -259,9 +256,9 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public NamespaceMetadataTransaction CreateNamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee, bool embedded)
+        public NamespaceMetadataTransaction CreateNamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee)
         {
-            return new NamespaceMetadataTransaction(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value, embedded)
+            return new NamespaceMetadataTransaction(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value)
             {
                 EntityBody = new EntityBody()
                 {
@@ -270,7 +267,6 @@ namespace io.nem2.sdk.Model
                     Network = NetworkType.GetNetworkByte(),
                     Version = 0x01
                 },
-                Type = TransactionTypes.Types.NAMESPACE_METADATA.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };

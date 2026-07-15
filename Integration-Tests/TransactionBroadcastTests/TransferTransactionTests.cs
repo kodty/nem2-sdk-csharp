@@ -1,4 +1,5 @@
-﻿using Integration_Tests;
+﻿using Coppery;
+using Integration_Tests;
 using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.HttpClients;
 using io.nem2.sdk.Model;
@@ -6,6 +7,7 @@ using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Utils;
+using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace IntegrationTests.Infrastructure.Transactions
@@ -108,22 +110,23 @@ namespace IntegrationTests.Infrastructure.Transactions
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
-                .CreateAccountMetadataTransaction("targetAddress",
-                "scopedKey",
-                0,
-                0,
-                [],
-                0,
-                false);
+                .CreateAccountMetadataTransaction(
+                "TBEAFD6ZBP2J7LTUUWYC2A2ZLXONTWU2ABVCIBA",
+                "aaaaaaaaaaaaaaaa",
+                8,
+                8,
+                "bbbbbbbbbbbbbbbb".FromHex(),
+                1000000);
 
-            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
-
-            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-
-            //// var a = await client.Announce(st);
+            //var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+            //
+            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            //
+            //var a = await client.Announce(st);
             //
             //var status = await client.GetTransactionStatus(st.Hash);
             //
+            //Thread.Sleep(4321);
             //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
@@ -168,12 +171,12 @@ namespace IntegrationTests.Infrastructure.Transactions
                 0,
                 0,
                 [],
-                0,
-                false);
+                0
+                );
 
-            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+            //var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
 
-            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             ////var a = await client.Announce(st);
             //
@@ -243,16 +246,17 @@ namespace IntegrationTests.Infrastructure.Transactions
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
-                .CreateMosaicMetadataTransaction("targetAddress",
+                .CreateMosaicMetadataTransaction(
+                "targetAddress",
                 "scopedKey",
                 "targetNamespaceId",
                 0,
                 0,
                 [],
-                0,
-                false);
+                0
+                );
 
-            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+           // var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
 
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
