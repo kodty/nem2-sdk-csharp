@@ -194,7 +194,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 .CreateMosaicDefinitionTransaction(
                     DataConverter.ConvertFrom(IdGenerator.GenerateId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 29498)).Reverse().ToArray().ToHex(),
                     29498,
-                    new MosaicProperties(false, true, false, 6, 44640),
+                    new MosaicProperties(true, true, false, 6, 44640),
                     500000,
                     false);
 
