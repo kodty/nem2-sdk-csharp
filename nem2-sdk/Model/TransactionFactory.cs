@@ -58,9 +58,9 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public LockFundsTransaction CreateHashLockTransaction(string mosaic, ulong duration, string transactionHash, ulong fee, bool embedded)
+        public LockFundsTransaction CreateHashLockTransaction(string mosaic, ulong amount, ulong duration, string transactionHash, ulong fee, bool embedded)
         {
-            return new LockFundsTransaction(mosaic, duration, transactionHash, embedded)
+            return new LockFundsTransaction(mosaic, amount, duration, transactionHash, embedded)
             {
                 EntityBody = new EntityBody()
                 {
@@ -69,7 +69,6 @@ namespace io.nem2.sdk.Model
                     Network = NetworkType.GetNetworkByte(),
                     Version = 0x01
                 },
-                Type = TransactionTypes.Types.HASH_LOCK.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };

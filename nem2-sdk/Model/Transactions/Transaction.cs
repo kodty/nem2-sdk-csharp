@@ -1,6 +1,5 @@
 ﻿using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
-using System.Diagnostics;
 using System.Reflection;
 using TweetNaclSharp;
 
@@ -8,7 +7,6 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public abstract class VerifiableTransaction
     {
-
         [Order(0)]
         public VerifiableEntity VerifiableEntity { get; set; }
 
@@ -44,7 +42,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public abstract VerifiableTransaction SetSigner(string signer);
 
-        public UnsignedTransaction Embed(string signer = null)
+        public UnsignedTransaction Embed(string signer)
         {
             EntityBody.Signer = signer.FromHex();
 

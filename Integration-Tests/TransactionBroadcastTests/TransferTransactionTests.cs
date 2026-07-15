@@ -65,6 +65,7 @@ namespace IntegrationTests.Infrastructure.Transactions
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateHashLockTransaction(
                     "72C0212E67A08BCE",
+                    10000000,
                     1440,
                     "A7D03C0D84B99E6253FF48976084194FBA858B85D37E812790A0CEB65E102402",
                     1000000,
@@ -75,11 +76,12 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            ////var a = await client.Announce(st);
-            //
-            //var status = await client.GetTransactionStatus(st.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
+            var a = await client.Announce(st);
+
+            Thread.Sleep(4321);
+            var status = await client.GetTransactionStatus(st.Hash);
+            
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
         // agg bonded
