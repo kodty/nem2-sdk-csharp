@@ -192,22 +192,22 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicDefinitionTransaction(
-                    "xym",
-                    "symbol",
-                    "72C0212E67A08BCE",
-                    new MosaicProperties(false, true, false, 6, 0),
-                    1000000,
+                    DataConverter.ConvertFrom(IdGenerator.GenerateId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 29498)).Reverse().ToArray().ToHex(),
+                    29498,
+                    new MosaicProperties(false, true, false, 6, 44640),
+                    500000,
                     false);
 
             var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
-
+            Debug.WriteLine(st.Payload.ToHex());
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            ////var a = await client.Announce(st);
-            //
-            //var status = await client.GetTransactionStatus(st.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
+            var a = await client.Announce(st);
+
+            Thread.Sleep(4321);
+            var status = await client.GetTransactionStatus(st.Hash);
+            
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
         // mosaic address restriction

@@ -1,31 +1,37 @@
 ﻿using Coppery;
 using io.nem2.sdk.Model.Articles;
-using System.Text;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {
     public class MosaicDefinitionTransaction : VerifiableTransaction
     {
-        public MosaicDefinitionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
+        public MosaicDefinitionTransaction(TransactionTypes.Types type, bool embedded) : base(TransactionTypes.Types.MOSAIC_DEFINITION, embedded) { }
 
-        public MosaicDefinitionTransaction(string mosaicName, string namespaceId, string mosaicId, MosaicProperties properties, bool embedded) : base(embedded) {
+        public MosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties, bool embedded) : base(TransactionTypes.Types.MOSAIC_DEFINITION, embedded) {
 
-            MosaicName = Encoding.UTF8.GetBytes(mosaicName);
-            NamespaceId = namespaceId.FromHex();
-            MosaicId = mosaicId.FromHex();
-            Properties = properties.GetFlags();
+            MosaicId = id.FromHex();
+            Duration = properties.Duration;
+            Flags = properties.GetFlags();
+            Nonce = nonce;
+            Divisibility = properties.Divisibility;
 
-            
-            Type = TransactionTypes.Types.MOSAIC_DEFINITION.GetValue();
+            VerifiableEntity.Size += 22;
         }
 
-        public byte[] MosaicName { get; set; }
-
-        public byte[] NamespaceId { get; set; }
-
+        [Order(12)]
         public byte[] MosaicId { get; set; }
 
-        public byte Properties { get; set; }
+        [Order(13)]
+        public ulong Duration { get; set; }
+
+        [Order(14)]
+        public uint Nonce { get; set; }
+
+        [Order(14)]
+        public byte Flags { get; set; }
+
+        [Order(15)]
+        public byte Divisibility { get; set; }
 
         public override MosaicDefinitionTransaction SetSigner(string signer)
         {

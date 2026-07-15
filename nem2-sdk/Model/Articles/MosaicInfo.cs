@@ -30,7 +30,7 @@
 
         public ulong Duration => Properties.Duration;
 
-        public int Divisibility => Properties.Divisibility;
+        public uint Divisibility => Properties.Divisibility;
 
         public MosaicInfo(bool active, int index, string metaId, NamespaceId namespaceId, MosaicId mosaicId, ulong supply, ulong height, string ownerPublicKey, MosaicProperties properties)
         {   

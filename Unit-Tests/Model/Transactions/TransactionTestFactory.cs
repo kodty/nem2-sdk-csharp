@@ -101,9 +101,9 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public MosaicDefinitionTransaction CreateMosaicDefinitionTransaction(string mosaicName, string namespaceId, string mosaicId, MosaicProperties properties, bool embedded)
+        public MosaicDefinitionTransaction CreateMosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties, bool embedded)
         {
-            return new MosaicDefinitionTransaction(mosaicName, namespaceId, mosaicId, properties, embedded)
+            return new MosaicDefinitionTransaction(id, nonce, properties, embedded)
             {
                 EntityBody = new EntityBody()
                 {

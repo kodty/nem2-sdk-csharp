@@ -272,9 +272,9 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public MosaicDefinitionTransaction CreateMosaicDefinitionTransaction(string mosaicName, string namespaceId, string mosaicId, MosaicProperties properties, ulong fee, bool embedded)
+        public MosaicDefinitionTransaction CreateMosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties, ulong fee, bool embedded)
         {
-            return new MosaicDefinitionTransaction(mosaicName, namespaceId, mosaicId, properties, embedded)
+            return new MosaicDefinitionTransaction(id, nonce, properties, embedded)
             {
                 EntityBody = new EntityBody()
                 {
@@ -283,7 +283,6 @@ namespace io.nem2.sdk.Model
                     Network = NetworkType.GetNetworkByte(),
                     Version = 0x01
                 },
-                Type = TransactionTypes.Types.MOSAIC_DEFINITION.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };

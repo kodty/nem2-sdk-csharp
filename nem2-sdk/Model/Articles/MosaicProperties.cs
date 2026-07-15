@@ -8,11 +8,11 @@
 
         public bool IsLevyMutable { get; }
 
-        public int Divisibility { get; }
+        public byte Divisibility { get; }
 
         public ulong Duration { get; }
 
-        public MosaicProperties(bool supplyMutable, bool transferable, bool levyMutable, int divisibility, ulong duration)
+        public MosaicProperties(bool supplyMutable, bool transferable, bool levyMutable, byte divisibility, ulong duration)
         {
             if (divisibility < 0 || divisibility > 6) throw new ArgumentException("Divisibility must be between 0 and 6");
             IsSupplyMutable = supplyMutable;
