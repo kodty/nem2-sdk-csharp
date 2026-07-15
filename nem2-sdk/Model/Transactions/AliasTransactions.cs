@@ -16,6 +16,14 @@ namespace io.nem2.sdk.Model.Transactions
         public ulong NamespaceId { get; set; }
 
         public byte AliasAction { get; set; }
+
+        public override AliasTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
+
     }
 
     public class AddressAliasTransaction : AliasTransaction
@@ -29,7 +37,14 @@ namespace io.nem2.sdk.Model.Transactions
             Type = TransactionTypes.Types.ADDRESS_ALIAS.GetValue();
         }
 
-        public byte[] Address { get; set; }      
+        public byte[] Address { get; set; }
+
+        public override AddressAliasTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
     }
 
     public class MosaicAliasTransaction : AliasTransaction
@@ -42,5 +57,12 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         public ulong MosaicId { get; set; }
+
+        public override MosaicAliasTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
     }
 }

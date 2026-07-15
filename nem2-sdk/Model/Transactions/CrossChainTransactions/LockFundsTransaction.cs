@@ -13,13 +13,13 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
         public LockFundsTransaction(string mosaic, ulong duration, string transactionHash, bool embedded) : base(embedded)
         {
             Mosaic = mosaic.FromHex();
-            Size += (uint)Mosaic.Length;
+            VerifiableEntity.Size += (uint)Mosaic.Length;
 
             Duration = duration;
-            Size += 8;
+            VerifiableEntity.Size += 8;
 
             TransactionHash = transactionHash.FromHex();
-            Size += 32;
+            VerifiableEntity.Size += 32;
         }
 
         public byte[] Mosaic { get; set; }
@@ -27,5 +27,12 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
         public ulong Duration { get; set; }
 
         public byte[] TransactionHash { get; set; }
+
+        public override LockFundsTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
     }
 }

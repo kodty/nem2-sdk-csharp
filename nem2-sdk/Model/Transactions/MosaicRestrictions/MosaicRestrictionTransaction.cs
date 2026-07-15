@@ -47,5 +47,12 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
         public byte[] RestrictionKey { get; set; }
         public byte[] PreviousRestrictionValue { get; set; }
         public byte[] NewRestrictionValue { get; set; }
+
+        public override MosaicRestrictionTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
     }
 }

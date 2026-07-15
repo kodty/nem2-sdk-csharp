@@ -1,4 +1,6 @@
-﻿namespace io.nem2.sdk.Model.Transactions
+﻿using Coppery;
+
+namespace io.nem2.sdk.Model.Transactions
 {
     public class MultisigAccountModificationTransaction : VerifiableTransaction
     {
@@ -22,6 +24,13 @@
 
             
             Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION.GetValue();        
+        }
+
+        public override MultisigAccountModificationTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
         }
     }
 }

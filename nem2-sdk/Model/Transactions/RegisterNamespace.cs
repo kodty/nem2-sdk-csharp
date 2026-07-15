@@ -8,6 +8,13 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public class RegisterNamespace : VerifiableTransaction
     {
+        public override RegisterNamespace SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
+
         public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, bool embedded) : base(embedded)
         {
             _Duration = duration;
@@ -19,7 +26,7 @@ namespace io.nem2.sdk.Model.Transactions
             RegistrationType = type.GetValue();
             Name = Encoding.UTF8.GetBytes(name);
             NameSize = (byte)Name.Length;
-            Size += 18 +  (uint)Name.Length;
+            VerifiableEntity.Size += 18 +  (uint)Name.Length;
 
             
             Type = TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue();
@@ -36,7 +43,7 @@ namespace io.nem2.sdk.Model.Transactions
             RegistrationType = type.GetValue();
             Name = Encoding.UTF8.GetBytes(name);
             NameSize = (byte)Name.Length;
-            Size += 18 + (uint)Name.Length;
+            VerifiableEntity.Size += 18 + (uint)Name.Length;
         }
 
         internal ulong _Duration { get; set; }

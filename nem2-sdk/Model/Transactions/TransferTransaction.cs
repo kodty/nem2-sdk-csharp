@@ -8,6 +8,7 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public class TransferTransaction_V1 : VerifiableTransaction
     {
+
         [Order(12)]
         public byte[] Address { get; set; }
 
@@ -32,28 +33,29 @@ namespace io.nem2.sdk.Model.Transactions
         [Order(19)]
         public byte[] Message { get; set; }
 
-        public TransferTransaction_V1(Address address, IMessage messege, Mosaic mosaic, bool embedded) : base(TransactionTypes.Types.TRANSFER, embedded)
+        public TransferTransaction_V1(Address address, IMessage messege, Mosaic mosaic, bool isEmbedded) : base(TransactionTypes.Types.TRANSFER, isEmbedded)
         {
-            Address = AddressEncoder.DecodeAddress(address.Plain);
-            VerifiableEntity.Size += (uint)Address.Length;
-            
+            // extended transaction size excluding variable length fields
+            VerifiableEntity.Size += 24; 
+
+            Address = AddressEncoder.DecodeAddress(address.Plain);         
             MosaicId = DataConverter.ConvertFrom(mosaic.MosaicId.Id).Reverse().ToArray();
-            VerifiableEntity.Size += 8;
-
             MosaicAmount = mosaic.Amount;
-            VerifiableEntity.Size += 8;
-
             MosaicsCount = 1;
-            VerifiableEntity.Size += 1;
-
-            Message = messege.GetPayload();    
-            MessegeSize = (ushort)Message.Length;
-            VerifiableEntity.Size += MessegeSize;
-            VerifiableEntity.Size += 2;
-
             Reserved_1 = 0;
             Reserved_2 = 0;
-            VerifiableEntity.Size += 5;
+            Message = messege.GetPayload();    
+            MessegeSize = (ushort)Message.Length;
+
+            VerifiableEntity.Size += (uint)Address.Length;
+            VerifiableEntity.Size += MessegeSize; 
+        }
+
+        public override TransferTransaction_V1 SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
         }
     }
 }

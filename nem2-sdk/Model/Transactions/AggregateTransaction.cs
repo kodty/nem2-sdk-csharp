@@ -12,11 +12,11 @@ namespace io.nem2.sdk.Model.Transactions
             Cosignatures = cosignatures;
             Aggregate_​transaction_​header_​reserved_​1 = 0;
 
-            Size += 32;
-            Size += (uint)EmbeddedTransactions.Length;
-            Size += PayloadSize;
-            Size += (uint)Cosignatures.Length;
-            Size += 4;
+            VerifiableEntity.Size += 32;
+            VerifiableEntity.Size += (uint)EmbeddedTransactions.Length;
+            VerifiableEntity.Size += PayloadSize;
+            VerifiableEntity.Size += (uint)Cosignatures.Length;
+            VerifiableEntity.Size += 4;
 
             Type = type.GetValue();
         }
@@ -39,5 +39,13 @@ namespace io.nem2.sdk.Model.Transactions
             }
             return rv;
         }
+
+        public override AggregateTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
+
     }
 }

@@ -26,5 +26,12 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
         public byte[] MosaicId { get; set; }
 
         public byte Properties { get; set; }
+
+        public override MosaicDefinitionTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
     }
 }

@@ -13,7 +13,7 @@
 
         public VerifiableEntity()
         {
-            Size = 0;
+            Size += 48;
             VerifiableEntityHeaderReserved = 0;
             Signature = new byte[64];
         }

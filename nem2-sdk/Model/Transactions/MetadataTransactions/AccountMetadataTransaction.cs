@@ -30,5 +30,12 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
         public ushort ValueSize { get; set; }
 
         public byte[] Value { get; set; }
+
+        public override AccountMetadataTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
     }
 }

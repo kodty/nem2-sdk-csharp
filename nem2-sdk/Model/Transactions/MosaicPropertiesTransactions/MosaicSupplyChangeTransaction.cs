@@ -15,7 +15,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
             MosaicId = mosaicId.FromHex();
             Delta = delta;
             SupplyType = supplyType.GetValue();
-            Size += 17;
+            VerifiableEntity.Size += 17;
 
             
             Type = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE.GetValue();
@@ -26,5 +26,12 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
         public ulong Delta { get; set; }
 
         public byte SupplyType { get; set; }
+
+        public override MosaicSupplyChangeTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
     }
 }

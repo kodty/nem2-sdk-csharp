@@ -1,13 +1,13 @@
 ﻿using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
+using System.Diagnostics;
 using System.Reflection;
 using TweetNaclSharp;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public class VerifiableTransaction
+    public abstract class VerifiableTransaction
     {
-        internal uint Size { get; set; }
 
         [Order(0)]
         public VerifiableEntity VerifiableEntity { get; set; }
@@ -27,7 +27,6 @@ namespace io.nem2.sdk.Model.Transactions
         public VerifiableTransaction(bool isEmbedded)
         {
             VerifiableEntity = new VerifiableEntity();
-            VerifiableEntity.Size += 48;
 
             if (!isEmbedded)
                 VerifiableEntity.Size += 80;
@@ -36,7 +35,6 @@ namespace io.nem2.sdk.Model.Transactions
         public VerifiableTransaction(TransactionTypes.Types type, bool isEmbedded)
         {
             VerifiableEntity = new VerifiableEntity();
-            VerifiableEntity.Size += 48;
 
             if (!isEmbedded)
                 VerifiableEntity.Size += 80;
@@ -44,13 +42,15 @@ namespace io.nem2.sdk.Model.Transactions
             Type = type.GetValue();
         }
 
-        public UnsignedTransaction Embed(string signer)
+        public abstract VerifiableTransaction SetSigner(string signer);
+
+        public UnsignedTransaction Embed(string signer = null)
         {
             EntityBody.Signer = signer.FromHex();
 
             return new UnsignedTransaction()
             {
-                Payload = Serialize(GetType(), VerifiableEntity.Size, [3, 10, 11])
+                Payload = this.Serialize(exclude: [3, 10, 11])
             };
         }
 
@@ -58,7 +58,7 @@ namespace io.nem2.sdk.Model.Transactions
         {
             EntityBody.Signer = signer.PublicKey;
 
-            var entity = Serialize(GetType(), VerifiableEntity.Size, []);
+            var entity = this.Serialize(exclude: []);
 
             var signBytes = new byte[32 + entity.Length - (4 + 4 + 64 + 32 + 4)];
 
@@ -68,7 +68,7 @@ namespace io.nem2.sdk.Model.Transactions
             for (var x = 32; x < 32 + entity.Length - (4 + 4 + 64 + 32 + 4); x++)
                 signBytes[x] = entity[(4 + 4 + 64 + 32 + 4) + x - 32];
 
-            var sig = NaclFast.SignDetached(signBytes, signer.SecretKey.ToArray());
+            var sig = NaclFast.SignDetached(msg: signBytes, signer.SecretKey.ToArray());
 
             if (NaclFast.SignDetachedVerify(signBytes, sig, signer.PublicKey))
             {
@@ -87,16 +87,16 @@ namespace io.nem2.sdk.Model.Transactions
             else throw new Exception("signature error");
         }
 
-        private byte[] Serialize(Type type, uint size, int[] ints)
+        private byte[] Serialize(int[] exclude)
         {
-            DataSerializer serializer = new DataSerializer(size);
+            DataSerializer serializer = new DataSerializer(this.VerifiableEntity.Size);
 
-            serializer.Serialize(this, type, (Type type) =>
+            serializer.Serialize(this, this.GetType(), (Type type) =>
             {
                 return type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                     .Where(p =>
                     {
-                        return !ints.Contains(((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order);
+                        return !exclude.Contains(((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order);
                     })
 
                     .OrderBy(p =>

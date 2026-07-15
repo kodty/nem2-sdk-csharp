@@ -30,5 +30,12 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
         public byte HashAlgo { get; set; }
 
         public byte[] Proof { get; set; }
+
+        public override SecretProofTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
     }
 }

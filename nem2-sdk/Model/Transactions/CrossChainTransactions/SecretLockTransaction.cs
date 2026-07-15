@@ -20,18 +20,25 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
                       ? AddressEncoder.DecodeAddress(recipient) 
                       : recipient.FromHex();
 
-            Size += (uint) (50 + Secret.Length);
+            VerifiableEntity.Size += (uint) (50 + Secret.Length);
             Type = TransactionTypes.Types.SECRET_LOCK.GetValue();
         }
 
-        public byte[] Mosaic { get; set; } // 16
+        public byte[] Mosaic { get; set; }
 
-        public ulong Duration { get; set; } // 8
+        public ulong Duration { get; set; }
 
-        public byte[] Secret { get; set; } // variable
+        public byte[] Secret { get; set; }
 
-        public byte HashAlgo { get; set; } // 1
+        public byte HashAlgo { get; set; }
 
-        public byte[] Recipient { get; set; } // 25
+        public byte[] Recipient { get; set; }
+
+        public override SecretLockTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
     }
 }

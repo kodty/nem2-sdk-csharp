@@ -22,7 +22,7 @@ namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
             RestrictionsDeletionsCount = (byte)restrictionsDeletions.Count();
             Account_​restriction_​transaction_​body_​reserved_​1 = 0;
 
-            Size += (uint)(8 + _RestrictionAdditions.Length + _RestrictionDeletions.Length);
+            VerifiableEntity.Size += (uint)(8 + _RestrictionAdditions.Length + _RestrictionDeletions.Length);
         }
 
         public ushort RestrictionFlags { get; set; }
@@ -65,6 +65,13 @@ namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
             }
 
             return bitValues;
+        }
+
+        public override AccountRestrictionsTransaction SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
         }
     }
 }
