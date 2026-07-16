@@ -172,26 +172,28 @@ namespace IntegrationTests.Infrastructure.Transactions
         {
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
+            var root = IdGenerator.GenerateId(0, "", true);
+
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateNamespaceRegistrationTransaction(
-                    0, 
                     0,
-                    IdGenerator.GenerateId(0, "", true),
-                    NamespaceTypes.Types.RootNamespace,
+                    root,
+                    IdGenerator.GenerateId(root, "", true),
+                    NamespaceTypes.Types.SubNamespace,
                     "",
-                    0 * 2,
+                    100000,
                     false);
 
-            //var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
-            //
-            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            //var a = await client.Announce(st);
-            //
-            //Thread.Sleep(4321);
-            //var status = await client.GetTransactionStatus(st.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
+            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+
+            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            
+            var a = await client.Announce(st);
+            
+            Thread.Sleep(4321);
+            var status = await client.GetTransactionStatus(st.Hash);
+            
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
         [Test, Timeout(30000)]

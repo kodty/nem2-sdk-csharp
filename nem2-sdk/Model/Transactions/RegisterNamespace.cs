@@ -11,6 +11,7 @@ namespace io.nem2.sdk.Model.Transactions
         public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, bool embedded) : base(TransactionTypes.Types.NAMESPACE_REGISTRATION, embedded)
         {         
             _Duration = duration;
+            _ParentId = parentId;
             Id = DataConverter.ConvertFrom(id).Reverse().ToArray();
             RegistrationType = type.GetValue();
             Name = Encoding.UTF8.GetBytes(name);
@@ -45,7 +46,7 @@ namespace io.nem2.sdk.Model.Transactions
                 if (RegistrationType == 0x00)
                     return new byte[] { };
                 else if (RegistrationType == 0x01)
-                    return DataConverter.ConvertFrom(_ParentId);
+                    return DataConverter.ConvertFrom(_ParentId).Reverse().ToArray();
                 else
                     throw new Exception("invalid registration type");
             }

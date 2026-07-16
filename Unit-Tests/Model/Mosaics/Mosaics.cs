@@ -15,6 +15,14 @@ namespace Unit_Tests.Model.Mosaics
 
             var symbolXem = IdGenerator.GenerateId(symbolId, "xym", true);
 
+            var root = IdGenerator.GenerateId(0, "testspace84324595869", true);
+
+            var level2 = IdGenerator.GenerateId(root, "space12387246", true);
+
+            Assert.That(DataConverter.ConvertFrom(root).ToHex(), Is.EqualTo("943B8E28D1D0BCAC"));
+
+            Assert.That(DataConverter.ConvertFrom(level2).ToHex(), Is.EqualTo("FF2C791E29E6FE80"));
+
             Assert.AreEqual(DataConverter.ConvertFrom(mosaicId).ToHex(), "570FB3ED9379624C"); // new mosaic id
 
             Assert.That(DataConverter.ConvertFrom(symbolXem).ToHex(), Is.EqualTo("E74B99BA41F4AFEE")); // namespace ID
