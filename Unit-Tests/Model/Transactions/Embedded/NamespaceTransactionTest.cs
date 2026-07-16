@@ -20,7 +20,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
             var factory = new TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var nsTx = factory.CreateNamespaceRegistrationTransaction(
-                1440, 0, IdGenerator.GenerateId(0, "symbol"), NamespaceTypes.Types.RootNamespace, "symbol", true);
+                1440, 0, IdGenerator.GenerateId(0, "symbol", true), NamespaceTypes.Types.RootNamespace, "symbol", true);
 
             var result = nsTx.Embed(keys.PublicKeyString);
 

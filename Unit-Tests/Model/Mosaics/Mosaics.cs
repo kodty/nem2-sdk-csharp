@@ -1,5 +1,6 @@
 ﻿using Coppery;
 using io.nem2.sdk.Utils;
+using System.Diagnostics;
 
 namespace Unit_Tests.Model.Mosaics
 {
@@ -8,11 +9,11 @@ namespace Unit_Tests.Model.Mosaics
         [Test]
         public static void NamespaceCreate()
         {
-            var symbolId = IdGenerator.GenerateId(0, "symbol");
+            var symbolId = IdGenerator.GenerateId(0, "symbol", true);
 
-            var mosaicId = IdGenerator.GenerateId(AddressEncoder.DecodeAddress("TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q"), 812613930);
+            var mosaicId = IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress("TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q"), 812613930);
 
-            var symbolXem = IdGenerator.GenerateId(symbolId, "xym");
+            var symbolXem = IdGenerator.GenerateId(symbolId, "xym", true);
 
             Assert.AreEqual(DataConverter.ConvertFrom(mosaicId).ToHex(), "570FB3ED9379624C"); // new mosaic id
 
@@ -52,8 +53,8 @@ namespace Unit_Tests.Model.Mosaics
         { 
             var decoded = AddressEncoder.DecodeAddress("TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q");
 
-            var id = IdGenerator.GenerateId(decoded, 713125680);
-            var id2 = IdGenerator.GenerateId(decoded, 729902896);
+            var id = IdGenerator.GenerateMosaicId(decoded, 713125680);
+            var id2 = IdGenerator.GenerateMosaicId(decoded, 729902896);
 
             Assert.That(id != id2);
            

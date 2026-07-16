@@ -8,38 +8,10 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public class RegisterNamespace : VerifiableTransaction
     {
-        public override RegisterNamespace SetSigner(string signer)
-        {
-            EntityBody.Signer = signer.FromHex();
-
-            return this;
-        }
-
-        public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, bool embedded) : base(embedded)
-        {
+        public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, bool embedded) : base(TransactionTypes.Types.NAMESPACE_REGISTRATION, embedded)
+        {         
             _Duration = duration;
-
-            if(type.GetValue() == 0x01)
-                _ParentId = parentId;
-
-            Id = id;
-            RegistrationType = type.GetValue();
-            Name = Encoding.UTF8.GetBytes(name);
-            NameSize = (byte)Name.Length;
-            VerifiableEntity.Size += 18 +  (uint)Name.Length;
-
-            
-            Type = TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue();
-        }
-
-        public RegisterNamespace(ulong duration, string parentId, string id, NamespaceTypes.Types type, string name, bool embedded) : base(embedded)
-        {
-            _Duration = duration;
-
-            if (type.GetValue() == 0x01)
-                _ParentId = DataConverter.ConvertTo<ulong>(parentId.FromHex());
-
-            Id = DataConverter.ConvertTo<ulong>(id.FromHex()); ;
+            Id = DataConverter.ConvertFrom(id).Reverse().ToArray();
             RegistrationType = type.GetValue();
             Name = Encoding.UTF8.GetBytes(name);
             NameSize = (byte)Name.Length;
@@ -48,43 +20,54 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal ulong _Duration { get; set; }
 
+        [Order(12)]
         public byte[] Duration
         {
             get
             {
-                if (RegistrationType == 0)
+                if (RegistrationType == 0x00)
                     return DataConverter.ConvertFrom(_Duration);
 
-                else if (RegistrationType == 0x1)
+                else if (RegistrationType == 0x01)
                     return new byte[] { };
                 else
                     throw new Exception("invalid registration type");
             }
-
-            set => DataConverter.ConvertFrom(_Duration);
         }
 
         internal ulong _ParentId { get; set; }
 
+        [Order(13)]
         public byte[] ParentId
         {
             get
             {
-                if (RegistrationType == 0)
+                if (RegistrationType == 0x00)
                     return new byte[] { };
-                else if (RegistrationType == 0x1) 
+                else if (RegistrationType == 0x01)
                     return DataConverter.ConvertFrom(_ParentId);
-                else 
+                else
                     throw new Exception("invalid registration type");
             }
         }
 
-        public ulong Id { get; internal set; }
+        [Order(14)]
+        public byte[] Id { get; set; }
 
-        public byte RegistrationType { get; internal set; } 
+        [Order(15)]
+        public byte RegistrationType { get; internal set; }
 
+        [Order(16)]
         public byte NameSize { get; internal set; }
 
+        [Order(17)]
         public byte[] Name { get; internal set; }
+
+        public override RegisterNamespace SetSigner(string signer)
+        {
+            EntityBody.Signer = signer.FromHex();
+
+            return this;
+        }
     }
 }

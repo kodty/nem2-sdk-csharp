@@ -17,7 +17,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 .CreateNamespaceRegistrationTransaction(
                     1440,
                     0,
-                    IdGenerator.GenerateId(0, "symbol"),
+                    IdGenerator.GenerateId(0, "symbol", true),
                     NamespaceTypes.Types.RootNamespace,
                     "symbol",
                     false
@@ -37,8 +37,8 @@ namespace Unit_Tests.Model.Transactions.Verified
             var transfer = new TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateNamespaceRegistrationTransaction(
                     1440,
-                    IdGenerator.GenerateId(0, "symbol"),
-                    IdGenerator.GenerateId(IdGenerator.GenerateId(0, "symbol"), "xym"),
+                    IdGenerator.GenerateId(0, "symbol", true),
+                    IdGenerator.GenerateId(IdGenerator.GenerateId(0, "symbol", true), "xym", true),
                     NamespaceTypes.Types.SubNamespace,
                     "symbol",
                     false

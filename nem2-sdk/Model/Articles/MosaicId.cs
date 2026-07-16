@@ -40,7 +40,7 @@ namespace io.nem2.sdk.Model.Articles
 
             FullName = string.Join(':', identifierParts);
 
-            Id = IdGenerator.GenerateId(IdGenerator.GenerateId(0, identifierParts[0]), identifierParts[1]); //
+            Id = IdGenerator.GenerateId(IdGenerator.GenerateId(0, identifierParts[0], true), identifierParts[1], true);
           
             HexId = DataConverter.ConvertFrom(Id).ToHex();
         }

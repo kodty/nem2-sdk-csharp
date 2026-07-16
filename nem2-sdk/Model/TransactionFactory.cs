@@ -82,9 +82,8 @@ namespace io.nem2.sdk.Model
                     Signer = null,
                     Entity_body_reserved_1 = 0,
                     Network = NetworkType.GetNetworkByte(),
-                    Version = 0x02
+                    Version = 0x01
                 },
-                Type = TransactionTypes.Types.AGGREGATE_BONDED.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -250,7 +249,6 @@ namespace io.nem2.sdk.Model
                     Network = NetworkType.GetNetworkByte(),
                     Version = 0x01
                 },
-                Type = TransactionTypes.Types.NAMESPACE_REGISTRATION.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };

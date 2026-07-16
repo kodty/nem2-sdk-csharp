@@ -14,20 +14,19 @@ namespace io.nem2.sdk.Utils
             internal static string NamePattern = "/^[a-z0-9] [a-z0-9-_]*$/";
         }
 
-        public static ulong GenerateId(byte[] hexAddress, uint nonce)
+        public static ulong GenerateMosaicId(byte[] hexAddress, uint nonce)
         {
-            return ReturnId(hexAddress, DataConverter.ConvertFrom(nonce));
+            return ReturnId(hexAddress, DataConverter.ConvertFrom(nonce), false);
         }
-
-        
-        public static ulong GenerateId(ulong parentId, string name)
+  
+        public static ulong GenerateId(ulong parentId, string name, bool isNamespace)
         {
             var n = Encoding.UTF8.GetBytes(name);
 
-            return ReturnId(n, DataConverter.ConvertFrom(parentId).Reverse().ToArray(), true);
+            return ReturnId(n, DataConverter.ConvertFrom(parentId).Reverse().ToArray(), isNamespace);
         }
 
-        public static ulong ReturnId(byte[] n, byte[] p, bool nsFlag = false)
+        public static ulong ReturnId(byte[] n, byte[] p, bool isNamespace)
         {
             var hash = new Sha3Digest(256);
 
@@ -38,10 +37,9 @@ namespace io.nem2.sdk.Utils
 
             hash.DoFinal(result, 0);
 
-            if(nsFlag)
-                result[7] ^= (1 << 7);
-
             result = result.Take(8).Reverse().ToArray();
+
+            if (isNamespace) result[0] |= 128;
 
             return result.ConvertTo<ulong>();
         }    

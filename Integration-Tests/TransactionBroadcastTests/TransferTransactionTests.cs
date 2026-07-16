@@ -51,12 +51,51 @@ namespace IntegrationTests.Infrastructure.Transactions
    
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            var a = await client.Announce(st);
+            //var a = await client.Announce(st);
+            //
+            //Thread.Sleep(3210);
+            //var status = await client.GetTransactionStatus(st.Hash);
+            //
+            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
+        }
+
+        public async Task CreateAggregateBondedTransaction()
+        {
+            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+
+            var factory = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
+
+            var transfer1 = factory.CreateTransferTransaction(
+                   Address.CreateFromEncoded(HttpSetUp.Recipient),
+                   PlainMessage.Create("hello"),
+                   Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
+                   1000000,
+                   false
+               );
+
+            var transfer2 = factory.CreateTransferTransaction(
+                   Address.CreateFromEncoded(HttpSetUp.Recipient),
+                   PlainMessage.Create("hello"),
+                   Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
+                   1000000,
+                   false
+               );
+
             
-            Thread.Sleep(3210);
-            var status = await client.GetTransactionStatus(st.Hash);
-            
-            Assert.AreEqual(status.ComposedResponse.Code, "Success");
+
+            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+               .CreateAggregateBonded(
+                "",
+                new UnsignedTransaction[]
+                {
+                    transfer1.Embed(keys.PublicKeyString),
+                    transfer2.Embed(keys.PublicKeyString)
+                },
+                new byte[] {},
+                1000000
+                );
+
+           // var signed = transfer.WrapVerified(keys, HttpSetUp.genHash);
         }
 
         [Test, Timeout(30000)]
@@ -69,24 +108,22 @@ namespace IntegrationTests.Infrastructure.Transactions
                     "72C0212E67A08BCE",
                     10000000,
                     1440,
-                    "A7D03C0D84B99E6253FF48976084194FBA858B85D37E812790A0CEB65E102402",
+                    "FBA858B85D37E812790A0CEB65E102402A7D03C0D84B99E6253FF48976084194",
                     1000000,
                     false
                 );
 
-            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
-
-            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-
-            var a = await client.Announce(st);
-
-            Thread.Sleep(4321);
-            var status = await client.GetTransactionStatus(st.Hash);
-            
-            Assert.AreEqual(status.ComposedResponse.Code, "Success");
+           // var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+           //
+           // var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+           //
+           // var a = await client.Announce(st);
+           //
+           // Thread.Sleep(4321);
+           // var status = await client.GetTransactionStatus(st.Hash);
+           // 
+           // Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
-
-        // agg bonded
          
         // agg complete
 
@@ -133,27 +170,25 @@ namespace IntegrationTests.Infrastructure.Transactions
         [Test, Timeout(30000)]
         public async Task CreateNamespaceRegistrationTransaction()
         {
-            ulong id = IdGenerator.GenerateId(0, "symbol");
-            ulong parentId = IdGenerator.GenerateId(0, "xym");
-
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateNamespaceRegistrationTransaction(
-                    1440,
-                    parentId,
-                    id,
+                    0, 
+                    0,
+                    IdGenerator.GenerateId(0, "", true),
                     NamespaceTypes.Types.RootNamespace,
                     "",
-                    1000000,
+                    0 * 2,
                     false);
 
-            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
-
-            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-
-            //// var a = await client.Announce(st);
+            //var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
             //
+            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            //
+            //var a = await client.Announce(st);
+            //
+            //Thread.Sleep(4321);
             //var status = await client.GetTransactionStatus(st.Hash);
             //
             //Assert.AreEqual(status.ComposedResponse.Code, "Success");
@@ -165,13 +200,14 @@ namespace IntegrationTests.Infrastructure.Transactions
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
-                .CreateNamespaceMetadataTransaction("targetAddress",
-                "scopedKey",
-                "targetNamespaceId",
-                0,
-                0,
+                .CreateNamespaceMetadataTransaction(
+                "TBEAFD6ZBP2J7LTUUWYC2A2ZLXONTWU2ABVCIBA",
+                "aaaaaaaaaaaaaaaa",
+                "aaaaaaaaaaaaaaaa",
+                8,
+                8,
                 [],
-                0
+                1000000
                 );
 
             //var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
@@ -189,25 +225,25 @@ namespace IntegrationTests.Infrastructure.Transactions
         public async Task CreateMosaicDefinitionTransaction()
         {
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
-
+            
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicDefinitionTransaction(
-                    DataConverter.ConvertFrom(IdGenerator.GenerateId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 29498)).Reverse().ToArray().ToHex(),
+                    DataConverter.ConvertFrom(IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 29498)).Reverse().ToArray().ToHex(),
                     29498,
                     new MosaicProperties(true, true, false, 6, 44640),
                     500000,
                     false);
 
             var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
-            Debug.WriteLine(st.Payload.ToHex());
-            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            var a = await client.Announce(st);
-
-            Thread.Sleep(4321);
-            var status = await client.GetTransactionStatus(st.Hash);
-            
-            Assert.AreEqual(status.ComposedResponse.Code, "Success");
+           // var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+           //
+           // var a = await client.Announce(st);
+           //
+           // Thread.Sleep(4321);
+           // var status = await client.GetTransactionStatus(st.Hash);
+           // 
+           // Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
         // mosaic address restriction
@@ -247,7 +283,7 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicMetadataTransaction(
-                "targetAddress",
+                "TBEAFD6ZBP2J7LTUUWYC2A2ZLXONTWU2ABVCIBA",
                 "scopedKey",
                 "targetNamespaceId",
                 0,

@@ -93,14 +93,13 @@ namespace io.nem2.sdk.Model.Transactions
             {
                 return type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                     .Where(p =>
-                    {
-                        return !exclude.Contains(((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order);
-                    })
-
+                        {
+                            return !exclude.Contains(((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order);
+                        })
                     .OrderBy(p =>
-                    {
-                        return ((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order;
-                    });
+                        {
+                            return ((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order;
+                        });
             });
 
             return serializer.GetBytes();

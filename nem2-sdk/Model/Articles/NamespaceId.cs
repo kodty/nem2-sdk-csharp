@@ -15,7 +15,7 @@ namespace io.nem2.sdk.Model.Articles
         {     
             if (id == null) throw new ArgumentNullException(nameof(id) + " cannot be null");
 
-            Id = IdGenerator.GenerateId(0, id);
+            Id = IdGenerator.GenerateId(0, id, true);
             Name = id;
             HexId = DataConverter.ConvertFrom(Id).ToHex();
         }
