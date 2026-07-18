@@ -331,9 +331,9 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public AggregateTransaction CreateAggregateComplete(string txsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures)
+        public AggregateTransaction CreateAggregateComplete(UnsignedTransaction[] embeddedTransactions, byte[] cosignatures)
         {
-            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE)
+            return new AggregateTransaction(embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE)
             {
                 EntityBody = new EntityBody()
                 {
@@ -347,9 +347,9 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public AggregateTransaction CreateAggregateBonded(string txsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures)
+        public AggregateTransaction CreateAggregateBonded( UnsignedTransaction[] embeddedTransactions, byte[] cosignatures)
         {
-            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
+            return new AggregateTransaction(embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
             {
                 EntityBody = new EntityBody()
                 {

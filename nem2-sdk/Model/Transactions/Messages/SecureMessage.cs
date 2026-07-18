@@ -1,5 +1,4 @@
 ﻿using Coppery;
-using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Security;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -22,12 +21,12 @@ namespace io.nem2.sdk.Model.Transactions.Messages
         }
         public static SecureMessage Create(string msg, string senderPrivateKey, string receiverPublicKey)
         {
-            return new SecureMessage(Encode(msg, senderPrivateKey, receiverPublicKey).FromHex());
+            return new SecureMessage(Encode(msg, senderPrivateKey, receiverPublicKey));
         }
 
         public string GetDecodedPayload(string privateKey, string publicKey)
         {
-            return Decode(Payload, privateKey, publicKey);
+            return Decode(privateKey.FromHex(), publicKey.FromHex(), Payload, 32, 16);
         }
 
         internal override byte GetMessageType()
@@ -45,7 +44,73 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return (ushort)Payload.Length;
         }
 
-        private static string Encode(string text, string secretKey, string publicKey)
+        private static bool IsCanonicalKey(byte[] publicKey)
+        {
+            var buffer = publicKey;
+            int a = (buffer[31] & 0x7F) ^ 0x7F;
+            for (int i = 30; 0 < i; --i)
+                a |= buffer[i] ^ 0xFF;
+
+            a = (a - 1) >>> 8;
+
+            int b = (0xED - 1 - buffer[0]) >>> 8;
+            return 0 != 1 - (a & b & 1);
+        }
+
+        public static byte[] HKDFDeriveSharedKey256(byte[] privateKey, byte[] otherPublicKey, byte[] info = null)
+        {
+            var sharedsecret = DeriveSharedSecret(privateKey, otherPublicKey, (byte[] key) =>
+            {
+                using(SHA512 sha = SHA512.Create())
+                {
+                    var hash = sha.ComputeHash(key, 0, 32);
+
+                    return hash;
+                }
+            });
+
+            return HKDF.Expand(HashAlgorithmName.SHA256, prk: sharedsecret, 32, info: info);
+        }
+
+        public static byte[] DeriveSharedSecret(byte[] privateKey, byte[] otherPublicKey, Func<byte[], byte[]> hashFunc)
+        {
+            var Gf = typeof(NaclFast).GetMethod("Gf", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+            long[][] point = [(long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null])];
+
+            var unpackneg = typeof(NaclFast).GetMethod("Unpackneg", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+            if(!IsCanonicalKey(otherPublicKey) || 0 != (int)unpackneg.Invoke(null, [point, otherPublicKey])){
+                throw new CryptographicException("invalid point");
+            }
+
+            var Z = typeof(NaclFast).GetMethod("Z", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+            Z.Invoke(null, [point[0], Gf.Invoke(null, [null]), point[0]]);
+            Z.Invoke(null, [point[3], Gf.Invoke(null, [null]), point[3]]);
+
+            byte[] scalar = hashFunc(privateKey);
+
+            scalar[0] &= 248;
+            scalar[31] &= 127;
+            scalar[31] |= 64;
+
+            long[][] result = [(long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null])];
+
+            var scalarmult = typeof(NaclFast).GetMethod("Scalarmult", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+            scalarmult.Invoke(null, [result, point, scalar]);
+
+            var pack = typeof(NaclFast).GetMethod("Pack", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+            byte[] sharedSecret = new byte[32];
+
+            pack.Invoke(null, [sharedSecret, result]);
+
+            return sharedSecret;
+        }
+
+        private static byte[] Encode(string text, string secretKey, string publicKey)
         {
             var random = new SecureRandom();
 
@@ -55,115 +120,26 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             var ivData = new byte[16];
             random.NextBytes(ivData);
 
-            return _Encode(
+            var shared = HKDFDeriveSharedKey256(
                 Convert.FromHexString(secretKey),
-                Convert.FromHexString(publicKey),
-                text,
-                ivData,
+                Convert.FromHexString(publicKey), 
                 salt);
+
+            return salt.Concat(AesEncryptor(shared, ivData, text)).ToArray();
+
         }
 
-        private static string Decode(byte[] text, string secretKey, string publicKey)
+        public static string Decode(byte[] privateKey, byte[] publicKey, byte[] data, int saltLen = 32, int ivLen = 16)
         {
-            return _Decode(
-                Convert.FromHexString(secretKey),
-                Convert.FromHexString(publicKey),
-                text);
-        }
-
-        private static string DerivePassSha(byte[] password, int count)
-        {
-            if (password == null) throw new ArgumentNullException(nameof(password));
-            if (count <= 0) throw new ArgumentOutOfRangeException(nameof(count), "must be positive");
-
-            var sha3Hasher = new KeccakDigest(256);
-            var hash = new byte[32];
-
-            sha3Hasher.BlockUpdate(password, 0, password.Length);
-            sha3Hasher.DoFinal(hash, 0);
-
-            for (var i = 0; i < count - 1; ++i)
-            {
-                sha3Hasher.Reset();
-                sha3Hasher.BlockUpdate(hash, 0, hash.Length);
-                sha3Hasher.DoFinal(hash, 0);
-            }
-
-            return Convert.ToHexString(hash);
-        }
-
-        private static string _Encode(byte[] privateKey, byte[] publicKey, string msg, byte[] iv, byte[] salt)
-        {
-            var shared = new byte[32];
-
-            var longKeyHash = new byte[64];
-            var shortKeyHash = new byte[32];
-
-            Array.Reverse(privateKey);
-
-            // compute  Sha3(512) hash of secret key (as in prepareForScalarMultiply)
-            var digestSha3 = new KeccakDigest(512);
-            digestSha3.BlockUpdate(privateKey, 0, 32);
-            digestSha3.DoFinal(longKeyHash, 0);
-
-            longKeyHash[0] &= 248;
-            longKeyHash[31] &= 127;
-            longKeyHash[31] |= 64;
-
-            Array.Copy(longKeyHash, 0, shortKeyHash, 0, 32);
-
-            shortKeyHash[0 + 0] &= 248;
-            shortKeyHash[0 + 31] &= 127;
-            shortKeyHash[0 + 31] |= 64;
-
-            var p = new[] { new long[16], new long[16], new long[16], new long[16] };
-            var q = new[] { new long[16], new long[16], new long[16], new long[16] };
-
-            var unpackneg = typeof(NaclFast).GetMethod("Unpackneg", BindingFlags.Static | BindingFlags.NonPublic)!;
-
-            var unpacknegResult = (int)unpackneg.Invoke(null, [q, publicKey])!;
-
-            var scalarmult = typeof(NaclFast).GetMethod("Scalarmult", BindingFlags.Static | BindingFlags.NonPublic)!;
-
-            scalarmult.Invoke(null, [p, q, shortKeyHash]);
-
-            var packMethod = typeof(NaclFast).GetMethod("Pack", BindingFlags.Static | BindingFlags.NonPublic)!;
-
-            packMethod.Invoke(null, [shared, p]);
-
-            //NaclFast.Unpackneg(q, publicKey); // returning -1 invalid signature
-            //NaclFast.Scalarmult(p, q, shortKeyHash);
-            //NaclFast.Pack(shared, p);
-
-            // for some reason the most significant bit of the last byte needs to be flipped.
-            // doesnt seem to be any corrosponding action in nano/nem.core, so this may be an issue in one of the above 3 functions. i have no idea.
-            shared[31] ^= (1 << 7);
-
-            // salt
-            for (var i = 0; i < salt.Length; i++)
-            {
-                shared[i] ^= salt[i];
-            }
-
-            // hash salted shared key
-            var digestSha3Two = new KeccakDigest(256);
-            digestSha3Two.BlockUpdate(shared, 0, 32);
-            digestSha3Two.DoFinal(shared, 0);
-
-            return Convert.ToHexString(salt) + AesEncryptor(shared, iv, msg);
-        }
-
-        private static string _Decode(byte[] privateKey, byte[] publicKey, byte[] data)
-        {
-            var salt = data.SubArray(0, 32).ToArray();
-            var iv = data.SubArray(32, 16);
-            var payload = data.SubArray(48, data.Length - 48);
-            var shared = new byte[32];
+            var salt = data.SubArray(0, saltLen).ToArray();
+            var iv = data.SubArray(saltLen, ivLen);
+            var payload = data.SubArray(saltLen + ivLen, data.Length - saltLen - ivLen);
+            var shared = HKDFDeriveSharedKey256(privateKey, publicKey, data.Take(saltLen).ToArray());
 
             return AesDecryptor(shared, iv, payload);
         }
 
-        private static string AesEncryptor(byte[] key, byte[] iv, string msg)
+        private static byte[] AesEncryptor(byte[] key, byte[] iv, string msg)
         {
             using (var aesAlg = Aes.Create())
             {
@@ -190,7 +166,7 @@ namespace io.nem2.sdk.Model.Transactions.Messages
                             swEncrypt.Write(msg);
                         }
 
-                        return Convert.ToHexString(iv) + Convert.ToHexString(msEncrypt.ToArray());
+                        return iv.Concat(msEncrypt.ToArray()).ToArray();
                     }
                 }
             }
@@ -200,6 +176,10 @@ namespace io.nem2.sdk.Model.Transactions.Messages
         {
             using (var aesAlg = Aes.Create())
             {
+                aesAlg.BlockSize = 128;
+
+                aesAlg.KeySize = 256;
+
                 aesAlg.Key = key;
 
                 aesAlg.IV = iv;

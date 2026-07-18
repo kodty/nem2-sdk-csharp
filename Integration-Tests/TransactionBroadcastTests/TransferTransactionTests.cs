@@ -7,7 +7,6 @@ using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Utils;
-using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace IntegrationTests.Infrastructure.Transactions
@@ -51,15 +50,16 @@ namespace IntegrationTests.Infrastructure.Transactions
    
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            //var a = await client.Announce(st);
-            //
-            //Thread.Sleep(3210);
-            //var status = await client.GetTransactionStatus(st.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
+            var a = await client.Announce(st);
+            
+            Thread.Sleep(3210);
+            var status = await client.GetTransactionStatus(st.Hash);
+            
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
-        public async Task CreateAggregateBondedTransaction()
+        [Test, Timeout(20000)]
+        public async Task CreateAggregateCompleteTransaction()
         {
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
@@ -70,32 +70,35 @@ namespace IntegrationTests.Infrastructure.Transactions
                    PlainMessage.Create("hello"),
                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
                    1000000,
-                   false
+                   true
                );
 
             var transfer2 = factory.CreateTransferTransaction(
                    Address.CreateFromEncoded(HttpSetUp.Recipient),
-                   PlainMessage.Create("hello"),
+                   PlainMessage.Create("olleh"),
                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
                    1000000,
-                   false
+                   true
                );
 
-            
-
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
-               .CreateAggregateBonded(
-                "",
-                new UnsignedTransaction[]
-                {
+               .CreateAggregateComplete(
+                [
                     transfer1.Embed(keys.PublicKeyString),
                     transfer2.Embed(keys.PublicKeyString)
-                },
-                new byte[] {},
-                1000000
-                );
+                ],
+                10000000);
 
-           // var signed = transfer.WrapVerified(keys, HttpSetUp.genHash);
+           var signed = transfer.WrapVerified(keys, HttpSetUp.genHash);
+
+           var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+           
+           var a = await client.Announce(signed);
+           
+           Thread.Sleep(4321);
+           var status = await client.GetTransactionStatus(signed.Hash);
+           
+           Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
         [Test, Timeout(30000)]
@@ -124,8 +127,6 @@ namespace IntegrationTests.Infrastructure.Transactions
            // 
            // Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
-         
-        // agg complete
 
         // multisig
 

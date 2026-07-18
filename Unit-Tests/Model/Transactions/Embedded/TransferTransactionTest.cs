@@ -58,7 +58,6 @@ namespace Unit_Tests.Model.Transactions.Embedded
                 );
 
             var aggTx = factory.CreateAggregateBonded(
-                "61E0F8B9AB2FE3E008DCE1380FECDAF5BCFB1851247BF990771154177A0B7E78", 
                 [
                     transfer.Embed(keys.PublicKeyString), 
                     supplyChange.Embed(keys.PublicKeyString)
@@ -68,7 +67,6 @@ namespace Unit_Tests.Model.Transactions.Embedded
             var aggPayload = aggTx.WrapVerified(keys, HttpSetUp.genHash);
 
             Assert.True(aggPayload.Payload.ToHex().Contains(transfer.Embed(keys.PublicKeyString).Payload.Concat(supplyChange.Embed(keys.PublicKeyString).Payload).ToArray().ToHex()));
-           //Assert.That(aggPayload.Payload.ToHex(), Is.EqualTo(""));
         }
     }
 }

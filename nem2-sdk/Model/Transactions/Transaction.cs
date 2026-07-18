@@ -52,18 +52,34 @@ namespace io.nem2.sdk.Model.Transactions
             };
         }
 
+        private bool isAggregate()
+        {
+            return this.Type == TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue() || this.Type == TransactionTypes.Types.AGGREGATE_BONDED.GetValue();
+        }
+
         public SignedTransaction WrapVerified(SecretKeyPair signer, string genHash)
         {
             EntityBody.Signer = signer.PublicKey;
 
-            var entity = this.Serialize(exclude: []);
+            byte[] entity = this.Serialize(exclude: []);
 
-            var signBytes = new byte[32 + entity.Length - (4 + 4 + 64 + 32 + 4)];
+            int truncate = 0;
+
+            if (isAggregate())
+            {
+                truncate = 52; // remove everything before version and after transactionsHash.
+            }
+            else
+            {
+                truncate = entity.Length - (4 + 4 + 64 + 32 + 4);
+            }
+
+            var signBytes = new byte[32 + truncate];
 
             for (var x = 0; x < 32; x++)
                 signBytes[x] = genHash.FromHex()[x];
 
-            for (var x = 32; x < 32 + entity.Length - (4 + 4 + 64 + 32 + 4); x++)
+            for (var x = 32; x < 32 + truncate; x++)
                 signBytes[x] = entity[(4 + 4 + 64 + 32 + 4) + x - 32];
 
             var sig = NaclFast.SignDetached(msg: signBytes, signer.SecretKey.ToArray());

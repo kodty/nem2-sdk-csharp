@@ -73,34 +73,33 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public AggregateTransaction CreateAggregateBonded(string txsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, ulong fee)
+        public AggregateTransaction CreateAggregateBonded(UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, ulong fee)
         {
-            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
+            return new AggregateTransaction(embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
             {
                 EntityBody = new EntityBody()
                 {
                     Signer = null,
                     Entity_body_reserved_1 = 0,
                     Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
+                    Version = 0x03
                 },
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
         }
 
-        public AggregateTransaction CreateAggregateComplete(string txsHash, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, ulong fee, bool embedded)
+        public AggregateTransaction CreateAggregateComplete(UnsignedTransaction[] embeddedTransactions, ulong fee)
         {
-            return new AggregateTransaction(txsHash, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE)
+            return new AggregateTransaction(embeddedTransactions, null, TransactionTypes.Types.AGGREGATE_COMPLETE)
             {
                 EntityBody = new EntityBody()
                 {
                     Signer = null,
                     Entity_body_reserved_1 = 0,
                     Network = NetworkType.GetNetworkByte(),
-                    Version = 0x02
+                    Version = 0x03
                 },
-                Type = TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
