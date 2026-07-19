@@ -1,4 +1,7 @@
 ﻿using Coppery;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -139,6 +142,56 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             pack.Invoke(null, [sharedSecret, result]);
 
             return sharedSecret;
+        }
+
+        public static byte[] AesGcmEncryptor_(byte[] nonce, byte[] key, string data, byte[] tag, byte[] info)
+        {
+            var engine = new AesEngine();
+
+            GcmBlockCipher blockCipher = new GcmBlockCipher(engine);
+
+            var parameters = new AeadParameters(new KeyParameter(key, 0, 32), 128, nonce, tag);
+
+            blockCipher.Init(true, parameters);
+
+            byte[] input = data.FromHex();
+
+            byte[] authTag = new byte[16];
+
+            blockCipher.ProcessBytes(input, 0, input.Length, authTag, 0);
+
+            byte[] cipher = new byte[input.Length];
+
+            blockCipher.DoFinal(cipher);
+
+            return cipher;
+
+        }
+
+        public static byte[] AesGcmEncryptor(byte[] nonce, byte[] key, string data, byte[] tag, byte[] info)
+        {
+            using(AesGcm aes = new AesGcm(key, 16))
+            {
+                var dataBytes = data.FromHex();
+
+                var cipher = new byte[dataBytes.Length];
+
+                aes.Encrypt(nonce, dataBytes, cipher, tag, info);
+                
+                return cipher;
+            }
+        }
+
+        public static byte[] AesGcmDecryptor(byte[] nonce, byte[] cipher, byte[] key, byte[] tag, byte[] info = null)
+        {
+            using (AesGcm aes = new AesGcm(key, 16))
+            {
+                byte[] text = new byte[cipher.Length];
+
+                aes.Decrypt(nonce, cipher, tag, info);
+
+                return cipher;
+            }
         }
 
         private static byte[] AesEncryptor(byte[] key, byte[] iv, string msg)

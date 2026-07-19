@@ -5,12 +5,38 @@ using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions.Messages;
 using System.Security.Cryptography;
 using System.Text.Json.Nodes;
-using System.Text;
 
 namespace Unit_Tests.Model
 {
     public class Message
     {
+        [Test]
+        public void CanEncodeCipher()
+        {
+            var text = File.ReadAllLines(HttpSetUp.VectorsPath + "4.test-cipher.json");
+
+            var keys = JsonObject.Parse(String.Concat(text));
+
+            for (var i = 0; i < keys.AsArray().Count; i++)
+            {
+                byte[] sk = keys[i]["privateKey"].GetValue<string>().FromHex();
+                byte[] pk = keys[i]["otherPublicKey"].GetValue<string>().FromHex();
+                byte[] tag = keys[i]["tag"].GetValue<string>().FromHex();
+                byte[] iv = keys[i]["iv"].GetValue<string>().FromHex();
+                byte[] cipherText = keys[i]["cipherText"].GetValue<string>().FromHex();
+                string clearText = keys[i]["clearText"].GetValue<string>();
+
+                byte[] scalarResult = SecureMessage.DeriveSharedKey(sk, pk);
+               
+                byte[] HKDF_key = SecureMessage.HKDF_Derive(scalarResult);
+
+                byte[] cipherResult = SecureMessage.AesGcmEncryptor_(iv, HKDF_key, clearText, tag, null);
+
+                Assert.AreEqual(cipherText.ToHex(), cipherResult.ToHex());
+            }
+        }
+
+
         [Test]
         public void CanCreateSharedKey()
         {
