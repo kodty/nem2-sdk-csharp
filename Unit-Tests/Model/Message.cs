@@ -3,10 +3,7 @@ using Integration_Tests;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions.Messages;
-using Org.BouncyCastle.Security;
-using System.Collections;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json.Nodes;
 
 namespace Unit_Tests.Model
@@ -20,14 +17,19 @@ namespace Unit_Tests.Model
 
             var keys = JsonObject.Parse(String.Concat(text));
 
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < keys.AsArray().Count; i++)
             {
                 string sk = keys[i]["privateKey"].GetValue<string>();
                 string pk = keys[i]["otherPublicKey"].GetValue<string>();
                 string sharedKey = keys[i]["sharedKey"].GetValue<string>();
                 string scalarMultResult = keys[i]["scalarMulResult"].GetValue<string>();
-               
-                Assert.AreEqual(SecureMessage.DeriveSharedKey(sk.FromHex(), pk.FromHex()).ToHex(), scalarMultResult);
+
+                byte[] scalarResult = SecureMessage.DeriveSharedKey(sk.FromHex(), pk.FromHex());
+
+                byte[] HKDF_key = SecureMessage.HKDF_Derive(scalarResult, System.Text.Encoding.UTF8.GetBytes("catapult"));
+
+                Assert.AreEqual(scalarResult.ToHex(), scalarMultResult);
+                Assert.AreEqual(HKDF_key.ToHex(), sharedKey);
             }
         }
 

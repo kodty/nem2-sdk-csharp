@@ -61,9 +61,11 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return 0 != 1 - (a & b & 1);
         }
 
-        public static byte[] HKDFExpand(byte[] sharedsecret, byte[] info)
+        public static byte[] HKDF_Derive(byte[] sharedsecret, byte[] info = null, byte[] salt = null)
         {
-            return HKDF.Expand(HashAlgorithmName.SHA256, prk: sharedsecret, 32, info: info);
+            var prk = HKDF.Extract(HashAlgorithmName.SHA256, ikm: sharedsecret, salt: salt);
+
+            return HKDF.Expand(HashAlgorithmName.SHA256, prk: prk, outputLength: 32, info: info);
         }
 
         public static byte[] DeriveSharedKey(byte[] privateKey, byte[] otherPublicKey)

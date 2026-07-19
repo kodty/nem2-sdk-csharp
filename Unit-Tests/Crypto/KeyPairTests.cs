@@ -17,6 +17,8 @@ namespace Unit_Tests.Crypto
             {
                 var kp = SecretKeyPair.CreateFromPrivateKey(keys[i]["privateKey"].GetValue<string>());
 
+                Assert.That(kp.PrivateKeyString, Is.EqualTo(keys[i]["privateKey"].GetValue<string>()));
+
                 Assert.That(kp.PublicKeyString, Is.EqualTo(keys[i]["publicKey"].GetValue<string>()));
             }   
         }   
