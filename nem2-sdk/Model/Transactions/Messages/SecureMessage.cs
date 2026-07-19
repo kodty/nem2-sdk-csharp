@@ -19,14 +19,14 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             Type = MessageType.Type.ENCRYPTED.GetValue();
             Payload = payload;
         }
-        public static SecureMessage Create(string msg, string senderPrivateKey, string receiverPublicKey)
+        public static SecureMessage Create(string msg, string senderPrivateKey, string receiverPublicKey, byte[] info = null)
         {
-            return new SecureMessage(Encode(msg, senderPrivateKey, receiverPublicKey));
+            return new SecureMessage(Encode(msg, senderPrivateKey, receiverPublicKey, info));
         }
 
-        public string GetDecodedPayload(string privateKey, string publicKey)
+        public string GetDecodedPayload(string privateKey, string publicKey, byte[] info = null)
         {
-            return Decode(privateKey.FromHex(), publicKey.FromHex(), Payload, 16);
+            return Decode(privateKey.FromHex(), publicKey.FromHex(), Payload, info);
         }
 
         internal override byte GetMessageType()
@@ -108,26 +108,26 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return sharedSecret;
         }
 
-        private static byte[] Encode(string text, string secretKey, string publicKey)
+        private static byte[] Encode(string text, string secretKey, string publicKey, byte[] info = null)
         {
             var random = new SecureRandom();
 
             var ivData = new byte[16];
             random.NextBytes(ivData);
 
-            var shared = DeriveSharedKey(
+            var shared = HKDF_Derive(DeriveSharedKey(
                 Convert.FromHexString(secretKey),
-                Convert.FromHexString(publicKey));
+                Convert.FromHexString(publicKey)), info);
 
             return AesEncryptor(shared, ivData, text);
 
         }
 
-        public static string Decode(byte[] privateKey, byte[] publicKey, byte[] data, int ivLen = 16)
+        public static string Decode(byte[] privateKey, byte[] publicKey, byte[] data, byte[] info = null)
         {
-            var iv = data.SubArray(0, ivLen);
-            var payload = data.SubArray(ivLen, data.Length - ivLen);
-            var shared = DeriveSharedKey(privateKey, publicKey);
+            var iv = data.SubArray(0, 16);
+            var payload = data.SubArray(16, data.Length - 16);
+            var shared = HKDF_Derive(DeriveSharedKey(privateKey, publicKey), info);
 
             return AesDecryptor(shared, iv, payload);
         }

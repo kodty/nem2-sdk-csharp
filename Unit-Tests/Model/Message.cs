@@ -5,6 +5,7 @@ using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions.Messages;
 using System.Security.Cryptography;
 using System.Text.Json.Nodes;
+using System.Text;
 
 namespace Unit_Tests.Model
 {
@@ -39,13 +40,13 @@ namespace Unit_Tests.Model
             var secureMessage = SecureMessage.Create(
                     msg: "Hello", 
                     senderPrivateKey: "5949fc564c90ac186cd4f9d2b8298b677bca300b9d8f926ca04e1739e4ed0cba", 
-                    receiverPublicKey: "2ecf1decef6818bd9c38985afd6efc1c981e64e9a1ecc1e7b6b25eb30454cce0"
-                );
+                    receiverPublicKey: "2ecf1decef6818bd9c38985afd6efc1c981e64e9a1ecc1e7b6b25eb30454cce0",
+                    System.Text.Encoding.UTF8.GetBytes("catapult"));
             
             var decoded = secureMessage.GetDecodedPayload(
                     privateKey: "5949fc564c90ac186cd4f9d2b8298b677bca300b9d8f926ca04e1739e4ed0cba",
-                    publicKey: "2ecf1decef6818bd9c38985afd6efc1c981e64e9a1ecc1e7b6b25eb30454cce0"
-                );
+                    publicKey: "2ecf1decef6818bd9c38985afd6efc1c981e64e9a1ecc1e7b6b25eb30454cce0",
+                    System.Text.Encoding.UTF8.GetBytes("catapult"));
             
             Assert.AreEqual("Hello", decoded);
             
@@ -68,11 +69,13 @@ namespace Unit_Tests.Model
                 secureMessage = SecureMessage.Create(
                     msg: msg, 
                     senderPrivateKey: sender.KeyPair.PrivateKeyString, 
-                    receiverPublicKey: receiver.KeyPair.PublicKeyString);
+                    receiverPublicKey: receiver.KeyPair.PublicKeyString,
+                    System.Text.Encoding.UTF8.GetBytes("catapult"));
             
                 decoded = secureMessage.GetDecodedPayload(
                     privateKey: receiver.KeyPair.PrivateKeyString,
-                    publicKey: sender.KeyPair.PublicKeyString);
+                    publicKey: sender.KeyPair.PublicKeyString,
+                    System.Text.Encoding.UTF8.GetBytes("catapult"));
 
                 Assert.That(sender.KeyPair.PrivateKey.ToHex() != receiver.KeyPair.PrivateKey.ToHex());
                 Assert.AreEqual(msg, decoded);
