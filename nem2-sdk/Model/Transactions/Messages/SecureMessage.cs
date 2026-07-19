@@ -44,6 +44,10 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return (ushort)Payload.Length;
         }
 
+        // publicKey is canonical if the y coordinate is smaller than 2^255 - 19
+        // note: this version is based on server version and should be constant-time
+        // note 2: don't touch it, you'll break it
+        // SharedKey.js#L18C1-L20C43
         private static bool IsCanonicalKey(byte[] publicKey)
         {
             var buffer = publicKey;
@@ -62,52 +66,38 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return HKDF.Expand(HashAlgorithmName.SHA256, prk: sharedsecret, 32, info: info);
         }
 
-        public static byte[] DeriveSharedKey256(byte[] privateKey, byte[] otherPublicKey, byte[] info = null)
-        {
-            var sharedsecret = DeriveSharedSecret(privateKey, otherPublicKey, (byte[] key) =>
-            {
-                using(SHA512 sha = SHA512.Create())
-                {
-                    var hash = sha.ComputeHash(key, 0, 32);
-
-                    return hash;
-                }
-            });
-
-            return sharedsecret;
-        }
-
-
-        public static byte[] DeriveSharedSecret(byte[] privateKey, byte[] otherPublicKey, Func<byte[], byte[]> hashFunc)
+        public static byte[] DeriveSharedKey256(byte[] privateKey, byte[] otherPublicKey)
         {
             var Gf = typeof(NaclFast).GetMethod("Gf", BindingFlags.Static | BindingFlags.NonPublic)!;
+            var unpackneg = typeof(NaclFast).GetMethod("Unpackneg", BindingFlags.Static | BindingFlags.NonPublic)!;
+            var Z = typeof(NaclFast).GetMethod("Z", BindingFlags.Static | BindingFlags.NonPublic)!;
+            var scalarmult = typeof(NaclFast).GetMethod("Scalarmult", BindingFlags.Static | BindingFlags.NonPublic)!;
+            var pack = typeof(NaclFast).GetMethod("Pack", BindingFlags.Static | BindingFlags.NonPublic)!;
 
             long[][] point = [(long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null])];
-
-            var unpackneg = typeof(NaclFast).GetMethod("Unpackneg", BindingFlags.Static | BindingFlags.NonPublic)!;
-
-            if(!IsCanonicalKey(otherPublicKey) || 0 != (int)unpackneg.Invoke(null, [point, otherPublicKey])){
+           
+            if (!IsCanonicalKey(otherPublicKey) || 0 != (int)unpackneg.Invoke(null, [point, otherPublicKey])){
                 throw new CryptographicException("invalid point");
             }
-
-            var Z = typeof(NaclFast).GetMethod("Z", BindingFlags.Static | BindingFlags.NonPublic)!;
-
+           
             Z.Invoke(null, [point[0], Gf.Invoke(null, [null]), point[0]]);
             Z.Invoke(null, [point[3], Gf.Invoke(null, [null]), point[3]]);
 
-            byte[] scalar = hashFunc(privateKey);
+            byte[] scalar = new byte[64];
+
+            using (SHA512 sha = SHA512.Create())
+            {
+                scalar = sha.ComputeHash(privateKey, 0, 32);
+                CryptographicOperations.ZeroMemory(privateKey);
+            }
 
             scalar[0] &= 248;
             scalar[31] &= 127;
             scalar[31] |= 64;
 
             long[][] result = [(long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null])];
-
-            var scalarmult = typeof(NaclFast).GetMethod("Scalarmult", BindingFlags.Static | BindingFlags.NonPublic)!;
             
             scalarmult.Invoke(null, [result, point, scalar]);
-
-            var pack = typeof(NaclFast).GetMethod("Pack", BindingFlags.Static | BindingFlags.NonPublic)!;
 
             byte[] sharedSecret = new byte[32];
 
@@ -128,8 +118,8 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
             var shared = DeriveSharedKey256(
                 Convert.FromHexString(secretKey),
-                Convert.FromHexString(publicKey), 
-                salt);
+                Convert.FromHexString(publicKey)
+                /*salt*/);
 
             return salt.Concat(AesEncryptor(shared, ivData, text)).ToArray();
 
@@ -140,7 +130,7 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             var salt = data.SubArray(0, saltLen).ToArray();
             var iv = data.SubArray(saltLen, ivLen);
             var payload = data.SubArray(saltLen + ivLen, data.Length - saltLen - ivLen);
-            var shared = DeriveSharedKey256(privateKey, publicKey, data.Take(saltLen).ToArray());
+            var shared = DeriveSharedKey256(privateKey, publicKey /*data.Take(saltLen).ToArray()*/);
 
             return AesDecryptor(shared, iv, payload);
         }
