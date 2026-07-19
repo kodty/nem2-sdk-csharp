@@ -57,7 +57,12 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return 0 != 1 - (a & b & 1);
         }
 
-        public static byte[] HKDFDeriveSharedKey256(byte[] privateKey, byte[] otherPublicKey, byte[] info = null)
+        public byte[] HKDFExpand(byte[] sharedsecret, byte[] info)
+        {
+            return HKDF.Expand(HashAlgorithmName.SHA256, prk: sharedsecret, 32, info: info);
+        }
+
+        public static byte[] DeriveSharedKey256(byte[] privateKey, byte[] otherPublicKey, byte[] info = null)
         {
             var sharedsecret = DeriveSharedSecret(privateKey, otherPublicKey, (byte[] key) =>
             {
@@ -69,8 +74,9 @@ namespace io.nem2.sdk.Model.Transactions.Messages
                 }
             });
 
-            return HKDF.Expand(HashAlgorithmName.SHA256, prk: sharedsecret, 32, info: info);
+            return sharedsecret;
         }
+
 
         public static byte[] DeriveSharedSecret(byte[] privateKey, byte[] otherPublicKey, Func<byte[], byte[]> hashFunc)
         {
@@ -98,7 +104,7 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             long[][] result = [(long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null]), (long[])Gf.Invoke(null, [null])];
 
             var scalarmult = typeof(NaclFast).GetMethod("Scalarmult", BindingFlags.Static | BindingFlags.NonPublic)!;
-
+            
             scalarmult.Invoke(null, [result, point, scalar]);
 
             var pack = typeof(NaclFast).GetMethod("Pack", BindingFlags.Static | BindingFlags.NonPublic)!;
@@ -120,7 +126,7 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             var ivData = new byte[16];
             random.NextBytes(ivData);
 
-            var shared = HKDFDeriveSharedKey256(
+            var shared = DeriveSharedKey256(
                 Convert.FromHexString(secretKey),
                 Convert.FromHexString(publicKey), 
                 salt);
@@ -134,7 +140,7 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             var salt = data.SubArray(0, saltLen).ToArray();
             var iv = data.SubArray(saltLen, ivLen);
             var payload = data.SubArray(saltLen + ivLen, data.Length - saltLen - ivLen);
-            var shared = HKDFDeriveSharedKey256(privateKey, publicKey, data.Take(saltLen).ToArray());
+            var shared = DeriveSharedKey256(privateKey, publicKey, data.Take(saltLen).ToArray());
 
             return AesDecryptor(shared, iv, payload);
         }

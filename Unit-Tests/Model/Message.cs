@@ -23,7 +23,7 @@ namespace Unit_Tests.Model
                 string sharedKey = keys[i]["sharedKey"].GetValue<string>();
                 string scalarMultResult = keys[i]["scalarMulResult"].GetValue<string>();
                
-                Assert.AreEqual(SecureMessage.HKDFDeriveSharedKey256(sk.FromHex(), pk.FromHex()).ToHex(), sharedKey);
+                Assert.AreEqual(SecureMessage.DeriveSharedKey256(sk.FromHex(), pk.FromHex()).ToHex(), scalarMultResult);
             }
         }
 
