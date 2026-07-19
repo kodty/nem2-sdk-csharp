@@ -79,6 +79,18 @@ namespace Unit_Tests.Model
 
                 Assert.That(sender.KeyPair.PrivateKey.ToHex() != receiver.KeyPair.PrivateKey.ToHex());
                 Assert.AreEqual(msg, decoded);
+
+                var secureMessageWithoutInfo = SecureMessage.Create(
+                    msg: msg,
+                    senderPrivateKey: sender.KeyPair.PrivateKeyString,
+                    receiverPublicKey: receiver.KeyPair.PublicKeyString);
+
+                var decodedWithoutInfo = secureMessageWithoutInfo.GetDecodedPayload(
+                    privateKey: receiver.KeyPair.PrivateKeyString,
+                    publicKey: sender.KeyPair.PublicKeyString);
+
+                Assert.That(sender.KeyPair.PrivateKey.ToHex() != receiver.KeyPair.PrivateKey.ToHex());
+                Assert.AreEqual(msg, decodedWithoutInfo);
             }
         }
     }

@@ -19,14 +19,47 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             Type = MessageType.Type.ENCRYPTED.GetValue();
             Payload = payload;
         }
+
         public static SecureMessage Create(string msg, string senderPrivateKey, string receiverPublicKey, byte[] info = null)
         {
-            return new SecureMessage(Encode(msg, senderPrivateKey, receiverPublicKey, info));
+            var random = new SecureRandom();
+
+            var salt = new byte[32];
+            random.NextBytes(salt);
+
+            return new SecureMessage(Encode(msg, senderPrivateKey.FromHex(), receiverPublicKey.FromHex(), info, salt));
         }
 
-        public string GetDecodedPayload(string privateKey, string publicKey, byte[] info = null)
+        public string GetDecodedPayload(string privateKey, string publicKey, byte[] info)
         {
             return Decode(privateKey.FromHex(), publicKey.FromHex(), Payload, info);
+        }
+
+        public string GetDecodedPayload(string privateKey, string publicKey)
+        {
+            return Decode(privateKey.FromHex(), publicKey.FromHex(), Payload);
+        }
+
+        public static byte[] Encode(string text, byte[] secretKey, byte[] publicKey, byte[] info = null, byte[] salt = null)
+        {
+            var random = new SecureRandom();
+
+            var ivData = new byte[16];
+            random.NextBytes(ivData);
+
+            var shared = HKDF_Derive(DeriveSharedKey(secretKey, publicKey), info, salt);
+
+            return salt.Concat(AesEncryptor(shared, ivData, text)).ToArray();
+        }
+
+        public static string Decode(byte[] privateKey, byte[] publicKey, byte[] data, byte[] info = null)
+        {
+            var salt = data.SubArray(0, 32);
+            var iv = data.SubArray(32, 16);
+            var payload = data.SubArray(48, data.Length - 32 - 16);
+            var shared = HKDF_Derive(DeriveSharedKey(privateKey, publicKey), info, salt);
+
+            return AesDecryptor(shared, iv, payload);
         }
 
         internal override byte GetMessageType()
@@ -106,30 +139,6 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             pack.Invoke(null, [sharedSecret, result]);
 
             return sharedSecret;
-        }
-
-        private static byte[] Encode(string text, string secretKey, string publicKey, byte[] info = null)
-        {
-            var random = new SecureRandom();
-
-            var ivData = new byte[16];
-            random.NextBytes(ivData);
-
-            var shared = HKDF_Derive(DeriveSharedKey(
-                Convert.FromHexString(secretKey),
-                Convert.FromHexString(publicKey)), info);
-
-            return AesEncryptor(shared, ivData, text);
-
-        }
-
-        public static string Decode(byte[] privateKey, byte[] publicKey, byte[] data, byte[] info = null)
-        {
-            var iv = data.SubArray(0, 16);
-            var payload = data.SubArray(16, data.Length - 16);
-            var shared = HKDF_Derive(DeriveSharedKey(privateKey, publicKey), info);
-
-            return AesDecryptor(shared, iv, payload);
         }
 
         private static byte[] AesEncryptor(byte[] key, byte[] iv, string msg)
