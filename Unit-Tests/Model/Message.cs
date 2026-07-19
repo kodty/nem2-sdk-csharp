@@ -3,6 +3,10 @@ using Integration_Tests;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions.Messages;
+using Org.BouncyCastle.Security;
+using System.Collections;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json.Nodes;
 
 namespace Unit_Tests.Model
@@ -23,7 +27,7 @@ namespace Unit_Tests.Model
                 string sharedKey = keys[i]["sharedKey"].GetValue<string>();
                 string scalarMultResult = keys[i]["scalarMulResult"].GetValue<string>();
                
-                Assert.AreEqual(SecureMessage.DeriveSharedKey256(sk.FromHex(), pk.FromHex()).ToHex(), scalarMultResult);
+                Assert.AreEqual(SecureMessage.DeriveSharedKey(sk.FromHex(), pk.FromHex()).ToHex(), scalarMultResult);
             }
         }
 
@@ -45,19 +49,31 @@ namespace Unit_Tests.Model
             
             for (int x = 0; x < 100; x++)
             {
-                var keys1 = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
-                var keys2 = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
-            
+                var sender = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
+                var receiver = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
+
+                string msg = "";
+
+                using (var ng = RandomNumberGenerator.Create())
+                {
+                    byte[] data = new byte[17];
+                    
+                    ng.GetNonZeroBytes(data);
+
+                    msg = data.ToHex();
+                }
+
                 secureMessage = SecureMessage.Create(
-                    msg: "Hello", 
-                    senderPrivateKey: keys1.KeyPair.PrivateKeyString, 
-                    receiverPublicKey: keys2.KeyPair.PublicKeyString);
+                    msg: msg, 
+                    senderPrivateKey: sender.KeyPair.PrivateKeyString, 
+                    receiverPublicKey: receiver.KeyPair.PublicKeyString);
             
                 decoded = secureMessage.GetDecodedPayload(
-                    privateKey: keys1.KeyPair.PrivateKeyString,
-                    publicKey: keys2.KeyPair.PublicKeyString);
-            
-                Assert.AreEqual("Hello", decoded);
+                    privateKey: receiver.KeyPair.PrivateKeyString,
+                    publicKey: sender.KeyPair.PublicKeyString);
+
+                Assert.That(sender.KeyPair.PrivateKey.ToHex() != receiver.KeyPair.PrivateKey.ToHex());
+                Assert.AreEqual(msg, decoded);
             }
         }
     }

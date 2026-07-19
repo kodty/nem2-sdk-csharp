@@ -26,7 +26,7 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
         public string GetDecodedPayload(string privateKey, string publicKey)
         {
-            return Decode(privateKey.FromHex(), publicKey.FromHex(), Payload, 32, 16);
+            return Decode(privateKey.FromHex(), publicKey.FromHex(), Payload, 16);
         }
 
         internal override byte GetMessageType()
@@ -61,12 +61,12 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return 0 != 1 - (a & b & 1);
         }
 
-        public byte[] HKDFExpand(byte[] sharedsecret, byte[] info)
+        public static byte[] HKDFExpand(byte[] sharedsecret, byte[] info)
         {
             return HKDF.Expand(HashAlgorithmName.SHA256, prk: sharedsecret, 32, info: info);
         }
 
-        public static byte[] DeriveSharedKey256(byte[] privateKey, byte[] otherPublicKey)
+        public static byte[] DeriveSharedKey(byte[] privateKey, byte[] otherPublicKey)
         {
             var Gf = typeof(NaclFast).GetMethod("Gf", BindingFlags.Static | BindingFlags.NonPublic)!;
             var unpackneg = typeof(NaclFast).GetMethod("Unpackneg", BindingFlags.Static | BindingFlags.NonPublic)!;
@@ -110,27 +110,22 @@ namespace io.nem2.sdk.Model.Transactions.Messages
         {
             var random = new SecureRandom();
 
-            var salt = new byte[32];
-            random.NextBytes(salt);
-
             var ivData = new byte[16];
             random.NextBytes(ivData);
 
-            var shared = DeriveSharedKey256(
+            var shared = DeriveSharedKey(
                 Convert.FromHexString(secretKey),
-                Convert.FromHexString(publicKey)
-                /*salt*/);
+                Convert.FromHexString(publicKey));
 
-            return salt.Concat(AesEncryptor(shared, ivData, text)).ToArray();
+            return AesEncryptor(shared, ivData, text);
 
         }
 
-        public static string Decode(byte[] privateKey, byte[] publicKey, byte[] data, int saltLen = 32, int ivLen = 16)
+        public static string Decode(byte[] privateKey, byte[] publicKey, byte[] data, int ivLen = 16)
         {
-            var salt = data.SubArray(0, saltLen).ToArray();
-            var iv = data.SubArray(saltLen, ivLen);
-            var payload = data.SubArray(saltLen + ivLen, data.Length - saltLen - ivLen);
-            var shared = DeriveSharedKey256(privateKey, publicKey /*data.Take(saltLen).ToArray()*/);
+            var iv = data.SubArray(0, ivLen);
+            var payload = data.SubArray(ivLen, data.Length - ivLen);
+            var shared = DeriveSharedKey(privateKey, publicKey);
 
             return AesDecryptor(shared, iv, payload);
         }
