@@ -87,6 +87,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     transfer1.Embed(keys.PublicKeyString),
                     transfer2.Embed(keys.PublicKeyString)
                 ],
+                Account.CreateFromPrivateKey(HttpSetUp.TestSK, NetworkType.Types.TEST_NET).KeyPair.PublicKey,
                 10000000);
 
            var signed = transfer.WrapVerified(keys, HttpSetUp.genHash);
