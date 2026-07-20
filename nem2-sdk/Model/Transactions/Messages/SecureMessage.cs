@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
@@ -153,7 +154,7 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
             byte[] input = data.FromHex();
 
-            byte[] result = new byte[tag.Length + input.Length];
+            byte[] result = new byte[input.Length + tag.Length];
 
             blockCipher.ProcessBytes(input, 0, input.Length, result, 0);
 
@@ -170,7 +171,43 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
             blockCipher.Init(false, parameters);
 
-            byte[] result = new byte[input.Length - 16];
+            byte[] result = new byte[input.Length - tag.Length];
+
+            blockCipher.ProcessBytes(input, 0, input.Length, result, 0);
+
+            blockCipher.DoFinal(result);
+
+            return result;
+        }
+
+        public static byte[] AesGcmEncryptor_(byte[] nonce, byte[] key, string data, byte[] tag, byte[] info)
+        {
+            GcmBlockCipher blockCipher = new GcmBlockCipher(new AesLightEngine());
+
+            var parameters = new AeadParameters(new KeyParameter(key, 0, 32), 128, nonce, tag);
+
+            blockCipher.Init(true, parameters);
+
+            byte[] input = data.FromHex();
+
+            byte[] result = new byte[input.Length + tag.Length];
+
+            blockCipher.ProcessBytes(input, 0, input.Length, result, 0);
+
+            blockCipher.DoFinal(result);
+
+            return result;
+        }
+
+        public static byte[] AesGcmDecryptor_(byte[] nonce, byte[] key, byte[] input, byte[] tag = null)
+        {
+            GcmBlockCipher blockCipher = new GcmBlockCipher(new AesEngine());
+
+            var parameters = new AeadParameters(new KeyParameter(key, 0, 32), 128, nonce, tag);
+
+            blockCipher.Init(false, parameters);
+
+            byte[] result = new byte[input.Length - tag.Length];
 
             blockCipher.ProcessBytes(input, 0, input.Length, result, 0);
 

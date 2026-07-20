@@ -22,18 +22,26 @@ namespace Unit_Tests.Model
                 byte[] sk = keys[i]["privateKey"].GetValue<string>().FromHex();
                 byte[] pk = keys[i]["otherPublicKey"].GetValue<string>().FromHex();
                 byte[] iv = keys[i]["iv"].GetValue<string>().FromHex();
-                //byte[] cipherText = keys[i]["cipherText"].GetValue<string>().FromHex();
+                byte[] cipherText = keys[i]["cipherText"].GetValue<string>().FromHex();
                 string clearText = keys[i]["clearText"].GetValue<string>();
 
                 byte[] scalarResult = SecureMessage.DeriveSharedKey(sk, pk);
                
                 byte[] HKDF_key = SecureMessage.HKDF_Derive(scalarResult);
 
-                byte[] cipherResult = SecureMessage.AesGcmSivEncryptor_(iv, HKDF_key, clearText, keys[i]["tag"].GetValue<string>().FromHex(), null);
+                byte[] cipherSivResult = SecureMessage.AesGcmSivEncryptor_(iv, HKDF_key, clearText, keys[i]["tag"].GetValue<string>().FromHex(), null);
 
-                byte[] decrypted = SecureMessage.AesGcmSivDecryptor_(iv, HKDF_key, cipherResult, keys[i]["tag"].GetValue<string>().FromHex());
+                byte[] decryptedSiv = SecureMessage.AesGcmSivDecryptor_(iv, HKDF_key, cipherSivResult, keys[i]["tag"].GetValue<string>().FromHex());
 
-                Assert.AreEqual(clearText, decrypted.ToHex());
+                Assert.AreEqual(clearText, decryptedSiv.ToHex());
+
+                //byte[] cipherResult = SecureMessage.AesGcmEncryptor_(iv, HKDF_key, clearText, keys[i]["tag"].GetValue<string>().FromHex(), null);
+                //
+                //var tag = keys[i]["tag"].GetValue<string>().FromHex();
+                //
+                //byte[] decrypted = SecureMessage.AesGcmDecryptor_(iv, HKDF_key, cipherResult, cipherResult.SubArray(cipherResult.Length - 16, 16).ToArray());
+                //
+                //Assert.AreEqual(cipherResult.ToHex(), cipherText.Concat(tag).ToArray().ToHex());
             }
         }
 
