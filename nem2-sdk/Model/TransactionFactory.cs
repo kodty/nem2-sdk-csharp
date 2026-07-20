@@ -73,33 +73,35 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public AggregateTransaction CreateAggregateBonded(UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, ulong fee)
+        public AggregateTransaction CreateAggregateBonded(UnsignedTransaction[] embeddedTransactions, byte[] signer, byte[] cosignatures, ulong fee)
         {
-            return new AggregateTransaction(embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
+            var entityBody = new EntityBody()
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x03
-                },
+                Signer = signer,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x03
+            };
+
+            return new AggregateTransaction(entityBody, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
+            {
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
         }
 
-        public AggregateTransaction CreateAggregateComplete(UnsignedTransaction[] embeddedTransactions, ulong fee)
+        public AggregateTransaction CreateAggregateComplete(UnsignedTransaction[] embeddedTransactions, byte[] signer, ulong fee)
         {
-            return new AggregateTransaction(embeddedTransactions, null, TransactionTypes.Types.AGGREGATE_COMPLETE)
+            var entityBody = new EntityBody()
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x03
-                },
+                Signer = signer,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x03
+            };
+
+            return new AggregateTransaction(entityBody, embeddedTransactions, null, TransactionTypes.Types.AGGREGATE_COMPLETE)
+            {       
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };

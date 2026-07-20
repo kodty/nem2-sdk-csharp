@@ -1,5 +1,6 @@
 ﻿using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
+using System.Diagnostics;
 using System.Reflection;
 using TweetNaclSharp;
 
@@ -89,7 +90,7 @@ namespace io.nem2.sdk.Model.Transactions
                 for (var x = 8; x < 72; x++)
                     entity[x] = sig[x - 8];
 
-                return new SignedTransaction()
+                var result = new SignedTransaction()
                 {
                     Payload = entity,
                     SignedBytes = signBytes,
@@ -97,6 +98,22 @@ namespace io.nem2.sdk.Model.Transactions
                     Signature = sig.ToHex(),
                     Hash = HashTransaction(sig, signer.PublicKey, signBytes)
                 };
+
+                if (isAggregate())
+                {
+                    var hash = new byte[32];
+
+                    var sha3Hasher = new Sha3Digest(256);
+
+                    sha3Hasher.BlockUpdate(result.Hash.FromHex(), 0, 32);
+                    sha3Hasher.BlockUpdate(result.Signer.FromHex(), 0, 32);
+                    sha3Hasher.DoFinal(hash, 0);
+
+                    result.Hash = hash.ToHex();
+
+                }
+
+                return result;
             }
             else throw new Exception("signature error");
         }

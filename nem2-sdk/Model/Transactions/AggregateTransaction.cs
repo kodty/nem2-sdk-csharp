@@ -12,56 +12,47 @@ namespace io.nem2.sdk.Model.Transactions
         [Order(14)]
         public uint Aggregate_​transaction_​header_​reserved_​1 { get; set; }
         [Order(15)]
-        public byte[] EmbeddedTransactions { get; set; }
+        public byte[] EmbeddedTransactionsPayload { get; set; }
         [Order(16)]
         public byte[] Cosignatures { get; set; }
 
-        internal byte[][] EmbeddedTransactionHashes { get; set; }
-
-        public AggregateTransaction(UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type) : base(type, false)
+        public AggregateTransaction(EntityBody entityBody, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type) : base(type, false)
         {
-            TransactionsHash = CalculateMerkleRoot_Combine(embeddedTransactions);
-            PayloadSize = (uint)EmbeddedTransactions.Length;
-            Aggregate_​transaction_​header_​reserved_​1 = 0;
-            // EmbeddedTransactions = _Combine
+            EntityBody = entityBody;
 
-            if (cosignatures == null)
-                Cosignatures = [];
-            else Cosignatures = cosignatures;
+            EmbeddedTransactionsPayload = Combine(embeddedTransactions.ToList().Select(e => e.Payload).ToArray());
 
-            VerifiableEntity.Size += 40;
-            VerifiableEntity.Size += (uint)EmbeddedTransactions.Length;
-            VerifiableEntity.Size += (uint)Cosignatures.Length;
-        }
+            var embeddedTransactionHashes = embeddedTransactions.ToList().Select(e => {
 
-       /* https://github.com/symbol/symbol/blob/23179e5bd9002bd6856270d2e3649eb6f2066038/sdk/javascript/src/symbol/merkle.js#L34 */
-        private byte[] CalculateMerkleRoot_Combine(UnsignedTransaction[] embeddedTransactions)
-        {
-            EmbeddedTransactionHashes = new byte[embeddedTransactions.Length][];
-
-            int index = 0;
-
-            byte[][] payloads = embeddedTransactions.ToList().Select(e => {
+                var hash = new byte[32];
 
                 var sha3Hasher = new Sha3Digest(256);
 
                 sha3Hasher.BlockUpdate(e.Payload, 44, e.Payload.Length - 44);
 
-                EmbeddedTransactionHashes[index] = new byte[32];
+                sha3Hasher.DoFinal(hash, 0);
 
-                sha3Hasher.DoFinal(EmbeddedTransactionHashes[index++], 0);
+                return hash;
 
-                // var paddedPayload = new byte[(int)(Math.Ceiling((decimal)e.Payload.Length / 8) * 8)];
-
-                //Buffer.BlockCopy(e.Payload, 0, paddedPayload, 0, e.Payload.Length);
-
-                return e.Payload;
-            
             }).ToArray();
 
-            EmbeddedTransactions = Combine(payloads);
+            TransactionsHash = CalculateMerkleRoot(embeddedTransactionHashes);
 
-            var numRemainingHashes = EmbeddedTransactionHashes.Length;
+            PayloadSize = (uint)EmbeddedTransactionsPayload.Length;
+            Aggregate_​transaction_​header_​reserved_​1 = 0;
+            
+            if (cosignatures == null)
+                Cosignatures = [];
+            else Cosignatures = cosignatures;
+
+            VerifiableEntity.Size += 40;
+            VerifiableEntity.Size += (uint)EmbeddedTransactionsPayload.Length;
+            VerifiableEntity.Size += (uint)Cosignatures.Length;
+        }
+
+        private byte[] CalculateMerkleRoot(byte[][] embeddedTransactionHashes)
+        {    
+            var numRemainingHashes = embeddedTransactionHashes.Length;
 
             while (1 < numRemainingHashes) {
 
@@ -73,27 +64,27 @@ namespace io.nem2.sdk.Model.Transactions
 
                     var sha3Hasher = new Sha3Digest(256);
 
-                    sha3Hasher.BlockUpdate(EmbeddedTransactionHashes[i], 0, 32);
+                    sha3Hasher.BlockUpdate(embeddedTransactionHashes[i], 0, 32);
 
                     if (i + 1 < numRemainingHashes)
                     {
-                        sha3Hasher.BlockUpdate(EmbeddedTransactionHashes[i + 1], 0, 32);
+                        sha3Hasher.BlockUpdate(embeddedTransactionHashes[i + 1], 0, 32);
                     }
                     else
                     {
-                        // if there is an odd number of hashes, duplicate the last one
-                        sha3Hasher.BlockUpdate(EmbeddedTransactionHashes[i], 0, 32);
+                        // duplicate
+                        sha3Hasher.BlockUpdate(embeddedTransactionHashes[i], 0, 32);
                         numRemainingHashes += 1;
                     }
 
-                    sha3Hasher.DoFinal(EmbeddedTransactionHashes[(int)Math.Floor((double)i / 2)]);
+                    sha3Hasher.DoFinal(embeddedTransactionHashes[(int)Math.Floor((double)i / 2)]);
                     i += 2;
                 }
 
                 numRemainingHashes = (int)Math.Floor((double)numRemainingHashes / 2);
             }
 
-            return EmbeddedTransactionHashes[0];
+            return embeddedTransactionHashes[0];
         }
 
         private static byte[] Combine(params byte[][] arrays)
