@@ -61,7 +61,8 @@ namespace Unit_Tests.Model.Transactions.Embedded
                 [
                     transfer.Embed(keys.PublicKeyString), 
                     supplyChange.Embed(keys.PublicKeyString)
-                ], 
+                ],
+                 Account.CreateFromPrivateKey(HttpSetUp.TestSK, NetworkType.Types.TEST_NET).KeyPair.PublicKey,
                 new byte[] { });
 
             var aggPayload = aggTx.WrapVerified(keys, HttpSetUp.genHash);
