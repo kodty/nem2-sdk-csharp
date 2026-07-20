@@ -21,21 +21,21 @@ namespace Unit_Tests.Model
             {
                 byte[] sk = keys[i]["privateKey"].GetValue<string>().FromHex();
                 byte[] pk = keys[i]["otherPublicKey"].GetValue<string>().FromHex();
-                byte[] tag = keys[i]["tag"].GetValue<string>().FromHex();
                 byte[] iv = keys[i]["iv"].GetValue<string>().FromHex();
-                byte[] cipherText = keys[i]["cipherText"].GetValue<string>().FromHex();
+                //byte[] cipherText = keys[i]["cipherText"].GetValue<string>().FromHex();
                 string clearText = keys[i]["clearText"].GetValue<string>();
 
                 byte[] scalarResult = SecureMessage.DeriveSharedKey(sk, pk);
                
                 byte[] HKDF_key = SecureMessage.HKDF_Derive(scalarResult);
 
-                byte[] cipherResult = SecureMessage.AesGcmEncryptor_(iv, HKDF_key, clearText, tag, null);
+                byte[] cipherResult = SecureMessage.AesGcmSivEncryptor_(iv, HKDF_key, clearText, keys[i]["tag"].GetValue<string>().FromHex(), null);
 
-                Assert.AreEqual(cipherText.ToHex(), cipherResult.ToHex());
+                byte[] decrypted = SecureMessage.AesGcmSivDecryptor_(iv, HKDF_key, cipherResult, keys[i]["tag"].GetValue<string>().FromHex());
+
+                Assert.AreEqual(clearText, decrypted.ToHex());
             }
         }
-
 
         [Test]
         public void CanCreateSharedKey()

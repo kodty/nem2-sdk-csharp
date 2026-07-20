@@ -1,5 +1,4 @@
 ﻿using Coppery;
-using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
@@ -144,11 +143,9 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return sharedSecret;
         }
 
-        public static byte[] AesGcmEncryptor_(byte[] nonce, byte[] key, string data, byte[] tag, byte[] info)
+        public static byte[] AesGcmSivEncryptor_(byte[] nonce, byte[] key, string data, byte[] tag, byte[] info)
         {
-            var engine = new AesEngine();
-
-            GcmBlockCipher blockCipher = new GcmBlockCipher(engine);
+            GcmSivBlockCipher blockCipher = new GcmSivBlockCipher();
 
             var parameters = new AeadParameters(new KeyParameter(key, 0, 32), 128, nonce, tag);
 
@@ -156,42 +153,30 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
             byte[] input = data.FromHex();
 
-            byte[] authTag = new byte[16];
+            byte[] result = new byte[tag.Length + input.Length];
 
-            blockCipher.ProcessBytes(input, 0, input.Length, authTag, 0);
+            blockCipher.ProcessBytes(input, 0, input.Length, result, 0);
 
-            byte[] cipher = new byte[input.Length];
+            blockCipher.DoFinal(result);
 
-            blockCipher.DoFinal(cipher);
-
-            return cipher;
-
+            return result;
         }
 
-        public static byte[] AesGcmEncryptor(byte[] nonce, byte[] key, string data, byte[] tag, byte[] info)
+        public static byte[] AesGcmSivDecryptor_(byte[] nonce, byte[] key, byte[] input, byte[] tag)
         {
-            using(AesGcm aes = new AesGcm(key, 16))
-            {
-                var dataBytes = data.FromHex();
+            GcmSivBlockCipher blockCipher = new GcmSivBlockCipher();
 
-                var cipher = new byte[dataBytes.Length];
+            var parameters = new AeadParameters(new KeyParameter(key, 0, 32), 128, nonce, tag);
 
-                aes.Encrypt(nonce, dataBytes, cipher, tag, info);
-                
-                return cipher;
-            }
-        }
+            blockCipher.Init(false, parameters);
 
-        public static byte[] AesGcmDecryptor(byte[] nonce, byte[] cipher, byte[] key, byte[] tag, byte[] info = null)
-        {
-            using (AesGcm aes = new AesGcm(key, 16))
-            {
-                byte[] text = new byte[cipher.Length];
+            byte[] result = new byte[input.Length - 16];
 
-                aes.Decrypt(nonce, cipher, tag, info);
+            blockCipher.ProcessBytes(input, 0, input.Length, result, 0);
 
-                return cipher;
-            }
+            blockCipher.DoFinal(result);
+
+            return result;
         }
 
         private static byte[] AesEncryptor(byte[] key, byte[] iv, string msg)
