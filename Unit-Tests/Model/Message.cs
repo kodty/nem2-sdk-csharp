@@ -25,6 +25,7 @@ namespace Unit_Tests.Model
                 byte[] cipherText = keys[i]["cipherText"].GetValue<string>().FromHex();
                 string clearText = keys[i]["clearText"].GetValue<string>();
 
+                // encrypt & decrypt using sender primary shared key
                 byte[] scalarResult = SecureMessage.DeriveSharedKey(sk, pk);
                
                 byte[] HKDF_key = SecureMessage.HKDF_Derive(scalarResult);
@@ -35,13 +36,24 @@ namespace Unit_Tests.Model
 
                 Assert.AreEqual(clearText, decryptedSiv.ToHex());
 
-                //byte[] cipherResult = SecureMessage.AesGcmEncryptor_(iv, HKDF_key, clearText, keys[i]["tag"].GetValue<string>().FromHex(), null);
-                //
-                //var tag = keys[i]["tag"].GetValue<string>().FromHex();
-                //
-                //byte[] decrypted = SecureMessage.AesGcmDecryptor_(iv, HKDF_key, cipherResult, cipherResult.SubArray(cipherResult.Length - 16, 16).ToArray());
-                //
-                //Assert.AreEqual(cipherResult.ToHex(), cipherText.Concat(tag).ToArray().ToHex());
+                // encrypt using sender primary shared key, decrypt using receiver primary shared key
+                var sender = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
+
+                var receiver = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
+
+                byte[] senderPrimaryScalarResult = SecureMessage.DeriveSharedKey(sender.KeyPair.PrivateKey, receiver.KeyPair.PublicKey);
+
+                byte[] senderPrimaryHKDF_key = SecureMessage.HKDF_Derive(senderPrimaryScalarResult);
+
+                byte[] receiverPrimaryScalarResult = SecureMessage.DeriveSharedKey(receiver.KeyPair.PrivateKey, sender.KeyPair.PublicKey);
+
+                byte[] receiverPrimaryHKDF_key = SecureMessage.HKDF_Derive(receiverPrimaryScalarResult);
+
+                byte[] senderPrimaryCipherSivResult = SecureMessage.AesGcmSivEncryptor_(iv, senderPrimaryHKDF_key, clearText, keys[i]["tag"].GetValue<string>().FromHex(), null);
+
+                byte[] receiverPrimaryDecryptedSiv = SecureMessage.AesGcmSivDecryptor_(iv, receiverPrimaryHKDF_key, senderPrimaryCipherSivResult, keys[i]["tag"].GetValue<string>().FromHex());
+
+                Assert.AreEqual(clearText, receiverPrimaryDecryptedSiv.ToHex());
             }
         }
 
