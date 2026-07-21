@@ -13,7 +13,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
         public MosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, bool embedded) : base(TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE, embedded)
         {
             Version = 0x01;
-            MosaicId = mosaicId.FromHex();
+            MosaicId = mosaicId.FromHex().Reverse().ToArray();
             Delta = delta;
             SupplyType = supplyType.GetValue();
             Size += 17;
