@@ -16,10 +16,8 @@ namespace io.nem2.sdk.Model.Transactions
         [Order(16)]
         public byte[] Cosignatures { get; set; }
 
-        public AggregateTransaction(EntityBody entityBody, UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type) : base(type, false)
+        public AggregateTransaction(UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type) : base(type, false)
         {
-            EntityBody = entityBody;
-
             EmbeddedTransactionsPayload = Combine(embeddedTransactions.ToList().Select(e => e.Payload).ToArray());
 
             var embeddedTransactionHashes = embeddedTransactions.ToList().Select(e => {
@@ -45,9 +43,9 @@ namespace io.nem2.sdk.Model.Transactions
                 Cosignatures = [];
             else Cosignatures = cosignatures;
 
-            VerifiableEntity.Size += 40;
-            VerifiableEntity.Size += (uint)EmbeddedTransactionsPayload.Length;
-            VerifiableEntity.Size += (uint)Cosignatures.Length;
+           Size += 40;
+           Size += (uint)EmbeddedTransactionsPayload.Length;
+           Size += (uint)Cosignatures.Length;
         }
 
         private byte[] CalculateMerkleRoot(byte[][] embeddedTransactionHashes)
@@ -102,7 +100,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public override AggregateTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

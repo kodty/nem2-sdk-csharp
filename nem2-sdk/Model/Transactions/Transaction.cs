@@ -8,11 +8,26 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public abstract class VerifiableTransaction
     {
-        [Order(0)]
-        public VerifiableEntity VerifiableEntity { get; set; }
+        [Order(1)]
+        public uint Size { get; set; }
 
-        [Order(4)]
-        public EntityBody EntityBody { get; set; }
+        [Order(2)]
+        public uint VerifiableEntityHeaderReserved { get; set; }
+
+        [Order(3)]
+        public byte[] Signature { get; set; }
+
+        [Order(5)]
+        public byte[] Signer { get; set; }
+
+        [Order(6)]
+        public uint Entity_body_reserved_1 { get; set; }
+
+        [Order(7)]
+        public byte Version { get; set; }
+
+        [Order(8)]
+        public byte Network { get; set; }
 
         [Order(9)]
         public ushort Type { get; set; }
@@ -25,18 +40,23 @@ namespace io.nem2.sdk.Model.Transactions
 
         public VerifiableTransaction(bool isEmbedded)
         {
-            VerifiableEntity = new VerifiableEntity();
+            Size += 48;
+            VerifiableEntityHeaderReserved = 0;
+            Entity_body_reserved_1 = 0;
+            Signature = new byte[64];
 
             if (!isEmbedded)
-                VerifiableEntity.Size += 80;
+                Size += 80;
         }
 
         public VerifiableTransaction(TransactionTypes.Types type, bool isEmbedded)
         {
-            VerifiableEntity = new VerifiableEntity();
+            Size += 48;
+            VerifiableEntityHeaderReserved = 0;
+            Signature = new byte[64];
 
             if (!isEmbedded)
-                VerifiableEntity.Size += 80;
+                Size += 80;
 
             Type = type.GetValue();
         }
@@ -45,7 +65,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public UnsignedTransaction Embed(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return new UnsignedTransaction()
             {
@@ -60,7 +80,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public SignedTransaction WrapVerified(SecretKeyPair signer, string genHash)
         {
-            EntityBody.Signer = signer.PublicKey;
+            Signer = signer.PublicKey;
 
             byte[] entity = this.Serialize(exclude: []);
 
@@ -120,20 +140,19 @@ namespace io.nem2.sdk.Model.Transactions
 
         private byte[] Serialize(int[] exclude)
         {
-            DataSerializer serializer = new DataSerializer(this.VerifiableEntity.Size);
+            DataSerializer serializer = new DataSerializer(Size);
 
-            serializer.Serialize(this, this.GetType(), (Type type) =>
-            {
-                return type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            var properties = this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
                     .Where(p =>
-                        {
-                            return !exclude.Contains(((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order);
-                        })
+                    {
+                        return !exclude.Contains(((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order);
+                    })
                     .OrderBy(p =>
-                        {
-                            return ((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order;
-                        });
-            });
+                    {
+                        return ((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order;
+                    });
+
+            serializer.Serialize(this, properties);
 
             return serializer.GetBytes();
         }

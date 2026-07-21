@@ -17,16 +17,10 @@ namespace Coppery
             return _Buffer;
         }
 
-        public void Serialize(object obj, Type type, Func<Type, IOrderedEnumerable<PropertyInfo>> func)
+        public void Serialize(object obj, IOrderedEnumerable<PropertyInfo> properties)
         {
-            foreach (var item in func(type))
-            {
-                if (item.PropertyType.IsPrimitive || item.PropertyType == typeof(byte[]))
-                    SerializeProperty(item.GetValue(obj), item.PropertyType);
-
-                if (!item.PropertyType.IsPrimitive && item.PropertyType != typeof(byte[]))
-                    Serialize(item.GetValue(obj), item.PropertyType, func);
-            }
+            foreach (var item in properties)
+                SerializeProperty(item.GetValue(obj), item.PropertyType);
         }
     
         private void SerializeProperty(object value, Type type)

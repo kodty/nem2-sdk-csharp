@@ -8,7 +8,6 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public class TransferTransaction_V1 : VerifiableTransaction
     {
-
         [Order(12)]
         public byte[] Address { get; set; }
 
@@ -36,7 +35,7 @@ namespace io.nem2.sdk.Model.Transactions
         public TransferTransaction_V1(Address address, IMessage messege, Mosaic mosaic, bool isEmbedded) : base(TransactionTypes.Types.TRANSFER, isEmbedded)
         {
             // extended transaction size excluding variable length fields
-            VerifiableEntity.Size += 24; 
+            Size += 24; 
 
             Address = AddressEncoder.DecodeAddress(address.Plain);         
             MosaicId = DataConverter.ConvertFrom(mosaic.MosaicId.Id).Reverse().ToArray();
@@ -47,13 +46,13 @@ namespace io.nem2.sdk.Model.Transactions
             Message = messege.GetPayload();    
             MessegeSize = (ushort)Message.Length;
 
-            VerifiableEntity.Size += (uint)Address.Length;
-            VerifiableEntity.Size += MessegeSize; 
+            Size += (uint)Address.Length;
+            Size += MessegeSize; 
         }
 
         public override TransferTransaction_V1 SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }
