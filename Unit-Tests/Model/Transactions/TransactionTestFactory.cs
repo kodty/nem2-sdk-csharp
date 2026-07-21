@@ -41,13 +41,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new MosaicSupplyChangeTransaction(delta, mosaicId, supplyType, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -57,13 +54,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new NamespaceMetadataTransaction(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -73,13 +67,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new AccountMetadataTransaction(targetAddress, scopedKey, valueSizeDelta, valueSize, value)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -89,13 +80,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new MosaicMetadataTransaction(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -105,13 +93,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new MosaicDefinitionTransaction(id, nonce, properties, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -121,13 +106,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new LockFundsTransaction(mosaic, amount, duration, transactionHash, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -137,13 +119,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new SecretLockTransaction(mosaic, duration, secret, hashAlgo, recipient, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Type = TransactionTypes.Types.SECRET_LOCK.GetValue(),
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
@@ -155,13 +134,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new SecretProofTransaction(recipientAddress, secret, hashAlgo, proof, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -171,13 +147,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new RegisterNamespace(duration, parentId, id, type, name, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -187,13 +160,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Type = type.GetValue(),
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
@@ -204,13 +174,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new KeyLinkTransaction(linkedPublicKey, linkAction, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Type = type.GetValue(),
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
@@ -221,13 +188,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new TransferTransaction_V1(address, messege, mosaic, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101),
                 Fee = DataConverter.ConvertFrom(287428975982)
             };
@@ -239,13 +203,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new AccountRestrictionsTransaction(type, restrictionFlags, additions, deletions, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -255,13 +216,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new MosaicAddressRestrictionTransaction(targetAddress, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101),//DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -271,13 +229,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -287,13 +242,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new AddressAliasTransaction(address, namepaceId, aliasAction, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -303,13 +255,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction, embedded)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -319,13 +268,10 @@ namespace Unit_Tests.Model.Transactions
         {
             return new MultisigAccountModificationTransaction(minApproval, minRemoval, addressAdditions, addressDeletions)
             {
-                EntityBody = new EntityBody()
-                {
-                    Signer = null,
-                    Entity_body_reserved_1 = 0,
-                    Network = NetworkType.GetNetworkByte(),
-                    Version = 0x01
-                },
+                Signer = null,
+                Entity_body_reserved_1 = 0,
+                Network = NetworkType.GetNetworkByte(),
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -333,17 +279,12 @@ namespace Unit_Tests.Model.Transactions
 
         public AggregateTransaction CreateAggregateComplete(UnsignedTransaction[] embeddedTransactions, byte[] signer, byte[] cosignatures)
         {
-            var entityBody = new EntityBody()
+            return new AggregateTransaction(embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE)
             {
                 Signer = signer,
                 Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01
-            };
-
-            return new AggregateTransaction(entityBody, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE)
-            {
-                
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -351,17 +292,12 @@ namespace Unit_Tests.Model.Transactions
 
         public AggregateTransaction CreateAggregateBonded(UnsignedTransaction[] embeddedTransactions, byte[] signer, byte[] cosignatures)
         {
-            var entityBody = new EntityBody()
+            return new AggregateTransaction(embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
             {
                 Signer = signer,
                 Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01
-            };
-
-            return new AggregateTransaction(entityBody, embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
-            {
-               
+                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };

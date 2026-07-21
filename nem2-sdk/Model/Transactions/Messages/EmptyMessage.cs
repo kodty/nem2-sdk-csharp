@@ -23,15 +23,5 @@
         {
             return 0;
         }
-
-        internal override byte GetMessageType()
-        {
-            return Type;
-        }
-
-        internal override byte GetEncodingType()
-        {
-            return Type;
-        }
     }
 }

@@ -50,7 +50,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
 
         public override MosaicRestrictionTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

@@ -13,15 +13,15 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
                       ? AddressEncoder.DecodeAddress(targetAddress)
                       : targetAddress.FromHex();
 
-            VerifiableEntity.Size += 12;
+            Size += 12;
 
             ScopedMetadataKey = scopedKey.FromHex();
             ValueSizeDelta = valueSizeDelta;
             ValueSize = valueSize;
             Value = value;
 
-            VerifiableEntity.Size += (uint)TargetAddress.Length;
-            VerifiableEntity.Size += (uint)Value.Length;
+            Size += (uint)TargetAddress.Length;
+            Size += (uint)Value.Length;
         }
 
         [Order(12)]
@@ -41,7 +41,7 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 
         public override AccountMetadataTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

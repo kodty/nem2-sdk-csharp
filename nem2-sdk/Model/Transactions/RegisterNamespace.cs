@@ -16,7 +16,7 @@ namespace io.nem2.sdk.Model.Transactions
             RegistrationType = type.GetValue();
             Name = Encoding.UTF8.GetBytes(name);
             NameSize = (byte)Name.Length;
-            VerifiableEntity.Size += 18 + (uint)Name.Length;
+            Size += 18 + (uint)Name.Length;
         }
 
         internal ulong _Duration { get; set; }
@@ -66,7 +66,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public override RegisterNamespace SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

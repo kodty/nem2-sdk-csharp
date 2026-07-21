@@ -16,7 +16,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 
         public override MosaicSupplyRevocationTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

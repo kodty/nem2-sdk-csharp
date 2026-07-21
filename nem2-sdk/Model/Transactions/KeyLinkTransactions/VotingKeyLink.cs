@@ -10,7 +10,7 @@ namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
             StartEpoch = startEpoch;
             EndEpoch = endEpoch;
             LinkAction = linkAction;
-            VerifiableEntity.Size += 16 + 33;
+            Size += 16 + 33;
 
             
             Type = TransactionTypes.Types.VOTING_KEY_LINK.GetValue();
@@ -23,7 +23,7 @@ namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
 
         public override VotingKeyLinkTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

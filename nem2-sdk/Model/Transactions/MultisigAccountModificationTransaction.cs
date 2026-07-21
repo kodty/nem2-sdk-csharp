@@ -28,7 +28,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public override MultisigAccountModificationTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

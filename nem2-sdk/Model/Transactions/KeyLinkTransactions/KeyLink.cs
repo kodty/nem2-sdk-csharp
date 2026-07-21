@@ -10,14 +10,14 @@ namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
         {
             LinkedPublicKey = linkedPublicKey.FromHex();
             LinkAction = linkAction;
-            VerifiableEntity.Size += 33;
+            Size += 33;
         }
         public byte[] LinkedPublicKey { get; set; }
         public byte LinkAction { get; set; }
 
         public override KeyLinkTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

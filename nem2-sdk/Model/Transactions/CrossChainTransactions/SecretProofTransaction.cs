@@ -33,7 +33,7 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 
         public override SecretProofTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

@@ -15,7 +15,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
             MosaicId = mosaicId.FromHex();
             Delta = delta;
             SupplyType = supplyType.GetValue();
-            VerifiableEntity.Size += 17;
+            Size += 17;
 
             
             Type = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE.GetValue();
@@ -29,7 +29,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 
         public override MosaicSupplyChangeTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

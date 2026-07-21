@@ -43,12 +43,12 @@ namespace io.nem2.sdk.Model.Transactions.Messages
            return new SecureMessage(cryption.GetValue(), encoding.GetValue(), cipherBytes);
         }
 
-        internal override byte GetMessageType()
+        internal bool IsEncrypted()
         {
-            return Type;
+            return Type == 1;
         }
 
-        internal override byte GetEncodingType()
+        internal byte GetEncodingType()
         {
             return Encoding;
         }

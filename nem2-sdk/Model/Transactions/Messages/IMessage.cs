@@ -2,10 +2,6 @@
 {
     public abstract class IMessage
     {
-        internal abstract byte GetMessageType();
-
-        internal abstract byte GetEncodingType();
-
         public abstract byte[] GetPayload();
 
         public abstract ushort GetLength();

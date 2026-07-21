@@ -20,7 +20,7 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
                       ? AddressEncoder.DecodeAddress(recipient) 
                       : recipient.FromHex();
 
-            VerifiableEntity.Size += (uint) (50 + Secret.Length);
+            Size += (uint) (50 + Secret.Length);
             Type = TransactionTypes.Types.SECRET_LOCK.GetValue();
         }
 
@@ -36,7 +36,7 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 
         public override SecretLockTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

@@ -20,22 +20,20 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
             return new PlainMessage(Encoding.UTF8.GetBytes(payload));
         }
+
         public override byte[] GetPayload()
         {
             return Payload;
         }
+
         public override ushort GetLength()
         {
             return (ushort)Payload.Length;
         }
-        internal override byte GetMessageType()
-        {
-            return Type;
-        }
 
-        internal override byte GetEncodingType()
+        internal bool IsEncrypted()
         {
-            return Type;
+            return false;     
         }
 
         public string GetStringPayload()

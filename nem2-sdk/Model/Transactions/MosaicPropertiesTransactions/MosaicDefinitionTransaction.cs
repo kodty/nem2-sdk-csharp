@@ -15,7 +15,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
             Nonce = nonce;
             Divisibility = properties.Divisibility;
 
-            VerifiableEntity.Size += 22;
+            Size += 22;
         }
 
         [Order(12)]
@@ -35,7 +35,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 
         public override MosaicDefinitionTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

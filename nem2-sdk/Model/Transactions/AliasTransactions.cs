@@ -19,7 +19,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public override AliasTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }
@@ -41,7 +41,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public override AddressAliasTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }
@@ -60,7 +60,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public override MosaicAliasTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }

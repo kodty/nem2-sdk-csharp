@@ -222,7 +222,7 @@ namespace io.nem2.sdk.Infrastructure
                 isReceptor = AddressEncoder.EncodeAddress(((TransferTransaction_V1)transaction).Address) == address.Plain;
             }
 
-            return Address.CreateFromPublicKey(transaction.EntityBody.Signer.ToHex(), address.NetworkByte).Plain == address.Plain || isReceptor;
+            return Address.CreateFromPublicKey(transaction.Signer.ToHex(), address.NetworkByte).Plain == address.Plain || isReceptor;
         }
 
         public void Close()

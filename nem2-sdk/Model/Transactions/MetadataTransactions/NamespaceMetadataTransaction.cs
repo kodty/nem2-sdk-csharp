@@ -14,9 +14,9 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
             ValueSize = valueSize;
             Value = value;
             
-            VerifiableEntity.Size += 24;
-            VerifiableEntity.Size += (uint)Value.Length;
-            VerifiableEntity.Size += (uint)TargetAddress.Length;
+            Size += 24;
+            Size += (uint)Value.Length;
+            Size += (uint)TargetAddress.Length;
         }
 
         [Order(14)]
@@ -24,7 +24,7 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 
         public override NamespaceMetadataTransaction SetSigner(string signer)
         {
-            EntityBody.Signer = signer.FromHex();
+            Signer = signer.FromHex();
 
             return this;
         }
