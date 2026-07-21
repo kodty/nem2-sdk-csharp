@@ -42,7 +42,7 @@ namespace Unit_Tests.Model.Transactions
             return new MosaicSupplyChangeTransaction(delta, mosaicId, supplyType, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -55,7 +55,7 @@ namespace Unit_Tests.Model.Transactions
             return new NamespaceMetadataTransaction(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -68,7 +68,7 @@ namespace Unit_Tests.Model.Transactions
             return new AccountMetadataTransaction(targetAddress, scopedKey, valueSizeDelta, valueSize, value)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -81,7 +81,7 @@ namespace Unit_Tests.Model.Transactions
             return new MosaicMetadataTransaction(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -94,7 +94,7 @@ namespace Unit_Tests.Model.Transactions
             return new MosaicDefinitionTransaction(id, nonce, properties, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -107,7 +107,7 @@ namespace Unit_Tests.Model.Transactions
             return new LockFundsTransaction(mosaic, amount, duration, transactionHash, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -120,7 +120,7 @@ namespace Unit_Tests.Model.Transactions
             return new SecretLockTransaction(mosaic, duration, secret, hashAlgo, recipient, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Type = TransactionTypes.Types.SECRET_LOCK.GetValue(),
@@ -135,7 +135,7 @@ namespace Unit_Tests.Model.Transactions
             return new SecretProofTransaction(recipientAddress, secret, hashAlgo, proof, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -148,7 +148,7 @@ namespace Unit_Tests.Model.Transactions
             return new RegisterNamespace(duration, parentId, id, type, name, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -161,7 +161,7 @@ namespace Unit_Tests.Model.Transactions
             return new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Type = type.GetValue(),
@@ -175,7 +175,7 @@ namespace Unit_Tests.Model.Transactions
             return new KeyLinkTransaction(linkedPublicKey, linkAction, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Type = type.GetValue(),
@@ -189,7 +189,7 @@ namespace Unit_Tests.Model.Transactions
             return new TransferTransaction_V1(address, messege, mosaic, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101),
@@ -204,7 +204,7 @@ namespace Unit_Tests.Model.Transactions
             return new AccountRestrictionsTransaction(type, restrictionFlags, additions, deletions, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101),
@@ -217,7 +217,7 @@ namespace Unit_Tests.Model.Transactions
             return new MosaicAddressRestrictionTransaction(targetAddress, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101),//DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -230,7 +230,7 @@ namespace Unit_Tests.Model.Transactions
             return new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -243,7 +243,7 @@ namespace Unit_Tests.Model.Transactions
             return new AddressAliasTransaction(address, namepaceId, aliasAction, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -256,7 +256,7 @@ namespace Unit_Tests.Model.Transactions
             return new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -269,7 +269,7 @@ namespace Unit_Tests.Model.Transactions
             return new MultisigAccountModificationTransaction(minApproval, minRemoval, addressAdditions, addressDeletions)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -282,7 +282,7 @@ namespace Unit_Tests.Model.Transactions
             return new AggregateTransaction(embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_COMPLETE)
             {
                 Signer = signer,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -295,7 +295,7 @@ namespace Unit_Tests.Model.Transactions
             return new AggregateTransaction(embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
             {
                 Signer = signer,
-                Entity_body_reserved_1 = 0,
+
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),

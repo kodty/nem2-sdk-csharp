@@ -46,7 +46,6 @@ namespace io.nem2.sdk.Model
             return new TransferTransaction_V1(address, messege, mosaic, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -59,7 +58,6 @@ namespace io.nem2.sdk.Model
             return new LockFundsTransaction(mosaic, amount, duration, transactionHash, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -72,7 +70,6 @@ namespace io.nem2.sdk.Model
             return new AggregateTransaction(embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
             {
                 Signer = signer,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x03,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -85,7 +82,6 @@ namespace io.nem2.sdk.Model
             return new AggregateTransaction(embeddedTransactions, null, TransactionTypes.Types.AGGREGATE_COMPLETE)
             {
                 Signer = signer,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x03,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -98,7 +94,6 @@ namespace io.nem2.sdk.Model
             return new MultisigAccountModificationTransaction(minApproval, minRemoval, addressAdditions, addressDeletions)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION.GetValue(),
@@ -112,7 +107,6 @@ namespace io.nem2.sdk.Model
             return new AccountRestrictionsTransaction(type, restrictionFlags, additions, deletions, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Type = type.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -125,7 +119,6 @@ namespace io.nem2.sdk.Model
             return new KeyLinkTransaction(linkedPublicKey, linkAction, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Type = type.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -138,7 +131,6 @@ namespace io.nem2.sdk.Model
             return new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Type = TransactionTypes.Types.VOTING_KEY_LINK.GetValue(),
@@ -152,7 +144,6 @@ namespace io.nem2.sdk.Model
             return new AddressAliasTransaction(address, namepaceId, aliasAction, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Type = TransactionTypes.Types.ADDRESS_ALIAS.GetValue(),
@@ -166,7 +157,6 @@ namespace io.nem2.sdk.Model
             return new AccountMetadataTransaction(targetAddress, scopedKey, valueSizeDelta, valueSize, value)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -179,7 +169,6 @@ namespace io.nem2.sdk.Model
             return new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Type = TransactionTypes.Types.MOSAIC_ALIAS.GetValue(),
@@ -193,7 +182,6 @@ namespace io.nem2.sdk.Model
             return new MosaicMetadataTransaction(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -206,7 +194,6 @@ namespace io.nem2.sdk.Model
             return new RegisterNamespace(duration, parentId, id, type, name, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -219,7 +206,6 @@ namespace io.nem2.sdk.Model
             return new NamespaceMetadataTransaction(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -232,7 +218,6 @@ namespace io.nem2.sdk.Model
             return new MosaicDefinitionTransaction(id, nonce, properties, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
@@ -245,7 +230,6 @@ namespace io.nem2.sdk.Model
             return new MosaicAddressRestrictionTransaction(targetAddress, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Type = TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION.GetValue(),
@@ -259,7 +243,6 @@ namespace io.nem2.sdk.Model
             return new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Type = TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION.GetValue(),
@@ -273,7 +256,6 @@ namespace io.nem2.sdk.Model
             return new MosaicSupplyChangeTransaction(delta, mosaicId, supplyType, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Type = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE.GetValue(),
@@ -288,7 +270,6 @@ namespace io.nem2.sdk.Model
             return new SecretLockTransaction(mosaic, duration, secret, hashAlgo, recipient, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Type = TransactionTypes.Types.SECRET_LOCK.GetValue(),
@@ -303,7 +284,6 @@ namespace io.nem2.sdk.Model
             return new SecretProofTransaction(recipientAddress, secret, hashAlgo, proof, embedded)
             {
                 Signer = null,
-                Entity_body_reserved_1 = 0,
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Type = TransactionTypes.Types.SECRET_PROOF.GetValue(),

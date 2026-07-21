@@ -18,10 +18,10 @@ namespace io.nem2.sdk.Model.Transactions
         public byte MosaicsCount { get; set; }
 
         [Order(15)]
-        public byte Reserved_1 { get; set; }
+        public byte Reserved_1 { get; }
 
         [Order(16)]
-        public uint Reserved_2 { get; set; }
+        public uint Reserved_2 { get; }
 
         [Order(17)]
         public byte[] MosaicId { get; set; }
@@ -41,8 +41,6 @@ namespace io.nem2.sdk.Model.Transactions
             MosaicId = DataConverter.ConvertFrom(mosaic.MosaicId.Id).Reverse().ToArray();
             MosaicAmount = mosaic.Amount;
             MosaicsCount = 1;
-            Reserved_1 = 0;
-            Reserved_2 = 0;
             Message = messege.GetPayload();    
             MessegeSize = (ushort)Message.Length;
 

@@ -12,7 +12,7 @@ namespace io.nem2.sdk.Model.Transactions
         public uint Size { get; set; }
 
         [Order(2)]
-        public uint VerifiableEntityHeaderReserved { get; set; }
+        public uint VerifiableEntityHeaderReserved { get; }
 
         [Order(3)]
         public byte[] Signature { get; set; }
@@ -21,7 +21,7 @@ namespace io.nem2.sdk.Model.Transactions
         public byte[] Signer { get; set; }
 
         [Order(6)]
-        public uint Entity_body_reserved_1 { get; set; }
+        public uint Entity_body_reserved_1 { get; }
 
         [Order(7)]
         public byte Version { get; set; }
@@ -41,8 +41,6 @@ namespace io.nem2.sdk.Model.Transactions
         public VerifiableTransaction(bool isEmbedded)
         {
             Size += 48;
-            VerifiableEntityHeaderReserved = 0;
-            Entity_body_reserved_1 = 0;
             Signature = new byte[64];
 
             if (!isEmbedded)
@@ -52,7 +50,6 @@ namespace io.nem2.sdk.Model.Transactions
         public VerifiableTransaction(TransactionTypes.Types type, bool isEmbedded)
         {
             Size += 48;
-            VerifiableEntityHeaderReserved = 0;
             Signature = new byte[64];
 
             if (!isEmbedded)
