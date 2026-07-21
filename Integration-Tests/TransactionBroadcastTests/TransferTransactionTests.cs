@@ -263,13 +263,13 @@ namespace IntegrationTests.Infrastructure.Transactions
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicAliasTransaction(
                     "627911F4CC867A0D",
-                    DataConverter.ConvertTo<ulong>("E53FAC6DD7D1A69B".FromHex()),
-                    0x01,
+                    "E53FAC6DD7D1A69B",
+                    0x1,
                     1000000,
                     false);
         
             var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
-        
+            Debug.WriteLine(st.Payload.ToHex());
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
         
             var a = await client.Announce(st);

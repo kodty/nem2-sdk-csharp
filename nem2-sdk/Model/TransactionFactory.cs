@@ -128,7 +128,7 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public AddressAliasTransaction CreateAddressAliasTransaction(string address, ulong namepaceId, byte aliasAction, ulong fee, bool embedded)
+        public AddressAliasTransaction CreateAddressAliasTransaction(string address, string namepaceId, byte aliasAction, ulong fee, bool embedded)
         {
             return new AddressAliasTransaction(address, namepaceId, aliasAction, embedded)
             {
@@ -150,7 +150,7 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public MosaicAliasTransaction CreateMosaicAliasTransaction(string mosaicId, ulong namepaceId, byte aliasAction, ulong fee, bool embedded)
+        public MosaicAliasTransaction CreateMosaicAliasTransaction(string mosaicId, string namepaceId, byte aliasAction, ulong fee, bool embedded)
         {
             return new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction, embedded)
             {
