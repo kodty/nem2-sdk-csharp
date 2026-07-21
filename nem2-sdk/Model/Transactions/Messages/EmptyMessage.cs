@@ -28,5 +28,10 @@
         {
             return Type;
         }
+
+        internal override byte GetEncodingType()
+        {
+            return Type;
+        }
     }
 }

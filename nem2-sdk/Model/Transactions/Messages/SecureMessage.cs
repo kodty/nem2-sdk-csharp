@@ -1,13 +1,8 @@
-﻿using Coppery;
-using Org.BouncyCastle.Crypto.Engines;
-using Org.BouncyCastle.Crypto.Modes;
+﻿using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Security;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Text;
 using TweetNaclSharp;
-using TweetNaclSharp.Core.Extensions;
 
 namespace io.nem2.sdk.Model.Transactions.Messages
 {
@@ -15,59 +10,47 @@ namespace io.nem2.sdk.Model.Transactions.Messages
     {
         private byte Type { get; }
 
+        private byte Encoding { get; }
+
         private byte[] Payload { get; }
 
-        public SecureMessage(byte[] payload)
+        private byte[] IV { get; }
+
+        private byte[] Salt { get; }
+
+        private byte[] Info { get; }
+
+        public SecureMessage(byte type, byte encoding, byte[] payload)
         {
             Type = MessageType.Type.ENCRYPTED.GetValue();
+            Encoding = encoding;
             Payload = payload;
+
         }
 
-        public static SecureMessage Create(string msg, string senderPrivateKey, string receiverPublicKey, byte[] info = null)
+        public SecureMessage(byte type, byte encoding, byte[] payload, byte[] iv, byte[] salt = null, byte[] info = null)
         {
-            var random = new SecureRandom();
-
-            var salt = new byte[32];
-            random.NextBytes(salt);
-
-            return new SecureMessage(Encode(msg, senderPrivateKey.FromHex(), receiverPublicKey.FromHex(), info, salt));
+            Type = MessageType.Type.ENCRYPTED.GetValue();
+            Encoding = encoding;
+            Payload = payload;
+            IV = iv;
+            salt = salt;
+            info = info;
         }
 
-        public string GetDecodedPayload(string privateKey, string publicKey, byte[] info)
+        public static SecureMessage Create(MessageType.Type cryption, MessageType.CipherEncoding encoding, byte[] cipherBytes)
         {
-            return Decode(privateKey.FromHex(), publicKey.FromHex(), Payload, info);
-        }
-
-        public string GetDecodedPayload(string privateKey, string publicKey)
-        {
-            return Decode(privateKey.FromHex(), publicKey.FromHex(), Payload);
-        }
-
-        public static byte[] Encode(string text, byte[] secretKey, byte[] publicKey, byte[] info = null, byte[] salt = null)
-        {
-            var random = new SecureRandom();
-
-            var ivData = new byte[16];
-            random.NextBytes(ivData);
-
-            var shared = HKDF_Derive(DeriveSharedKey(secretKey, publicKey), info, salt);
-
-            return salt.Concat(AesEncryptor(shared, ivData, text)).ToArray();
-        }
-
-        public static string Decode(byte[] privateKey, byte[] publicKey, byte[] data, byte[] info = null)
-        {
-            var salt = data.SubArray(0, 32);
-            var iv = data.SubArray(32, 16);
-            var payload = data.SubArray(48, data.Length - 32 - 16);
-            var shared = HKDF_Derive(DeriveSharedKey(privateKey, publicKey), info, salt);
-
-            return AesDecryptor(shared, iv, payload);
+           return new SecureMessage(cryption.GetValue(), encoding.GetValue(), cipherBytes);
         }
 
         internal override byte GetMessageType()
         {
             return Type;
+        }
+
+        internal override byte GetEncodingType()
+        {
+            return Encoding;
         }
 
         public override byte[] GetPayload()
@@ -97,9 +80,9 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return 0 != 1 - (a & b & 1);
         }
 
-        public static byte[] HKDF_Derive(byte[] sharedsecret, byte[] info = null, byte[] salt = null)
+        public static byte[] HKDF_Derive(byte[] sharedkey, byte[] info = null, byte[] salt = null)
         {
-            var prk = HKDF.Extract(HashAlgorithmName.SHA256, ikm: sharedsecret, salt: salt);
+            var prk = HKDF.Extract(HashAlgorithmName.SHA256, ikm: sharedkey, salt: salt);
 
             return HKDF.Expand(HashAlgorithmName.SHA256, prk: prk, outputLength: 32, info: info);
         }
@@ -126,7 +109,6 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             using (SHA512 sha = SHA512.Create())
             {
                 scalar = sha.ComputeHash(privateKey, 0, 32);
-                CryptographicOperations.ZeroMemory(privateKey);
             }
 
             scalar[0] &= 248;
@@ -137,6 +119,8 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             
             scalarmult.Invoke(null, [result, point, scalar]);
 
+            CryptographicOperations.ZeroMemory(scalar);
+
             byte[] sharedSecret = new byte[32];
 
             pack.Invoke(null, [sharedSecret, result]);
@@ -144,7 +128,7 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return sharedSecret;
         }
 
-        public static byte[] AesGcmSivEncryptor_(byte[] nonce, byte[] key, string data, byte[] tag, byte[] info)
+        public static byte[] AesGcmSivEncryptor(byte[] nonce, byte[] key, byte[] data, byte[] tag, byte[] info)
         {
             GcmSivBlockCipher blockCipher = new GcmSivBlockCipher();
 
@@ -152,18 +136,16 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
             blockCipher.Init(true, parameters);
 
-            byte[] input = data.FromHex();
+            byte[] result = new byte[data.Length + tag.Length];
 
-            byte[] result = new byte[input.Length + tag.Length];
-
-            blockCipher.ProcessBytes(input, 0, input.Length, result, 0);
+            blockCipher.ProcessBytes(data, 0, data.Length, result, 0);
 
             blockCipher.DoFinal(result);
 
             return result;
         }
 
-        public static byte[] AesGcmSivDecryptor_(byte[] nonce, byte[] key, byte[] input, byte[] tag)
+        public static byte[] AesGcmSivDecryptor(byte[] nonce, byte[] key, byte[] input, byte[] tag)
         {
             GcmSivBlockCipher blockCipher = new GcmSivBlockCipher();
 
@@ -180,6 +162,7 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return result;
         }
 
+        /*
         public static byte[] AesGcmEncryptor_(byte[] nonce, byte[] key, string data, byte[] tag, byte[] info)
         {
             GcmBlockCipher blockCipher = new GcmBlockCipher(new AesLightEngine());
@@ -198,6 +181,7 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
             return result;
         }
+        
 
         public static byte[] AesGcmDecryptor_(byte[] nonce, byte[] key, byte[] input, byte[] tag = null)
         {
@@ -215,8 +199,9 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
             return result;
         }
+        */
 
-        private static byte[] AesEncryptor(byte[] key, byte[] iv, string msg)
+        public static byte[] AesEncryptor(byte[] key, byte[] iv, string msg)
         {
             using (var aesAlg = Aes.Create())
             {
@@ -238,18 +223,18 @@ namespace io.nem2.sdk.Model.Transactions.Messages
                 {
                     using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                     {
-                        using (var swEncrypt = new StreamWriter(csEncrypt, Encoding.UTF8))
+                        using (var swEncrypt = new StreamWriter(csEncrypt, System.Text.Encoding.UTF8))
                         {
                             swEncrypt.Write(msg);
                         }
 
-                        return iv.Concat(msEncrypt.ToArray()).ToArray();
+                        return msEncrypt.ToArray();
                     }
                 }
             }
         }
 
-        private static string AesDecryptor(byte[] key, byte[] iv, byte[] payload)
+        public static string AesDecryptor(byte[] key, byte[] iv, byte[] payload)
         {
             using (var aesAlg = Aes.Create())
             {
@@ -271,7 +256,7 @@ namespace io.nem2.sdk.Model.Transactions.Messages
                 {
                     using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {
-                        using (var srDecrypt = new StreamReader(csDecrypt, Encoding.UTF8))
+                        using (var srDecrypt = new StreamReader(csDecrypt, System.Text.Encoding.UTF8))
                         {
                             var a = srDecrypt.ReadToEnd();
 

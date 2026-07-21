@@ -9,7 +9,18 @@
             UNENCRYPTED = 0x00
         }
 
+        public enum CipherEncoding
+        {
+            CBC = 0,
+            GCMSIV = 1
+        }
+
         public static byte GetValue(this Type type)
+        {
+            return (byte)type;
+        }
+
+        public static byte GetValue(this CipherEncoding type)
         {
             return (byte)type;
         }

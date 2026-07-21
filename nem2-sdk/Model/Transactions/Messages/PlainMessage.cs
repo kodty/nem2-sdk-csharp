@@ -33,6 +33,11 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return Type;
         }
 
+        internal override byte GetEncodingType()
+        {
+            return Type;
+        }
+
         public string GetStringPayload()
         {
             return Encoding.UTF8.GetString(Payload);
