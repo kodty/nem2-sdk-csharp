@@ -10,8 +10,9 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
     {
         public SecretLockTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 
-        public SecretLockTransaction(string mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded) : base(embedded)
+        public SecretLockTransaction(string mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded) : base(TransactionTypes.Types.SECRET_LOCK, embedded)
         {
+            Version = 0x01;
             Mosaic = mosaic.FromHex();
             Duration = duration;
             Secret = secret.FromHex();
@@ -21,7 +22,6 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
                       : recipient.FromHex();
 
             Size += (uint) (50 + Secret.Length);
-            Type = TransactionTypes.Types.SECRET_LOCK.GetValue();
         }
 
         public byte[] Mosaic { get; set; }
@@ -39,6 +39,13 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             Signer = signer.FromHex();
 
             return this;
+        }
+
+        public override void SetVersion(byte version)
+        {
+            if (version > 3) throw new Exception("invalid version");
+
+            Version = version;
         }
     }
 }

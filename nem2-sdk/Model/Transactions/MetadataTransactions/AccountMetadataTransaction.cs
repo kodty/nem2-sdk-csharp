@@ -9,6 +9,7 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 
         public AccountMetadataTransaction(string targetAddress, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value) : base(TransactionTypes.Types.ACCOUNT_METADATA, true)
         {
+            Version = 0x01;
             TargetAddress = targetAddress.IsBase32()
                       ? AddressEncoder.DecodeAddress(targetAddress)
                       : targetAddress.FromHex();
@@ -50,6 +51,13 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
         public SignedTransaction WrapVerified(SecretKeyPair signer, string genHash)
         {
             return null;
+        }
+
+        public override void SetVersion(byte version)
+        {
+            if (version > 3) throw new Exception("invalid version");
+
+            Version = version;
         }
     }
 }

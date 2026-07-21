@@ -9,7 +9,8 @@ namespace io.nem2.sdk.Model.Transactions
     public class RegisterNamespace : VerifiableTransaction
     {
         public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, bool embedded) : base(TransactionTypes.Types.NAMESPACE_REGISTRATION, embedded)
-        {         
+        {
+            Version = 0x01;
             _Duration = duration;
             _ParentId = parentId;
             Id = DataConverter.ConvertFrom(id).Reverse().ToArray();
@@ -69,6 +70,13 @@ namespace io.nem2.sdk.Model.Transactions
             Signer = signer.FromHex();
 
             return this;
+        }
+
+        public override void SetVersion(byte version)
+        {
+            if (version > 3) throw new Exception("invalid version");
+
+            Version = version;
         }
     }
 }

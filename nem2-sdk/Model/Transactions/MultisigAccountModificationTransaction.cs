@@ -11,9 +11,10 @@ namespace io.nem2.sdk.Model.Transactions
         public int Multisig_​account_​modification_​transaction_​body_​reserved_​1 { get; set; }
         public string[] AddressAdditions { get; set; }
         public string[] AddressDeletions { get; set; }
-        public MultisigAccountModificationTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions) : base(true)
+        public MultisigAccountModificationTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions) : base(TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION, true)
         {
-        
+
+            Version = 0x01;
             MinApprovalDelta = minApproval;
             MinRemovalDelta = minRemoval;
             AddressAdditionsCount = (byte)AddressAdditions.Length;
@@ -31,6 +32,13 @@ namespace io.nem2.sdk.Model.Transactions
             Signer = signer.FromHex();
 
             return this;
+        }
+
+        public override void SetVersion(byte version)
+        {
+            if (version > 3) throw new Exception("invalid version");
+
+            Version = version;
         }
     }
 }

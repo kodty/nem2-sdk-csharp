@@ -172,13 +172,12 @@ namespace Unit_Tests.Model.Transactions
 
         public KeyLinkTransaction CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, byte linkAction, bool embedded)
         {
-            return new KeyLinkTransaction(linkedPublicKey, linkAction, embedded)
+            return new KeyLinkTransaction(type, linkedPublicKey, linkAction, embedded)
             {
                 Signer = null,
 
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
-                Type = type.GetValue(),
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };

@@ -13,6 +13,7 @@ namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
 
         public AccountRestrictionsTransaction(TransactionTypes.Types type, ushort restrictionFlags, string[] restrictionAdditions, string[] restrictionsDeletions, bool embedded) : base(type, embedded)
         {
+            Version = 0x01;
             RestrictionFlags = restrictionFlags;
             _RestrictionAdditions = [];
             _RestrictionDeletions = [];
@@ -72,6 +73,13 @@ namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
             Signer = signer.FromHex();
 
             return this;
+        }
+
+        public override void SetVersion(byte version)
+        {
+            if (version > 3) throw new Exception("invalid version");
+
+            Version = version;
         }
     }
 }

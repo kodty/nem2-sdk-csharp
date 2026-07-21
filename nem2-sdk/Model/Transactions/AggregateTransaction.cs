@@ -18,6 +18,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public AggregateTransaction(UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type) : base(type, false)
         {
+            Version = 0x03;
             EmbeddedTransactionsPayload = Combine(embeddedTransactions.ToList().Select(e => e.Payload).ToArray());
 
             var embeddedTransactionHashes = embeddedTransactions.ToList().Select(e => {
@@ -103,6 +104,13 @@ namespace io.nem2.sdk.Model.Transactions
             Signer = signer.FromHex();
 
             return this;
+        }
+
+        public override void SetVersion(byte version)
+        {
+            if (version > 3) throw new Exception("invalid version");
+
+            Version = version;
         }
     }
 }

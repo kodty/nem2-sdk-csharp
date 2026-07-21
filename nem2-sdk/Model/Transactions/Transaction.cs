@@ -38,15 +38,6 @@ namespace io.nem2.sdk.Model.Transactions
         [Order(11)]
         public byte[] Deadline { get; set; }
 
-        public VerifiableTransaction(bool isEmbedded)
-        {
-            Size += 48;
-            Signature = new byte[64];
-
-            if (!isEmbedded)
-                Size += 80;
-        }
-
         public VerifiableTransaction(TransactionTypes.Types type, bool isEmbedded)
         {
             Size += 48;
@@ -59,6 +50,9 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         public abstract VerifiableTransaction SetSigner(string signer);
+
+        public abstract void SetVersion(byte version);
+
 
         public UnsignedTransaction Embed(string signer)
         {

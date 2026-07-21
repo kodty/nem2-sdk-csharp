@@ -13,6 +13,7 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
         {
             Size += 48;
 
+            Version = 0x01;
             Mosaic = mosaic.FromHex().Reverse().ToArray();
             Amount = amount;
             Duration = duration;
@@ -38,6 +39,13 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             Signer = signer.FromHex();
 
             return this;
+        }
+
+        public override void SetVersion(byte version)
+        {
+            if (version > 3) throw new Exception("invalid version");
+
+            Version = version;
         }
     }
 }

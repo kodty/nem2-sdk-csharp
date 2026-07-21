@@ -7,8 +7,9 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
     {
         public SecretProofTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) {}
 
-        public SecretProofTransaction(string recipient, string secret, HashType.Types hashAlgo, string proof, bool embedded) : base(embedded)
-        {    
+        public SecretProofTransaction(string recipient, string secret, HashType.Types hashAlgo, string proof, bool embedded) : base(TransactionTypes.Types.SECRET_PROOF, embedded)
+        {
+            Version = 0x01;
             Secret = secret.FromHex();
             HashAlgo = hashAlgo.GetHashTypeValue();
             Proof = proof.FromHex();
@@ -16,9 +17,6 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             Recipient = recipient.IsBase32()
                       ? AddressEncoder.DecodeAddress(recipient)
                       : recipient.FromHex();
-
-            
-            Type = TransactionTypes.Types.SECRET_PROOF.GetValue();
         }
 
         public byte[] Recipient { get; set; }
@@ -36,6 +34,13 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             Signer = signer.FromHex();
 
             return this;
+        }
+
+        public override void SetVersion(byte version)
+        {
+            if (version > 3) throw new Exception("invalid version");
+
+            Version = version;
         }
     }
 }

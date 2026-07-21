@@ -35,8 +35,9 @@ namespace io.nem2.sdk.Model.Transactions
         public TransferTransaction_V1(Address address, IMessage messege, Mosaic mosaic, bool isEmbedded) : base(TransactionTypes.Types.TRANSFER, isEmbedded)
         {
             // extended transaction size excluding variable length fields
-            Size += 24; 
+            Size += 24;
 
+            Version = 0x01;
             Address = AddressEncoder.DecodeAddress(address.Plain);         
             MosaicId = DataConverter.ConvertFrom(mosaic.MosaicId.Id).Reverse().ToArray();
             MosaicAmount = mosaic.Amount;
@@ -53,6 +54,13 @@ namespace io.nem2.sdk.Model.Transactions
             Signer = signer.FromHex();
 
             return this;
+        }
+
+        public override void SetVersion(byte version)
+        {
+            if (version > 3) throw new Exception("invalid version");
+
+            Version = version;
         }
     }
 }

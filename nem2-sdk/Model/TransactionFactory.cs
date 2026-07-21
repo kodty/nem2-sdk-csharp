@@ -1,5 +1,4 @@
 ﻿using Coppery;
-using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions;
@@ -47,7 +46,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -59,7 +57,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -71,7 +68,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = signer,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x03,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -83,7 +79,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = signer,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x03,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -95,8 +90,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
-                Type = TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -108,7 +101,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Type = type.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -116,11 +108,10 @@ namespace io.nem2.sdk.Model
 
         public KeyLinkTransaction CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, byte linkAction, byte linkType, ulong fee, bool embedded)
         {
-            return new KeyLinkTransaction(linkedPublicKey, linkAction, embedded)
+            return new KeyLinkTransaction(type, linkedPublicKey, linkAction, embedded)
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Type = type.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -132,8 +123,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
-                Type = TransactionTypes.Types.VOTING_KEY_LINK.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -145,8 +134,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
-                Type = TransactionTypes.Types.ADDRESS_ALIAS.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -158,7 +145,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -170,8 +156,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
-                Type = TransactionTypes.Types.MOSAIC_ALIAS.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -183,7 +167,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -195,7 +178,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -207,7 +189,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -219,7 +200,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -231,8 +211,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
-                Type = TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -244,8 +222,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
-                Type = TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -257,9 +233,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
-                Type = TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE.GetValue(),
-                SupplyType = supplyType.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(fee)
             };
@@ -271,8 +244,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
-                Type = TransactionTypes.Types.SECRET_LOCK.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)
             };
@@ -285,8 +256,6 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Version = 0x01,
-                Type = TransactionTypes.Types.SECRET_PROOF.GetValue(),
                 Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee =  DataConverter.ConvertFrom(fee)           
             };
