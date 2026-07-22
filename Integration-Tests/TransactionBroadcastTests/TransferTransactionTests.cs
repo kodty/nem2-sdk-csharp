@@ -47,8 +47,8 @@ namespace IntegrationTests.Infrastructure.Transactions
                     false
                 );
 
-            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
-   
+            var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
+            Debug.WriteLine(st.Payload.ToHex());
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var a = await client.Announce(st);
@@ -187,7 +187,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     100000,
                     false);
 
-            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+            var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
             
@@ -233,14 +233,14 @@ namespace IntegrationTests.Infrastructure.Transactions
             
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicDefinitionTransaction(
-                    DataConverter.ConvertFrom(IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 29498)).ToHex(),
-                    29498,
-                    new MosaicProperties(true, true, false, 6, 863935),
+                    DataConverter.ConvertFrom(IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 29499)).ToHex(),
+                    29499,
+                    new MosaicProperties(true, true, false, 6, 863),
                     500000,
-                    false);
+                    true);
 
-            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
-
+            var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
+            Debug.WriteLine(st.Payload.ToHex());
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
            
             var a = await client.Announce(st);
@@ -268,7 +268,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     1000000,
                     false);
         
-            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+            var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
             Debug.WriteLine(st.Payload.ToHex());
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
         
@@ -294,7 +294,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     1000000,
                     false);
 
-            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+            var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
@@ -352,7 +352,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     1000000,
                     false);
 
-            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+            var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
@@ -377,7 +377,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     1000000,
                     false);
 
-            var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+            var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
             //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
             //

@@ -15,7 +15,7 @@ namespace io.nem2.sdk.Model
 
         public string Signer { get; set; }
 
-        public string Signature { get; set; }
+        public byte[] Signature { get; set; }
 
         internal byte[] SignedBytes { get; set; }
 
@@ -33,7 +33,7 @@ namespace io.nem2.sdk.Model
             Payload = payload.FromHex();
             Hash = hash;
             Signer = signer;
-            Signature = signature;
+            Signature = signature.FromHex();
             SignedBytes = signedBytes;
         }
 
@@ -50,7 +50,7 @@ namespace io.nem2.sdk.Model
 
         public bool VerifySignature()
         {
-            return NaclFast.SignDetachedVerify(SignedBytes, Signature.FromHex(), Signer.FromHex());
+            return NaclFast.SignDetachedVerify(SignedBytes, Signature, Signer.FromHex());
         }
 
         public static bool VerifySignature(byte[] signedBytes, string signature, string signer)

@@ -44,13 +44,16 @@ namespace io.nem2.sdk.Model.Transactions
 
         public byte[] Deadline { get; set; }
 
+        public SignedTransaction SignedTransaction { get; set; }
+
+        internal bool IsEmbedded { get; set; }
+
         public VerifiableTransaction(TransactionTypes.Types type, bool isEmbedded)
         {
-            Size += 48;
+            Size += 128;
             Signature = new byte[64];
 
-            if (!isEmbedded)
-                Size += 80;
+            IsEmbedded = isEmbedded;
 
             Type = type.GetValue();
         }
@@ -70,85 +73,84 @@ namespace io.nem2.sdk.Model.Transactions
             };
         }
 
-        private bool isAggregate()
+        internal bool isAggregate()
         {
             return this.Type == TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue() || this.Type == TransactionTypes.Types.AGGREGATE_BONDED.GetValue();
         }
 
-        public SignedTransaction WrapVerified(SecretKeyPair signer, string genHash)
+        public SignedTransaction SignEmbeddedTransaction(SecretKeyPair keyPair)
+           => SignTransaction(keyPair, exclude: [2, 8, 9], excludeLen: 124);
+
+        public SignedTransaction SignTransaction(SecretKeyPair keyPair, string networkGenHash = null)
+           => SignTransaction(keyPair, exclude: [], excludeLen: 108, networkGenHash);
+
+        protected SignedTransaction SignTransaction(SecretKeyPair signer, int[] exclude, uint excludeLen, string networkGenHash = null)
         {
+            uint appendLen = 0;
+
+            if (!IsEmbedded && networkGenHash == null)
+                throw new Exception("conflict");
+            if (!IsEmbedded && networkGenHash != null)
+                appendLen = 32;
+            if (Signer != null && Signer.ToHex() != signer.PublicKeyString)
+                throw new Exception("signer mismatch");
+
             Signer = signer.PublicKey;
 
-            byte[] entity = this.Serialize(exclude: []);
+            var signBytes = new byte[appendLen + Size - excludeLen];
 
-            int truncate = 0;
-
-            if (isAggregate())
-            {
-                truncate = 52; // remove everything before version and after transactionsHash.
+            if (IsEmbedded)
+            { 
+                exclude = [2, 8, 9]; excludeLen = 124; 
             }
-            else
+            if (!IsEmbedded)
             {
-                truncate = entity.Length - (4 + 4 + 64 + 32 + 4);
+                for (var x = 0; x < 32; x++)
+                    signBytes[x] = networkGenHash.FromHex()[x];
             }
 
-            var signBytes = new byte[32 + truncate];
+            var tBytes = this.Serialize(exclude: [0, 1, 2, 3, 4, ..exclude], excludeLen: excludeLen);
 
-            for (var x = 0; x < 32; x++)
-                signBytes[x] = genHash.FromHex()[x];
+            for (var x = appendLen; x < appendLen + tBytes.Length; x++)
+                signBytes[x] = tBytes[x - appendLen];
 
-            for (var x = 32; x < 32 + truncate; x++)
-                signBytes[x] = entity[(4 + 4 + 64 + 32 + 4) + x - 32];
+            this.Signature = NaclFast.SignDetached(msg: signBytes, signer.SecretKey.ToArray());
 
-            var sig = NaclFast.SignDetached(msg: signBytes, signer.SecretKey.ToArray());
-
-            if (NaclFast.SignDetachedVerify(signBytes, sig, signer.PublicKey))
+            if (NaclFast.SignDetachedVerify(signBytes, this.Signature, signer.PublicKey))
             {
-                for (var x = 8; x < 72; x++)
-                    entity[x] = sig[x - 8];
+                var entity = this.Serialize(IsEmbedded ? exclude : [], IsEmbedded ? (uint)80 : 0);
 
-                var result = new SignedTransaction()
+                return new SignedTransaction()
                 {
-                    Payload = entity,
-                    SignedBytes = signBytes,
+                    Signature = this.Signature,
+                    SignedBytes = signBytes, 
                     Signer = signer.PublicKeyString,
-                    Signature = sig.ToHex(),
-                    Hash = HashTransaction(sig, signer.PublicKey, signBytes)
+                    Payload = entity,
+                    Hash = HashTransaction(this.Signature, signer.PublicKey, signBytes).ToHex()
                 };
-
-                if (isAggregate())
-                {
-                    var hash = new byte[32];
-
-                    var sha3Hasher = new Sha3Digest(256);
-
-                    sha3Hasher.BlockUpdate(result.Hash.FromHex(), 0, 32);
-                    sha3Hasher.BlockUpdate(result.Signer.FromHex(), 0, 32);
-                    sha3Hasher.DoFinal(hash, 0);
-
-                    result.Hash = hash.ToHex();
-
-                }
-
-                return result;
             }
-            else throw new Exception("signature error");
+            else throw new Exception("invalid signature");
         }
 
-        private byte[] Serialize(int[] exclude)
+        internal byte[] Serialize(int[] exclude, uint excludeLen = 0)
         {
-            DataSerializer serializer = new DataSerializer(Size);
+            lock (this)
+            {
+                DataSerializer serializer = new DataSerializer(Size -= excludeLen);
 
-            var props = RetrieveProperties();
+                var props = RetrieveProperties();
 
-            for (var x = 0; x < props.Length; x++)
-                if (!exclude.Contains(x)) 
-                    serializer.SerializeProperty(props[x].GetValue(this), props[x].PropertyType);
+                for (var x = 0; x < props.Length; x++)
+                    if (!exclude.Contains(x))
+                        serializer.SerializeProperty(props[x].GetValue(this), props[x].PropertyType);
 
-            return serializer.GetBytes();
+                Size += excludeLen;
+
+                return serializer.GetBytes();
+            }
         }
 
-        public static string HashTransaction(byte[] signature, byte[] signer, byte[] signBytes)
+        public static byte[] HashTransaction(byte[] signature, byte[] signer, byte[] signBytes)
         {
             var hash = new byte[32];
 
@@ -159,7 +161,7 @@ namespace io.nem2.sdk.Model.Transactions
             sha3Hasher.BlockUpdate(signBytes, 0, signBytes.Length);
             sha3Hasher.DoFinal(hash, 0);
 
-            return hash.ToHex();
+            return hash;
         }
     }
 }

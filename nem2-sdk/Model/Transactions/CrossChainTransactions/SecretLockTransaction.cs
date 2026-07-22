@@ -1,7 +1,5 @@
 ﻿
 using Coppery;
-using io.nem2.sdk.Infrastructure.Responses;
-using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Utils;
 using System.Reflection;
 
