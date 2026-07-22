@@ -224,9 +224,9 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public MosaicGlobalRestrictionTransaction CreateMosaicGlobalRestrictionTransaction(string referenceMosaicId, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded)
+        public MosaicGlobalRestrictionTransaction CreateMosaicGlobalRestrictionTransaction(string referenceMosaicId, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, byte previousRestrictionType, byte newRestrictionType, bool embedded)
         {
-            return new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
+            return new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, previousRestrictionType, newRestrictionType, embedded)
             {
                 Signer = null,
 
@@ -237,7 +237,7 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public AddressAliasTransaction CreateAddressAliasTransaction(string address, ulong namepaceId, byte aliasAction, bool embedded)
+        public AddressAliasTransaction CreateAddressAliasTransaction(string address, string namepaceId, byte aliasAction, bool embedded)
         {
             return new AddressAliasTransaction(address, namepaceId, aliasAction, embedded)
             {
@@ -250,7 +250,7 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public MosaicAliasTransaction CreateMosaicAliasTransaction(string mosaicId, ulong namepaceId, byte aliasAction, bool embedded)
+        public MosaicAliasTransaction CreateMosaicAliasTransaction(string mosaicId, string namepaceId, byte aliasAction, bool embedded)
         {
             return new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction, embedded)
             {

@@ -2,12 +2,27 @@
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions;
+using System.Reflection;
 using System.Text;
 
 namespace io.nem2.sdk.Model.Transactions
 {
     public class RegisterNamespace : VerifiableTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("Duration"),
+                GetType().GetProperty("ParentId"),
+                GetType().GetProperty("Id"),
+                GetType().GetProperty("RegistrationType"),
+                GetType().GetProperty("NameSize"),
+                GetType().GetProperty("Name")
+            ];
+        }
+
         public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, bool embedded) : base(TransactionTypes.Types.NAMESPACE_REGISTRATION, embedded)
         {
             Version = 0x01;
@@ -22,7 +37,6 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal ulong _Duration { get; set; }
 
-        [Order(12)]
         public byte[] Duration
         {
             get
@@ -39,7 +53,6 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal ulong _ParentId { get; set; }
 
-        [Order(13)]
         public byte[] ParentId
         {
             get
@@ -53,16 +66,12 @@ namespace io.nem2.sdk.Model.Transactions
             }
         }
 
-        [Order(14)]
         public byte[] Id { get; set; }
 
-        [Order(15)]
         public byte RegistrationType { get; internal set; }
 
-        [Order(16)]
         public byte NameSize { get; internal set; }
 
-        [Order(17)]
         public byte[] Name { get; internal set; }
 
         public override RegisterNamespace SetSigner(string signer)

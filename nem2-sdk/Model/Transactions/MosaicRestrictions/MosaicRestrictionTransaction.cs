@@ -1,10 +1,23 @@
 ﻿using Coppery;
 using io.nem2.sdk.Utils;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
 {
     public class MosaicRestrictionTransaction : VerifiableTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("MosaicID"),
+                GetType().GetProperty("RestrictionKey"),
+                GetType().GetProperty("PreviousRestrictionValue"),
+                GetType().GetProperty("NewRestrictionValue")
+            ];
+        }
+
         public MosaicRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 
         public MosaicRestrictionTransaction(TransactionTypes.Types type, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded) : base(type, embedded)
@@ -17,8 +30,11 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
         }
 
         public byte[] MosaicID { get; set; }
+
         public byte[] RestrictionKey { get; set; }
+
         public byte[] PreviousRestrictionValue { get; set; }
+
         public byte[] NewRestrictionValue { get; set; }
 
         public override MosaicRestrictionTransaction SetSigner(string signer)
@@ -38,6 +54,18 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
 
     public class MosaicAddressRestrictionTransaction : MosaicRestrictionTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("MosaicID"),
+                GetType().GetProperty("RestrictionKey"),
+                GetType().GetProperty("PreviousRestrictionValue"),
+                GetType().GetProperty("NewRestrictionValue"),
+                GetType().GetProperty("TargetAddress")
+            ];
+        }
         public MosaicAddressRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 
         public MosaicAddressRestrictionTransaction(string targetAddress, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded) : base(TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
@@ -50,15 +78,32 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
 
     public class MosaicGlobalRestrictionTransaction : MosaicRestrictionTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("MosaicID"),
+                GetType().GetProperty("ReferenceMosaicId"),
+                GetType().GetProperty("RestrictionKey"),
+                GetType().GetProperty("PreviousRestrictionValue"),
+                GetType().GetProperty("NewRestrictionValue"),
+                GetType().GetProperty("PreviousRestrictionType"),
+                GetType().GetProperty("NewRestrictionType")
+            ];
+        }
+
         public MosaicGlobalRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 
-        public MosaicGlobalRestrictionTransaction(string mosaicID, string referenceMosaicId, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded) : base(TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
+        public MosaicGlobalRestrictionTransaction(string mosaicID, string referenceMosaicId, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, byte previousRestrictionType, byte newRestrictionType, bool embedded) : base(TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
         {
             ReferenceMosaicId = referenceMosaicId.FromHex();
         }
 
         public byte[] ReferenceMosaicId { get; set; }
-    }
 
-   
+        public byte PreviousRestrictionType { get; set; }
+
+        public byte NewRestrictionType { get; set; }
+    }
 }

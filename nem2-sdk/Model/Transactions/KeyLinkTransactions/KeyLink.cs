@@ -1,9 +1,20 @@
 ﻿using Coppery;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
 {
     public class KeyLinkTransaction : VerifiableTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("LinkedPublicKey"),
+                GetType().GetProperty("LinkAction")
+            ];
+        }
+
         public KeyLinkTransaction(TransactionTypes.Types type, bool embedded) : base (type, embedded) { }
 
         public KeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, byte linkAction, bool embedded) : base(type, embedded)
@@ -14,10 +25,8 @@ namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
             Size += 33;
         }
 
-        [Order(12)]
         public byte[] LinkedPublicKey { get; set; }
 
-        [Order(15)]
         public byte LinkAction { get; set; }
 
         public override KeyLinkTransaction SetSigner(string signer)

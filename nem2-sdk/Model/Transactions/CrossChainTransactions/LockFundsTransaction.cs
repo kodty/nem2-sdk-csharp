@@ -1,9 +1,22 @@
 ﻿using Coppery;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 {
     public class LockFundsTransaction : VerifiableTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("Mosaic"),
+                GetType().GetProperty("Amount"),
+                GetType().GetProperty("Duration​"),
+                GetType().GetProperty("TransactionHash")
+            ];
+        }
+
         public LockFundsTransaction(TransactionTypes.Types type, bool isEmbedded) : base(type, isEmbedded)
         {
 
@@ -22,16 +35,12 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             Size += (uint)Mosaic.Length;
         }
 
-        [Order(12)]
         public byte[] Mosaic { get; set; }
 
-        [Order(13)]
         public ulong Amount { get; set; }
 
-        [Order(14)]
         public ulong Duration { get; set; }
 
-        [Order(15)]
         public byte[] TransactionHash { get; set; }
 
         public override LockFundsTransaction SetSigner(string signer)

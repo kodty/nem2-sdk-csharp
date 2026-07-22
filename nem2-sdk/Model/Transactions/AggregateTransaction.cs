@@ -1,19 +1,32 @@
 ﻿using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions
 {
     public class AggregateTransaction : VerifiableTransaction
     {
-        [Order(12)]
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("TransactionsHash"),
+                GetType().GetProperty("PayloadSize"),
+                GetType().GetProperty("Aggregate_​transaction_​header_​reserved_​1"),
+                GetType().GetProperty("EmbeddedTransactionsPayload"),
+                GetType().GetProperty("Cosignatures")
+            ];
+        }
+
         public byte[] TransactionsHash { get; set; }
-        [Order(13)]
+
         public uint PayloadSize { get; set; }
-        [Order(14)]
-        public uint Aggregate_​transaction_​header_​reserved_​1 { get; set; }
-        [Order(15)]
+
+        public uint Aggregate_​transaction_​header_​reserved_​1 { get; }
+
         public byte[] EmbeddedTransactionsPayload { get; set; }
-        [Order(16)]
+
         public byte[] Cosignatures { get; set; }
 
         public AggregateTransaction(UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type) : base(type, false)

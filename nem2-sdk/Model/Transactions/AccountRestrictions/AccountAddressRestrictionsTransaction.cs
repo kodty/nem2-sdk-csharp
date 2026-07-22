@@ -1,11 +1,26 @@
 ﻿using Coppery;
 using io.nem2.sdk.Utils;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
 {
     //AccountMosaic, AccountAddress, AccountOperation
     public class AccountRestrictionsTransaction : VerifiableTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("RestrictionFlags"),
+                GetType().GetProperty("RestrictionsAdditionsCount"),
+                GetType().GetProperty("RestrictionsDeletionsCount"),
+                GetType().GetProperty("Account_​restriction_​transaction_​body_​reserved_​1"),
+                GetType().GetProperty("_RestrictionAdditions"),
+                GetType().GetProperty("_RestrictionDeletions")
+            ];
+        }
+
         public AccountRestrictionsTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded)
         {
 
@@ -29,7 +44,7 @@ namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
         public ushort RestrictionFlags { get; set; }
         public byte RestrictionsAdditionsCount { get; set; }
         public byte RestrictionsDeletionsCount { get; set; }
-        public uint Account_​restriction_​transaction_​body_​reserved_​1 { get; set; }
+        public uint Account_​restriction_​transaction_​body_​reserved_​1 { get; }
         public byte[] _RestrictionAdditions{ get; set; }
         public byte[] _RestrictionDeletions{ get; set; }       
 

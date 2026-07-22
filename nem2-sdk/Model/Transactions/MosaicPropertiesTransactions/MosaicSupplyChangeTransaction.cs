@@ -2,12 +2,23 @@
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
-{
-    
+{   
     public class MosaicSupplyChangeTransaction : VerifiableTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("MosaicId"),
+                GetType().GetProperty("Delta"),
+                GetType().GetProperty("SupplyType")
+            ];
+        }
+
         public MosaicSupplyChangeTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 
         public MosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, bool embedded) : base(TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE, embedded)
@@ -19,13 +30,10 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
             Size += 17;
         }
 
-        [Order(12)]
         public byte[] MosaicId { get; set; }
 
-        [Order(13)]
         public ulong Delta { get; set; }
 
-        [Order(14)]
         public byte SupplyType { get; set; }
 
         public override MosaicSupplyChangeTransaction SetSigner(string signer)

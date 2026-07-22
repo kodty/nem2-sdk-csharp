@@ -1,6 +1,5 @@
 ﻿using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
-using System.Diagnostics;
 using System.Reflection;
 using TweetNaclSharp;
 
@@ -8,34 +7,41 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public abstract class VerifiableTransaction
     {
-        [Order(1)]
+        public PropertyInfo[] BaseProperties => 
+            [ 
+                GetType().GetProperty("Size"),
+                GetType().GetProperty("VerifiableEntityHeaderReserved"),
+                GetType().GetProperty("Signature"),
+                GetType().GetProperty("Signer"),
+                GetType().GetProperty("Entity_body_reserved_1"),
+                GetType().GetProperty("Version"),
+                GetType().GetProperty("Network"),
+                GetType().GetProperty("Type"),
+                GetType().GetProperty("Fee"),
+                GetType().GetProperty("Deadline")
+            ];
+
+        // return extended transaction properties intended for serialization.
+        public abstract PropertyInfo[] RetrieveProperties();
+
         public uint Size { get; set; }
 
-        [Order(2)]
         public uint VerifiableEntityHeaderReserved { get; }
 
-        [Order(3)]
         public byte[] Signature { get; set; }
 
-        [Order(5)]
         public byte[] Signer { get; set; }
 
-        [Order(6)]
         public uint Entity_body_reserved_1 { get; }
 
-        [Order(7)]
         public byte Version { get; set; }
 
-        [Order(8)]
         public byte Network { get; set; }
 
-        [Order(9)]
         public ushort Type { get; set; }
 
-        [Order(10)]
         public byte[] Fee { get; set; }
 
-        [Order(11)]
         public byte[] Deadline { get; set; }
 
         public VerifiableTransaction(TransactionTypes.Types type, bool isEmbedded)
@@ -60,7 +66,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             return new UnsignedTransaction()
             {
-                Payload = this.Serialize(exclude: [3, 10, 11])
+                Payload = this.Serialize(exclude: [3, 9, 10])
             };
         }
 
@@ -133,17 +139,11 @@ namespace io.nem2.sdk.Model.Transactions
         {
             DataSerializer serializer = new DataSerializer(Size);
 
-            var properties = this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p =>
-                    {
-                        return !exclude.Contains(((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order);
-                    })
-                    .OrderBy(p =>
-                    {
-                        return ((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order;
-                    });
+            var props = RetrieveProperties();
 
-            serializer.Serialize(this, properties);
+            for (var x = 0; x < props.Length; x++)
+                if (!exclude.Contains(x)) 
+                    serializer.SerializeProperty(props[x].GetValue(this), props[x].PropertyType);
 
             return serializer.GetBytes();
         }

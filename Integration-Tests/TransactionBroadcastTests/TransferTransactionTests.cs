@@ -288,9 +288,9 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicSupplyChangeTransaction(
-                    8919293949000000,
+                    1000000,
                     "627911F4CC867A0D",
-                    MosaicSupplyType.Type.INCREASE,
+                    MosaicSupplyType.Type.DECREASE,
                     1000000,
                     false);
 

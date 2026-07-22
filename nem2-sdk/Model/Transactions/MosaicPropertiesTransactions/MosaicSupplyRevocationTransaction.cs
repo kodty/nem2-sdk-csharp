@@ -1,10 +1,21 @@
 ﻿using Coppery;
 using io.nem2.sdk.Utils;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {
     public class MosaicSupplyRevocationTransaction : VerifiableTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("IssuerAddress"),
+                GetType().GetProperty("RevokedMosaicAmount")
+            ];
+        }
+
         public MosaicSupplyRevocationTransaction(string issuerAddress, Tuple<string, ulong> revokedMosaicAmount, bool embedded) : base (TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION, embedded)
         {
             IssuerAddress = issuerAddress.IsBase32() ? AddressEncoder.DecodeAddress(issuerAddress) : issuerAddress.FromHex(); ;

@@ -1,9 +1,22 @@
 ﻿using Coppery;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
 {
     public class VotingKeyLinkTransaction : KeyLinkTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("StartEpoch"),
+                GetType().GetProperty("LinkedPublicKey"),
+                GetType().GetProperty("LinkAction​"),
+                GetType().GetProperty("EndEpoch")
+            ];
+        }
+
         public VotingKeyLinkTransaction(ulong startEpoch, ulong endEpoch, string linkedPublicKey, byte linkAction, bool embedded) : base (TransactionTypes.Types.VOTING_KEY_LINK, embedded)
         {
             Version = 0x01;
@@ -14,10 +27,8 @@ namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
             Size += 16 + 33;  
         }
 
-        [Order(13)]
         public ulong StartEpoch { get; set; }
 
-        [Order(14)]
         public ulong EndEpoch { get; set; }
 
         public override VotingKeyLinkTransaction SetSigner(string signer)

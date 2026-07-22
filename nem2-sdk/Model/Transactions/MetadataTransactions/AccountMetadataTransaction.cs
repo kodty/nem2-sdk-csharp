@@ -1,10 +1,24 @@
 ﻿using Coppery;
 using io.nem2.sdk.Utils;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 {
     public class AccountMetadataTransaction : VerifiableTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("TargetAddress"),
+                GetType().GetProperty("ScopedMetadataKey"),
+                GetType().GetProperty("ValueSizeDelta"),
+                GetType().GetProperty("ValueSize"),
+                GetType().GetProperty("Value")
+            ];
+        }
+
         public AccountMetadataTransaction(TransactionTypes.Types type) : base(type, true) { }
 
         public AccountMetadataTransaction(string targetAddress, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value) : base(TransactionTypes.Types.ACCOUNT_METADATA, true)
@@ -25,19 +39,14 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
             Size += (uint)Value.Length;
         }
 
-        [Order(12)]
         public byte[] TargetAddress { get; set; }
 
-        [Order(13)]
         public byte[] ScopedMetadataKey { get; set; }
 
-        [Order(15)]
         public ushort ValueSizeDelta { get; set; }
 
-        [Order(16)]
         public ushort ValueSize { get; set; }
 
-        [Order(17)]
         public byte[] Value { get; set; }
 
         public override AccountMetadataTransaction SetSigner(string signer)

@@ -3,33 +3,42 @@ using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Utils;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions
 {
     public class TransferTransaction_V1 : VerifiableTransaction
     {
-        [Order(12)]
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("Address"),
+                GetType().GetProperty("MessegeSize"),
+                GetType().GetProperty("MosaicsCount"),
+                GetType().GetProperty("Reserved_1"),
+                GetType().GetProperty("Reserved_2"),
+                GetType().GetProperty("MosaicId"),
+                GetType().GetProperty("MosaicAmount"),
+                GetType().GetProperty("Message"),
+            ];
+        }
+
         public byte[] Address { get; set; }
 
-        [Order(13)]
         public ushort MessegeSize { get; set; }
 
-        [Order(14)]
         public byte MosaicsCount { get; set; }
 
-        [Order(15)]
         public byte Reserved_1 { get; }
 
-        [Order(16)]
         public uint Reserved_2 { get; }
 
-        [Order(17)]
         public byte[] MosaicId { get; set; }
 
-        [Order(18)]
         public ulong MosaicAmount { get; set; }
 
-        [Order(19)]
         public byte[] Message { get; set; }
 
         public TransferTransaction_V1(Address address, IMessage messege, Mosaic mosaic, bool isEmbedded) : base(TransactionTypes.Types.TRANSFER, isEmbedded)

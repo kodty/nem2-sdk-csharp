@@ -1,10 +1,24 @@
 ﻿using Coppery;
 using io.nem2.sdk.Utils;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 {
     public class SecretProofTransaction : VerifiableTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+               .. BaseProperties,
+                GetType().GetProperty("Recipient"),
+                GetType().GetProperty("Secret"),
+                GetType().GetProperty("ProofSize"),
+                GetType().GetProperty("HashALgo"),
+                GetType().GetProperty("Proof")
+            ];
+        }
+
         public SecretProofTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) {}
 
         public SecretProofTransaction(string recipient, string secret, HashType.Types hashAlgo, string proof, bool embedded) : base(TransactionTypes.Types.SECRET_PROOF, embedded)

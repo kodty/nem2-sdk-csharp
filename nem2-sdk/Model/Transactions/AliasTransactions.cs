@@ -1,9 +1,10 @@
 ﻿using Coppery;
 using io.nem2.sdk.Utils;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public class AliasTransaction : VerifiableTransaction
+    public abstract class AliasTransaction : VerifiableTransaction
     {
         public AliasTransaction(TransactionTypes.Types type, string namespaceId, byte aliasAction, bool embedded) : base(type, embedded)
         {
@@ -13,10 +14,8 @@ namespace io.nem2.sdk.Model.Transactions
             Size += 9;
         }
 
-        [Order(12)]
         public byte[] NamespaceId { get; set; }
 
-        [Order(14)]
         public byte AliasAction { get; set; }
 
         public override AliasTransaction SetSigner(string signer)
@@ -44,7 +43,17 @@ namespace io.nem2.sdk.Model.Transactions
             Size += 8;
         }
 
-        [Order(13)]
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("NamespaceId"),
+                GetType().GetProperty("Address"),
+                GetType().GetProperty("AliasAction")
+            ];
+        }
+
         public byte[] Address { get; set; }
     }
 
@@ -57,7 +66,14 @@ namespace io.nem2.sdk.Model.Transactions
             Size += 8;
         }
 
-        [Order(13)]
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return BaseProperties.Concat([
+                GetType().GetProperty("NamespaceId"),
+                GetType().GetProperty("MosaicId"),
+                GetType().GetProperty("AliasAction")]).ToArray();
+        }
+
         public byte[] MosaicId { get; set; }
     }
 }

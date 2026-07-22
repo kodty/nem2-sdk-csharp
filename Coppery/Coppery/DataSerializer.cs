@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Coppery
+﻿namespace Coppery
 {
     public class DataSerializer
     {
@@ -17,13 +15,7 @@ namespace Coppery
             return _Buffer;
         }
 
-        public void Serialize(object obj, IOrderedEnumerable<PropertyInfo> properties)
-        {
-            foreach (var item in properties)
-                SerializeProperty(item.GetValue(obj), item.PropertyType);
-        }
-    
-        private void SerializeProperty(object value, Type type)
+        public void SerializeProperty(object value, Type type)
         {
             if (type == typeof(byte))
             {

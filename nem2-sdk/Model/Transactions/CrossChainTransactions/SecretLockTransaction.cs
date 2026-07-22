@@ -3,11 +3,25 @@ using Coppery;
 using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Utils;
+using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 {
     public class SecretLockTransaction : VerifiableTransaction
     {
+        public override PropertyInfo[] RetrieveProperties()
+        {
+            return
+            [
+                .. BaseProperties,
+                GetType().GetProperty("Mosaic"),
+                GetType().GetProperty("Duration"),
+                GetType().GetProperty("Secret​"),
+                GetType().GetProperty("HashAlgo"),
+                GetType().GetProperty("Recipient")
+            ];
+        }
+
         public SecretLockTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 
         public SecretLockTransaction(string mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded) : base(TransactionTypes.Types.SECRET_LOCK, embedded)
