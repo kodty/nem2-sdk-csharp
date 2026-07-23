@@ -48,7 +48,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 );
 
             var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
-            Debug.WriteLine(st.Payload.ToHex());
+
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var a = await client.Announce(st);

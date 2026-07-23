@@ -69,7 +69,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             return new UnsignedTransaction()
             {
-                Payload = this.Serialize(exclude: [3, 9, 10])
+                Payload = this.Serialize([[3, 9, 10], []])[0]
             };
         }
 
@@ -79,72 +79,68 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         public SignedTransaction SignEmbeddedTransaction(SecretKeyPair keyPair)
-           => SignTransaction(keyPair, exclude: [2, 8, 9], excludeLen: 124);
+           => SignTransaction(keyPair, exclude: [[], [2, 8, 9]], excludeLen: 124);
 
         public SignedTransaction SignTransaction(SecretKeyPair keyPair, string networkGenHash = null)
-           => SignTransaction(keyPair, exclude: [], excludeLen: 108, networkGenHash);
+           => SignTransaction(keyPair, exclude: [[],[0, 1, 2, 3, 4]], excludeLen: 108, networkGenHash.FromHex());
 
-        protected SignedTransaction SignTransaction(SecretKeyPair signer, int[] exclude, uint excludeLen, string networkGenHash = null)
+        protected SignedTransaction SignTransaction(SecretKeyPair signer, uint[][] exclude, uint excludeLen, byte[] networkGenHash = null)
         {
-            uint appendLen = 0;
-
             if (!IsEmbedded && networkGenHash == null)
                 throw new Exception("conflict");
-            if (!IsEmbedded && networkGenHash != null)
-                appendLen = 32;
             if (Signer != null && Signer.ToHex() != signer.PublicKeyString)
                 throw new Exception("signer mismatch");
 
             Signer = signer.PublicKey;
 
-            var signBytes = new byte[appendLen + Size - excludeLen];
+            var s = Size;
 
-            if (IsEmbedded)
-            { 
-                exclude = [2, 8, 9]; excludeLen = 124; 
-            }
-            if (!IsEmbedded)
+            var tBytes = this.Serialize(
+                [
+                    [s,               ..exclude[0] ], 
+                    [s -= excludeLen, ..exclude[1] ]
+                ]
+            );
+
+            var signBytes = new byte[32 + tBytes[1].Length];
+
+            for (var x = 0; x < tBytes[1].Length; x++)
             {
-                for (var x = 0; x < 32; x++)
-                    signBytes[x] = networkGenHash.FromHex()[x];
+                signBytes[x + 32] = tBytes[1][x];
+
+                if(x < 32)
+                    signBytes[x] = networkGenHash[x];
             }
-
-            var tBytes = this.Serialize(exclude: [0, 1, 2, 3, 4, ..exclude], excludeLen: excludeLen);
-
-            for (var x = appendLen; x < appendLen + tBytes.Length; x++)
-                signBytes[x] = tBytes[x - appendLen];
 
             this.Signature = NaclFast.SignDetached(msg: signBytes, signer.SecretKey.ToArray());
 
+            for (int x = 0; x < 64; x++)
+                tBytes[0][x + 8] = Signature[x];
+
             if (NaclFast.SignDetachedVerify(signBytes, this.Signature, signer.PublicKey))
             {
-                var entity = this.Serialize(IsEmbedded ? exclude : [], IsEmbedded ? (uint)80 : 0);
-
                 return new SignedTransaction()
                 {
                     Signature = this.Signature,
                     SignedBytes = signBytes, 
                     Signer = signer.PublicKeyString,
-                    Payload = entity,
+                    Payload = tBytes[0],
                     Hash = HashTransaction(this.Signature, signer.PublicKey, signBytes).ToHex()
                 };
             }
             else throw new Exception("invalid signature");
         }
 
-        internal byte[] Serialize(int[] exclude, uint excludeLen = 0)
+        internal byte[][] Serialize(uint[][] s)
         {
             lock (this)
             {
-                DataSerializer serializer = new DataSerializer(Size -= excludeLen);
+                DataSerializer serializer = new DataSerializer(s);
 
                 var props = RetrieveProperties();
 
                 for (var x = 0; x < props.Length; x++)
-                    if (!exclude.Contains(x))
-                        serializer.SerializeProperty(props[x].GetValue(this), props[x].PropertyType);
-
-                Size += excludeLen;
+                        serializer.SerializeProperty(props[x].GetValue(this), props[x].PropertyType, (uint)x);
 
                 return serializer.GetBytes();
             }
