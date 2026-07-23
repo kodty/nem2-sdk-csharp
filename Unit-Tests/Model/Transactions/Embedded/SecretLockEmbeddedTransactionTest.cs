@@ -21,7 +21,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
                     true
                 );
 
-            var result = lockFunds.Embed(keys.PublicKeyString);
+            var result = lockFunds.SignEmbeddedTransaction(keys);
 
             Assert.That(result.Payload.ToHex(), Is.EqualTo("660000000000000091D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B452000000000198524172C0212E67A08BCEA00500000000000067A08BCE0098AA70CA43E5D3B95CD303A57892D0BA953C204A4D937AF4386ED658A8FA555D00"));
         }

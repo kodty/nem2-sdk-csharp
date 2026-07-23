@@ -26,7 +26,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
                     true
                 );
 
-            var supplyChangePayload = supplyChange.Embed(keys.PublicKeyString);
+            var supplyChangePayload = supplyChange.SignEmbeddedTransaction(keys);
 
             Assert.That(supplyChangePayload.Payload.ToHex(), Is.EqualTo("410000000000000091D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B4520000000001984D428969746E9B1A70570A0000000000000001"));
         }

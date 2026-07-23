@@ -27,7 +27,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
                     true
                 );
 
-            var supplyChangePayload = supplyChange.Embed(keys.PublicKeyString);
+            var supplyChangePayload = supplyChange.SignEmbeddedTransaction(keys);
 
             Assert.That(supplyChangePayload.Payload.ToHex(), Is.EqualTo("410000000000000091D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B4520000000001984D428969746E9B1A70570A0000000000000001"));
         }
@@ -48,7 +48,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
                     true
                 );
 
-            Assert.That(transfer.Embed(keys.PublicKeyString).Payload.ToHex(), Is.EqualTo("600000000000000091D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B45200000000019854419841E5B8E40781CF74DABF592817DE48711D778648DEAFB20000010000000000672B0000CE5600006500000000000000"));
+            Assert.That(transfer.SignEmbeddedTransaction(keys).Payload.ToHex(), Is.EqualTo("600000000000000091D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B45200000000019854419841E5B8E40781CF74DABF592817DE48711D778648DEAFB20000010000000000672B0000CE5600006500000000000000"));
 
             var supplyChange = factory.CreateMosaicSupplyChangeTransaction(
                     10,
@@ -67,7 +67,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
 
             var aggPayload = aggTx.SignTransaction(keys, HttpSetUp.genHash);
 
-            Assert.True(aggPayload.Payload.ToHex().Contains(transfer.Embed(keys.PublicKeyString).Payload.Concat(supplyChange.Embed(keys.PublicKeyString).Payload).ToArray().ToHex()));
+            Assert.True(aggPayload.Payload.ToHex().Contains(transfer.SignEmbeddedTransaction(keys).Payload.Concat(supplyChange.SignEmbeddedTransaction(keys).Payload).ToArray().ToHex()));
         }
     }
 }
