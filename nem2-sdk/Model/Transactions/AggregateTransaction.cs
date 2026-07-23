@@ -29,24 +29,13 @@ namespace io.nem2.sdk.Model.Transactions
 
         public byte[] Cosignatures { get; set; }
 
-        public AggregateTransaction(UnsignedTransaction[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type) : base(type, false)
+        public AggregateTransaction(SignedTransaction[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type) : base(type, false)
         {
             Version = 0x03;
+
             EmbeddedTransactionsPayload = Combine(embeddedTransactions.ToList().Select(e => e.Payload).ToArray());
 
-            var embeddedTransactionHashes = embeddedTransactions.ToList().Select(e => {
-
-                var hash = new byte[32];
-
-                var sha3Hasher = new Sha3Digest(256);
-
-                sha3Hasher.BlockUpdate(e.Payload, 44, e.Payload.Length - 44);
-
-                sha3Hasher.DoFinal(hash, 0);
-
-                return hash;
-
-            }).ToArray();
+            var embeddedTransactionHashes = embeddedTransactions.ToList().Select(e => e.Hash.FromHex()).ToArray();
 
             TransactionsHash = CalculateMerkleRoot(embeddedTransactionHashes);
 

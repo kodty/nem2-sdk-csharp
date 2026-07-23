@@ -139,7 +139,7 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         public SignedTransaction SignEmbeddedTransaction(SecretKeyPair keyPair)
-           => SignTransaction(keyPair, exclude: [[], []], excludeLen: 0);
+           => SignTransaction(keyPair, exclude: [[], [0, 1, 3, 4]], excludeLen: 44);
 
         public SignedTransaction SignTransaction(SecretKeyPair keyPair, string networkGenHash = null)
            => SignTransaction(keyPair, exclude: [[],[0, 1, 2, 3, 4]], excludeLen: 108, networkGenHash.FromHex());
@@ -155,8 +155,6 @@ namespace io.nem2.sdk.Model.Transactions
 
             var s = Size;
 
-            if (IsEmbedded) excludeLen = 0;
-
             var tBytes = this.Serialize(
                 [
                     [s,               ..exclude[0] ], 
@@ -166,7 +164,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             var signBytes = new byte[32 + tBytes[1].Length];
 
-            if (IsEmbedded) signBytes = tBytes[0];
+            if (IsEmbedded) signBytes = tBytes[1];
             else
             {
                 for (var x = 0; x < tBytes[1].Length; x++)
@@ -192,7 +190,7 @@ namespace io.nem2.sdk.Model.Transactions
             {
                 return new SignedTransaction()
                 {
-                    Signature = this.Signature,
+                    Signature = sig,
                     SignedBytes = signBytes, 
                     Signer = signer.PublicKeyString,
                     Payload = tBytes[0],

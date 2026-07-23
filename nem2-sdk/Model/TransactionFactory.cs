@@ -62,7 +62,7 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public AggregateTransaction CreateAggregateBonded(UnsignedTransaction[] embeddedTransactions, byte[] signer, byte[] cosignatures, ulong fee)
+        public AggregateTransaction CreateAggregateBonded(SignedTransaction[] embeddedTransactions, byte[] signer, byte[] cosignatures, ulong fee)
         {
             return new AggregateTransaction(embeddedTransactions, cosignatures, TransactionTypes.Types.AGGREGATE_BONDED)
             {
@@ -73,7 +73,7 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public AggregateTransaction CreateAggregateComplete(UnsignedTransaction[] embeddedTransactions, byte[] signer, ulong fee)
+        public AggregateTransaction CreateAggregateComplete(SignedTransaction[] embeddedTransactions, byte[] signer, ulong fee)
         {
             return new AggregateTransaction(embeddedTransactions, null, TransactionTypes.Types.AGGREGATE_COMPLETE)
             {
