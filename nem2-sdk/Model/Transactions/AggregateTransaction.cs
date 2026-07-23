@@ -13,7 +13,7 @@ namespace io.nem2.sdk.Model.Transactions
                 .. BaseProperties,
                 GetType().GetProperty("TransactionsHash"),
                 GetType().GetProperty("PayloadSize"),
-                GetType().GetProperty("Aggregate_​transaction_​header_​reserved_​1"),
+                GetType().GetProperty("AggregateHeaderPadding"),
                 GetType().GetProperty("EmbeddedTransactionsPayload"),
                 GetType().GetProperty("Cosignatures")
             ];
@@ -23,39 +23,39 @@ namespace io.nem2.sdk.Model.Transactions
 
         public uint PayloadSize { get; set; }
 
-        public uint Aggregate_​transaction_​header_​reserved_​1 { get; }
+        public uint AggregateHeaderPadding { get; }
 
         public byte[] EmbeddedTransactionsPayload { get; set; }
 
         public byte[] Cosignatures { get; set; }
 
+        public SignedTransaction[] EmbeddedTransactions { get; set; }
+
         public AggregateTransaction(SignedTransaction[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type) : base(type, false)
         {
             Version = 0x03;
 
-            EmbeddedTransactionsPayload = Combine(embeddedTransactions.ToList().Select(e => e.Payload).ToArray());
+            EmbeddedTransactions = embeddedTransactions;
 
-            var embeddedTransactionHashes = embeddedTransactions.ToList().Select(e => e.Hash.FromHex()).ToArray();
-
-            TransactionsHash = CalculateMerkleRoot(embeddedTransactionHashes);
+            EmbeddedTransactionsPayload = PaddedCombine();
 
             PayloadSize = (uint)EmbeddedTransactionsPayload.Length;
-            Aggregate_​transaction_​header_​reserved_​1 = 0;
-            
+
             if (cosignatures == null)
                 Cosignatures = [];
             else Cosignatures = cosignatures;
 
-           Size += 40;
-           Size += (uint)EmbeddedTransactionsPayload.Length;
-           Size += (uint)Cosignatures.Length;
+            Size += 40;
+            Size += (uint)EmbeddedTransactionsPayload.Length;
+            Size += (uint)Cosignatures.Length;
         }
 
         private byte[] CalculateMerkleRoot(byte[][] embeddedTransactionHashes)
-        {    
+        {
             var numRemainingHashes = embeddedTransactionHashes.Length;
 
-            while (1 < numRemainingHashes) {
+            while (1 < numRemainingHashes)
+            {
 
                 int i = 0;
 
@@ -88,17 +88,38 @@ namespace io.nem2.sdk.Model.Transactions
             return embeddedTransactionHashes[0];
         }
 
-        private static byte[] Combine(params byte[][] arrays)
+        private byte[] PaddedCombine()
         {
-            byte[] rv = new byte[arrays.Sum(a => a.Length)];
+            var ets = EmbeddedTransactions.ToList();
+
+            var pPayloads = ets.Select(item =>
+            {
+                if (item.Payload.Length % 8 != 0 && ets.IndexOf(item) != EmbeddedTransactions.Length - 1)
+                {
+                    var paddedPayload = new byte[(int)(Math.Ceiling((decimal)item.Payload.Length / 8) * 8)];
+
+                    Buffer.BlockCopy(item.Payload, 0, paddedPayload, 0, item.Payload.Length);
+
+                    return paddedPayload;
+                }
+                else return item.Payload;
+
+            }).ToArray();
+
+            TransactionsHash = CalculateMerkleRoot(ets.Select(e => e.Hash.FromHex()).ToArray());
+
+            byte[] ap = new byte[pPayloads.Sum(a => a.Length)];
+
             int offset = 0;
 
-            foreach (byte[] array in arrays)
+            foreach (byte[] p in pPayloads)
             {
-                Buffer.BlockCopy(array, 0, rv, offset, array.Length);
-                offset += array.Length;
+                Buffer.BlockCopy(p, 0, ap, offset, p.Length);
+
+                offset += p.Length;
             }
-            return rv;
+
+            return ap;
         }
 
         public override AggregateTransaction SetSigner(string signer)
