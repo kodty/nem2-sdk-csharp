@@ -28,7 +28,26 @@ namespace io.nem2.sdk.Model.Transactions
 
         public uint VerifiableEntityHeaderReserved { get; }
 
-        public byte[] Signature { get; set; }
+        private byte[] _Signature { get; set; }
+
+        public byte[] Signature
+        {
+            get
+            {
+                if (IsEmbedded)
+                {
+                    return new byte[] { };
+                }
+                else return _Signature;
+            }
+            set
+            {
+                if (_Signature != value && !IsEmbedded)
+                {
+                    _Signature = value;
+                }
+            }
+        }
 
         public byte[] Signer { get; set; }
 
@@ -89,11 +108,12 @@ namespace io.nem2.sdk.Model.Transactions
         public VerifiableTransaction(TransactionTypes.Types type, bool isEmbedded)
         {
             Size += 128;
+
             Signature = new byte[64];
 
             IsEmbedded = isEmbedded;
 
-            if (isEmbedded) Size -= 16;
+            if (isEmbedded) Size -= 80;
 
             Type = type.GetValue();
         }
@@ -119,7 +139,7 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         public SignedTransaction SignEmbeddedTransaction(SecretKeyPair keyPair)
-           => SignTransaction(keyPair, exclude: [[], [2]], excludeLen: 124);
+           => SignTransaction(keyPair, exclude: [[], []], excludeLen: 0);
 
         public SignedTransaction SignTransaction(SecretKeyPair keyPair, string networkGenHash = null)
            => SignTransaction(keyPair, exclude: [[],[0, 1, 2, 3, 4]], excludeLen: 108, networkGenHash.FromHex());
@@ -135,6 +155,8 @@ namespace io.nem2.sdk.Model.Transactions
 
             var s = Size;
 
+            if (IsEmbedded) excludeLen = 0;
+
             var tBytes = this.Serialize(
                 [
                     [s,               ..exclude[0] ], 
@@ -144,20 +166,29 @@ namespace io.nem2.sdk.Model.Transactions
 
             var signBytes = new byte[32 + tBytes[1].Length];
 
-            for (var x = 0; x < tBytes[1].Length; x++)
+            if (IsEmbedded) signBytes = tBytes[0];
+            else
             {
-                signBytes[x + 32] = tBytes[1][x];
+                for (var x = 0; x < tBytes[1].Length; x++)
+                {
+                    signBytes[x + 32] = tBytes[1][x];
 
-                if(x < 32)
-                    signBytes[x] = networkGenHash[x];
+                    if (x < 32)
+                        signBytes[x] = networkGenHash[x];
+                }
             }
 
-            this.Signature = NaclFast.SignDetached(msg: signBytes, signer.SecretKey.ToArray());
+            var sig = NaclFast.SignDetached(msg: signBytes, signer.SecretKey.ToArray());
 
-            for (int x = 0; x < 64; x++)
-                tBytes[0][x + 8] = Signature[x];
+            if (!IsEmbedded)
+            {
+                for (int x = 0; x < 64; x++)
+                    tBytes[0][x + 8] = sig[x];
 
-            if (NaclFast.SignDetachedVerify(signBytes, this.Signature, signer.PublicKey))
+                this.Signature = sig;
+            }
+
+            if (NaclFast.SignDetachedVerify(signBytes, sig, signer.PublicKey))
             {
                 return new SignedTransaction()
                 {
