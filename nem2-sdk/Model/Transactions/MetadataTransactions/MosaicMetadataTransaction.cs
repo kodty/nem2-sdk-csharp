@@ -30,7 +30,7 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 
 
         [Obsolete("This transaction is only available as an aggregate embedded transaction", true)]
-        public SignedTransaction WrapVerified(SecretKeyPair signer, string genHash)
+        public new SignedTransaction WrapVerified(SecretKeyPair signer, string genHash)
         {
             return null;
         }

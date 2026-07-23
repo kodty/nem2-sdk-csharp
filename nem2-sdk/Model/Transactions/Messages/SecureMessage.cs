@@ -34,8 +34,8 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             Encoding = encoding;
             Payload = payload;
             IV = iv;
-            salt = salt;
-            info = info;
+            Salt = salt;
+            Info = info;
         }
 
         public static SecureMessage Create(MessageType.Type cryption, MessageType.CipherEncoding encoding, byte[] cipherBytes)

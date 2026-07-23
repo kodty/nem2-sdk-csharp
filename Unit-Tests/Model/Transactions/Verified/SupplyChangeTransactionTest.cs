@@ -26,7 +26,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     false
                 );
 
-            var result = supplyChange.WrapVerified(keys, HttpSetUp.genHash);
+            var result = supplyChange.SignTransaction(keys, HttpSetUp.genHash);
 
             Debug.WriteLine(result.Payload.ToHex());
 

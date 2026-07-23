@@ -42,7 +42,7 @@ namespace Unit_Tests.Crypto
 
             var tx = factory.CreateTransferTransaction(address, PlainMessage.Create("hello"), Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000), false);
             
-            var st = tx.WrapVerified(keyPair, HttpSetUp.genHash);
+            var st = tx.SignTransaction(keyPair, HttpSetUp.genHash);
 
             Assert.True(st.VerifySignature());
         }

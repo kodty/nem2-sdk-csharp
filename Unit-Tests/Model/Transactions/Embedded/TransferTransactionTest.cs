@@ -59,13 +59,13 @@ namespace Unit_Tests.Model.Transactions.Embedded
 
             var aggTx = factory.CreateAggregateBonded(
                 [
-                    transfer.Embed(keys.PublicKeyString), 
-                    supplyChange.Embed(keys.PublicKeyString)
+                    transfer.SignEmbeddedTransaction(keys), 
+                    supplyChange.SignEmbeddedTransaction(keys)
                 ],
                  Account.CreateFromPrivateKey(HttpSetUp.TestSK, NetworkType.Types.TEST_NET).KeyPair.PublicKey,
                 new byte[] { });
 
-            var aggPayload = aggTx.WrapVerified(keys, HttpSetUp.genHash);
+            var aggPayload = aggTx.SignTransaction(keys, HttpSetUp.genHash);
 
             Assert.True(aggPayload.Payload.ToHex().Contains(transfer.Embed(keys.PublicKeyString).Payload.Concat(supplyChange.Embed(keys.PublicKeyString).Payload).ToArray().ToHex()));
         }
