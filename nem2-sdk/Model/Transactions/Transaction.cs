@@ -7,6 +7,28 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public abstract class VerifiableTransaction
     {
+        public VerifiableTransaction(TransactionTypes.Types type, bool isEmbedded)
+        {
+            Size += 128;
+
+            Signature = new byte[64];
+
+            IsEmbedded = isEmbedded;
+
+            if (isEmbedded) Size -= 80;
+
+            Type = type.GetValue();
+        }
+
+        private byte[] _Signature { get; set; }
+        private byte[] _Fee { get; set; }
+        private byte[] _Deadline { get; set; }
+        internal bool IsEmbedded { get; set; }
+        public SignedTransaction SignedTransaction { get; set; }
+        public abstract VerifiableTransaction SetSigner(string signer);      
+        public abstract PropertyInfo[] RetrieveProperties();
+        public abstract void SetVersion(byte version);
+
         public PropertyInfo[] BaseProperties => 
             [ 
                 GetType().GetProperty("Size"),
@@ -21,14 +43,9 @@ namespace io.nem2.sdk.Model.Transactions
                 GetType().GetProperty("Deadline")
             ];
 
-        // return extended transaction properties intended for serialization.
-        public abstract PropertyInfo[] RetrieveProperties();
-
         public uint Size { get; set; }
 
         public uint VerifiableEntityHeaderReserved { get; }
-
-        private byte[] _Signature { get; set; }
 
         public byte[] Signature
         {
@@ -59,8 +76,6 @@ namespace io.nem2.sdk.Model.Transactions
 
         public ushort Type { get; set; }
 
-        private byte[] _Fee { get; set; }
-
         public byte[] Fee
         {
             get
@@ -80,8 +95,6 @@ namespace io.nem2.sdk.Model.Transactions
             }
         }
 
-        private byte[] _Deadline { get; set; }
-
         public byte[] Deadline
         {
             get
@@ -99,38 +112,6 @@ namespace io.nem2.sdk.Model.Transactions
                     _Deadline = value;
                 }
             }
-        }
-
-        public SignedTransaction SignedTransaction { get; set; }
-
-        internal bool IsEmbedded { get; set; }
-
-        public VerifiableTransaction(TransactionTypes.Types type, bool isEmbedded)
-        {
-            Size += 128;
-
-            Signature = new byte[64];
-
-            IsEmbedded = isEmbedded;
-
-            if (isEmbedded) Size -= 80;
-
-            Type = type.GetValue();
-        }
-
-        public abstract VerifiableTransaction SetSigner(string signer);
-
-        public abstract void SetVersion(byte version);
-
-
-        public UnsignedTransaction Embed(string signer)
-        {
-            Signer = signer.FromHex();
-
-            return new UnsignedTransaction()
-            {
-                Payload = this.Serialize([[3, 9, 10], []])[0]
-            };
         }
 
         internal bool isAggregate()
