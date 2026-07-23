@@ -40,9 +40,47 @@ namespace io.nem2.sdk.Model.Transactions
 
         public ushort Type { get; set; }
 
-        public byte[] Fee { get; set; }
+        private byte[] _Fee { get; set; }
 
-        public byte[] Deadline { get; set; }
+        public byte[] Fee
+        {
+            get
+            {
+                if (IsEmbedded)
+                {
+                    return new byte[] { };
+                }
+                else return _Fee;
+            }
+            set
+            {
+                if (_Fee != value && !IsEmbedded)
+                {
+                    _Fee = value;
+                }
+            }
+        }
+
+        private byte[] _Deadline { get; set; }
+
+        public byte[] Deadline
+        {
+            get
+            {
+                if (IsEmbedded)
+                {
+                    return new byte[] { };
+                }
+                else return _Deadline;
+            }
+            set
+            {
+                if (_Deadline != value && !IsEmbedded)
+                {
+                    _Deadline = value;
+                }
+            }
+        }
 
         public SignedTransaction SignedTransaction { get; set; }
 
@@ -54,6 +92,8 @@ namespace io.nem2.sdk.Model.Transactions
             Signature = new byte[64];
 
             IsEmbedded = isEmbedded;
+
+            if (isEmbedded) Size -= 16;
 
             Type = type.GetValue();
         }
@@ -79,7 +119,7 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         public SignedTransaction SignEmbeddedTransaction(SecretKeyPair keyPair)
-           => SignTransaction(keyPair, exclude: [[], [2, 8, 9]], excludeLen: 124);
+           => SignTransaction(keyPair, exclude: [[], [2]], excludeLen: 124);
 
         public SignedTransaction SignTransaction(SecretKeyPair keyPair, string networkGenHash = null)
            => SignTransaction(keyPair, exclude: [[],[0, 1, 2, 3, 4]], excludeLen: 108, networkGenHash.FromHex());
