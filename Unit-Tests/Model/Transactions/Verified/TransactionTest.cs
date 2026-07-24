@@ -77,5 +77,27 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             Assert.That(result.Payload.ToHex(), Is.EqualTo("9B00000000000000DB0979FEFABB7FFF49017B78785E340B20D9A7D34C50262A477875EEC604AE3FD11C6E1123DACFE5E184AA9D1CE91F27747601E229F3B7817337C37A2FB42A0691D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B4520000000001984E41A086010000000000348FF3641B0000003297060000000000C70F9CB252E64AB60009746573747370616365"));
         }
+
+        [Test, Timeout(30000)]
+        public async Task CreateMosaicSupplyChangeTransaction()
+        {
+            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+
+            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+                .CreateMosaicSupplyChangeTransaction(
+                    1000000,
+                    "42925519A9B65A55",
+                    MosaicSupplyType.Type.INCREASE,
+                    1000000,
+                    false);
+
+            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
+            transfer.Deadline = DataConverter.ConvertFrom((ulong)117658653329);
+
+            var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
+            
+            Assert.That(result.Payload.ToHex(), Is.EqualTo("910000000000000005CE41082BD2E962706A513A9C1740582C8094C495A19315509E257E80FF1E79C7775D92EA8FFD92BBF8538202DBDE7CF05916D5A9B6663F6097E804C129BD0B91D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B4520000000001984D4240420F0000000000919200651B000000555AB6A91955924240420F000000000001"));
+
+        }
     }
 }
