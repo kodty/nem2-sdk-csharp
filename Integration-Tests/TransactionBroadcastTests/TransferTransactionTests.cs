@@ -235,13 +235,16 @@ namespace IntegrationTests.Infrastructure.Transactions
             
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicDefinitionTransaction(
-                    DataConverter.ConvertFrom(IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 29499)).ToHex(),
-                    29499,
-                    new MosaicProperties(true, true, false, 6, 863),
+                    DataConverter.ConvertFrom(IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 2745897589)).ToHex(),
+                    2745897589,
+                    new MosaicProperties(true, true, false, 6, 1000000),
                     500000,
-                    true);
+                    false);
 
             var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
+            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Deadline));
+            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Fee));
+            Debug.WriteLine(st.Payload.ToHex());
             Debug.WriteLine(st.Payload.ToHex());
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
            

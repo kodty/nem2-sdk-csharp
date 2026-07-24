@@ -89,7 +89,7 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public MosaicDefinitionTransaction CreateMosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties, bool embedded)
+        public MosaicDefinitionTransaction CreateMosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties, ulong fee, bool embedded)
         {
             return new MosaicDefinitionTransaction(id, nonce, properties, embedded)
             {
@@ -98,7 +98,7 @@ namespace Unit_Tests.Model.Transactions
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(20202020202)
+                Fee = DataConverter.ConvertFrom(20202020202) // 
             };
         }
 
