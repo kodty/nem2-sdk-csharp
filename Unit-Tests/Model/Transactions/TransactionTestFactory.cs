@@ -102,7 +102,7 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public LockFundsTransaction CreateLockFundsTransaction(string mosaic, ulong amount, ulong duration, string transactionHash, bool embedded)
+        public LockFundsTransaction CreateHashLockTransaction(string mosaic, ulong amount, ulong duration, string transactionHash, bool embedded)
         {
             return new LockFundsTransaction(mosaic, amount, duration, transactionHash, embedded)
             {
@@ -123,7 +123,6 @@ namespace Unit_Tests.Model.Transactions
 
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
-                Type = TransactionTypes.Types.SECRET_LOCK.GetValue(),
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -164,7 +163,6 @@ namespace Unit_Tests.Model.Transactions
 
                 Network = NetworkType.GetNetworkByte(),
                 Version = 0x01,
-                Type = type.GetValue(),
                 Deadline = DataConverter.ConvertFrom(10101010101), // DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
                 Fee = DataConverter.ConvertFrom(20202020202)
             };
@@ -195,8 +193,6 @@ namespace Unit_Tests.Model.Transactions
                 Fee = DataConverter.ConvertFrom(287428975982)
             };
         }
-
-
 
         public AccountRestrictionsTransaction CreateAccountRestrictionTransaction(TransactionTypes.Types type, ushort restrictionFlags, string[] additions, string[] deletions, bool embedded)
         {

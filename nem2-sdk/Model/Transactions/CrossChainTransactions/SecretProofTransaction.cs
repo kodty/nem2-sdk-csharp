@@ -14,7 +14,7 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
                 GetType().GetProperty("Recipient"),
                 GetType().GetProperty("Secret"),
                 GetType().GetProperty("ProofSize"),
-                GetType().GetProperty("HashALgo"),
+                GetType().GetProperty("HashAlgo"),
                 GetType().GetProperty("Proof")
             ];
         }
@@ -31,6 +31,12 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             Recipient = recipient.IsBase32()
                       ? AddressEncoder.DecodeAddress(recipient)
                       : recipient.FromHex();
+
+            Size += (uint)Recipient.Length;
+            Size += (uint)Secret.Length;
+            Size += 4;
+            Size += 1;
+            Size += (uint)Proof.Length;
         }
 
         public byte[] Recipient { get; set; }

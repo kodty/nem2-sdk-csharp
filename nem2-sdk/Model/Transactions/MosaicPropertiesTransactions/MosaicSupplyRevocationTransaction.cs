@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Utils;
 using System.Reflection;
 
@@ -12,19 +13,26 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
             [
                 .. BaseProperties,
                 GetType().GetProperty("IssuerAddress"),
-                GetType().GetProperty("RevokedMosaicAmount")
+                GetType().GetProperty("MosaicId"),
+                GetType().GetProperty("Amount")
             ];
         }
 
-        public MosaicSupplyRevocationTransaction(string issuerAddress, Tuple<string, ulong> revokedMosaicAmount, bool embedded) : base (TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION, embedded)
-        {
-            IssuerAddress = issuerAddress.IsBase32() ? AddressEncoder.DecodeAddress(issuerAddress) : issuerAddress.FromHex(); ;
-            RevokedMosaicAmount = revokedMosaicAmount;
+        public MosaicSupplyRevocationTransaction(Address issuerAddress, string mosaicId, ulong amount, bool embedded) : base (TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION, embedded)
+        { 
+            IssuerAddress = AddressEncoder.DecodeAddress(issuerAddress.Plain);
+            MosaicId = mosaicId.FromHex();
+            Amount = amount;
+
+            Size += (uint)IssuerAddress.Length;
+            Size += 16;
         }
 
         public byte[] IssuerAddress { get; set; }
 
-        public Tuple<string, ulong> RevokedMosaicAmount {get; set;}
+        public byte[] MosaicId { get; set; }
+
+        public ulong Amount { get; set; }
 
         public override MosaicSupplyRevocationTransaction SetSigner(string signer)
         {

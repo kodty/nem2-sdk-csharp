@@ -16,11 +16,10 @@ namespace Unit_Tests.Crypto
         [Test, Timeout(20000)]
         public void TestSignVerify()
         {
-            var privateKey = "98AA70CA43E5D3B95CD303A57892D0BA953C204A4D937AF4386ED658A8FA555D";
             var data = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4019854416E1D1AEC42000000B52E115A0200000098E21944E27CE919474CE22D4145725E322766E1A278E414050001000000000072C0212E67A08BCEE80300000000000068656C6C6F";
             var sigVectorData = "23A6CF4C33E70B2B2108D9BB1F6534DCB929002FF3D7ADE5274B45E58760D82AFF79B5F85B027515CAD1AF85CE1F6547C13DAFDD85C285814966DBB950FD710B";
 
-            var keyPair = SecretKeyPair.CreateFromPrivateKey(privateKey);
+            var keyPair = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var result = keyPair.Sign(data.FromHex());
 
@@ -41,7 +40,9 @@ namespace Unit_Tests.Crypto
             var factory = new TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var tx = factory.CreateTransferTransaction(address, PlainMessage.Create("hello"), Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000), 1000, false);
-            
+
+            tx.SetSigner(keyPair.PublicKeyString);
+
             var st = tx.SignTransaction(keyPair, HttpSetUp.genHash);
 
             Assert.True(st.VerifySignature());

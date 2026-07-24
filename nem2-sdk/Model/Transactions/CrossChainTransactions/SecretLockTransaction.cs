@@ -12,11 +12,11 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             return
             [
                 .. BaseProperties,
+                GetType().GetProperty("Recipient"),
+                GetType().GetProperty("Secret​"),
                 GetType().GetProperty("Mosaic"),
                 GetType().GetProperty("Duration"),
-                GetType().GetProperty("Secret​"),
-                GetType().GetProperty("HashAlgo"),
-                GetType().GetProperty("Recipient")
+                GetType().GetProperty("HashAlgo")          
             ];
         }
 

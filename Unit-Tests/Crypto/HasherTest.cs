@@ -66,7 +66,7 @@ namespace Unit_Tests.Crypto
             
             var final = VerifiableTransaction.HashTransaction(signature, signer.FromHex(), genHash.FromHex().Concat(payload.FromHex()).ToArray());
 
-            Assert.AreEqual(final, actualHash);
+            Assert.AreEqual(final.ToHex(), actualHash);
         }
     }
 }

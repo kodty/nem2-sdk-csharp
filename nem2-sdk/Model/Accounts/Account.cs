@@ -55,7 +55,7 @@ namespace io.nem2.sdk.Model.Accounts
 
                 var digestSha3 = new Sha3Digest(256);
                 var stepOne = new byte[32];
-                digestSha3.BlockUpdate(bytes, 0, 32);
+                digestSha3.BlockUpdate(bytes, 0, 2048);
                 digestSha3.DoFinal(stepOne, 0);
 
                 var keyPair = SecretKeyPair.CreateFromPrivateKey(stepOne.ToHex());

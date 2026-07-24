@@ -17,11 +17,6 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             ];
         }
 
-        public LockFundsTransaction(TransactionTypes.Types type, bool isEmbedded) : base(type, isEmbedded)
-        {
-
-        }
-
         public LockFundsTransaction(string mosaic, ulong amount, ulong duration, string transactionHash, bool isEmbedded) : base(TransactionTypes.Types.HASH_LOCK, isEmbedded)
         {
             Size += 48;

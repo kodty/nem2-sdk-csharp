@@ -106,7 +106,7 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public KeyLinkTransaction CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, byte linkAction, byte linkType, ulong fee, bool embedded)
+        public KeyLinkTransaction CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, byte linkAction, ulong fee, bool embedded)
         {
             return new KeyLinkTransaction(type, linkedPublicKey, linkAction, embedded)
             {
@@ -117,7 +117,7 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public VotingKeyLinkTransaction CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, byte linkAction, byte linkType, ulong fee, bool embedded)
+        public VotingKeyLinkTransaction CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, byte linkAction, ulong fee, bool embedded)
         {
             return new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
             {
@@ -230,6 +230,17 @@ namespace io.nem2.sdk.Model
         public MosaicSupplyChangeTransaction CreateMosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, ulong fee, bool embedded)
         {
             return new MosaicSupplyChangeTransaction(delta, mosaicId, supplyType, embedded)
+            {
+                Signer = null,
+                Network = NetworkType.GetNetworkByte(),
+                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
+                Fee = DataConverter.ConvertFrom(fee)
+            };
+        }
+
+        public MosaicSupplyRevocationTransaction CreateMosaicSupplyRevocationTransaction(Address issuer, string mosaicId, ulong amount, ulong fee, bool embedded)
+        {
+            return new MosaicSupplyRevocationTransaction(issuer, mosaicId, amount, embedded)
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
