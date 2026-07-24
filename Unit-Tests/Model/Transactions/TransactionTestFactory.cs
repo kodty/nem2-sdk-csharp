@@ -183,7 +183,7 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public TransferTransaction_V1 CreateTransferTransaction(Address address, IMessage messege, Mosaic mosaic, bool embedded)
+        public TransferTransaction_V1 CreateTransferTransaction(Address address, IMessage messege, Mosaic mosaic, ulong fee, bool embedded)
         {
             return new TransferTransaction_V1(address, messege, mosaic, embedded)
             {

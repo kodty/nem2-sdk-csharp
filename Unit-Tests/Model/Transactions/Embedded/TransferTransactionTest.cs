@@ -45,6 +45,7 @@ namespace Unit_Tests.Model.Transactions.Embedded
                     Address.CreateFromEncoded("TBA6LOHEA6A465G2X5MSQF66JBYR254GJDPK7MQ"),
                     EmptyMessage.Create(),
                     Mosaic.CreateFromHexIdentifier("000056CE00002B67", 101),
+                    1000000,
                     true
                 );
 
