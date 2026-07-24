@@ -242,10 +242,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     false);
 
             var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Deadline));
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Fee));
-            Debug.WriteLine(st.Payload.ToHex());
-            Debug.WriteLine(st.Payload.ToHex());
+            
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
            
             var a = await client.Announce(st);

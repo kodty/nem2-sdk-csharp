@@ -38,7 +38,7 @@ namespace Unit_Tests.Model.Transactions.Verified
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var transfer = new TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
-                .CreateMosaicDefinitionTransaction(
+                 .CreateMosaicDefinitionTransaction(
                     DataConverter.ConvertFrom(IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 2745897589)).ToHex(),
                     2745897589,
                     new MosaicProperties(true, true, false, 6, 1000000),
@@ -46,12 +46,36 @@ namespace Unit_Tests.Model.Transactions.Verified
                     false);
 
             transfer.Fee = DataConverter.ConvertFrom((ulong)500000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)117655775106);
+            transfer.Deadline = DataConverter.ConvertFrom((ulong)117657395737);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
-            Assert.That(result.Payload.ToHex(), Is.EqualTo("960000000000000002A4E9707ABF768454AFB68737CD817687DED4C6EE38C7F3C7B2B4F6776F1DFF0F9EE7C41CAC51780E086FE5AA8500984E6C8BD280A494CA733CB6D6A1F7DB0791D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B4520000000001984D4120A107000000000082A7D4641B000000555AB6A91955924240420F00000000007512ABA30306"));
+            Assert.That(result.Payload.ToHex(), Is.EqualTo("96000000000000002AFDC76E12D90490D6DCE8D15DA1FC5929B57E894F23C1C33CEB920CAD193CBCE774A8D96277D5BD6FE0F0007C9E798910FF1C091D240BE7BF92F54776E0A80091D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B4520000000001984D4120A10700000000001962ED641B000000555AB6A91955924240420F00000000007512ABA30306"));
+        }
 
+        [Test, Timeout(20000)]
+        public void CreateNamespaceRentalTest()
+        {
+            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+
+            var root = IdGenerator.GenerateId(0, "testspace", true);
+
+            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+                .CreateNamespaceRegistrationTransaction(
+                    431922,
+                    0,
+                    IdGenerator.GenerateId(0, "testspace", true),
+                    NamespaceTypes.Types.RootNamespace,
+                    "testspace",
+                    100000,
+                    false);
+
+            transfer.Fee = DataConverter.ConvertFrom((ulong)100000);
+            transfer.Deadline = DataConverter.ConvertFrom((ulong)117657800500);
+
+            var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
+
+            Assert.That(result.Payload.ToHex(), Is.EqualTo("9B00000000000000DB0979FEFABB7FFF49017B78785E340B20D9A7D34C50262A477875EEC604AE3FD11C6E1123DACFE5E184AA9D1CE91F27747601E229F3B7817337C37A2FB42A0691D5DCB54E185D3700DD88283D9DC8C3EDC58A18305BB2B933BBA252B516B4520000000001984E41A086010000000000348FF3641B0000003297060000000000C70F9CB252E64AB60009746573747370616365"));
         }
     }
 }
