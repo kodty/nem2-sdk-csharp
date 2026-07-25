@@ -20,7 +20,7 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateTransferTransaction(
-                    Address.CreateFromEncoded(HttpSetUp.Recipient),
+                    Address.CreateFromEncoded("TDX7QVF6XXMJNDFFRIOYTV4N3GSVUGNTWVCIMZQ"),
                     EmptyMessage.Create(),
                     Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
                     1000000,
@@ -29,24 +29,53 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             transfer.SetSigner(keys.PublicKeyString);
 
-            //transfer.Fee = DataConverter.ConvertFrom((ulong)500000);
-            //transfer.Deadline = DataConverter.ConvertFrom((ulong)117657395737);
+            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
+            transfer.Deadline = DataConverter.ConvertFrom((ulong)117756998097);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
-            Debug.WriteLine(result.Payload.ToHex());
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Deadline));
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Fee));
+            Assert.That(result.Payload.ToHex(), Is.EqualTo("B000000000000000115504A388D963BF8B64400920CEBBC04597C0EC97E429C5B2660614440FD6A97E5A122FB7ADF2AC7DADA41CDEB23915E00BE23FE5F06B2B6896C4964E440600F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198544140420F0000000000D131DD6A1B00000098EFF854BEBDD8968CA58A1D89D78DD9A55A19B3B54486660000010000000000CE8BA0672E21C07240420F0000000000"));
+        }
 
-            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            //var a = await client.Announce(result);
-            //
-            //var status = await client.GetTransactionStatus(result.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
+        [Test, Timeout(20000)]
+        public async Task CreateHashLockTest()
+        {
+            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
-            //Assert.That(result.Payload.ToHex(), Is.EqualTo(""));
+            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+               .CreateTransferTransaction(
+                   Address.CreateFromEncoded("TDX7QVF6XXMJNDFFRIOYTV4N3GSVUGNTWVCIMZQ"),
+                   EmptyMessage.Create(),
+                   Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
+                   1000000,
+                   false
+               );
+
+            transfer.SetSigner(keys.PublicKeyString);
+
+            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
+            transfer.Deadline = DataConverter.ConvertFrom((ulong)117756998097);
+
+            var transferResult = transfer.SignTransaction(keys, HttpSetUp.genHash);
+
+            var hashlock = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+                .CreateHashLockTransaction(
+                    "72C0212E67A08BCE",
+                    10000000,
+                    2880,
+                    transferResult.Hash,
+                    1000000,
+                    false
+                );
+
+            hashlock.SetSigner(keys.PublicKeyString);
+
+            hashlock.Fee = DataConverter.ConvertFrom((ulong)1000000);
+            hashlock.Deadline = DataConverter.ConvertFrom((ulong)117757956956);
+
+            var hashlockResult = hashlock.SignTransaction(keys, HttpSetUp.genHash);
+
+            Assert.That(hashlockResult.Payload.ToHex(), Is.EqualTo("B800000000000000A6A7110A8D6A6FF5901235955DEA7EC0A0F5AFE717B14AAA5D6DF5869F7695C6CF87B5BDA105B7D1724812544A846585701BB9C6F4E225170F55DF9AD9132205F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198484140420F00000000005CD3EB6A1B000000CE8BA0672E21C0728096980000000000400B000000000000FD492A6AD4BA0A2CD73277C4390BFCA885C17693DD6463F4418D0A6553A586D3"));
         }
 
         [Test, Timeout(20000)]
@@ -253,7 +282,7 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicSupplyRevocationTransaction(
-                    Address.CreateFromEncoded("TA3GCBHJBTRCEHVYVHCNUCULY2NB76W7MVECFUY"), // dummy address
+                    Address.CreateFromEncoded(""),
                     DataConverter.ConvertFrom((ulong)sub).ToHex(),
                     1000000,
                     1000000,
@@ -281,42 +310,7 @@ namespace Unit_Tests.Model.Transactions.Verified
             //Assert.That(result.Payload.ToHex(), Is.EqualTo(""));
         }
 
-        [Test, Timeout(20000)]
-        public async Task CreateHashLockTest()
-        {
-            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
-            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
-                .CreateHashLockTransaction(
-                    "72C0212E67A08BCE",
-                    10000000,
-                    2880,
-                    "F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7", // dummy hash
-                    1000000,
-                    false
-                );
-
-            transfer.SetSigner(keys.PublicKeyString);
-
-            //transfer.Fee = DataConverter.ConvertFrom((ulong)500000);
-            //transfer.Deadline = DataConverter.ConvertFrom((ulong)117657395737);
-
-            var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
-
-            //Debug.WriteLine(result.Payload.ToHex());
-            //Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Deadline));
-            //Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Fee));
-
-            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            //var a = await client.Announce(result);
-            //
-            //var status = await client.GetTransactionStatus(result.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
-
-            //Assert.That(result.Payload.ToHex(), Is.EqualTo(""));
-        }
 
         [Test, Timeout(20000)]
         public async Task CreateSecretLockTest()
@@ -327,9 +321,9 @@ namespace Unit_Tests.Model.Transactions.Verified
                 .CreateSecretLockTransaction(
                     "72C0212E67A08BCE",
                     10000000,
-                    "F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7", // dummy secret
+                    "",
                     HashType.Types.SHA3_512,
-                    "TA3GCBHJBTRCEHVYVHCNUCULY2NB76W7MVECFUY", // dummy recipient
+                    "", 
                     1000000,
                     false
                 );
@@ -363,10 +357,10 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateSecretProofTransaction(
-                    "TA3GCBHJBTRCEHVYVHCNUCULY2NB76W7MVECFUY",
-                    "F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7",
+                    "",
+                    "",
                     HashType.Types.SHA3_512,
-                    "F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7",
+                    "",
                     1000000,
                     false
                 );
@@ -419,7 +413,7 @@ namespace Unit_Tests.Model.Transactions.Verified
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateKeyLinkTransaction(
                     TransactionTypes.Types.ACCOUNT_KEY_LINK,
-                    "F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7", // dummy key
+                    "",
                     0x1,
                     1000000,
                     false
@@ -455,7 +449,7 @@ namespace Unit_Tests.Model.Transactions.Verified
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateKeyLinkTransaction(
                     TransactionTypes.Types.NODE_KEY_LINK,
-                    "F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7",
+                    "",
                     0x1,
                     1000000,
                     false
@@ -491,7 +485,7 @@ namespace Unit_Tests.Model.Transactions.Verified
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateKeyLinkTransaction(
                     TransactionTypes.Types.VRF_KEY_LINK,
-                    "F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7", // dummy key
+                    "",
                     0x1,
                     1000000,
                     false
@@ -529,7 +523,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     TransactionTypes.Types.VOTING_KEY_LINK,
                     0,
                     0,
-                    "F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7", // dummy key
+                    "",
                     0x1,
                     1000000,
                     false
