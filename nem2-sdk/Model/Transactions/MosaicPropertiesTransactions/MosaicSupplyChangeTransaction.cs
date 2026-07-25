@@ -2,21 +2,16 @@
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {   
     public class MosaicSupplyChangeTransaction : VerifiableTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("MosaicId"),
-                GetType().GetProperty("Delta"),
-                GetType().GetProperty("SupplyType")
-            ];
+            serializer.SerializeProperty(MosaicId, typeof(byte[]), 10);
+            serializer.SerializeProperty(Delta, typeof(ulong), 11);
+            serializer.SerializeProperty(SupplyType, typeof(byte), 12);
         }
 
         public MosaicSupplyChangeTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }

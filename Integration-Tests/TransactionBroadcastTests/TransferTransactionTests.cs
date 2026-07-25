@@ -44,23 +44,23 @@ namespace IntegrationTests.Infrastructure.Transactions
                 .CreateTransferTransaction(
                     account2.Address, 
                     EmptyMessage.Create(),
-                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 8168000000),
+                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000),
                     397031,
                     false
                 );
-            
+
             transfer.SetSigner(keys.PublicKeyString);
-            
-            //var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
+
+            var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
             //
-            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
             //
-            //var a = await client.Announce(st);
+            var a = await client.Announce(st);
             //
-            //Thread.Sleep(3210);
-            //var status = await client.GetTransactionStatus(st.Hash);
+            Thread.Sleep(3210);
+            var status = await client.GetTransactionStatus(st.Hash);
             //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
         [Test, Timeout(20000)]

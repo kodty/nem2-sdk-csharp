@@ -1,23 +1,18 @@
 ﻿
 using Coppery;
 using io.nem2.sdk.Utils;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 {
     public class SecretLockTransaction : VerifiableTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("Recipient"),
-                GetType().GetProperty("Secret​"),
-                GetType().GetProperty("Mosaic"),
-                GetType().GetProperty("Duration"),
-                GetType().GetProperty("HashAlgo")          
-            ];
+            serializer.SerializeProperty(Recipient, typeof(byte[]), 10);
+            serializer.SerializeProperty(Secret, typeof(byte[]), 11);
+            serializer.SerializeProperty(Mosaic, typeof(byte[]), 12);
+            serializer.SerializeProperty(Duration, typeof(ulong), 13);
+            serializer.SerializeProperty(HashAlgo, typeof(byte), 14);
         }
 
         public SecretLockTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }

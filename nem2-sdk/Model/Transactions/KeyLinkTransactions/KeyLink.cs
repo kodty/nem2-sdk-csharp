@@ -1,18 +1,14 @@
 ﻿using Coppery;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
 {
     public class KeyLinkTransaction : VerifiableTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("LinkedPublicKey"),
-                GetType().GetProperty("LinkAction")
-            ];
+            serializer.SerializeProperty(LinkedPublicKey, typeof(byte[]), 10);
+            serializer.SerializeProperty(LinkAction, typeof(byte), 11);
+            
         }
 
         public KeyLinkTransaction(TransactionTypes.Types type, bool embedded) : base (type, embedded) { }

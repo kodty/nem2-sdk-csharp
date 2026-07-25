@@ -1,24 +1,19 @@
 ﻿using Coppery;
 using io.nem2.sdk.Utils;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
 {
     //AccountMosaic, AccountAddress, AccountOperation
     public class AccountRestrictionsTransaction : VerifiableTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("RestrictionFlags"),
-                GetType().GetProperty("RestrictionsAdditionsCount"),
-                GetType().GetProperty("RestrictionsDeletionsCount"),
-                GetType().GetProperty("Account_​restriction_​transaction_​body_​reserved_​1"),
-                GetType().GetProperty("_RestrictionAdditions"),
-                GetType().GetProperty("_RestrictionDeletions")
-            ];
+            serializer.SerializeProperty(RestrictionFlags, typeof(ushort), 10);
+            serializer.SerializeProperty(RestrictionsAdditionsCount, typeof(byte), 11);
+            serializer.SerializeProperty(RestrictionsDeletionsCount, typeof(byte), 12);
+            serializer.SerializeProperty(new byte[4], typeof(byte[]), 13);
+            serializer.SerializeProperty(_RestrictionAdditions, typeof(byte[]), 14);
+            serializer.SerializeProperty(_RestrictionDeletions, typeof(byte[]), 15);
         }
 
         public AccountRestrictionsTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded)
@@ -36,7 +31,6 @@ namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
             RestrictionsAdditionsCount = (byte)restrictionAdditions.Count();
             RestrictionDeletions = restrictionsDeletions;
             RestrictionsDeletionsCount = (byte)restrictionsDeletions.Count();
-            Account_​restriction_​transaction_​body_​reserved_​1 = 0;
 
             Size += (uint)(8 + _RestrictionAdditions.Length + _RestrictionDeletions.Length);
         }
@@ -44,7 +38,6 @@ namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
         public ushort RestrictionFlags { get; set; }
         public byte RestrictionsAdditionsCount { get; set; }
         public byte RestrictionsDeletionsCount { get; set; }
-        public uint Account_​restriction_​transaction_​body_​reserved_​1 { get; }
         public byte[] _RestrictionAdditions{ get; set; }
         public byte[] _RestrictionDeletions{ get; set; }       
 

@@ -1,22 +1,17 @@
 ﻿using Coppery;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 {
     public class MosaicMetadataTransaction : AccountMetadataTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("TargetAddress"),
-                GetType().GetProperty("ScopedMetadataKey"),
-                GetType().GetProperty("TargetMosaicId"),
-                GetType().GetProperty("ValueSizeDelta"),
-                GetType().GetProperty("ValueSize"),
-                GetType().GetProperty("Value")
-            ];
+            serializer.SerializeProperty(TargetAddress, typeof(byte[]), 10);
+            serializer.SerializeProperty(ScopedMetadataKey, typeof(byte[]), 11);
+            serializer.SerializeProperty(TargetMosaicId, typeof(byte[]), 12);
+            serializer.SerializeProperty(ValueSizeDelta, typeof(ushort), 13);
+            serializer.SerializeProperty(ValueSize, typeof(ushort), 14);
+            serializer.SerializeProperty(Value, typeof(byte[]), 15);
         }
 
         public MosaicMetadataTransaction(TransactionTypes.Types type) : base(TransactionTypes.Types.MOSAIC_METADATA) { }

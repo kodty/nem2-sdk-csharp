@@ -1,22 +1,17 @@
 ﻿using Coppery;
 using io.nem2.sdk.Utils;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 {
     public class AccountMetadataTransaction : VerifiableTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("TargetAddress"),
-                GetType().GetProperty("ScopedMetadataKey"),
-                GetType().GetProperty("ValueSizeDelta"),
-                GetType().GetProperty("ValueSize"),
-                GetType().GetProperty("Value")
-            ];
+            serializer.SerializeProperty(TargetAddress, typeof(byte[]), 10);
+            serializer.SerializeProperty(ScopedMetadataKey, typeof(byte[]), 11);
+            serializer.SerializeProperty(ValueSizeDelta, typeof(ushort), 12);
+            serializer.SerializeProperty(ValueSize, typeof(ushort), 13);
+            serializer.SerializeProperty(Value, typeof(byte[]), 14);
         }
 
         public AccountMetadataTransaction(TransactionTypes.Types type) : base(type, true) { }

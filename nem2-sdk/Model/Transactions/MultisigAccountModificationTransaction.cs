@@ -1,30 +1,25 @@
 ﻿using Coppery;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions
 {
     public class MultisigAccountModificationTransaction : VerifiableTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("MinApprovalDelta"),
-                GetType().GetProperty("MinRemovalDelta"),
-                GetType().GetProperty("AddressAdditionsCount"),
-                GetType().GetProperty("AddressDeletionsCount"),
-                GetType().GetProperty("Multisig_​account_​modification_​transaction_​body_​reserved_​1"),
-                GetType().GetProperty("AddressAdditions"),
-                GetType().GetProperty("AddressDeletions")
-            ];
+            serializer.SerializeProperty(MinApprovalDelta, typeof(byte), 10);
+            serializer.SerializeProperty(MinRemovalDelta, typeof(byte), 11);
+            serializer.SerializeProperty(AddressAdditionsCount, typeof(byte), 12);
+            serializer.SerializeProperty(AddressDeletionsCount, typeof(byte), 13);
+            serializer.SerializeProperty(new byte[4], typeof(byte[]), 14);
+            // serializer.SerializeProperty(AddressAdditions, typeof(ulong), 15);
+            // serializer.SerializeProperty(AddressDeletions, typeof(ulong), 16);
+            throw new Exception("not implimented");
         }
 
         public byte MinApprovalDelta { get; set; }
         public byte MinRemovalDelta { get; set; }
         public byte AddressAdditionsCount { get; set; }
         public byte AddressDeletionsCount { get; set; }
-        public int Multisig_​account_​modification_​transaction_​body_​reserved_​1 { get; }
         public string[] AddressAdditions { get; set; }
         public string[] AddressDeletions { get; set; }
 
@@ -36,7 +31,6 @@ namespace io.nem2.sdk.Model.Transactions
             MinRemovalDelta = minRemoval;
             AddressAdditionsCount = (byte)AddressAdditions.Length;
             AddressDeletionsCount = (byte)AddressDeletions.Length;
-            Multisig_account_modification_transaction_body_reserved_1 = 0;
             AddressAdditions = addressAdditions;
             AddressDeletions = addressDeletions;    
         }

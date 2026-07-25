@@ -1,24 +1,20 @@
 ﻿using Coppery;
 using io.nem2.sdk.Utils;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 {
     public class NamespaceMetadataTransaction : AccountMetadataTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("TargetAddress"),
-                GetType().GetProperty("ScopedMetadataKey"),
-                GetType().GetProperty("TargetNamespaceId"),
-                GetType().GetProperty("ValueSizeDelta"),
-                GetType().GetProperty("ValueSize"),
-                GetType().GetProperty("Value")
-            ];
+            serializer.SerializeProperty(TargetAddress, typeof(byte[]), 10);
+            serializer.SerializeProperty(ScopedMetadataKey, typeof(byte[]), 11);
+            serializer.SerializeProperty(TargetNamespaceId, typeof(byte[]), 12);
+            serializer.SerializeProperty(ValueSizeDelta, typeof(ushort), 13);
+            serializer.SerializeProperty(ValueSize, typeof(ushort), 14);
+            serializer.SerializeProperty(Value, typeof(byte[]), 15);
         }
+
         public NamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, ushort valueSizeDelta, ushort valueSize, byte[] value) : base(TransactionTypes.Types.NAMESPACE_METADATA) 
         {
             TargetAddress = AddressEncoder.DecodeAddress(targetAddress);

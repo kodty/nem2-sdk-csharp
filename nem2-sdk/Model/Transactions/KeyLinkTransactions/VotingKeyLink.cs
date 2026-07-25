@@ -1,20 +1,15 @@
 ﻿using Coppery;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
 {
     public class VotingKeyLinkTransaction : KeyLinkTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("StartEpoch"),
-                GetType().GetProperty("LinkedPublicKey"),
-                GetType().GetProperty("LinkAction​"),
-                GetType().GetProperty("EndEpoch")
-            ];
+            serializer.SerializeProperty(StartEpoch, typeof(ulong), 10);
+            serializer.SerializeProperty(LinkedPublicKey, typeof(byte[]), 11);
+            serializer.SerializeProperty(LinkAction, typeof(byte), 12);
+            serializer.SerializeProperty(EndEpoch, typeof(ulong), 13);
         }
 
         public VotingKeyLinkTransaction(ulong startEpoch, ulong endEpoch, string linkedPublicKey, byte linkAction, bool embedded) : base (TransactionTypes.Types.VOTING_KEY_LINK, embedded)

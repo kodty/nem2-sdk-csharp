@@ -3,26 +3,21 @@ using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Utils;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions
 {
     public class TransferTransaction_V1 : VerifiableTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("Address"),
-                GetType().GetProperty("MessegeSize"),
-                GetType().GetProperty("MosaicsCount"),
-                GetType().GetProperty("Reserved_1"),
-                GetType().GetProperty("Reserved_2"),
-                GetType().GetProperty("MosaicId"),
-                GetType().GetProperty("MosaicAmount"),
-                GetType().GetProperty("Message"),
-            ];
+            serializer.SerializeProperty(Address, typeof(byte[]), 10);
+            serializer.SerializeProperty(MessegeSize, typeof(ushort), 11);
+            serializer.SerializeProperty(MosaicsCount, typeof(byte), 12);
+            serializer.SerializeProperty((byte)0x0, typeof(byte), 13);
+            serializer.SerializeProperty(new byte[4], typeof(byte[]), 14);
+            serializer.SerializeProperty(MosaicId, typeof(byte[]), 15);
+            serializer.SerializeProperty(MosaicAmount, typeof(ulong), 16);
+            serializer.SerializeProperty(Message, typeof(byte[]), 17);
         }
 
         public byte[] Address { get; set; }
@@ -30,10 +25,6 @@ namespace io.nem2.sdk.Model.Transactions
         public ushort MessegeSize { get; set; }
 
         public byte MosaicsCount { get; set; }
-
-        public byte Reserved_1 { get; }
-
-        public uint Reserved_2 { get; }
 
         public byte[] MosaicId { get; set; }
 
@@ -55,7 +46,7 @@ namespace io.nem2.sdk.Model.Transactions
             MessegeSize = (ushort)Message.Length;
 
             Size += (uint)Address.Length;
-            Size += MessegeSize; 
+            Size += MessegeSize;
         }
 
         public override TransferTransaction_V1 SetSigner(string signer)

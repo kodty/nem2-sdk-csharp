@@ -1,22 +1,17 @@
 ﻿using Coppery;
 using io.nem2.sdk.Model.Articles;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {
     public class MosaicDefinitionTransaction : VerifiableTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("MosaicId"),
-                GetType().GetProperty("Duration"),
-                GetType().GetProperty("Nonce"),
-                GetType().GetProperty("Flags"),
-                GetType().GetProperty("Divisibility")
-            ];
+            serializer.SerializeProperty(MosaicId, typeof(byte[]), 10);
+            serializer.SerializeProperty(Duration, typeof(ulong), 11);
+            serializer.SerializeProperty(Nonce, typeof(uint), 12);
+            serializer.SerializeProperty(Flags, typeof(byte), 13);
+            serializer.SerializeProperty(Divisibility, typeof(byte), 14);
         }
 
         public MosaicDefinitionTransaction(TransactionTypes.Types type, bool embedded) : base(TransactionTypes.Types.MOSAIC_DEFINITION, embedded) { }

@@ -1,7 +1,5 @@
 ﻿using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
-using System.Diagnostics;
-using System.Reflection;
 using TweetNaclSharp;
 
 namespace io.nem2.sdk.Model.Transactions
@@ -25,28 +23,14 @@ namespace io.nem2.sdk.Model.Transactions
         private byte[] _Fee { get; set; }
         private byte[] _Deadline { get; set; }
         internal bool IsEmbedded { get; set; }
-        public SignedTransaction SignedTransaction { get; set; }
+
+        internal abstract void Extend(DataSerializer serializer);
+
         public abstract VerifiableTransaction SetSigner(string signer);      
-        public abstract PropertyInfo[] RetrieveProperties();
+
         public abstract void SetVersion(byte version);
 
-        public PropertyInfo[] BaseProperties => 
-            [ 
-                GetType().GetProperty("Size"),
-                GetType().GetProperty("VerifiableEntityHeaderReserved"),
-                GetType().GetProperty("Signature"),
-                GetType().GetProperty("Signer"),
-                GetType().GetProperty("Entity_body_reserved_1"),
-                GetType().GetProperty("Version"),
-                GetType().GetProperty("Network"),
-                GetType().GetProperty("Type"),
-                GetType().GetProperty("Fee"),
-                GetType().GetProperty("Deadline")
-            ];
-
         public uint Size { get; set; }
-
-        public uint VerifiableEntityHeaderReserved { get; }
 
         public byte[] Signature
         {
@@ -68,8 +52,6 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         public byte[] Signer { get; set; }
-
-        public uint Entity_body_reserved_1 { get; }
 
         public byte Version { get; set; }
 
@@ -183,7 +165,7 @@ namespace io.nem2.sdk.Model.Transactions
             }
 
             this.Signature = NaclFast.SignDetached(msg: signBytes, signer.SecretKey.ToArray());
-            Debug.WriteLine(Signature.ToHex());
+
             for (int x = 0; x < 64; x++)
                 tBytes[0][x + 8] = this.Signature[x];
 
@@ -263,15 +245,18 @@ namespace io.nem2.sdk.Model.Transactions
             {
                 DataSerializer serializer = new DataSerializer(s);
 
-                var props = RetrieveProperties();
+                serializer.SerializeProperty(Size, typeof(uint), 0);
+                serializer.SerializeProperty(new byte[4], typeof(byte[]), 1);
+                serializer.SerializeProperty(Signature, typeof(byte[]), 2);
+                serializer.SerializeProperty(Signer, typeof(byte[]), 3);
+                serializer.SerializeProperty(new byte[4], typeof(byte[]), 4);
+                serializer.SerializeProperty(Version, typeof(byte), 5);
+                serializer.SerializeProperty(Network, typeof(byte), 6);
+                serializer.SerializeProperty(Type, typeof(ushort), 7);
+                serializer.SerializeProperty(Fee, typeof(byte[]), 8);
+                serializer.SerializeProperty(Deadline, typeof(byte[]), 9);
 
-                for (var x = 0; x < props.Length; x++)
-                {
-                    Debug.WriteLine(x);
-                    Debug.WriteLine(props[x].Name);
-                    serializer.SerializeProperty(props[x].GetValue(this), props[x].PropertyType, (uint)x);
-                }
-                        
+                Extend(serializer);
 
                 return serializer.GetBytes();
             }

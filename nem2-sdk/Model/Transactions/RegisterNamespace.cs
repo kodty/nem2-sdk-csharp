@@ -2,25 +2,20 @@
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions;
-using System.Reflection;
 using System.Text;
 
 namespace io.nem2.sdk.Model.Transactions
 {
     public class RegisterNamespace : VerifiableTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("Duration"),
-                GetType().GetProperty("ParentId"),
-                GetType().GetProperty("Id"),
-                GetType().GetProperty("RegistrationType"),
-                GetType().GetProperty("NameSize"),
-                GetType().GetProperty("Name")
-            ];
+            serializer.SerializeProperty(Duration, typeof(byte[]), 10);
+            serializer.SerializeProperty(ParentId, typeof(byte[]), 11);
+            serializer.SerializeProperty(Id, typeof(byte[]), 12);
+            serializer.SerializeProperty(RegistrationType, typeof(byte), 13);
+            serializer.SerializeProperty(NameSize, typeof(byte), 14);
+            serializer.SerializeProperty(Name, typeof(byte[]), 15);
         }
 
         public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, bool embedded) : base(TransactionTypes.Types.NAMESPACE_REGISTRATION, embedded)

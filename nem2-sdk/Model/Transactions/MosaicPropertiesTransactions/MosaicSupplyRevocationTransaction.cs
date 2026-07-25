@@ -1,21 +1,16 @@
 ﻿using Coppery;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Utils;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {
     public class MosaicSupplyRevocationTransaction : VerifiableTransaction
     {
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("IssuerAddress"),
-                GetType().GetProperty("MosaicId"),
-                GetType().GetProperty("Amount")
-            ];
+            serializer.SerializeProperty(IssuerAddress, typeof(byte[]), 10);
+            serializer.SerializeProperty(MosaicId, typeof(byte[]), 11);
+            serializer.SerializeProperty(Amount, typeof(ulong), 12);
         }
 
         public MosaicSupplyRevocationTransaction(Address issuerAddress, string mosaicId, ulong amount, bool embedded) : base (TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION, embedded)

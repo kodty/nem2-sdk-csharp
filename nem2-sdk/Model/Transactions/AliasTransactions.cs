@@ -1,6 +1,5 @@
 ﻿using Coppery;
 using io.nem2.sdk.Utils;
-using System.Reflection;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -43,15 +42,11 @@ namespace io.nem2.sdk.Model.Transactions
             Size += 8;
         }
 
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return
-            [
-                .. BaseProperties,
-                GetType().GetProperty("NamespaceId"),
-                GetType().GetProperty("Address"),
-                GetType().GetProperty("AliasAction")
-            ];
+            serializer.SerializeProperty(NamespaceId, typeof(byte[]), 10);
+            serializer.SerializeProperty(Address, typeof(byte[]), 11);
+            serializer.SerializeProperty(AliasAction, typeof(byte), 12);
         }
 
         public byte[] Address { get; set; }
@@ -66,12 +61,11 @@ namespace io.nem2.sdk.Model.Transactions
             Size += 8;
         }
 
-        public override PropertyInfo[] RetrieveProperties()
+        internal override void Extend(DataSerializer serializer)
         {
-            return BaseProperties.Concat([
-                GetType().GetProperty("NamespaceId"),
-                GetType().GetProperty("MosaicId"),
-                GetType().GetProperty("AliasAction")]).ToArray();
+            serializer.SerializeProperty(NamespaceId, typeof(byte[]), 10);
+            serializer.SerializeProperty(MosaicId, typeof(byte[]), 11);
+            serializer.SerializeProperty(AliasAction, typeof(byte), 12);
         }
 
         public byte[] MosaicId { get; set; }
