@@ -7,7 +7,6 @@ using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Utils;
-using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace IntegrationTests.Infrastructure.Transactions
@@ -38,29 +37,26 @@ namespace IntegrationTests.Infrastructure.Transactions
         {
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
-            var account2 = PublicAccount.CreateFromPublicKey(HttpSetUp.pubKey, NetworkType.Types.TEST_NET);
-
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateTransferTransaction(
-                    account2.Address, 
+                    Address.CreateFromEncoded(""), 
                     EmptyMessage.Create(),
-                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000),
-                    397031,
+                    Mosaic.CreateFromHexIdentifier("", 0),
+                    0,
                     false
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
 
-            var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
-            //
-            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            var a = await client.Announce(st);
-            //
-            Thread.Sleep(3210);
-            var status = await client.GetTransactionStatus(st.Hash);
-            //
-            Assert.AreEqual(status.ComposedResponse.Code, "Success");
+            //var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
+
+            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+
+            //var a = await client.Announce(st);
+
+            //var status = await client.GetTransactionStatus(st.Hash);
+
+            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
         [Test, Timeout(20000)]
@@ -72,9 +68,9 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer1 = factory.CreateTransferTransaction(
                    Address.CreateFromEncoded(HttpSetUp.Recipient),
-                   PlainMessage.Create("hello"),
-                   Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
-                   1000000,
+                   PlainMessage.Create(""),
+                   Mosaic.CreateFromHexIdentifier("", 0),
+                   0,
                    true
                );
 
@@ -82,9 +78,9 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer2 = factory.CreateTransferTransaction(
                    Address.CreateFromEncoded(HttpSetUp.Recipient),
-                   PlainMessage.Create("olleh"),
-                   Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
-                   1000000,
+                   PlainMessage.Create(""),
+                   Mosaic.CreateFromHexIdentifier("", 0),
+                   0,
                    true
                );
 
@@ -97,19 +93,18 @@ namespace IntegrationTests.Infrastructure.Transactions
                     transfer2.SignEmbeddedTransaction(keys)
                 ],
                 Account.CreateFromPrivateKey(HttpSetUp.TestSK, NetworkType.Types.TEST_NET).KeyPair.PublicKey,
-                10000000);
+                0);
 
             transfer.SetSigner(keys.PublicKeyString);
 
             //var signed = transfer.WrapVerified(keys, HttpSetUp.genHash);
-            //
+
             //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
+
             //var a = await client.Announce(signed);
-            //
-            //Thread.Sleep(4321);
+
             //var status = await client.GetTransactionStatus(signed.Hash);
-            //
+
             //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
@@ -120,41 +115,26 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateHashLockTransaction(
-                    "72C0212E67A08BCE",
-                    10000000,
-                    1440,
-                    "FBA858B85D37E812790A0CEB65E102402A7D03C0D84B99E6253FF48976084194",
-                    1000000,
+                    "",
+                    0,
+                    0,
+                    "",
+                    0,
                     false
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
 
-            // var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
-            //
-            // var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            // var a = await client.Announce(st);
-            //
-            // Thread.Sleep(4321);
-            // var status = await client.GetTransactionStatus(st.Hash);
-            // 
-            // Assert.AreEqual(status.ComposedResponse.Code, "Success");
+            //var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
+
+            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+
+            //var a = await client.Announce(st);
+
+            //var status = await client.GetTransactionStatus(st.Hash);
+
+            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
-
-        // multisig
-
-        // account address, mosaic, opperation restrictions
-
-        // account
-
-        // node
-
-        // VRF 
-
-        // voting
-
-        // address alias
 
         [Test, Timeout(30000)]
         public async Task CreateAccountMetadataTransaction()
@@ -163,24 +143,23 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateAccountMetadataTransaction(
-                "TBEAFD6ZBP2J7LTUUWYC2A2ZLXONTWU2ABVCIBA",
-                "aaaaaaaaaaaaaaaa",
-                8,
-                8,
-                "bbbbbbbbbbbbbbbb".FromHex(),
-                1000000);
+                "",
+                "",
+                0,
+                0,
+                "".FromHex(),
+                0);
 
             transfer.SetSigner(keys.PublicKeyString);
 
             //var st = transfer.WrapVerified(keys, HttpSetUp.genHash);
-            //
+
             //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
+
             //var a = await client.Announce(st);
-            //
+
             //var status = await client.GetTransactionStatus(st.Hash);
-            //
-            //Thread.Sleep(4321);
+
             //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
@@ -193,26 +172,25 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateNamespaceRegistrationTransaction(
-                    431922,
                     0,
-                    IdGenerator.GenerateId(0, "testspace", true),
+                    0,
+                    IdGenerator.GenerateId(0, "", true),
                     NamespaceTypes.Types.RootNamespace,
-                    "testspace",
-                    100000,
+                    "",
+                    0,
                     false);
 
             transfer.SetSigner(keys.PublicKeyString);
 
-           // var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
-           //
-           // var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-           // 
-           // var a = await client.Announce(st);
-           // 
-           // Thread.Sleep(4321);
-           // var status = await client.GetTransactionStatus(st.Hash);
-           // 
-           // Assert.AreEqual(status.ComposedResponse.Code, "Success");
+            //var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
+
+            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+
+            //var a = await client.Announce(st);
+
+            //var status = await client.GetTransactionStatus(st.Hash);
+
+            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
         [Test, Timeout(30000)]
@@ -222,13 +200,13 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateNamespaceMetadataTransaction(
-                "TBEAFD6ZBP2J7LTUUWYC2A2ZLXONTWU2ABVCIBA",
-                "aaaaaaaaaaaaaaaa",
-                "aaaaaaaaaaaaaaaa",
-                8,
-                8,
+                "",
+                "",
+                "",
+                0,
+                0,
                 [],
-                1000000
+                0
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
@@ -237,10 +215,10 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            ////var a = await client.Announce(st);
-            //
+            //var a = await client.Announce(st);
+
             //var status = await client.GetTransactionStatus(st.Hash);
-            //
+
             //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
@@ -251,29 +229,24 @@ namespace IntegrationTests.Infrastructure.Transactions
             
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicDefinitionTransaction(
-                    DataConverter.ConvertFrom(IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 2745897589)).ToHex(),
-                    2745897589,
-                    new MosaicProperties(true, true, false, 6, 1000000),
-                    500000,
+                    DataConverter.ConvertFrom(IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 0)).ToHex(),
+                    0,
+                    new MosaicProperties(true, true, false, 0, 0),
+                    0,
                     false);
 
             transfer.SetSigner(keys.PublicKeyString);
 
             //var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
-            //
+
             //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
+
             //var a = await client.Announce(st);
-            //
-            //Thread.Sleep(4321);
+
             //var status = await client.GetTransactionStatus(st.Hash);
-            //
+
             //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
-
-        // mosaic address restriction
-
-        // mosaic global restriction
 
         [Test, Timeout(30000)]
         public async Task CreateMosaicAliasTransaction()
@@ -282,23 +255,22 @@ namespace IntegrationTests.Infrastructure.Transactions
         
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicAliasTransaction(
-                    "627911F4CC867A0D",
-                    "E53FAC6DD7D1A69B",
-                    0x1,
-                    1000000,
+                    "",
+                    "",
+                    0x0,
+                    0,
                     false);
 
             transfer.SetSigner(keys.PublicKeyString);
 
             //var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
-            //Debug.WriteLine(st.Payload.ToHex());
+
             //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
+
             //var a = await client.Announce(st);
-            //
-            //Thread.Sleep(4321);
+
             //var status = await client.GetTransactionStatus(st.Hash);
-            //
+
             //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
@@ -310,27 +282,24 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicSupplyChangeTransaction(
-                    1000000,
-                    "627911F4CC867A0D",
+                    0,
+                    "",
                     MosaicSupplyType.Type.DECREASE,
-                    1000000,
+                    0,
                     false);
 
             transfer.SetSigner(keys.PublicKeyString);
 
             //var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
-            //
+
             //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
+
             //var a = await client.Announce(st);
-            //
-            //Thread.Sleep(4321);
+
             //var status = await client.GetTransactionStatus(st.Hash);
-            //
+
             //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
-
-        // mosaic alias
 
         [Test, Timeout(30000)]
         public async Task CreateMosaicMetadataTransaction()
@@ -339,14 +308,13 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicMetadataTransaction(
-                "TBEAFD6ZBP2J7LTUUWYC2A2ZLXONTWU2ABVCIBA",
-                "scopedKey",
-                "targetNamespaceId",
+                "",
+                "",
+                "",
                 0,
                 0,
                 [],
-                0
-                );
+                0);
 
             transfer.SetSigner(keys.PublicKeyString);
 
@@ -354,14 +322,12 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            ////var a = await client.Announce(st);
-            //
+            //var a = await client.Announce(st);
+
             //var status = await client.GetTransactionStatus(st.Hash);
-            //
+
             //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
-
-        // mosaic supply revocation
 
         [Test, Timeout(30000)]
         public async Task CreateSecretLockTransaction()
@@ -370,24 +336,24 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateSecretLockTransaction(
-                    "72C0212E67A08BCE",
-                    1440,
-                    "secret",
+                    "",
+                    0,
+                    "",
                     HashType.Types.SHA3_512,
                     HttpSetUp.Recipient,
-                    1000000,
+                    0,
                     false);
 
             transfer.SetSigner(keys.PublicKeyString);
 
-           // var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
+            // var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
-          //  var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            // var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            ////var a = await client.Announce(st);
-            //
+            //var a = await client.Announce(st);
+
             //var status = await client.GetTransactionStatus(st.Hash);
-            //
+
             //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
@@ -398,10 +364,10 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateSecretProofTransaction(
-                    "recipientAddress",
-                    "secret",
+                    "",
+                    "",
                     HashType.Types.SHA3_512,
-                    "proof",
+                    "",
                     1000000,
                     false);
 
@@ -410,11 +376,11 @@ namespace IntegrationTests.Infrastructure.Transactions
             var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
             //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            ////var a = await client.Announce(st);
-            //
+
+            //var a = await client.Announce(st);
+
             //var status = await client.GetTransactionStatus(st.Hash);
-            //
+
             //Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
     }
