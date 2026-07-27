@@ -8,9 +8,9 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(IssuerAddress, typeof(byte[]), 10);
-            serializer.SerializeProperty(MosaicId, typeof(byte[]), 11);
-            serializer.SerializeProperty(Amount, typeof(ulong), 12);
+            serializer.SerializeProperty(IssuerAddress, 10);
+            serializer.SerializeProperty(MosaicId, 11);
+            serializer.SerializeProperty(Amount, 12);
         }
 
         public MosaicSupplyRevocationTransaction(Address issuerAddress, string mosaicId, ulong amount, bool embedded) : base (TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION, embedded)

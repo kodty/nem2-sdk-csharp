@@ -6,10 +6,10 @@ namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(StartEpoch, typeof(ulong), 10);
-            serializer.SerializeProperty(LinkedPublicKey, typeof(byte[]), 11);
-            serializer.SerializeProperty(LinkAction, typeof(byte), 12);
-            serializer.SerializeProperty(EndEpoch, typeof(ulong), 13);
+            serializer.SerializeProperty(StartEpoch, 10);
+            serializer.SerializeProperty(LinkedPublicKey, 11);
+            serializer.SerializeProperty(LinkAction, 12);
+            serializer.SerializeProperty(EndEpoch, 13);
         }
 
         public VotingKeyLinkTransaction(ulong startEpoch, ulong endEpoch, string linkedPublicKey, byte linkAction, bool embedded) : base (TransactionTypes.Types.VOTING_KEY_LINK, embedded)

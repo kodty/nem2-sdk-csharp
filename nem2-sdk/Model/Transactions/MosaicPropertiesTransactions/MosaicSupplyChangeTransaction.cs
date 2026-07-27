@@ -9,9 +9,9 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(MosaicId, typeof(byte[]), 10);
-            serializer.SerializeProperty(Delta, typeof(ulong), 11);
-            serializer.SerializeProperty(SupplyType, typeof(byte), 12);
+            serializer.SerializeProperty(MosaicId, 10);
+            serializer.SerializeProperty(Delta, 11);
+            serializer.SerializeProperty(SupplyType, 12);
         }
 
         public MosaicSupplyChangeTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }

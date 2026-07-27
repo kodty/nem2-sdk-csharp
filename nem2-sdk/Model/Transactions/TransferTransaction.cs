@@ -10,14 +10,14 @@ namespace io.nem2.sdk.Model.Transactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(Address, typeof(byte[]), 10);
-            serializer.SerializeProperty(MessegeSize, typeof(ushort), 11);
-            serializer.SerializeProperty(MosaicsCount, typeof(byte), 12);
-            serializer.SerializeProperty((byte)0x0, typeof(byte), 13);
-            serializer.SerializeProperty(new byte[4], typeof(byte[]), 14);
-            serializer.SerializeProperty(MosaicId, typeof(byte[]), 15);
-            serializer.SerializeProperty(MosaicAmount, typeof(ulong), 16);
-            serializer.SerializeProperty(Message, typeof(byte[]), 17);
+            serializer.SerializeProperty(Address, 10);
+            serializer.SerializeProperty(MessegeSize, 11);
+            serializer.SerializeProperty(MosaicsCount, 12);
+            serializer.SerializeProperty(0x0, 13);
+            serializer.SerializeProperty(new byte[4],14);
+            serializer.SerializeProperty(MosaicId, 15);
+            serializer.SerializeProperty(MosaicAmount, 16);
+            serializer.SerializeProperty(Message, 17);
         }
 
         public byte[] Address { get; set; }
@@ -35,7 +35,7 @@ namespace io.nem2.sdk.Model.Transactions
         public TransferTransaction_V1(Address address, IMessage messege, Mosaic mosaic, bool isEmbedded) : base(TransactionTypes.Types.TRANSFER, isEmbedded)
         {
             // extended transaction size excluding variable length fields
-            Size += 24;
+            Size += 48;
 
             Version = 0x01;
             Address = AddressEncoder.DecodeAddress(address.Plain);         
@@ -45,7 +45,6 @@ namespace io.nem2.sdk.Model.Transactions
             Message = messege.GetPayload();    
             MessegeSize = (ushort)Message.Length;
 
-            Size += (uint)Address.Length;
             Size += MessegeSize;
         }
 

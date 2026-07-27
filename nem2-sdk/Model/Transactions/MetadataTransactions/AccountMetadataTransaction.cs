@@ -7,11 +7,11 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(TargetAddress, typeof(byte[]), 10);
-            serializer.SerializeProperty(ScopedMetadataKey, typeof(byte[]), 11);
-            serializer.SerializeProperty(ValueSizeDelta, typeof(ushort), 12);
-            serializer.SerializeProperty(ValueSize, typeof(ushort), 13);
-            serializer.SerializeProperty(Value, typeof(byte[]), 14);
+            serializer.SerializeProperty(TargetAddress, 10);
+            serializer.SerializeProperty(ScopedMetadataKey, 11);
+            serializer.SerializeProperty(ValueSizeDelta, 12);
+            serializer.SerializeProperty(ValueSize, 13);
+            serializer.SerializeProperty(Value, 14);
         }
 
         public AccountMetadataTransaction(TransactionTypes.Types type) : base(type, true) { }

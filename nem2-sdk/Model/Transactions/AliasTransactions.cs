@@ -44,9 +44,9 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(NamespaceId, typeof(byte[]), 10);
-            serializer.SerializeProperty(Address, typeof(byte[]), 11);
-            serializer.SerializeProperty(AliasAction, typeof(byte), 12);
+            serializer.SerializeProperty(NamespaceId, 10);
+            serializer.SerializeProperty(Address, 11);
+            serializer.SerializeProperty(AliasAction, 12);
         }
 
         public byte[] Address { get; set; }
@@ -63,9 +63,9 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(NamespaceId, typeof(byte[]), 10);
-            serializer.SerializeProperty(MosaicId, typeof(byte[]), 11);
-            serializer.SerializeProperty(AliasAction, typeof(byte), 12);
+            serializer.SerializeProperty(NamespaceId, 10);
+            serializer.SerializeProperty(MosaicId, 11);
+            serializer.SerializeProperty(AliasAction, 12);
         }
 
         public byte[] MosaicId { get; set; }

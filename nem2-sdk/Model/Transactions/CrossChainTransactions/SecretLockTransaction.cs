@@ -8,11 +8,11 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(Recipient, typeof(byte[]), 10);
-            serializer.SerializeProperty(Secret, typeof(byte[]), 11);
-            serializer.SerializeProperty(Mosaic, typeof(byte[]), 12);
-            serializer.SerializeProperty(Duration, typeof(ulong), 13);
-            serializer.SerializeProperty(HashAlgo, typeof(byte), 14);
+            serializer.SerializeProperty(Recipient, 10);
+            serializer.SerializeProperty(Secret, 11);
+            serializer.SerializeProperty(Mosaic, 12);
+            serializer.SerializeProperty(Duration, 13);
+            serializer.SerializeProperty(HashAlgo, 14);
         }
 
         public SecretLockTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }

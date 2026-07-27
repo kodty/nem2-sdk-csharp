@@ -8,12 +8,12 @@ namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(RestrictionFlags, typeof(ushort), 10);
-            serializer.SerializeProperty(RestrictionsAdditionsCount, typeof(byte), 11);
-            serializer.SerializeProperty(RestrictionsDeletionsCount, typeof(byte), 12);
-            serializer.SerializeProperty(new byte[4], typeof(byte[]), 13);
-            serializer.SerializeProperty(_RestrictionAdditions, typeof(byte[]), 14);
-            serializer.SerializeProperty(_RestrictionDeletions, typeof(byte[]), 15);
+            serializer.SerializeProperty(RestrictionFlags, 10);
+            serializer.SerializeProperty(RestrictionsAdditionsCount, 11);
+            serializer.SerializeProperty(RestrictionsDeletionsCount, 12);
+            serializer.SerializeProperty(new byte[4], 13);
+            serializer.SerializeProperty(_RestrictionAdditions, 14);
+            serializer.SerializeProperty(_RestrictionDeletions, 15);
         }
 
         public AccountRestrictionsTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded)

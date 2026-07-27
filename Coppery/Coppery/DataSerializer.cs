@@ -2,20 +2,19 @@
 {
     public class DataSerializer
     {
+        internal uint[] Exclude { get; set; }
         internal byte[][] _Buffer { get; set; }
+
         private int _offset1 = 0;
         private int _offset2 = 0;
-        internal uint[] S1 { get; set; }
-        internal uint[] S2 { get; set; }
 
-        public DataSerializer(uint[][] s)
+        public DataSerializer(uint size, uint[] exclude)
         {
             _Buffer = new byte[2][];
-            _Buffer[0] = new byte[s[0][0]];
-            _Buffer[1] = new byte[s[1][0]];
+            _Buffer[0] = new byte[size];
+            _Buffer[1] = new byte[size - exclude[0]];
 
-            S1 = s[0];
-            S2 = s[1];     
+            Exclude = exclude;
         }
 
         public byte[][] GetBytes()
@@ -23,124 +22,83 @@
             return _Buffer;
         }
 
-        public void SerializeProperty(object value, Type type, uint ix)
+        public void SerializeProperty(byte value, uint ix)
         {
-            if (type == typeof(byte))
+            
+            _Buffer[0][_offset1++] = value;
+
+            if (!Exclude.Contains(ix))
+                _Buffer[1][_offset2++] = value;    
+        }
+
+        public void SerializeProperty(uint value, uint ix)
+        {
+            var source = DataConverter.ConvertFrom(value);
+         
+            for (var x = 0; x < 4; x++)
+                _Buffer[0][_offset1 + x] = source[x];
+
+            _offset1 += source.Length;
+
+            if (!Exclude.Contains(ix))
             {
-                if (!S1.Contains(ix))
-                {
-                    _Buffer[0][_offset1++] = (byte)value;
+                for (var x = 0; x < 4; x++)
+                    _Buffer[1][_offset2 + x] = source[x];
 
-                    if (!S2.Contains(ix))
-                        _Buffer[1][_offset2++] = (byte)value;
-                }
-
-                return;
+                _offset2 += source.Length;
             }      
-            if (type == typeof(ushort))
+        }
+
+        public void SerializeProperty(ushort value, uint ix)
+        {
+            var source = DataConverter.ConvertFrom(value);
+        
+            for (var x = 0; x < 2; x++)
+                _Buffer[0][_offset1 + x] = source[x];
+
+            _offset1 += source.Length;
+
+            if (!Exclude.Contains(ix))
             {
-                var source = DataConverter.ConvertFrom((ushort)value);
+                for (var x = 0; x < 2; x++)
+                    _Buffer[1][_offset2 + x] = source[x];
 
-                if (!S1.Contains(ix))
-                {
-                    for (var x = 0; x < 2; x++)
-                        _Buffer[0][_offset1 + x] = source[x];
+                _offset2 += source.Length;
+            }         
+        }
 
-                    _offset1 += source.Length;
+        public void SerializeProperty(ulong value, uint ix)
+        {
+            var source = DataConverter.ConvertFrom(value);
+           
+            for (var x = 0; x < 8; x++)
+                _Buffer[0][_offset1 + x] = source[x];
 
-                    if (!S2.Contains(ix))
-                    {
-                        for (var x = 0; x < 2; x++)
-                            _Buffer[1][_offset2 + x] = source[x];
+            _offset1 += source.Length;
 
-                        _offset2 += source.Length;
-                    }
-                }
-
-                return;
-            }
-            if (type == typeof(uint))
+            if (!Exclude.Contains(ix))
             {
-                var source = DataConverter.ConvertFrom((uint)value);
+                for (var x = 0; x < 8; x++)
+                    _Buffer[1][_offset2 + x] = source[x];
 
-                if (!S1.Contains(ix))
-                {
-                    for (var x = 0; x < 4; x++)
-                        _Buffer[0][_offset1 + x] = source[x];
+                _offset2 += source.Length;
+            }          
+        }
 
-                    _offset1 += source.Length;
+        public void SerializeProperty(byte[] value, uint ix)
+        {        
+            for (var x = 0; x < value.Length; x++)
+                _Buffer[0][_offset1 + x] = value[x];
 
-                    if (!S2.Contains(ix))
-                    {
-                        for (var x = 0; x < 4; x++)
-                            _Buffer[1][_offset2 + x] = source[x];
+            _offset1 += value.Length;
 
-                        _offset2 += source.Length;
-                    }
-                }
-                 
-
-                return;
-            }
-            if (type == typeof(ulong))
+            if (!Exclude.Contains(ix))
             {
-                var source = DataConverter.ConvertFrom((ulong)value);
+                for (var x = 0; x < value.Length; x++)
+                    _Buffer[1][_offset2 + x] = value[x];
 
-                if (!S1.Contains(ix))
-                {
-                    for (var x = 0; x < 8; x++)
-                        _Buffer[0][_offset1 + x] = source[x];
-
-                    _offset1 += source.Length;
-
-                    if (!S2.Contains(ix))
-                    {
-                        for (var x = 0; x < 8; x++)
-                            _Buffer[1][_offset2 + x] = source[x];
-
-                        _offset2 += source.Length;
-                    }
-                }
-
-                return;
-            }
-            if (type == typeof(bool))
-            {
-                if (!S1.Contains(ix))
-                {
-                    _Buffer[0][_offset1++] = (byte)value;
-
-                    if (!S2.Contains(ix))
-                    {
-                        _Buffer[1][_offset2++] = (byte)value;
-                    }
-                }
-
-                return;
-            }
-            if (type == typeof(byte[]))
-            {
-                var source = (byte[])value;
-
-                if (!S1.Contains(ix))
-                {
-                    for (var x = 0; x < source.Length; x++)
-                        _Buffer[0][_offset1 + x] = source[x];
-
-                    _offset1 += source.Length;
-
-                    if (!S2.Contains(ix))
-                    {
-                        for (var x = 0; x < source.Length; x++)
-                            _Buffer[1][_offset2 + x] = source[x];
-
-                        _offset2 += source.Length;
-                    }
-                }
-
-                return;
-            }
-            else throw new NotImplementedException("Type " + type.ToString() + "unsupported");
+                _offset2 += value.Length;
+            }       
         }
     }
 }

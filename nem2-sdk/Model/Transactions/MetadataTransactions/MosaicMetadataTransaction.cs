@@ -6,12 +6,12 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(TargetAddress, typeof(byte[]), 10);
-            serializer.SerializeProperty(ScopedMetadataKey, typeof(byte[]), 11);
-            serializer.SerializeProperty(TargetMosaicId, typeof(byte[]), 12);
-            serializer.SerializeProperty(ValueSizeDelta, typeof(ushort), 13);
-            serializer.SerializeProperty(ValueSize, typeof(ushort), 14);
-            serializer.SerializeProperty(Value, typeof(byte[]), 15);
+            serializer.SerializeProperty(TargetAddress, 10);
+            serializer.SerializeProperty(ScopedMetadataKey, 11);
+            serializer.SerializeProperty(TargetMosaicId, 12);
+            serializer.SerializeProperty(ValueSizeDelta, 13);
+            serializer.SerializeProperty(ValueSize, 14);
+            serializer.SerializeProperty(Value, 15);
         }
 
         public MosaicMetadataTransaction(TransactionTypes.Types type) : base(TransactionTypes.Types.MOSAIC_METADATA) { }

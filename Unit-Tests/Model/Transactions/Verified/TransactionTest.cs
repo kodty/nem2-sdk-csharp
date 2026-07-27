@@ -4,6 +4,7 @@ using io.nem2.sdk.Infrastructure.HttpClients;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
+using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Utils;
 using System.Diagnostics;
@@ -20,20 +21,22 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateTransferTransaction(
-                    Address.CreateFromEncoded("TDX7QVF6XXMJNDFFRIOYTV4N3GSVUGNTWVCIMZQ"),
-                    EmptyMessage.Create(),
-                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
-                    1000000,
-                    false
+                    address: Address.CreateFromEncoded("TDX7QVF6XXMJNDFFRIOYTV4N3GSVUGNTWVCIMZQ"),
+                    messege: EmptyMessage.Create(),
+                    mosaic: Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
+                    fee: 1000000,
+                    embedded: false
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
 
             transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
             transfer.Deadline = DataConverter.ConvertFrom((ulong)117756998097);
-
+            
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
+            Debug.WriteLine(result.Payload.ToHex());
 
+            Assert.That(result.VerifiablePayload.ToHex() == HttpSetUp.genHash + "0198544140420F0000000000D131DD6A1B00000098EFF854BEBDD8968CA58A1D89D78DD9A55A19B3B54486660000010000000000CE8BA0672E21C07240420F0000000000");
             Assert.That(result.Payload.ToHex(), Is.EqualTo("B000000000000000115504A388D963BF8B64400920CEBBC04597C0EC97E429C5B2660614440FD6A97E5A122FB7ADF2AC7DADA41CDEB23915E00BE23FE5F06B2B6896C4964E440600F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198544140420F0000000000D131DD6A1B00000098EFF854BEBDD8968CA58A1D89D78DD9A55A19B3B54486660000010000000000CE8BA0672E21C07240420F0000000000"));
         }
 
@@ -76,6 +79,67 @@ namespace Unit_Tests.Model.Transactions.Verified
             var hashlockResult = hashlock.SignTransaction(keys, HttpSetUp.genHash);
 
             Assert.That(hashlockResult.Payload.ToHex(), Is.EqualTo("B800000000000000A6A7110A8D6A6FF5901235955DEA7EC0A0F5AFE717B14AAA5D6DF5869F7695C6CF87B5BDA105B7D1724812544A846585701BB9C6F4E225170F55DF9AD9132205F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198484140420F00000000005CD3EB6A1B000000CE8BA0672E21C0728096980000000000400B000000000000FD492A6AD4BA0A2CD73277C4390BFCA885C17693DD6463F4418D0A6553A586D3"));
+        }
+
+        [Test, Timeout(20000)]
+        public async Task CreateAggregateBondedTest()
+        {
+            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+            var keys2 = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.privKey);
+
+            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+                .CreateTransferTransaction(
+                    Address.CreateFromEncoded("TDX7QVF6XXMJNDFFRIOYTV4N3GSVUGNTWVCIMZQ"),
+                    PlainMessage.Create("hello"),
+                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
+                    1000000,
+                    true
+                );
+
+                transfer.SetSigner(keys.PublicKeyString);
+
+            var transfer2 = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+                .CreateTransferTransaction(
+                    Address.CreateFromEncoded("TA3GCBHJBTRCEHVYVHCNUCULY2NB76W7MVECFUY"),
+                    PlainMessage.Create("hello"),
+                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 200),
+                    800000,
+                    true
+                );
+
+                transfer.SetSigner(keys2.PublicKeyString);
+
+            var aggregateBonded = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+                .CreateAggregateBonded(
+                    [
+                        transfer.PrepareEmbedded(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET)), 
+                        transfer2.PrepareEmbedded(PublicAccount.CreateFromPublicKey(keys2.PublicKeyString, NetworkType.Types.TEST_NET))
+                    ],
+                    keys.PublicKey,
+                    4321000
+                );
+
+            aggregateBonded.Cosign([keys2]);
+
+            //transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
+            //transfer.Deadline = DataConverter.ConvertFrom((ulong)117756998097);
+
+            var result = aggregateBonded.SignTransaction(keys, HttpSetUp.genHash);
+
+            Debug.WriteLine(result.Payload.ToHex());
+            Debug.WriteLine(DataConverter.ConvertTo<ulong>(aggregateBonded.Deadline));
+            Debug.WriteLine(DataConverter.ConvertTo<ulong>(aggregateBonded.Fee));
+
+            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            
+            var a = await client.Announce(result);
+            
+            Thread.Sleep(4321);
+            var status = await client.GetTransactionStatus(result.Hash);
+            
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
+
+            // Assert.That(result.Payload.ToHex(), Is.EqualTo("B000000000000000115504A388D963BF8B64400920CEBBC04597C0EC97E429C5B2660614440FD6A97E5A122FB7ADF2AC7DADA41CDEB23915E00BE23FE5F06B2B6896C4964E440600F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198544140420F0000000000D131DD6A1B00000098EFF854BEBDD8968CA58A1D89D78DD9A55A19B3B54486660000010000000000CE8BA0672E21C07240420F0000000000"));
         }
 
         [Test, Timeout(20000)]

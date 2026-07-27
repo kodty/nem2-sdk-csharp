@@ -10,12 +10,12 @@ namespace io.nem2.sdk.Model.Transactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(Duration, typeof(byte[]), 10);
-            serializer.SerializeProperty(ParentId, typeof(byte[]), 11);
-            serializer.SerializeProperty(Id, typeof(byte[]), 12);
-            serializer.SerializeProperty(RegistrationType, typeof(byte), 13);
-            serializer.SerializeProperty(NameSize, typeof(byte), 14);
-            serializer.SerializeProperty(Name, typeof(byte[]), 15);
+            serializer.SerializeProperty(Duration, 10);
+            serializer.SerializeProperty(ParentId, 11);
+            serializer.SerializeProperty(Id, 12);
+            serializer.SerializeProperty(RegistrationType, 13);
+            serializer.SerializeProperty(NameSize, 14);
+            serializer.SerializeProperty(Name, 15);
         }
 
         public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, bool embedded) : base(TransactionTypes.Types.NAMESPACE_REGISTRATION, embedded)

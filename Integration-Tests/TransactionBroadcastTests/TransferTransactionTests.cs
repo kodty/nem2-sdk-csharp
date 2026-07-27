@@ -7,6 +7,7 @@ using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Utils;
+using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace IntegrationTests.Infrastructure.Transactions
@@ -39,24 +40,26 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateTransferTransaction(
-                    Address.CreateFromEncoded(""), 
+                    Address.CreateFromEncoded("TA3GCBHJBTRCEHVYVHCNUCULY2NB76W7MVECFUY"), 
                     EmptyMessage.Create(),
-                    Mosaic.CreateFromHexIdentifier("", 0),
-                    0,
+                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 200),
+                    800000,
                     false
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
 
-            //var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
+            var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
-            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
-            //var a = await client.Announce(st);
+            Debug.WriteLine(st.Payload.ToHex());
+            var a = await client.Announce(st);
 
-            //var status = await client.GetTransactionStatus(st.Hash);
+            Thread.Sleep(4321);
+            var status = await client.GetTransactionStatus(st.Hash);
 
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
         [Test, Timeout(20000)]
@@ -89,8 +92,8 @@ namespace IntegrationTests.Infrastructure.Transactions
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                .CreateAggregateComplete(
                 [
-                    transfer1.SignEmbeddedTransaction(keys),
-                    transfer2.SignEmbeddedTransaction(keys)
+                    transfer1.PrepareEmbedded(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET)),
+                    transfer2.PrepareEmbedded(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET))
                 ],
                 Account.CreateFromPrivateKey(HttpSetUp.TestSK, NetworkType.Types.TEST_NET).KeyPair.PublicKey,
                 0);

@@ -7,17 +7,18 @@ namespace io.nem2.sdk.Model
     public class UnsignedTransaction
     {
         public byte[] Payload { get; set; }
+
+        public byte[] VerifiablePayload { get; set; }
+
+        public string Signer { get; set; }
     }
 
     public class SignedTransaction : UnsignedTransaction
     {
         public string Hash { get; set; }
 
-        public string Signer { get; set; }
-
-        public byte[] Signature { get; set; }
-
-        internal byte[] SignedBytes { get; set; }
+        public string Signature { get; set; }
+ 
 
         public TransactionTypes.Types TransactionType { get; }
 
@@ -33,8 +34,8 @@ namespace io.nem2.sdk.Model
             Payload = payload.FromHex();
             Hash = hash;
             Signer = signer;
-            Signature = signature.FromHex();
-            SignedBytes = signedBytes;
+            Signature = signature;
+            VerifiablePayload = signedBytes;
         }
 
         public static SignedTransaction Create(byte[] payload, byte[] signedBytes, byte[] hash, byte[] signer, byte[] signature, TransactionTypes.Types transactionType)
@@ -50,7 +51,7 @@ namespace io.nem2.sdk.Model
 
         public bool VerifySignature()
         {
-            return NaclFast.SignDetachedVerify(SignedBytes, Signature, Signer.FromHex());
+            return NaclFast.SignDetachedVerify(VerifiablePayload, Signature.FromHex(), Signer.FromHex());
         }
 
         public static bool VerifySignature(byte[] signedBytes, string signature, string signer)

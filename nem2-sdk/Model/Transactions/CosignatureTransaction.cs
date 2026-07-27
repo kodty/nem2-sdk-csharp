@@ -1,11 +1,18 @@
 ﻿namespace io.nem2.sdk.Model.Transactions
 {
-    public class CosignatureTransaction
+    public class Cosignature
     {
-        public CosignatureTransaction() { }
+        public Cosignature() { }
         public byte Version { get; set; }
-        public string Signer { get; set; }
-        public string Signature { get; set; }
-        public string ParentHash { get; set; }
+        public byte[] Signer { get; set; }
+        public byte[] Signature { get; set; }
+        
+
+    }  
+
+    public class DetachedCosignature : Cosignature
+    {
+        public DetachedCosignature() { }
+        public byte[] ParentHash { get; set; }
     }
 }

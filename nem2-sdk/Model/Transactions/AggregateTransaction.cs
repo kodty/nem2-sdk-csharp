@@ -1,5 +1,6 @@
 ﻿using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
+using TweetNaclSharp;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -7,11 +8,17 @@ namespace io.nem2.sdk.Model.Transactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(TransactionsHash, typeof(byte[]), 10);
-            serializer.SerializeProperty(PayloadSize, typeof(uint), 11);
-            serializer.SerializeProperty(new byte[4], typeof(byte[]), 12);
-            serializer.SerializeProperty(EmbeddedTransactionsPayload, typeof(byte[]), 13);
-            serializer.SerializeProperty(Cosignatures, typeof(byte[]), 14);
+            serializer.SerializeProperty(TransactionsHash, 10);
+            serializer.SerializeProperty(PayloadSize, 11);
+            serializer.SerializeProperty(new byte[4], 12);
+            serializer.SerializeProperty(EmbeddedTransactionsPayload, 13);
+            
+            if(Cosignatures != null)
+                foreach(var e in Cosignatures) {
+                    serializer.SerializeProperty((byte)0x0, 14);
+                    serializer.SerializeProperty(e.Signer, 14);
+                    serializer.SerializeProperty(e.Signature, 14);
+                }
         }
 
         public byte[] TransactionsHash { get; set; }
@@ -20,11 +27,11 @@ namespace io.nem2.sdk.Model.Transactions
 
         public byte[] EmbeddedTransactionsPayload { get; set; }
 
-        public byte[] Cosignatures { get; set; }
+        public Cosignature[] Cosignatures { get; set; }
 
-        public SignedTransaction[] EmbeddedTransactions { get; set; }
+        public UnsignedTransaction[] EmbeddedTransactions { get; set; }
 
-        public AggregateTransaction(SignedTransaction[] embeddedTransactions, byte[] cosignatures, TransactionTypes.Types type) : base(type, false)
+        public AggregateTransaction(UnsignedTransaction[] embeddedTransactions, TransactionTypes.Types type) : base(type, false)
         {
             Version = 0x03;
 
@@ -32,15 +39,39 @@ namespace io.nem2.sdk.Model.Transactions
 
             EmbeddedTransactionsPayload = PaddedCombine();
 
-            PayloadSize = (uint)EmbeddedTransactionsPayload.Length;
-
-            if (cosignatures == null)
-                Cosignatures = [];
-            else Cosignatures = cosignatures;
+            PayloadSize += (uint)EmbeddedTransactionsPayload.Length;
 
             Size += 40;
-            Size += (uint)EmbeddedTransactionsPayload.Length;
-            Size += (uint)Cosignatures.Length;
+            Size += (uint)EmbeddedTransactionsPayload.Length;     
+        }
+
+        public void Cosign(SecretKeyPair[] signers)
+        {
+            var si = Size;
+
+            var tBytes = this.Serialize(si, [52, 0, 1, 2, 3, 4, 11, 12, 13, 14]);
+
+            Cosignatures = new Cosignature[signers.Count()];
+
+            for (int i = 0; i < signers.Length; i++)
+            {
+                SecretKeyPair? signer = signers[i];
+
+                if (Signer == signer.PublicKey) return;
+
+                var sig = NaclFast.SignDetached(msg: tBytes[1], signer.SecretKey.ToArray());
+
+                Cosignatures[i] = new Cosignature()
+                {
+                    Version = 0x0,
+                    Signature = sig,
+                    Signer = signer.PublicKey,
+                };
+
+                Size += 1;
+                Size += 64;
+                Size += 32;
+            }
         }
 
         private byte[] CalculateMerkleRoot(byte[][] embeddedTransactionHashes)
@@ -85,13 +116,23 @@ namespace io.nem2.sdk.Model.Transactions
         {
             var ets = EmbeddedTransactions.ToList();
 
+            uint bufPadding = 0;
+
             var pPayloads = ets.Select(item =>
             {
-                if (item.Payload.Length % 8 != 0 && ets.IndexOf(item) != EmbeddedTransactions.Length - 1)
+                if (item.Payload.Length % 8 != 0 && ets.IndexOf(item) != EmbeddedTransactions.Length)
                 {
                     var paddedPayload = new byte[(int)(Math.Ceiling((decimal)item.Payload.Length / 8) * 8)];
 
-                    Buffer.BlockCopy(item.Payload, 0, paddedPayload, 0, item.Payload.Length);
+                    var size = DataConverter.ConvertTo<uint>(item.Payload.Take(4).ToArray());
+
+                    Buffer.BlockCopy(item.Payload, 4, paddedPayload, 4, item.Payload.Length - 4);
+
+                    var s = (uint)(paddedPayload.Length - item.Payload.Length);
+                    size += s;
+                    bufPadding += s;
+
+                    Buffer.BlockCopy(DataConverter.ConvertFrom(size), 0, paddedPayload, 0, 4);
 
                     return paddedPayload;
                 }
@@ -99,7 +140,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             }).ToArray();
 
-            TransactionsHash = CalculateMerkleRoot(ets.Select(e => e.Hash.FromHex()).ToArray());
+            TransactionsHash = CalculateMerkleRoot(ets.Select(e => Hash(e.VerifiablePayload)).ToArray());
 
             byte[] ap = new byte[pPayloads.Sum(a => a.Length)];
 
@@ -112,6 +153,8 @@ namespace io.nem2.sdk.Model.Transactions
                 offset += p.Length;
             }
 
+            PayloadSize += bufPadding;
+
             return ap;
         }
 
@@ -121,6 +164,8 @@ namespace io.nem2.sdk.Model.Transactions
 
             return this;
         }
+
+
 
         public override void SetVersion(byte version)
         {

@@ -7,10 +7,10 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(MosaicId, typeof(byte[]), 10);
-            serializer.SerializeProperty(RestrictionKey, typeof(byte[]), 11);
-            serializer.SerializeProperty(PreviousRestrictionValue, typeof(byte[]), 12);
-            serializer.SerializeProperty(NewRestrictionValue, typeof(byte[]), 13);
+            serializer.SerializeProperty(MosaicId, 10);
+            serializer.SerializeProperty(RestrictionKey, 11);
+            serializer.SerializeProperty(PreviousRestrictionValue, 12);
+            serializer.SerializeProperty(NewRestrictionValue, 13);
         }
 
         public MosaicRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
@@ -51,11 +51,11 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(MosaicId, typeof(byte[]), 10);
-            serializer.SerializeProperty(RestrictionKey, typeof(byte[]), 11);
-            serializer.SerializeProperty(PreviousRestrictionValue, typeof(byte[]), 12);
-            serializer.SerializeProperty(NewRestrictionValue, typeof(byte[]), 13);
-            serializer.SerializeProperty(TargetAddress, typeof(byte[]), 14);
+            serializer.SerializeProperty(MosaicId, 10);
+            serializer.SerializeProperty(RestrictionKey, 11);
+            serializer.SerializeProperty(PreviousRestrictionValue, 12);
+            serializer.SerializeProperty(NewRestrictionValue, 13);
+            serializer.SerializeProperty(TargetAddress, 14);
         }
 
         public MosaicAddressRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
@@ -72,12 +72,12 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(MosaicId, typeof(byte[]), 10);
-            serializer.SerializeProperty(RestrictionKey, typeof(byte[]), 11);
-            serializer.SerializeProperty(PreviousRestrictionValue, typeof(byte[]), 12);
-            serializer.SerializeProperty(NewRestrictionValue, typeof(byte[]), 13);
-            serializer.SerializeProperty(PreviousRestrictionType, typeof(byte), 14);
-            serializer.SerializeProperty(NewRestrictionType, typeof(byte), 15);
+            serializer.SerializeProperty(MosaicId, 10);
+            serializer.SerializeProperty(RestrictionKey, 11);
+            serializer.SerializeProperty(PreviousRestrictionValue, 12);
+            serializer.SerializeProperty(NewRestrictionValue, 13);
+            serializer.SerializeProperty(PreviousRestrictionType, 14);
+            serializer.SerializeProperty(NewRestrictionType, 15);
         }
 
         public MosaicGlobalRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }

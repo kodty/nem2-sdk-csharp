@@ -6,10 +6,10 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(Mosaic, typeof(byte[]), 10);
-            serializer.SerializeProperty(Amount, typeof(ulong), 11);
-            serializer.SerializeProperty(Duration, typeof(ulong), 12);
-            serializer.SerializeProperty(TransactionHash, typeof(byte[]), 13);
+            serializer.SerializeProperty(Mosaic, 10);
+            serializer.SerializeProperty(Amount, 11);
+            serializer.SerializeProperty(Duration, 12);
+            serializer.SerializeProperty(TransactionHash, 13);
         }
 
 
