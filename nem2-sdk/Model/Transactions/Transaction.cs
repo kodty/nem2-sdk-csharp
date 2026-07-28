@@ -1,5 +1,4 @@
 ﻿using Coppery;
-using io.nem2.sdk.Model.Accounts;
 using Org.BouncyCastle.Crypto.Digests;
 using TweetNaclSharp;
 

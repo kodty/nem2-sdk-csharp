@@ -16,9 +16,12 @@ namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
         public KeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, byte linkAction, bool embedded) : base(type, embedded)
         {
             Version = 0x01;
+
+            Size += 33;
+
             LinkedPublicKey = linkedPublicKey.FromHex();
             LinkAction = linkAction;
-            Size += 33;
+            
         }
 
         public byte[] LinkedPublicKey { get; set; }

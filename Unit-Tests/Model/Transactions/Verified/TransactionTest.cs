@@ -454,7 +454,7 @@ namespace Unit_Tests.Model.Transactions.Verified
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateKeyLinkTransaction(
                     TransactionTypes.Types.ACCOUNT_KEY_LINK,
-                    "",
+                    "F885063A6A798EE7BF34CEEE1E6FE17377E15E54590C90FE783F99690226C033",
                     0x1,
                     1000000,
                     false
@@ -462,24 +462,12 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             transfer.SetSigner(keys.PublicKeyString);
 
-            //transfer.Fee = DataConverter.ConvertFrom((ulong)500000);
-            //transfer.Deadline = DataConverter.ConvertFrom((ulong)117657395737);
+            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
+            transfer.Deadline = DataConverter.ConvertFrom((ulong)117996356712);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
-            Debug.WriteLine(result.Payload.ToHex());
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Deadline));
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Fee));
-
-            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            //var a = await client.Announce(result);
-            //
-            //var status = await client.GetTransactionStatus(result.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
-
-            //Assert.That(result.Payload.ToHex(), Is.EqualTo(""));
+            Assert.That(result.Payload.ToHex(), Is.EqualTo("A100000000000000AE45DAAB6E538FF628B9E2F5B3DB7041B01FDC62ABFBD836E8826348CE8082D82AB971554A8D805AC2402DCB199C77BE31CCF4A36DD0915F787E64869FAB9604F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F70000000001984C4140420F0000000000688421791B000000F885063A6A798EE7BF34CEEE1E6FE17377E15E54590C90FE783F99690226C03301"));
         }
 
         [Test, Timeout(20000)]
