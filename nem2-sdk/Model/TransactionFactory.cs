@@ -117,7 +117,7 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public VotingKeyLinkTransaction CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, byte linkAction, ulong fee, bool embedded)
+        public VotingKeyLinkTransaction CreateVotingKeyLinkTransaction(TransactionTypes.Types type, uint startEpoch, uint endEpoch, string linkedPublicKey, byte linkAction, ulong fee, bool embedded)
         {
             return new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
             {

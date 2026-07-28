@@ -478,32 +478,20 @@ namespace Unit_Tests.Model.Transactions.Verified
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateKeyLinkTransaction(
                     TransactionTypes.Types.NODE_KEY_LINK,
-                    "",
+                    "4F250755A54BB32675D5639D32A5B098A4B65FC86A232E0E8EEE1AB64E801091",
                     0x1,
                     1000000,
                     false
                 );
-
+           
             transfer.SetSigner(keys.PublicKeyString);
 
-            //transfer.Fee = DataConverter.ConvertFrom((ulong)500000);
-            //transfer.Deadline = DataConverter.ConvertFrom((ulong)117657395737);
+            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
+            transfer.Deadline = DataConverter.ConvertFrom((ulong)118001735974);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
-
-            Debug.WriteLine(result.Payload.ToHex());
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Deadline));
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Fee));
-
-            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            //var a = await client.Announce(result);
-            //
-            //var status = await client.GetTransactionStatus(result.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
-
-            //Assert.That(result.Payload.ToHex(), Is.EqualTo(""));
+           
+            Assert.That(result.Payload.ToHex(), Is.EqualTo("A100000000000000C8E4800E71AD8A09E80FA3F5CF3D8683D80D6C87E5AB1F31C13C98DDE2EBD1C953142FABB04BB23D74BB5A12BBB19FC3D38406E549E03D0E3408326FAF450801F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F70000000001984C4240420F0000000000269973791B0000004F250755A54BB32675D5639D32A5B098A4B65FC86A232E0E8EEE1AB64E80109101"));
         }
 
         [Test, Timeout(20000)]
@@ -514,7 +502,7 @@ namespace Unit_Tests.Model.Transactions.Verified
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateKeyLinkTransaction(
                     TransactionTypes.Types.VRF_KEY_LINK,
-                    "",
+                    "6A59D229673DC22D6EC7BF9173932D32B5567AAFAF1C23AFE6A427EEA275A368",
                     0x1,
                     1000000,
                     false
@@ -522,24 +510,12 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             transfer.SetSigner(keys.PublicKeyString);
 
-            //transfer.Fee = DataConverter.ConvertFrom((ulong)500000);
-            //transfer.Deadline = DataConverter.ConvertFrom((ulong)117657395737);
+            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
+            transfer.Deadline = DataConverter.ConvertFrom((ulong)118001919791);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
-            Debug.WriteLine(result.Payload.ToHex());
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Deadline));
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Fee));
-
-            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            //var a = await client.Announce(result);
-            //
-            //var status = await client.GetTransactionStatus(result.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
-
-            //Assert.That(result.Payload.ToHex(), Is.EqualTo(""));
+            Assert.That(result.Payload.ToHex(), Is.EqualTo("A10000000000000017AB406B5DEC4E4C5364E30AAFEA65D74B09A600318AE4DDF31757F04CB7A836030CB16B358558CB5CF1CD2AE61CEA0F15F723F02DBF39E84878B49BB0B83008F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198434240420F00000000002F6776791B0000006A59D229673DC22D6EC7BF9173932D32B5567AAFAF1C23AFE6A427EEA275A36801"));
         }
 
         [Test, Timeout(20000)]
@@ -550,34 +526,22 @@ namespace Unit_Tests.Model.Transactions.Verified
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateVotingKeyLinkTransaction(
                     TransactionTypes.Types.VOTING_KEY_LINK,
-                    0,
-                    0,
-                    "",
+                    4986,
+                    5696,
+                    "542E24FBBE86278CD2C3AA2F43E39F5330DA2C1AC48ED74DD4E11C916A5B3BE1",
                     0x1,
                     1000000,
                     false
                 );
-
+          
             transfer.SetSigner(keys.PublicKeyString);
 
-            //transfer.Fee = DataConverter.ConvertFrom((ulong)500000);
-            //transfer.Deadline = DataConverter.ConvertFrom((ulong)117657395737);
+            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
+            transfer.Deadline = DataConverter.ConvertFrom((ulong)118006993952);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
-            Debug.WriteLine(result.Payload.ToHex());
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Deadline));
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Fee));
-
-            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            //var a = await client.Announce(result);
-            //
-            //var status = await client.GetTransactionStatus(result.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
-
-            //Assert.That(result.Payload.ToHex(), Is.EqualTo(""));
+            Assert.That(result.Payload.ToHex(), Is.EqualTo("A9000000000000009C90AA81DC27ACD136EF4F7C33C22D4C7FAAC42A499090BAAEB4AFE1CB2D0EFA4CF34BA273A72071140A44B14C22E184729B72CEC80D84EEF6F11942B3AD030DF8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198434140420F000000000020D4C3791B000000542E24FBBE86278CD2C3AA2F43E39F5330DA2C1AC48ED74DD4E11C916A5B3BE17A1300004016000001"));
         }
     }
 }

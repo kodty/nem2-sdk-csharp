@@ -155,7 +155,7 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public VotingKeyLinkTransaction CreateVotingKeyLinkTransaction(TransactionTypes.Types type, ulong startEpoch, ulong endEpoch, string linkedPublicKey, byte linkAction, bool embedded)
+        public VotingKeyLinkTransaction CreateVotingKeyLinkTransaction(TransactionTypes.Types type, uint startEpoch, uint endEpoch, string linkedPublicKey, byte linkAction, bool embedded)
         {
             return new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
             {
