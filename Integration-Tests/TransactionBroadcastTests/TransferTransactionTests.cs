@@ -92,8 +92,8 @@ namespace IntegrationTests.Infrastructure.Transactions
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                .CreateAggregateComplete(
                 [
-                    transfer1.PrepareEmbedded(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET)),
-                    transfer2.PrepareEmbedded(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET))
+                    transfer1.PrepareEmbedded(keys.PublicKeyString),
+                    transfer2.PrepareEmbedded(keys.PublicKeyString)
                 ],
                 Account.CreateFromPrivateKey(HttpSetUp.TestSK, NetworkType.Types.TEST_NET).KeyPair.PublicKey,
                 0);

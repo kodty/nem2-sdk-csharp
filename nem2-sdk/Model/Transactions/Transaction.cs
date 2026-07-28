@@ -103,18 +103,18 @@ namespace io.nem2.sdk.Model.Transactions
             return this.Type == TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue() || this.Type == TransactionTypes.Types.AGGREGATE_BONDED.GetValue();
         }
 
-        public UnsignedTransaction PrepareEmbedded(PublicAccount signer)
-           => PrepareEmbedded(signer, exclude: [0, 1, 3, 4], excludeLen: 44);
+        public UnsignedTransaction PrepareEmbedded(string signer)
+           => Prepare(signer, exclude: [0, 1, 3, 4], excludeLen: 44);
 
         public SignedTransaction SignTransaction(SecretKeyPair keyPair, string networkGenHash = null)
            => SignTransaction(keyPair, exclude: [0, 1, 2, 3, 4], excludeLen: 108, networkGenHash.FromHex());
 
-        protected UnsignedTransaction PrepareEmbedded(PublicAccount signer, uint[] exclude, uint excludeLen)
+        internal UnsignedTransaction Prepare(string signer, uint[] exclude, uint excludeLen)
         {
-            if (Signer != null && Signer.ToHex() != signer.PublicKeyString)
+            if (Signer != null && Signer.ToHex() != signer)
                 throw new Exception("signer not set or mismatch");
 
-            Signer = signer.PublicKey;
+            Signer = signer.FromHex();
 
             var s = Size;
 
@@ -128,30 +128,15 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         protected SignedTransaction SignTransaction(SecretKeyPair signer, uint[] exclude, uint excludeLen, byte[] networkGenHash = null)
-        {
-            if (!IsEmbedded && networkGenHash == null)
-                throw new Exception("conflict");
-            if (Signer != null && Signer.ToHex() != signer.PublicKeyString)
-                throw new Exception("signer not set or mismatch");
+        {       
+            var tBytes = Prepare(signer.PublicKeyString, exclude, excludeLen);
 
-            var s = Size;
-
-            var tBytes = this.Serialize(s, [excludeLen, ..exclude]);
-
-            var signBytes = new byte[32 + tBytes[1].Length];
-
-            for (var x = 0; x < tBytes[1].Length; x++)
-            {
-                signBytes[x + 32] = tBytes[1][x];
-
-                if (x < 32)
-                    signBytes[x] = networkGenHash[x];
-            }
-
+            var signBytes = networkGenHash.Concat(tBytes.VerifiablePayload).ToArray();
+     
             this.Signature = NaclFast.SignDetached(msg: signBytes, signer.SecretKey.ToArray());
 
             for (int x = 0; x < 64; x++)
-                tBytes[0][x + 8] = this.Signature[x];
+                tBytes.Payload[x + 8] = this.Signature[x];
 
             if (NaclFast.SignDetachedVerify(signBytes, this.Signature, signer.PublicKey))
             {
@@ -160,7 +145,7 @@ namespace io.nem2.sdk.Model.Transactions
                     Signature = this.Signature.ToHex(),
                     VerifiablePayload = signBytes, 
                     Signer = signer.PublicKeyString,
-                    Payload = tBytes[0],
+                    Payload = tBytes.Payload,
                     Hash = HashTransaction(this.Signature, signer.PublicKey, signBytes).ToHex()
                 };
             }
@@ -169,38 +154,22 @@ namespace io.nem2.sdk.Model.Transactions
 
         protected SignedTransaction SignAnyTransaction(SecretKeyPair signer, uint[] exclude, uint excludeLen, byte[] networkGenHash = null)
         {
-            if (!IsEmbedded && networkGenHash == null)
-                throw new Exception("conflict");
-            if (Signer != null && Signer.ToHex() != signer.PublicKeyString)
-                throw new Exception("signer mismatch");
+            var tBytes = Prepare(signer.PublicKeyString, exclude, excludeLen);
 
-            Signer = signer.PublicKey;
+            var signBytes = new byte[32 + tBytes.VerifiablePayload.Length];
 
-            var s = Size;
-
-            var tBytes = this.Serialize(s, [excludeLen, .. exclude]
-            );
-
-            var signBytes = new byte[32 + tBytes[1].Length];
-
-            if (IsEmbedded) signBytes = tBytes[1];
+            if (IsEmbedded) signBytes = tBytes.VerifiablePayload;
             else
             {
-                for (var x = 0; x < tBytes[1].Length; x++)
-                {
-                    signBytes[x + 32] = tBytes[1][x];
-
-                    if (x < 32)
-                        signBytes[x] = networkGenHash[x];
-                }
-            }
+                signBytes = networkGenHash.Concat(tBytes.VerifiablePayload).ToArray();
+            }        
 
             var sig = NaclFast.SignDetached(msg: signBytes, signer.SecretKey.ToArray());
 
             if (!IsEmbedded)
             {
                 for (int x = 0; x < 64; x++)
-                    tBytes[0][x + 8] = sig[x];
+                    tBytes.Payload[x + 8] = sig[x];
 
                 this.Signature = sig;
             }
@@ -212,7 +181,7 @@ namespace io.nem2.sdk.Model.Transactions
                     Signature = sig.ToHex(),
                     VerifiablePayload = signBytes,
                     Signer = signer.PublicKeyString,
-                    Payload = tBytes[0],
+                    Payload = tBytes.Payload,
                     Hash = HashTransaction(this.Signature, signer.PublicKey, signBytes).ToHex()
                 };
             }

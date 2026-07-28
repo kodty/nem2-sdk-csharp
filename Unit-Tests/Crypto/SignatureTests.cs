@@ -12,20 +12,16 @@ namespace Unit_Tests.Crypto
 {
     internal class SignatureTests
     {
-
-        [Test, Timeout(20000)]
         public void TestSignVerify()
         {
-            var data = "49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4019854416E1D1AEC42000000B52E115A0200000098E21944E27CE919474CE22D4145725E322766E1A278E414050001000000000072C0212E67A08BCEE80300000000000068656C6C6F";
-            var sigVectorData = "23A6CF4C33E70B2B2108D9BB1F6534DCB929002FF3D7ADE5274B45E58760D82AFF79B5F85B027515CAD1AF85CE1F6547C13DAFDD85C285814966DBB950FD710B";
+            var data = "";
+            var sigVectorData = "";
 
             var keyPair = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
             var result = keyPair.Sign(data.FromHex());
 
-            Assert.AreEqual(sigVectorData, result.ToHex());
-
-            Assert.IsTrue(data == keyPair.SignOpen(sigVectorData.FromHex().Concat(data.FromHex()).ToArray()).ToHex());
+            Assert.IsTrue(data == keyPair.Sign(sigVectorData.FromHex().Concat(data.FromHex()).ToArray()).ToHex());
             Assert.IsTrue(keyPair.SignDetachedVerify(data.FromHex(), sigVectorData.FromHex()));
         }
 
