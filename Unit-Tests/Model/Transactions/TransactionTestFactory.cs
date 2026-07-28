@@ -115,9 +115,9 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public SecretLockTransaction CreateSecretLockTransaction(string mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded)
+        public SecretLockTransaction CreateSecretLockTransaction(string mosaic, ulong amount, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded)
         {
-            return new SecretLockTransaction(mosaic, duration, secret, hashAlgo, recipient, embedded)
+            return new SecretLockTransaction(mosaic, amount, duration, secret, hashAlgo, recipient, embedded)
             {
                 Signer = null,
 

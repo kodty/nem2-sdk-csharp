@@ -341,6 +341,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 .CreateSecretLockTransaction(
                     "",
                     0,
+                    0,
                     "",
                     HashType.Types.SHA3_512,
                     HttpSetUp.Recipient,

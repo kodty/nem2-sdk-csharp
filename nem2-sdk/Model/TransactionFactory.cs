@@ -249,9 +249,9 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public SecretLockTransaction CreateSecretLockTransaction(string mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, ulong fee, bool embedded)
+        public SecretLockTransaction CreateSecretLockTransaction(string mosaic, ulong amount, ulong duration, string secret, HashType.Types hashAlgo, string recipient, ulong fee, bool embedded)
         {
-            return new SecretLockTransaction(mosaic, duration, secret, hashAlgo, recipient, embedded)
+            return new SecretLockTransaction(mosaic, amount, duration, secret, hashAlgo, recipient, embedded)
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),

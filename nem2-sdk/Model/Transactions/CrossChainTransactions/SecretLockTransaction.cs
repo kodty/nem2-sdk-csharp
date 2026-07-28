@@ -11,27 +11,30 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             serializer.SerializeProperty(Recipient, 10);
             serializer.SerializeProperty(Secret, 11);
             serializer.SerializeProperty(Mosaic, 12);
-            serializer.SerializeProperty(Duration, 13);
-            serializer.SerializeProperty(HashAlgo, 14);
+            serializer.SerializeProperty(Amount, 13);
+            serializer.SerializeProperty(Duration, 14);
+            serializer.SerializeProperty(HashAlgo, 15);
         }
 
         public SecretLockTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
 
-        public SecretLockTransaction(string mosaic, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded) : base(TransactionTypes.Types.SECRET_LOCK, embedded)
+        public SecretLockTransaction(string mosaic, ulong amount, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded) : base(TransactionTypes.Types.SECRET_LOCK, embedded)
         {
             Version = 0x01;
-            Mosaic = mosaic.FromHex();
+
+            Mosaic = mosaic.FromHex().Reverse().ToArray();
+            Amount = amount;
             Duration = duration;
             Secret = secret.FromHex();
             HashAlgo = hashAlgo.GetHashTypeValue();
-            Recipient = recipient.IsBase32() 
-                      ? AddressEncoder.DecodeAddress(recipient) 
-                      : recipient.FromHex();
+            Recipient = AddressEncoder.DecodeAddress(recipient);
 
-            Size += (uint) (50 + Secret.Length);
+            Size += (uint) (57 + Recipient.Length);
         }
 
         public byte[] Mosaic { get; set; }
+
+        public ulong Amount { get; set; }
 
         public ulong Duration { get; set; }
 

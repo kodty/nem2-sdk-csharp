@@ -384,34 +384,23 @@ namespace Unit_Tests.Model.Transactions.Verified
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateSecretLockTransaction(
                     "72C0212E67A08BCE",
-                    10000000,
-                    "",
+                    10,
+                    1880,
+                    "A6A7110A8D6A6FF5901235955DEA7EC0A0F5AFE717B14AAA5D6DF5869F7695CA",
                     HashType.Types.SHA3_512,
-                    "", 
+                    "TBEAFD6ZBP2J7LTUUWYC2A2ZLXONTWU2ABVCIBA", 
                     1000000,
                     false
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
 
-            //transfer.Fee = DataConverter.ConvertFrom((ulong)500000);
-            //transfer.Deadline = DataConverter.ConvertFrom((ulong)117657395737);
+            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
+            transfer.Deadline = DataConverter.ConvertFrom((ulong)117986581510);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
-            Debug.WriteLine(result.Payload.ToHex());
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Deadline));
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Fee));
-
-            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            //var a = await client.Announce(result);
-            //
-            //var status = await client.GetTransactionStatus(result.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
-
-            //Assert.That(result.Payload.ToHex(), Is.EqualTo(""));
+            Assert.That(result.Payload.ToHex(), Is.EqualTo("D100000000000000812AB8910C1CF35A5FE6DF2AA7D40500EACBBF363CE6D6E79238E4EE22FC17D74B0826D18E5C3EE7FDB5921772A9E8A8D96487A957E0FEAC97096F3B7B489201F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198524140420F0000000000065C8C781B0000009848028FD90BF49FAE74A5B02D03595DDCD9DA9A006A2404A6A7110A8D6A6FF5901235955DEA7EC0A0F5AFE717B14AAA5D6DF5869F7695CACE8BA0672E21C0720A00000000000000580700000000000000"));
         }
 
         [Test, Timeout(20000)]
