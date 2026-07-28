@@ -410,34 +410,22 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateSecretProofTransaction(
-                    "",
-                    "",
+                    "TBEAFD6ZBP2J7LTUUWYC2A2ZLXONTWU2ABVCIBA",
+                    "A6A7110A8D6A6FF5901235955DEA7EC0A0F5AFE717B14AAA5D6DF5869F7695CA",
                     HashType.Types.SHA3_512,
-                    "",
+                    "955DEA7EC0A0",
                     1000000,
                     false
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
 
-            //transfer.Fee = DataConverter.ConvertFrom((ulong)500000);
-            //transfer.Deadline = DataConverter.ConvertFrom((ulong)117657395737);
+            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
+            transfer.Deadline = DataConverter.ConvertFrom((ulong)117994138799);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
-            //Debug.WriteLine(result.Payload.ToHex());
-            //Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Deadline));
-            //Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Fee));
-
-            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            //var a = await client.Announce(result);
-            //
-            //var status = await client.GetTransactionStatus(result.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
-
-            //Assert.That(result.Payload.ToHex(), Is.EqualTo(""));
+            Assert.That(result.Payload.ToHex(), Is.EqualTo("C10000000000000011881967B919D823EC7628C1338F3127A2BBE0498BBB4030A9E67E78534490FE05D93122561C61C5412E988BB36B364EE2AFE321ABFD376CDD3F8CBEA3BD620AF8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198524240420F0000000000AFACFF781B0000009848028FD90BF49FAE74A5B02D03595DDCD9DA9A006A2404A6A7110A8D6A6FF5901235955DEA7EC0A0F5AFE717B14AAA5D6DF5869F7695CA060000955DEA7EC0A0"));
         }
 
         private void produceAccounts()

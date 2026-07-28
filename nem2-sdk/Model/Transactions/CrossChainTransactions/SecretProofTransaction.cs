@@ -19,18 +19,17 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
         public SecretProofTransaction(string recipient, string secret, HashType.Types hashAlgo, string proof, bool embedded) : base(TransactionTypes.Types.SECRET_PROOF, embedded)
         {
             Version = 0x01;
+
+            Size += 59;
+
             Secret = secret.FromHex();
             HashAlgo = hashAlgo.GetHashTypeValue();
             Proof = proof.FromHex();
-            ProofSize = (uint)Proof.Length;
+            ProofSize = (ushort)Proof.Length;
             Recipient = recipient.IsBase32()
                       ? AddressEncoder.DecodeAddress(recipient)
                       : recipient.FromHex();
 
-            Size += (uint)Recipient.Length;
-            Size += (uint)Secret.Length;
-            Size += 4;
-            Size += 1;
             Size += (uint)Proof.Length;
         }
 
@@ -38,7 +37,7 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 
         public byte[] Secret { get; set; }
 
-        public uint ProofSize { get; set; }
+        public ushort ProofSize { get; set; }
 
         public byte HashAlgo { get; set; }
 

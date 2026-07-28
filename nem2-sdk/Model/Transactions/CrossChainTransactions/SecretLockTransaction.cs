@@ -22,14 +22,16 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
         {
             Version = 0x01;
 
+            Size += 81;
+
             Mosaic = mosaic.FromHex().Reverse().ToArray();
             Amount = amount;
             Duration = duration;
             Secret = secret.FromHex();
             HashAlgo = hashAlgo.GetHashTypeValue();
-            Recipient = AddressEncoder.DecodeAddress(recipient);
-
-            Size += (uint) (57 + Recipient.Length);
+            Recipient = recipient.IsBase32()
+                      ? AddressEncoder.DecodeAddress(recipient)
+                      : recipient.FromHex();
         }
 
         public byte[] Mosaic { get; set; }
