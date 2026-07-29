@@ -44,7 +44,7 @@
         {
             ParamRequestCompatible(param);
 
-            ParamMap.Add(ParamMap.Count == 0 ? ("?" + param.ToString() + "=") : ((ParamMap.Count + 1).ToString() + param.ToString() + "="), value);
+            ParamMap.Add(((ushort)param).ToString(), (ParamMap.Count == 0 ? (param.ToString() + "=") : ("&" + param.ToString() + "=")) + value);
         }
 
         public void SetParam(DefinedParams param, bool value) => SetParam(param, value.ToString().ToLower()); 
@@ -57,8 +57,9 @@
 
         public void RemoveParam(DefinedParams param)
         {
-            ParamMap.Remove("?" + param.ToString() + "=");
+            ParamMap.Remove(((ushort)param).ToString());
         }
+
         public void Flush()
         {
             ParamMap.Clear();
@@ -66,16 +67,7 @@
 
         public string ReturnPathParams()
         {
-            if (ParamMap.Count == 1)
-            {
-                return ParamMap.Select(p => {
-                    return p.Key.ToString() + p.Value.ToString();
-                }).Single();
-            }
-            else return string.Join("&", ParamMap.Select(p => {
-
-                    return (p.Key.ToString().Substring(1) + p.Value.ToString());
-                }));
+            return string.Concat(ParamMap.Select(p => p.Value.ToString()));
         }
 
         public enum DefineRequest
@@ -99,40 +91,40 @@
 
         public enum DefinedParams
         {
-            address = 1,
-            aliasType = 2,
-            artifactId = 3,
-            beneficiaryAddress = 4,
-            embedded = 5,
-            entryType = 6,
-            fromHeight = 7,
-            fromTimestamp = 8,
-            fromTransferAmount = 9,
-            height = 10,
-            level0 = 11, // do level 1 & 2
-            metadataType = 12,
-            mosaicId = 13,
-            offset = 14,
-            order = 15,
-            orderBy = 16,
-            ownerAddress = 17,
-            pageNumber = 18,
-            pageSize = 19,
-            type = 20,
-            recipientAddress = 21,
-            registrationType = 22,
-            scopedMetadataKey = 23,
-            secret = 24,
-            senderAddress = 25,
-            signerPublicKey = 26,
-            sourceAddress = 27,
-            targetAddress = 28,
-            targetId = 29,
-            toHeight = 30,
-            toTimestamp = 31,
-            toTransferAmount = 32,
-            transferMosaicId = 33,
-            receiptType = 34,  
+            address = 0,
+            aliasType = 1,
+            artifactId = 2,
+            beneficiaryAddress = 3,
+            embedded = 4,
+            entryType = 5,
+            fromHeight = 6,
+            fromTimestamp = 7,
+            fromTransferAmount = 8,
+            height = 9,
+            level0 = 10, // do level 1 & 2
+            metadataType = 11,
+            mosaicId = 12,
+            offset = 13,
+            order = 14,
+            orderBy = 15,
+            ownerAddress = 16,
+            pageNumber = 17,
+            pageSize = 18,
+            type = 19,
+            recipientAddress = 20,
+            registrationType = 21,
+            scopedMetadataKey = 22,
+            secret = 23,
+            senderAddress = 24,
+            signerPublicKey = 25,
+            sourceAddress = 26,
+            targetAddress = 27,
+            targetId = 28,
+            toHeight = 29,
+            toTimestamp = 30,
+            toTransferAmount = 31,
+            transferMosaicId = 32,
+            receiptType = 33,  
         }
 
         public enum Order
