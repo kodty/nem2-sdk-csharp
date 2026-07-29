@@ -16,25 +16,25 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task GetHashLock()
         {
-            string hash = "526262DEBE21A5A37CBFAF39907AB1C30D34BDD959148181B7EFCA8E67D4CBBF";
+            string hash = "FD492A6AD4BA0A2CD73277C4390BFCA885C17693DD6463F4418D0A6553A586D3";
 
-            var client = new LockHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new LockHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var result = await client.GetHashLockInfo(hash);
 
-            Assert.That(result.ComposedResponse.Lock.MosaicId, Is.EqualTo("6BED913FA20223F8"));
+            Assert.That(result.ComposedResponse.Lock.MosaicId, Is.EqualTo("72C0212E67A08BCE"));
         }
 
         [Test, Timeout(20000)]
         public async Task GetHashLockMerkle()
         {
-            string hash = "526262DEBE21A5A37CBFAF39907AB1C30D34BDD959148181B7EFCA8E67D4CBBF";
+            string hash = "FD492A6AD4BA0A2CD73277C4390BFCA885C17693DD6463F4418D0A6553A586D3";
 
-            var client = new LockHttp(HttpSetUp.Node, HttpSetUp.Port);
+            var client = new LockHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
             var result = await client.GetHashLockMerkleInfo(hash);
 
-            Assert.That(result.ComposedResponse.Tree[0].LeafHash, Is.EqualTo("D825C21F9FF60A9D4AF96D73C8C3C577676A977A8664F606FE65645E51C22691"));
+            Assert.That(result.ComposedResponse.Tree[0].LeafHash, Is.EqualTo("80812C6A76AB011E217DF970C19356CFF53A6C4CF1D90767D5070C54E062B7AB"));
         }
 
         [Test, Timeout(20000)]

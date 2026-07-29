@@ -26,7 +26,9 @@
 
         public bool IsTransferable => Properties.IsTransferable;
 
-        public bool IsLevyMutable => Properties.IsLevyMutable;
+        public bool IsRestrictable => Properties.IsRestrictable;
+
+        public bool IsRevokable => Properties.IsRevokable;
 
         public ulong Duration => Properties.Duration;
 

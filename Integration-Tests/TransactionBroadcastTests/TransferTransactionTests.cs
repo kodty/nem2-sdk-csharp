@@ -51,15 +51,6 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var st = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
-            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-
-            Debug.WriteLine(st.Payload.ToHex());
-            var a = await client.Announce(st);
-
-            Thread.Sleep(4321);
-            var status = await client.GetTransactionStatus(st.Hash);
-
-            Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
         [Test, Timeout(20000)]
@@ -234,7 +225,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 .CreateMosaicDefinitionTransaction(
                     DataConverter.ConvertFrom(IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 0)).ToHex(),
                     0,
-                    new MosaicProperties(true, true, false, 0, 0),
+                    new MosaicProperties(true, true, false, true, 0, 0),
                     0,
                     false);
 

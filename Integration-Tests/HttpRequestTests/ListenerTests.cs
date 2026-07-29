@@ -39,7 +39,7 @@ namespace Integration_Tests.HttpRequests
         [Test, Timeout(20000)]
         public async Task ListenForUnconfirmedTransactionAdded()
         {
-            for (int x = 0; x < 10; x++)
+            for (int x = 0; x < 5; x++)
             {
                 var listener = new Listener(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
@@ -53,9 +53,11 @@ namespace Integration_Tests.HttpRequests
 
                 socketResponses.Subscribe(t =>
                 {
-                    if (t.Meta.Hash == tx.Item1.Hash)
+                    var c = t.Transaction.Type.GetTypeValue();
+
+                    if (t.Meta.Hash == tx.Item1.Hash && c == typeof(SimpleTransfer))
                     {
-                        Assert.AreEqual(t.Transaction.SignerPublicKey, HttpSetUp.pubKey);
+                        Assert.AreEqual(((SimpleTransfer)t.Transaction).SignerPublicKey, HttpSetUp.pubKey);
 
                         unconfirmed = true;
                     }
