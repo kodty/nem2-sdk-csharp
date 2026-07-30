@@ -8,22 +8,24 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(IssuerAddress, 10);
+            serializer.SerializeProperty(DebtorImposed, 10);
             serializer.SerializeProperty(MosaicId, 11);
             serializer.SerializeProperty(Amount, 12);
         }
 
-        public MosaicSupplyRevocationTransaction(Address issuerAddress, string mosaicId, ulong amount, bool embedded) : base (TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION, embedded)
-        { 
-            IssuerAddress = AddressEncoder.DecodeAddress(issuerAddress.Plain);
+        public MosaicSupplyRevocationTransaction(Address debtorImposed, string mosaicId, ulong amount, bool embedded) : base (TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION, embedded)
+        {
+            Version = 0x01;
+
+            DebtorImposed = AddressEncoder.DecodeAddress(debtorImposed.Plain);
             MosaicId = mosaicId.FromHex();
             Amount = amount;
 
-            Size += (uint)IssuerAddress.Length;
+            Size += (uint)DebtorImposed.Length;
             Size += 16;
         }
 
-        public byte[] IssuerAddress { get; set; }
+        public byte[] DebtorImposed { get; set; }
 
         public byte[] MosaicId { get; set; }
 

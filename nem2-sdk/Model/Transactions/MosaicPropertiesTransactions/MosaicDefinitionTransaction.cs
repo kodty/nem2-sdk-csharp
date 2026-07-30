@@ -19,6 +19,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
         public MosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties, bool embedded) : base(TransactionTypes.Types.MOSAIC_DEFINITION, embedded) 
         {
             Version = 0x01;
+
             MosaicId = id.FromHex().Reverse().ToArray();
             Duration = properties.Duration;
             Flags = properties.GetFlags();

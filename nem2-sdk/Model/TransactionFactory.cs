@@ -238,9 +238,9 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public MosaicSupplyRevocationTransaction CreateMosaicSupplyRevocationTransaction(Address issuer, string mosaicId, ulong amount, ulong fee, bool embedded)
+        public MosaicSupplyRevocationTransaction CreateMosaicSupplyRevocationTransaction(Address debtorImposed, string mosaicId, ulong amount, ulong fee, bool embedded)
         {
-            return new MosaicSupplyRevocationTransaction(issuer, mosaicId, amount, embedded)
+            return new MosaicSupplyRevocationTransaction(debtorImposed, mosaicId, amount, embedded)
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
