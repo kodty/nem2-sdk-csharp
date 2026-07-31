@@ -11,35 +11,12 @@ namespace Integration_Tests.HttpRequests
 {
     public class ListenerTests
     {
-        private Tuple<SignedTransaction, IObservable<TransactionAnnounceResponse>> AnnounceTransaction()
-        {
-            var newAccount = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
-
-            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
-
-            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
-                .CreateTransferTransaction(
-                    address: Address.CreateFromEncoded(newAccount.Address.Plain),
-                    messege: EmptyMessage.Create(),
-                    mosaic: Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000),
-                    fee: 1000000,
-                    embedded: false
-                );
-
-            transfer.SetSigner(keys.PublicKeyString);
-
-            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-
-            var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
-
-            return new Tuple<SignedTransaction, IObservable<TransactionAnnounceResponse>>(result, client.Announce(result));
-
-        }
+        
 
         [Test, Timeout(20000)]
         public async Task ListenForUnconfirmedTransactionAdded()
         {
-            for (int x = 0; x < 5; x++)
+            for (int x = 0; x < 10; x++)
             {
                 var listener = new Listener(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
@@ -47,7 +24,7 @@ namespace Integration_Tests.HttpRequests
 
                 var socketResponses = listener.UnconfirmedTransactionsAdded(Address.CreateFromEncoded(HttpSetUp.address));
 
-                var tx = AnnounceTransaction();
+                var tx = HttpSetUp.AnnounceTransaction();
 
                 bool unconfirmed = false;
 

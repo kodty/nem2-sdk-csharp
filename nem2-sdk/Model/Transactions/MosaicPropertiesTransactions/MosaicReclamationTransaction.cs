@@ -4,7 +4,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {
-    public class MosaicSupplyRevocationTransaction : VerifiableTransaction
+    public class MosaicReclamationTransaction : VerifiableTransaction
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -13,16 +13,15 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
             serializer.SerializeProperty(Amount, 12);
         }
 
-        public MosaicSupplyRevocationTransaction(Address debtorImposed, string mosaicId, ulong amount, bool embedded) : base (TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION, embedded)
+        public MosaicReclamationTransaction(Address debtorImposed, string mosaicId, ulong amount, bool embedded) : base (TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION, embedded)
         {
             Version = 0x01;
 
-            DebtorImposed = AddressEncoder.DecodeAddress(debtorImposed.Plain);
-            MosaicId = mosaicId.FromHex();
-            Amount = amount;
+            Size += 40;
 
-            Size += (uint)DebtorImposed.Length;
-            Size += 16;
+            DebtorImposed = AddressEncoder.DecodeAddress(debtorImposed.Plain);
+            MosaicId = mosaicId.FromHex().Reverse().ToArray();
+            Amount = amount;          
         }
 
         public byte[] DebtorImposed { get; set; }
@@ -31,7 +30,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 
         public ulong Amount { get; set; }
 
-        public override MosaicSupplyRevocationTransaction SetSigner(string signer)
+        public override MosaicReclamationTransaction SetSigner(string signer)
         {
             Signer = signer.FromHex();
 

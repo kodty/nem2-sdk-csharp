@@ -1,13 +1,11 @@
 ﻿using Coppery;
 using Integration_Tests;
-using io.nem2.sdk.Infrastructure.HttpClients;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
-using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Utils;
-using System.Diagnostics;
+
 using System.Reactive.Linq;
 
 namespace Unit_Tests.Model.Transactions.Verified
@@ -30,8 +28,7 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             transfer.SetSigner(keys.PublicKeyString);
 
-            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)117756998097);
+            transfer.Deadline = DataConverter.ConvertFrom(17756998097);
             
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
@@ -46,7 +43,7 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                .CreateTransferTransaction(
-                   Address.CreateFromEncoded("TDX7QVF6XXMJNDFFRIOYTV4N3GSVUGNTWVCIMZQ"),
+                   Address.CreateFromEncoded(HttpSetUp.TestRecipient),
                    EmptyMessage.Create(),
                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
                    1000000,
@@ -54,11 +51,11 @@ namespace Unit_Tests.Model.Transactions.Verified
                );
 
             transfer.SetSigner(keys.PublicKeyString);
-
-            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)117756998097);
+            transfer.Deadline = DataConverter.ConvertFrom(118252829489);
 
             var transferResult = transfer.SignTransaction(keys, HttpSetUp.genHash);
+
+            Assert.That(transferResult.Payload.ToHex(), Is.EqualTo("B000000000000000FFF5CBDC9346843342BA5AF9A777C6D53B51591668D081653D9AB17440CCA8F189B1BBAA414C7DBD0044BBD1440904EF2C7D36421FDD887F5667C830B1FF9504F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198544140420F000000000031FB6A881B00000098D9807AC250198EA57D689A7239DFA3B52E1506A3F71FDC0000010000000000CE8BA0672E21C07240420F0000000000"));
 
             var hashlock = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateHashLockTransaction(
@@ -71,29 +68,13 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
 
             hashlock.SetSigner(keys.PublicKeyString);
-
-            //hashlock.Fee = DataConverter.ConvertFrom((ulong)1000000);
-            //hashlock.Deadline = DataConverter.ConvertFrom((ulong)117757956956);
+            hashlock.Deadline = DataConverter.ConvertFrom(118252829538);
 
             var hashlockResult = hashlock.SignTransaction(keys, HttpSetUp.genHash);
 
-            Debug.WriteLine(hashlockResult.Payload.ToHex());
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(hashlock.Deadline));
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(hashlock.Fee));
-
-            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            
-            var a = await client.Announce(hashlockResult);
-            
-            Thread.Sleep(4321);
-            var status = await client.GetTransactionStatus(hashlockResult.Hash);
-
-            Assert.AreEqual(status.ComposedResponse.Code, "Success");
-
-            Assert.That(hashlockResult.Payload.ToHex(), Is.EqualTo("B800000000000000A6A7110A8D6A6FF5901235955DEA7EC0A0F5AFE717B14AAA5D6DF5869F7695C6CF87B5BDA105B7D1724812544A846585701BB9C6F4E225170F55DF9AD9132205F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198484140420F00000000005CD3EB6A1B000000CE8BA0672E21C0728096980000000000400B000000000000FD492A6AD4BA0A2CD73277C4390BFCA885C17693DD6463F4418D0A6553A586D3"));
+            Assert.That(hashlockResult.Payload.ToHex(), Is.EqualTo("B8000000000000004B410773EDF2D53DF47DD2B5802E25C786B7041BF129619C908A56C3CC1B571CA4AA0B9133354D349E845AF87CDD753FCEBE28CB770449D0E970F235E07BB90CF8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198484140420F000000000062FB6A881B000000CE8BA0672E21C0728096980000000000400B000000000000D556C9E5630C16F3CBDCCB2C693219FD32AF95D8A8CC17F3A4844A6C35554B8E"));
         }
 
-        [Test, Timeout(20000)]
         public async Task CreateAggregateBondedTest()
         {
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
@@ -133,14 +114,13 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             aggregateBonded.Cosign([keys2]);
 
-            //transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
             //transfer.Deadline = DataConverter.ConvertFrom((ulong)117756998097);
 
             var result = aggregateBonded.SignTransaction(keys, HttpSetUp.genHash);
 
-            Debug.WriteLine(result.Payload.ToHex());
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(aggregateBonded.Deadline));
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(aggregateBonded.Fee));
+            //Debug.WriteLine(result.Payload.ToHex());
+            //Debug.WriteLine(DataConverter.ConvertTo<ulong>(aggregateBonded.Deadline));
+            //Debug.WriteLine(DataConverter.ConvertTo<ulong>(aggregateBonded.Fee));
 
             //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
             //
@@ -168,9 +148,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     false);
 
             transfer.SetSigner(keys.PublicKeyString);
-
-            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)118101078075);
+            transfer.Deadline = DataConverter.ConvertFrom(118101078075);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
@@ -195,9 +173,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     false);
 
             transfer.SetSigner(keys.PublicKeyString);
-
-            transfer.Fee = DataConverter.ConvertFrom((ulong)100000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)118099407728);
+            transfer.Deadline = DataConverter.ConvertFrom(118099407728);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
@@ -222,9 +198,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     false);
 
             transfer.SetSigner(keys.PublicKeyString);
-
-            transfer.Fee = DataConverter.ConvertFrom((ulong)100000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)118099685418);
+            transfer.Deadline = DataConverter.ConvertFrom(118099685418);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
@@ -252,9 +226,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                    false);
 
             transfer.SetSigner(keys.PublicKeyString);
-
-            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)118099831562);
+            transfer.Deadline = DataConverter.ConvertFrom(118099831562);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
@@ -279,12 +251,10 @@ namespace Unit_Tests.Model.Transactions.Verified
                     false);
 
             transfer.SetSigner(keys.PublicKeyString);
-
-            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)118101233052);
+            transfer.Deadline = DataConverter.ConvertFrom(118101233052);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
-
+            
             Assert.That(result.Payload.ToHex(), Is.EqualTo("91000000000000006FC93BB7634B9E2D34F6806E0FDA34C0D50E606FF9EE7512E99254FC4C584FABADCB455A08ED0B77151FFC5373B2F909F726F0706FA05AC6C24DDC57D900E90DF8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F70000000001984D4240420F00000000009CCD617F1B000000EC0566A626196BDC00A0724E1809000001"));
         }
 
@@ -292,43 +262,26 @@ namespace Unit_Tests.Model.Transactions.Verified
         public async Task CreateMosaicSupplyRevocationTransaction()
         {
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
-
-            var root = IdGenerator.GenerateId(0, "Plasma", true);
-
-            var sub = IdGenerator.GenerateId(root, "Aeternae", true);
-
+            
+            var root = IdGenerator.GenerateId(0, "plasma", true);
+            
+            var sub = IdGenerator.GenerateId(root, "aeternae", true);
+            
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
-                .CreateMosaicSupplyRevocationTransaction(
-                    Address.CreateFromEncoded(""),
-                    DataConverter.ConvertFrom((ulong)sub).ToHex(),
+                .CreateMosaicReclamationTransaction(
+                    Address.CreateFromEncoded("TAKSZ42GO35ENLHYRUBKE6EMSM4UUQAKUACXB5A"),
+                    DataConverter.ConvertFrom(sub).ToHex(),
+                    100000000,
                     1000000,
-                    1000000,
-                    false);
-
+                    false);      
             
             transfer.SetSigner(keys.PublicKeyString);
-
-            //transfer.Fee = DataConverter.ConvertFrom((ulong)100000);
-            //transfer.Deadline = DataConverter.ConvertFrom((ulong)117657800500);
+            transfer.Deadline = DataConverter.ConvertFrom(118250895120);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
-            Debug.WriteLine(result.Payload.ToHex());
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Deadline));
-            Debug.WriteLine(DataConverter.ConvertTo<ulong>(transfer.Fee));
-
-            //var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            //
-            //var a = await client.Announce(result);
-            //
-            //var status = await client.GetTransactionStatus(result.Hash);
-            //
-            //Assert.AreEqual(status.ComposedResponse.Code, "Success");
-
-            //Assert.That(result.Payload.ToHex(), Is.EqualTo(""));
+            Assert.That(result.Payload.ToHex(), Is.EqualTo("A8000000000000000B0A8B65E950AEA89119C5AFB08F58A3657FE02FFA08B7B5F8C25DFD3FDA46C3E9AAB83299628BD52BB9CAE1B52C2C77DE6DC6FBE21671162868F0746DD2990BF8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F70000000001984D4340420F000000000010774D881B00000098152CF34676FA46ACF88D02A2788C93394A400AA00570F4EC0566A626196BDC00E1F50500000000"));
         }
-
-
 
         [Test, Timeout(20000)]
         public async Task CreateSecretLockTest()
@@ -348,9 +301,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
-
-            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)117986581510);
+            transfer.Deadline = DataConverter.ConvertFrom(117986581510);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
@@ -373,31 +324,11 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
-
-            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)117994138799);
+            transfer.Deadline = DataConverter.ConvertFrom(117994138799);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
             Assert.That(result.Payload.ToHex(), Is.EqualTo("C10000000000000011881967B919D823EC7628C1338F3127A2BBE0498BBB4030A9E67E78534490FE05D93122561C61C5412E988BB36B364EE2AFE321ABFD376CDD3F8CBEA3BD620AF8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198524240420F0000000000AFACFF781B0000009848028FD90BF49FAE74A5B02D03595DDCD9DA9A006A2404A6A7110A8D6A6FF5901235955DEA7EC0A0F5AFE717B14AAA5D6DF5869F7695CA060000955DEA7EC0A0"));
-        }
-
-        private void produceAccounts()
-        {
-            var a = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
-            var b = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
-            var c = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
-            var d = Account.GenerateNewAccount(NetworkType.Types.TEST_NET);
-
-            Debug.WriteLine(a.KeyPair.PrivateKeyString);
-            Debug.WriteLine(b.KeyPair.PrivateKeyString);
-            Debug.WriteLine(c.KeyPair.PrivateKeyString);
-            Debug.WriteLine(d.KeyPair.PrivateKeyString);
-
-            Debug.WriteLine(a.KeyPair.PublicKeyString);
-            Debug.WriteLine(b.KeyPair.PublicKeyString);
-            Debug.WriteLine(c.KeyPair.PublicKeyString);
-            Debug.WriteLine(d.KeyPair.PublicKeyString);
         }
 
         [Test, Timeout(20000)]
@@ -415,9 +346,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
-
-            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)117996356712);
+            transfer.Deadline = DataConverter.ConvertFrom(117996356712);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
@@ -439,9 +368,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
            
             transfer.SetSigner(keys.PublicKeyString);
-
-            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)118001735974);
+            transfer.Deadline = DataConverter.ConvertFrom(118001735974);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
            
@@ -463,9 +390,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
-
-            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)118001919791);
+            transfer.Deadline = DataConverter.ConvertFrom(118001919791);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 
@@ -489,9 +414,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
           
             transfer.SetSigner(keys.PublicKeyString);
-
-            transfer.Fee = DataConverter.ConvertFrom((ulong)1000000);
-            transfer.Deadline = DataConverter.ConvertFrom((ulong)118006993952);
+            transfer.Deadline = DataConverter.ConvertFrom(118006993952);
 
             var result = transfer.SignTransaction(keys, HttpSetUp.genHash);
 

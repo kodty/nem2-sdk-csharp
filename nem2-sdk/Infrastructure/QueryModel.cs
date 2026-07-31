@@ -44,7 +44,9 @@
         {
             ParamRequestCompatible(param);
 
-            ParamMap.Add(((ushort)param).ToString(), (ParamMap.Count == 0 ? (param.ToString() + "=") : ("&" + param.ToString() + "=")) + value);
+            ParamMap.Add(ParamMap.Count().ToString() 
+                        + ((ushort)Request).ToString() 
+                        + ((ushort)param).ToString(), (ParamMap.Count == 0 ? (param.ToString() + "=") : ("&" + param.ToString() + "=")) + value);
         }
 
         public void SetParam(DefinedParams param, bool value) => SetParam(param, value.ToString().ToLower()); 
