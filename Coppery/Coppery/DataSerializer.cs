@@ -30,16 +30,22 @@
         public void SerializeProperty(uint value)
         {
             var source = DataConverter.ConvertFrom(value);
-         
-            for (var x = 0; x < 4; x++)
-                _BufferOne[_offset1 + x] = source[x];  
 
             if (!Exclude.Contains(_offset1))
             {
                 for (var x = 0; x < 4; x++)
+                {
+                    _BufferOne[_offset1 + x] = source[x];
                     _BufferTwo[_offset1 - dif + x] = source[x];
+                }          
             }
-            else dif += source.Length;
+            else
+            {
+                for (var x = 0; x < 4; x++)
+                    _BufferOne[_offset1 + x] = source[x];
+
+                dif += source.Length;
+            }
 
             _offset1 += source.Length;
         }
@@ -72,16 +78,23 @@
 
         public void SerializeProperty(byte[] value)
         {
-            for (var x = 0; x < value.Length; x++)
-                _BufferOne[_offset1 + x] = value[x];    
-
             if (!Exclude.Contains(_offset1))
             {
                 for (var x = 0; x < value.Length; x++)
+                {
+                    _BufferOne[_offset1 + x] = value[x];
                     _BufferTwo[_offset1 - dif + x] = value[x];
-
+                }
             }
-            else dif += value.Length;
+            else 
+            {
+                for (var x = 0; x < value.Length; x++)
+                {
+                    _BufferOne[_offset1 + x] = value[x];
+                }
+
+                dif += value.Length; 
+            }
 
             _offset1 += value.Length;
         }
