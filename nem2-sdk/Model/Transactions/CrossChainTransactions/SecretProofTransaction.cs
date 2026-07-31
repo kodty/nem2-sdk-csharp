@@ -7,11 +7,11 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(Recipient, 10);
-            serializer.SerializeProperty(Secret, 11);
-            serializer.SerializeProperty(ProofSize, 12);
-            serializer.SerializeProperty(HashAlgo, 13);
-            serializer.SerializeProperty(Proof, 14);
+            serializer.SerializeProperty(Recipient);
+            serializer.SerializeProperty(Secret);
+            serializer.SerializeProperty(ProofSize);
+            serializer.SerializeProperty(HashAlgo);
+            serializer.SerializeProperty(Proof);
         }
 
         public SecretProofTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) {}

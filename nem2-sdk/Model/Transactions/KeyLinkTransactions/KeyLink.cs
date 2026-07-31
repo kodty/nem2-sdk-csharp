@@ -6,9 +6,8 @@ namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(LinkedPublicKey, 10);
-            serializer.SerializeProperty(LinkAction, 11);
-            
+            serializer.SerializeProperty(LinkedPublicKey);
+            serializer.SerializeProperty(LinkAction);        
         }
 
         public KeyLinkTransaction(TransactionTypes.Types type, bool embedded) : base (type, embedded) { }

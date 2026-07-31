@@ -6,13 +6,13 @@ namespace io.nem2.sdk.Model.Transactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(MinApprovalDelta, 10);
-            serializer.SerializeProperty(MinRemovalDelta, 11);
-            serializer.SerializeProperty(AddressAdditionsCount, 12);
-            serializer.SerializeProperty(AddressDeletionsCount, 13);
-            serializer.SerializeProperty(new byte[4], 14);
-            // serializer.SerializeProperty(AddressAdditions, 15);
-            // serializer.SerializeProperty(AddressDeletions, 16);
+            serializer.SerializeProperty(MinApprovalDelta);
+            serializer.SerializeProperty(MinRemovalDelta);
+            serializer.SerializeProperty(AddressAdditionsCount);
+            serializer.SerializeProperty(AddressDeletionsCount);
+            serializer.SerializeProperty(new byte[4]);
+            // serializer.SerializeProperty(AddressAdditions);
+            // serializer.SerializeProperty(AddressDeletions);
             throw new Exception("not implimented");
         }
 

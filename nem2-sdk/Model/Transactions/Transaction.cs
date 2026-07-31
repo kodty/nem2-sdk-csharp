@@ -102,22 +102,18 @@ namespace io.nem2.sdk.Model.Transactions
             return this.Type == TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue() || this.Type == TransactionTypes.Types.AGGREGATE_BONDED.GetValue();
         }
 
-        public UnsignedTransaction PrepareEmbedded(string signer)
-           => Prepare(signer, exclude: [0, 1, 3, 4], excludeLen: 44);
+        public UnsignedTransaction PrepareEmbedded(string signer) => Prepare(signer);
 
-        public SignedTransaction SignTransaction(SecretKeyPair keyPair, string networkGenHash = null)
-           => SignTransaction(keyPair, exclude: [0, 1, 2, 3, 4], excludeLen: 108, networkGenHash.FromHex());
+        public SignedTransaction SignTransaction(SecretKeyPair keyPair, string networkGenHash) => SignTransaction(keyPair, networkGenHash.FromHex());
 
-        internal UnsignedTransaction Prepare(string signer, uint[] exclude, uint excludeLen)
+        internal UnsignedTransaction Prepare(string signer)
         {
             if (Signer != null && Signer.ToHex() != signer)
                 throw new Exception("signer not set or mismatch");
 
             Signer = signer.FromHex();
 
-            var s = Size;
-
-            var tBytes = this.Serialize(s, [excludeLen, ..exclude ]);
+            var tBytes = this.Serialize(Size);
 
             return new UnsignedTransaction()
             {
@@ -126,9 +122,9 @@ namespace io.nem2.sdk.Model.Transactions
             };
         }
 
-        protected SignedTransaction SignTransaction(SecretKeyPair signer, uint[] exclude, uint excludeLen, byte[] networkGenHash = null)
+        protected SignedTransaction SignTransaction(SecretKeyPair signer, byte[] networkGenHash)
         {       
-            var tBytes = Prepare(signer.PublicKeyString, exclude, excludeLen);
+            var tBytes = Prepare(signer.PublicKeyString);
 
             var signBytes = networkGenHash.Concat(tBytes.VerifiablePayload).ToArray();
      
@@ -151,9 +147,9 @@ namespace io.nem2.sdk.Model.Transactions
             else throw new Exception("invalid signature");
         }
 
-        protected SignedTransaction SignAnyTransaction(SecretKeyPair signer, uint[] exclude, uint excludeLen, byte[] networkGenHash = null)
+        protected SignedTransaction SignAnyTransaction(SecretKeyPair signer, byte[] networkGenHash = null)
         {
-            var tBytes = Prepare(signer.PublicKeyString, exclude, excludeLen);
+            var tBytes = Prepare(signer.PublicKeyString);
 
             var signBytes = new byte[32 + tBytes.VerifiablePayload.Length];
 
@@ -187,22 +183,22 @@ namespace io.nem2.sdk.Model.Transactions
             else throw new Exception("invalid signature");
         }
 
-        internal byte[][] Serialize(uint size, uint[] exclude)
+        internal byte[][] Serialize(uint size)
         {
             lock (this)
             {
-                DataSerializer serializer = new DataSerializer(size, exclude);
+                DataSerializer serializer = new DataSerializer(size, IsEmbedded ? 44 : 108);
 
-                serializer.SerializeProperty(Size, 0);
-                serializer.SerializeProperty(new byte[4], 1);
-                serializer.SerializeProperty(Signature, 2);
-                serializer.SerializeProperty(Signer, 3);
-                serializer.SerializeProperty(new byte[4], 4);
-                serializer.SerializeProperty(Version, 5);
-                serializer.SerializeProperty(Network, 6);
-                serializer.SerializeProperty(Type, 7);
-                serializer.SerializeProperty(Fee, 8);
-                serializer.SerializeProperty(Deadline, 9);
+                serializer.SerializeProperty(Size);
+                serializer.SerializeProperty(new byte[4]);
+                serializer.SerializeProperty(Signature);
+                serializer.SerializeProperty(Signer);
+                serializer.SerializeProperty(new byte[4]);
+                serializer.SerializeProperty(Version);
+                serializer.SerializeProperty(Network);
+                serializer.SerializeProperty(Type);
+                serializer.SerializeProperty(Fee);
+                serializer.SerializeProperty(Deadline);
 
                 Extend(serializer);
 

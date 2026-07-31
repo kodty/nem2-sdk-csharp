@@ -7,11 +7,11 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(MosaicId, 10);
-            serializer.SerializeProperty(Duration, 11);
-            serializer.SerializeProperty(Nonce, 12);
-            serializer.SerializeProperty(Flags, 13);
-            serializer.SerializeProperty(Divisibility, 14);
+            serializer.SerializeProperty(MosaicId);
+            serializer.SerializeProperty(Duration);
+            serializer.SerializeProperty(Nonce);
+            serializer.SerializeProperty(Flags);
+            serializer.SerializeProperty(Divisibility);
         }
 
         public MosaicDefinitionTransaction(TransactionTypes.Types type, bool embedded) : base(TransactionTypes.Types.MOSAIC_DEFINITION, embedded) { }

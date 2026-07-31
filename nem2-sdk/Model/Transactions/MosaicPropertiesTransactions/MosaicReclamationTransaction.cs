@@ -8,9 +8,9 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(DebtorImposed, 10);
-            serializer.SerializeProperty(MosaicId, 11);
-            serializer.SerializeProperty(Amount, 12);
+            serializer.SerializeProperty(DebtorImposed);
+            serializer.SerializeProperty(MosaicId);
+            serializer.SerializeProperty(Amount);
         }
 
         public MosaicReclamationTransaction(Address debtorImposed, string mosaicId, ulong amount, bool embedded) : base (TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION, embedded)

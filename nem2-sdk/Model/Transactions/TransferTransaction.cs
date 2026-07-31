@@ -10,14 +10,14 @@ namespace io.nem2.sdk.Model.Transactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(Address, 10);
-            serializer.SerializeProperty(MessegeSize, 11);
-            serializer.SerializeProperty(MosaicsCount, 12);
-            serializer.SerializeProperty(0x0, 13);
-            serializer.SerializeProperty(new byte[4],14);
-            serializer.SerializeProperty(MosaicId, 15);
-            serializer.SerializeProperty(MosaicAmount, 16);
-            serializer.SerializeProperty(Message, 17);
+            serializer.SerializeProperty(Address);
+            serializer.SerializeProperty(MessegeSize);
+            serializer.SerializeProperty(MosaicsCount);
+            serializer.SerializeProperty(0x0);
+            serializer.SerializeProperty(new byte[4]);
+            serializer.SerializeProperty(MosaicId);
+            serializer.SerializeProperty(MosaicAmount);
+            serializer.SerializeProperty(Message);
         }
 
         public byte[] Address { get; set; }

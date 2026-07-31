@@ -7,10 +7,10 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(MosaicId, 10);
-            serializer.SerializeProperty(RestrictionKey, 11);
-            serializer.SerializeProperty(PreviousRestrictionValue, 12);
-            serializer.SerializeProperty(NewRestrictionValue, 13);
+            serializer.SerializeProperty(MosaicId);
+            serializer.SerializeProperty(RestrictionKey);
+            serializer.SerializeProperty(PreviousRestrictionValue);
+            serializer.SerializeProperty(NewRestrictionValue);
         }
 
         public MosaicRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
@@ -51,11 +51,11 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(MosaicId, 10);
-            serializer.SerializeProperty(RestrictionKey, 11);
-            serializer.SerializeProperty(PreviousRestrictionValue, 12);
-            serializer.SerializeProperty(NewRestrictionValue, 13);
-            serializer.SerializeProperty(TargetAddress, 14);
+            serializer.SerializeProperty(MosaicId);
+            serializer.SerializeProperty(RestrictionKey);
+            serializer.SerializeProperty(PreviousRestrictionValue);
+            serializer.SerializeProperty(NewRestrictionValue);
+            serializer.SerializeProperty(TargetAddress);
         }
 
         public MosaicAddressRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
@@ -72,12 +72,12 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(MosaicId, 10);
-            serializer.SerializeProperty(RestrictionKey, 11);
-            serializer.SerializeProperty(PreviousRestrictionValue, 12);
-            serializer.SerializeProperty(NewRestrictionValue, 13);
-            serializer.SerializeProperty(PreviousRestrictionType, 14);
-            serializer.SerializeProperty(NewRestrictionType, 15);
+            serializer.SerializeProperty(MosaicId);
+            serializer.SerializeProperty(RestrictionKey);
+            serializer.SerializeProperty(PreviousRestrictionValue);
+            serializer.SerializeProperty(NewRestrictionValue);
+            serializer.SerializeProperty(PreviousRestrictionType);
+            serializer.SerializeProperty(NewRestrictionType);
         }
 
         public MosaicGlobalRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }

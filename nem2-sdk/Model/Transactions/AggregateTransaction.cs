@@ -8,16 +8,16 @@ namespace io.nem2.sdk.Model.Transactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(TransactionsHash, 10);
-            serializer.SerializeProperty(PayloadSize, 11);
-            serializer.SerializeProperty(new byte[4], 12);
-            serializer.SerializeProperty(EmbeddedTransactionsPayload, 13);
+            serializer.SerializeProperty(TransactionsHash);
+            serializer.SerializeProperty(PayloadSize);
+            serializer.SerializeProperty(new byte[4]);
+            serializer.SerializeProperty(EmbeddedTransactionsPayload);
             
             if(Cosignatures != null)
                 foreach(var e in Cosignatures) {
-                    serializer.SerializeProperty((byte)0x0, 14);
-                    serializer.SerializeProperty(e.Signer, 14);
-                    serializer.SerializeProperty(e.Signature, 14);
+                    serializer.SerializeProperty((byte)0x0);
+                    serializer.SerializeProperty(e.Signer);
+                    serializer.SerializeProperty(e.Signature);
                 }
         }
 
@@ -49,7 +49,7 @@ namespace io.nem2.sdk.Model.Transactions
         {
             var si = Size;
 
-            var tBytes = this.Serialize(si, [52, 0, 1, 2, 3, 4, 11, 12, 13, 14]);
+            var tBytes = this.Serialize(si);
 
             Cosignatures = new Cosignature[signers.Count()];
 

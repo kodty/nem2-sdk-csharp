@@ -7,12 +7,12 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(TargetAddress, 10);
-            serializer.SerializeProperty(ScopedMetadataKey, 11);
-            serializer.SerializeProperty(TargetNamespaceId, 12);
-            serializer.SerializeProperty(ValueSizeDelta, 13);
-            serializer.SerializeProperty(ValueSize, 14);
-            serializer.SerializeProperty(Value, 15);
+            serializer.SerializeProperty(TargetAddress);
+            serializer.SerializeProperty(ScopedMetadataKey);
+            serializer.SerializeProperty(TargetNamespaceId);
+            serializer.SerializeProperty(ValueSizeDelta);
+            serializer.SerializeProperty(ValueSize);
+            serializer.SerializeProperty(Value);
         }
 
         public NamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, ushort valueSizeDelta, ushort valueSize, byte[] value) : base(TransactionTypes.Types.NAMESPACE_METADATA) 
