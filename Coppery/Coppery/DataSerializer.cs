@@ -2,7 +2,7 @@
 {
     public class DataSerializer
     {
-        internal int[] Exclude = new int[] { 0, 4, 8, 72, 104 };
+        internal int[] Exclude = new int[] { 0, 4, 8, 40, 72, 104 };
         internal byte[] _BufferOne { get; set; }
         internal byte[] _BufferTwo { get; set; }
 
