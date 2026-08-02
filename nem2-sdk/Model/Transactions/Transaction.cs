@@ -26,8 +26,6 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal abstract void Extend(DataSerializer serializer);
 
-        public UnsignedTransaction PrepareEmbedded() => Prepare();
-
         public Transaction(TransactionTypes.Types type, bool isEmbedded)
         {
             IsEmbedded = isEmbedded;
@@ -39,7 +37,12 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal virtual UnsignedTransaction Prepare()
         {
-            var tBytes = this.Serialize(Size);
+            byte[][] tBytes = new byte[2][];
+
+            if (IsEmbedded && Size % 8 != 0)
+                Size += (uint)((Math.Ceiling((decimal)Size / 8) * 8) - Size);
+            
+            tBytes = this.Serialize(Size);
 
             return new UnsignedTransaction()
             {
@@ -90,6 +93,7 @@ namespace io.nem2.sdk.Model.Transactions
                 }
             }
         }
+
         public byte[] Fee
         {
             get
@@ -108,6 +112,7 @@ namespace io.nem2.sdk.Model.Transactions
                 }
             }
         }
+
         public byte[] Deadline
         {
             get

@@ -15,13 +15,20 @@ namespace io.nem2.sdk.Model.Transactions
 
         public AggregatePayload(Transaction[] transactions)
         {
-            EmbeddedTransactions = transactions.Select(t => t.Prepare()).ToArray();
+            EmbeddedTransactions = new UnsignedTransaction[transactions.Count()];
+            EmbeddedTransactionsPayload = new byte[transactions.Count()][];
 
-            TransactionsHash = CalculateMerkleRoot(EmbeddedTransactions.Select(e => Transaction.Hash(e.VerifiablePayload)).ToArray());
-
-            EmbeddedTransactionsPayload = Pad(EmbeddedTransactions);
-
-            PayloadSize = (uint)EmbeddedTransactionsPayload.Sum(e => e.Length);
+            for (int i = 0; i < transactions.Count(); i++)
+            {
+                EmbeddedTransactions[i] = transactions[i].Prepare();
+                EmbeddedTransactionsPayload[i] = EmbeddedTransactions[i].Payload;
+                PayloadSize += (uint)EmbeddedTransactions[i].Payload.Length;
+            }
+ 
+            TransactionsHash 
+                = CalculateMerkleRoot(
+                    EmbeddedTransactions.Select(e => Transaction.Hash(e.VerifiablePayload)).ToArray()
+                    );
         }
 
         private byte[] CalculateMerkleRoot(byte[][] embeddedTransactionHashes)
@@ -63,37 +70,6 @@ namespace io.nem2.sdk.Model.Transactions
 
             return embeddedTransactionHashes[0];
         }
-
-        private byte[][] Pad(UnsignedTransaction[] embeddedTransactions)
-        {
-            uint bufPadding = 0;
-
-            var pPayloads = embeddedTransactions.ToList().Select(item =>
-            {
-                if (item.Payload.Length % 8 != 0)
-                {
-                    var paddedPayload = new byte[(int)(Math.Ceiling((decimal)item.Payload.Length / 8) * 8)];
-
-                    var size = DataConverter.ConvertTo<uint>(item.Payload.Take(4).ToArray());
-
-                    Buffer.BlockCopy(item.Payload, 4, paddedPayload, 4, item.Payload.Length - 4);
-
-                    var s = (uint)(paddedPayload.Length - item.Payload.Length);
-
-                    size += s;
-
-                    bufPadding += s;
-
-                    Buffer.BlockCopy(DataConverter.ConvertFrom(size), 0, paddedPayload, 0, 4);
-
-                    return paddedPayload;
-                }
-                else return item.Payload;
-
-            }).ToArray();
-
-            return pPayloads;
-        }
     }
 
     public class AggregateTransaction : VerifiableTransaction
@@ -109,7 +85,6 @@ namespace io.nem2.sdk.Model.Transactions
             Payload = payload;
 
             Size += payload.PayloadSize;
-
         }
 
         internal override UnsignedTransaction Prepare()
@@ -118,7 +93,7 @@ namespace io.nem2.sdk.Model.Transactions
 
             return new UnsignedTransaction()
             {
-                Payload = tBytes[0].Concat(Serialize()).ToArray(),
+                Payload = [.. tBytes[0], .. Serialize()],
                 VerifiablePayload = tBytes[1]
             };
         }
@@ -132,24 +107,13 @@ namespace io.nem2.sdk.Model.Transactions
         {
             lock (this)
             {
-                uint len = Payload.PayloadSize;
-
-                byte[] ap = new byte[len];
-
-                int offset = 0;
-
-                foreach (byte[] p in Payload.EmbeddedTransactionsPayload)
-                {
-                    Buffer.BlockCopy(p, 0, ap, offset, p.Length);
-
-                    offset += p.Length;
-                }
-
-                DataSerializer serializer = new DataSerializer(8 + len, 0);
+                DataSerializer serializer = new DataSerializer(8 + Payload.PayloadSize, 0);
 
                 serializer.SerializeProperty(Payload.PayloadSize);
                 serializer.SerializeProperty(new byte[4]);
-                serializer.SerializeProperty(ap);
+
+                foreach (byte[] p in Payload.EmbeddedTransactionsPayload)
+                    serializer.SerializeProperty(p);
 
                 return serializer.GetBytes()[0];
             }
