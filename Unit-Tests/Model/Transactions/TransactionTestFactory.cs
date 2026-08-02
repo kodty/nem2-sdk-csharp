@@ -272,9 +272,9 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public AggregateTransaction CreateAggregateComplete(SignedTransaction[] embeddedTransactions, byte[] signer, byte[] cosignatures)
+        public AggregateTransaction CreateAggregateComplete(AggregatePayload payload, byte[] signer, byte[] cosignatures)
         {
-            return new AggregateTransaction(embeddedTransactions, TransactionTypes.Types.AGGREGATE_COMPLETE)
+            return new AggregateTransaction(payload, TransactionTypes.Types.AGGREGATE_COMPLETE)
             {
                 Signer = signer,
 
@@ -285,9 +285,9 @@ namespace Unit_Tests.Model.Transactions
             };
         }
 
-        public AggregateTransaction CreateAggregateBonded(SignedTransaction[] embeddedTransactions, byte[] signer, byte[] cosignatures)
+        public AggregateTransaction CreateAggregateBonded(AggregatePayload payload, byte[] signer, byte[] cosignatures)
         {
-            return new AggregateTransaction(embeddedTransactions, TransactionTypes.Types.AGGREGATE_BONDED)
+            return new AggregateTransaction(payload, TransactionTypes.Types.AGGREGATE_BONDED)
             {
                 Signer = signer,
 

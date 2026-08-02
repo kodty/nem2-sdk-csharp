@@ -1,17 +1,58 @@
 ﻿using Coppery;
 using Integration_Tests;
+using io.nem2.sdk.Infrastructure.HttpClients;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
+using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Utils;
-
+using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace Unit_Tests.Model.Transactions.Verified
 {
     internal class TransactionTest
     {
+
+        [Test, Timeout(20000)]
+        public async Task CreateAggregateTransactionTest()
+        {
+            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+
+            // embedded transaction
+
+            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+                .CreateTransferTransaction(
+                    address: Address.CreateFromEncoded("TAKSZ42GO35ENLHYRUBKE6EMSM4UUQAKUACXB5A"),
+                    messege: PlainMessage.Create("hello"),
+                    mosaic: Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
+                    fee: 0,
+                    embedded: true
+                );
+
+            transfer.SetSigner(keys.PublicKeyString);
+
+            // aggregate transaction complete
+
+            var aggregate = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
+                .CreateAggregateComplete(
+                new AggregatePayload([transfer]),
+                keys.PublicKey,
+                10000000);
+
+            var result = aggregate.SignTransaction(keys, HttpSetUp.genHash);
+
+            var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+
+            var a = await client.Announce(result);
+
+            Thread.Sleep(4321);
+            var status = await client.GetTransactionStatus(result.Hash);
+
+            Assert.AreEqual(status.ComposedResponse.Code, "Success");
+        }
+
         [Test, Timeout(20000)]
         public async Task CreateTransferTransactionTest()
         {
@@ -100,19 +141,16 @@ namespace Unit_Tests.Model.Transactions.Verified
                     true
                 );
 
-                transfer.SetSigner(keys2.PublicKeyString);
+                transfer2.SetSigner(keys2.PublicKeyString);
 
             var aggregateBonded = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateAggregateBonded(
-                    [
-                        transfer.PrepareEmbedded(keys.PublicKeyString), 
-                        transfer2.PrepareEmbedded(keys2.PublicKeyString)
-                    ],
+                     new AggregatePayload([transfer, transfer2]),
                     keys.PublicKey,
                     4321000
                 );
 
-            aggregateBonded.Cosign([keys2]);
+            //aggregateBonded.Cosign([keys2]);
 
             //transfer.Deadline = DataConverter.ConvertFrom((ulong)117756998097);
 

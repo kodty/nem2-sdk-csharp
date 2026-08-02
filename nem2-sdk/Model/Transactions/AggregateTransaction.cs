@@ -1,82 +1,36 @@
 ﻿using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
-using TweetNaclSharp;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public class AggregateTransaction : VerifiableTransaction
+    public class AggregatePayload
     {
-        internal override void Extend(DataSerializer serializer)
-        {
-            serializer.SerializeProperty(TransactionsHash);
-            serializer.SerializeProperty(PayloadSize);
-            serializer.SerializeProperty(new byte[4]);
-            serializer.SerializeProperty(EmbeddedTransactionsPayload);
-            
-            if(Cosignatures != null)
-                foreach(var e in Cosignatures) {
-                    serializer.SerializeProperty((byte)0x0);
-                    serializer.SerializeProperty(e.Signer);
-                    serializer.SerializeProperty(e.Signature);
-                }
-        }
-
         public byte[] TransactionsHash { get; set; }
 
         public uint PayloadSize { get; set; }
 
-        public byte[] EmbeddedTransactionsPayload { get; set; }
-
-        public Cosignature[] Cosignatures { get; set; }
-
         public UnsignedTransaction[] EmbeddedTransactions { get; set; }
 
-        public AggregateTransaction(UnsignedTransaction[] embeddedTransactions, TransactionTypes.Types type) : base(type, false)
+        public byte[][] EmbeddedTransactionsPayload { get; set; }
+
+        public AggregatePayload(Transaction[] transactions)
         {
-            Version = 0x03;
+            EmbeddedTransactions = transactions.Select(t => t.Prepare()).ToArray();
 
-            EmbeddedTransactions = embeddedTransactions;
+            TransactionsHash = CalculateMerkleRoot(EmbeddedTransactions.Select(e => Transaction.Hash(e.VerifiablePayload)).ToArray());
 
-            EmbeddedTransactionsPayload = PaddedCombine();
+            EmbeddedTransactionsPayload = Pad(EmbeddedTransactions);
 
-            PayloadSize += (uint)EmbeddedTransactionsPayload.Length;
-
-            Size += 40;
-            Size += (uint)EmbeddedTransactionsPayload.Length;     
-        }
-
-        public void Cosign(SecretKeyPair[] signers)
-        {
-            var si = Size;
-
-            var tBytes = this.Serialize(si);
-
-            Cosignatures = new Cosignature[signers.Count()];
-
-            for (int i = 0; i < signers.Length; i++)
-            {
-                SecretKeyPair? signer = signers[i];
-
-                if (Signer == signer.PublicKey) return;
-
-                var sig = NaclFast.SignDetached(msg: tBytes[1], signer.SecretKey.ToArray());
-
-                Cosignatures[i] = new Cosignature()
-                {
-                    Version = 0x0,
-                    Signature = sig,
-                    Signer = signer.PublicKey,
-                };
-
-                Size += 1;
-                Size += 64;
-                Size += 32;
-            }
+            PayloadSize = (uint)EmbeddedTransactionsPayload.Sum(e => e.Length);
         }
 
         private byte[] CalculateMerkleRoot(byte[][] embeddedTransactionHashes)
         {
             var numRemainingHashes = embeddedTransactionHashes.Length;
+
+            var hash = new byte[32];
+
+            var sha3Hasher = new Sha3Digest(256);
 
             while (1 < numRemainingHashes)
             {
@@ -85,10 +39,6 @@ namespace io.nem2.sdk.Model.Transactions
 
                 while (i < numRemainingHashes)
                 {
-                    var hash = new byte[32];
-
-                    var sha3Hasher = new Sha3Digest(256);
-
                     sha3Hasher.BlockUpdate(embeddedTransactionHashes[i], 0, 32);
 
                     if (i + 1 < numRemainingHashes)
@@ -104,6 +54,8 @@ namespace io.nem2.sdk.Model.Transactions
 
                     sha3Hasher.DoFinal(embeddedTransactionHashes[(int)Math.Floor((double)i / 2)]);
                     i += 2;
+
+                    sha3Hasher.Reset();
                 }
 
                 numRemainingHashes = (int)Math.Floor((double)numRemainingHashes / 2);
@@ -112,15 +64,13 @@ namespace io.nem2.sdk.Model.Transactions
             return embeddedTransactionHashes[0];
         }
 
-        private byte[] PaddedCombine()
+        private byte[][] Pad(UnsignedTransaction[] embeddedTransactions)
         {
-            var ets = EmbeddedTransactions.ToList();
-
             uint bufPadding = 0;
 
-            var pPayloads = ets.Select(item =>
+            var pPayloads = embeddedTransactions.ToList().Select(item =>
             {
-                if (item.Payload.Length % 8 != 0 && ets.IndexOf(item) != EmbeddedTransactions.Length)
+                if (item.Payload.Length % 8 != 0)
                 {
                     var paddedPayload = new byte[(int)(Math.Ceiling((decimal)item.Payload.Length / 8) * 8)];
 
@@ -129,7 +79,9 @@ namespace io.nem2.sdk.Model.Transactions
                     Buffer.BlockCopy(item.Payload, 4, paddedPayload, 4, item.Payload.Length - 4);
 
                     var s = (uint)(paddedPayload.Length - item.Payload.Length);
+
                     size += s;
+
                     bufPadding += s;
 
                     Buffer.BlockCopy(DataConverter.ConvertFrom(size), 0, paddedPayload, 0, 4);
@@ -140,22 +92,67 @@ namespace io.nem2.sdk.Model.Transactions
 
             }).ToArray();
 
-            TransactionsHash = CalculateMerkleRoot(ets.Select(e => Hash(e.VerifiablePayload)).ToArray());
+            return pPayloads;
+        }
+    }
 
-            byte[] ap = new byte[pPayloads.Sum(a => a.Length)];
+    public class AggregateTransaction : VerifiableTransaction
+    {
+        public AggregatePayload Payload { get; set; }
 
-            int offset = 0;
+        public AggregateTransaction(AggregatePayload payload, TransactionTypes.Types type) : base(TransactionTypes.Types.AGGREGATE_COMPLETE, false)
+        {
+            Version = 0x03;
 
-            foreach (byte[] p in pPayloads)
+            Size += 40;
+
+            Payload = payload;
+
+            Size += payload.PayloadSize;
+
+        }
+
+        internal override UnsignedTransaction Prepare()
+        {
+            var tBytes = base.Serialize(Size - 8 - Payload.PayloadSize);
+
+            return new UnsignedTransaction()
             {
-                Buffer.BlockCopy(p, 0, ap, offset, p.Length);
+                Payload = tBytes[0].Concat(Serialize()).ToArray(),
+                VerifiablePayload = tBytes[1]
+            };
+        }
 
-                offset += p.Length;
+        internal override void Extend(DataSerializer serializer)
+        {
+            serializer.SerializeProperty(Payload.TransactionsHash);
+        }
+
+        internal byte[] Serialize()
+        {
+            lock (this)
+            {
+                uint len = Payload.PayloadSize;
+
+                byte[] ap = new byte[len];
+
+                int offset = 0;
+
+                foreach (byte[] p in Payload.EmbeddedTransactionsPayload)
+                {
+                    Buffer.BlockCopy(p, 0, ap, offset, p.Length);
+
+                    offset += p.Length;
+                }
+
+                DataSerializer serializer = new DataSerializer(8 + len, 0);
+
+                serializer.SerializeProperty(Payload.PayloadSize);
+                serializer.SerializeProperty(new byte[4]);
+                serializer.SerializeProperty(ap);
+
+                return serializer.GetBytes()[0];
             }
-
-            PayloadSize += bufPadding;
-
-            return ap;
         }
 
         public override AggregateTransaction SetSigner(string signer)
@@ -164,8 +161,6 @@ namespace io.nem2.sdk.Model.Transactions
 
             return this;
         }
-
-
 
         public override void SetVersion(byte version)
         {

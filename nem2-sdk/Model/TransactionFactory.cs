@@ -62,9 +62,9 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public AggregateTransaction CreateAggregateBonded(UnsignedTransaction[] embeddedTransactions, byte[] signer, ulong fee)
+        public AggregateTransaction CreateAggregateBonded(AggregatePayload payload, byte[] signer, ulong fee)
         {
-            return new AggregateTransaction(embeddedTransactions, TransactionTypes.Types.AGGREGATE_BONDED)
+            return new AggregateTransaction(payload, TransactionTypes.Types.AGGREGATE_BONDED)
             {
                 Signer = signer,
                 Network = NetworkType.GetNetworkByte(),
@@ -73,9 +73,9 @@ namespace io.nem2.sdk.Model
             };
         }
 
-        public AggregateTransaction CreateAggregateComplete(UnsignedTransaction[] embeddedTransactions, byte[] signer, ulong fee)
+        public AggregateTransaction CreateAggregateComplete(AggregatePayload payload, byte[] signer, ulong fee)
         {
-            return new AggregateTransaction(embeddedTransactions, TransactionTypes.Types.AGGREGATE_COMPLETE)
+            return new AggregateTransaction(payload, TransactionTypes.Types.AGGREGATE_COMPLETE)
             {
                 Signer = signer,
                 Network = NetworkType.GetNetworkByte(),
