@@ -145,18 +145,14 @@ namespace io.nem2.sdk.Model.Transactions
             for (int x = 0; x < 64; x++)
                 tBytes.Payload[x + 8] = this.Signature[x];
 
-            if (NaclFast.SignDetachedVerify(signBytes, this.Signature, signer.PublicKey))
+            return new SignedTransaction()
             {
-                return new SignedTransaction()
-                {
-                    Signature = this.Signature.ToHex(),
-                    VerifiablePayload = signBytes, 
-                    Signer = signer.PublicKeyString,
-                    Payload = tBytes.Payload,
-                    Hash = HashTransaction(this.Signature, signer.PublicKey, signBytes).ToHex()
-                };
-            }
-            else throw new Exception("invalid signature");
+                Signature = this.Signature.ToHex(),
+                VerifiablePayload = signBytes,
+                Signer = signer.PublicKeyString,
+                Payload = tBytes.Payload,
+                Hash = HashTransaction(this.Signature, signer.PublicKey, signBytes).ToHex()
+            };
         }
 
         internal override byte[][] Serialize(uint size)
