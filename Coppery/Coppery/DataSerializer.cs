@@ -31,49 +31,21 @@
         {
             var source = DataConverter.ConvertFrom(value);
 
-            if (!Exclude.Contains(_offset1))
-            {
-                for (var x = 0; x < 4; x++)
-                {
-                    _BufferOne[_offset1 + x] = source[x];
-                    _BufferTwo[_offset1 - dif + x] = source[x];
-                }          
-            }
-            else
-            {
-                for (var x = 0; x < 4; x++)
-                    _BufferOne[_offset1 + x] = source[x];
-
-                dif += source.Length;
-            }
-
-            _offset1 += source.Length;
+            SerializeProperty(source);
         }
 
         public void SerializeProperty(ushort value)
         {
             var source = DataConverter.ConvertFrom(value);
         
-            for (var x = 0; x < 2; x++)
-            {
-                _BufferOne[_offset1 + x] = source[x];
-                _BufferTwo[_offset1 - dif + x] = source[x];
-            }
-               
-            _offset1 += source.Length;
+            SerializeProperty(source);
         }
 
         public void SerializeProperty(ulong value)
         {
             var source = DataConverter.ConvertFrom(value);
-           
-            for (var x = 0; x < 8; x++)
-            {
-                _BufferOne[_offset1 + x] = source[x];
-                _BufferTwo[_offset1 - dif + x] = source[x];
-            }
 
-            _offset1 += source.Length;
+            SerializeProperty(source);
         }
 
         public void SerializeProperty(byte[] value)
