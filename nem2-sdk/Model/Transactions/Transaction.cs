@@ -33,6 +33,27 @@ namespace io.nem2.sdk.Model.Transactions
         
     }
 
+    public class SimpleTransaction<T> : VerifiableTransaction where T : TransactionExtension
+    {
+        public SimpleTransaction(T extension, NetworkType.Types networkType, ulong fee)
+        {
+            TransactionExtension = extension;
+            Size += (uint)TransactionExtension.AddSize();
+
+            base.Version = TransactionExtension.SetVersion();
+            base.Network = networkType.GetNetworkByte();
+            base.Type = TransactionExtension.SetType().GetValue();
+
+            base.Fee = DataConverter.ConvertFrom(fee);
+        }
+
+        internal override void Extend(DataSerializer serializer) => TransactionExtension.Extend(serializer);
+
+        public T TransactionExtension { get; set; }
+
+
+    }
+
     public class SubTransaction : Transaction
     {
         public SubTransaction(TransactionExtension extension, NetworkType.Types networkType)
@@ -70,11 +91,54 @@ namespace io.nem2.sdk.Model.Transactions
         }
     }
 
+    public class SubTransaction<T> : Transaction where T : TransactionExtension
+    {
+        public SubTransaction(T extension, NetworkType.Types networkType)
+        {
+            TransactionExtension = extension;
+            Size += (uint)TransactionExtension.AddSize();
+
+            Version = TransactionExtension.SetVersion();
+            Network = networkType.GetNetworkByte();
+            Type = TransactionExtension.SetType().GetValue();
+        }
+
+        internal override void Extend(DataSerializer serializer) => TransactionExtension.Extend(serializer);
+
+        public T TransactionExtension { get; set; }
+
+        internal override byte[][] Serialize(uint size)
+        {
+            lock (this)
+            {
+                DataSerializer serializer = new DataSerializer(size, 44);
+
+                serializer.SerializeProperty(Size);
+                serializer.SerializeProperty(new byte[4]);
+                serializer.SerializeProperty(Signer);
+                serializer.SerializeProperty(new byte[4]);
+                serializer.SerializeProperty(Version);
+                serializer.SerializeProperty(Network);
+                serializer.SerializeProperty(Type);
+
+                Extend(serializer);
+
+                return serializer.GetBytes();
+            }
+        }
+    }
+
     public abstract class Transaction
     {
+
         public static Transaction Create(TransactionExtension transaction, NetworkType.Types networkType)
         {
             return new SubTransaction(transaction, networkType);
+        }
+
+        public static SubTransaction<T> Create<T>(T transaction, NetworkType.Types networkType) where T : TransactionExtension
+        {
+            return new SubTransaction<T>(transaction, networkType);
         }
 
         public Transaction SetSigner(string signer)
@@ -143,6 +207,11 @@ namespace io.nem2.sdk.Model.Transactions
         public static SimpleTransaction Create(TransactionExtension transaction, NetworkType.Types networkType, ulong fee)
         {
             return new SimpleTransaction(transaction, networkType, fee);
+        }
+
+        public static SimpleTransaction<T> Create<T>(T transaction, NetworkType.Types networkType, ulong fee) where T : TransactionExtension
+        {
+            return new SimpleTransaction<T>(transaction, networkType, fee);
         }
 
         public VerifiableTransaction()
