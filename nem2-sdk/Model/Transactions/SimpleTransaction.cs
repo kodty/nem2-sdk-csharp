@@ -1,0 +1,54 @@
+﻿using Coppery;
+
+namespace io.nem2.sdk.Model.Transactions
+{
+    public class SimpleTransaction : VerifiableTransaction
+    {
+        public SimpleTransaction(TransactionExtension extension, NetworkType.Types networkType, ulong fee, Deadline deadline)
+        {
+            TransactionExtension = extension;
+            Size += (uint)TransactionExtension.AddSize();
+
+            base.Version = TransactionExtension.SetVersion();
+            base.Network = networkType.GetNetworkByte();
+            base.Type = TransactionExtension.SetType().GetValue();
+
+            base.Fee = DataConverter.ConvertFrom(fee);
+            base.Deadline = DataConverter.ConvertFrom(deadline.Ticks);
+        }
+
+        internal override void Extend(DataSerializer serializer) => TransactionExtension.Extend(serializer);
+
+        public TransactionExtension TransactionExtension { get; set; }
+
+        public override bool IsAggregate()
+        {
+            return typeof(AggregatePayload) == TransactionExtension.GetType();
+        }
+    }
+
+    public class SimpleTransaction<T> : VerifiableTransaction where T : TransactionExtension
+    {
+        public SimpleTransaction(T extension, NetworkType.Types networkType, ulong fee, Deadline deadline)
+        {
+            TransactionExtension = extension;
+            Size += (uint)TransactionExtension.AddSize();
+
+            base.Version = TransactionExtension.SetVersion();
+            base.Network = networkType.GetNetworkByte();
+            base.Type = TransactionExtension.SetType().GetValue();
+
+            base.Fee = DataConverter.ConvertFrom(fee);
+            base.Deadline = DataConverter.ConvertFrom(deadline.Ticks);
+        }
+
+        internal override void Extend(DataSerializer serializer) => TransactionExtension.Extend(serializer);
+
+        public T TransactionExtension { get; set; }
+
+        public override bool IsAggregate()
+        {
+            return typeof(AggregatePayload) == TransactionExtension.GetType();
+        }
+    }
+}

@@ -27,7 +27,7 @@ namespace io.nem2.sdk.Model.Transactions
  
             TransactionsHash 
                 = CalculateMerkleRoot(
-                    EmbeddedTransactions.Select(e => Transaction.Hash(e.VerifiablePayload)).ToArray()
+                    EmbeddedTransactions.Select(e => Hash(e.VerifiablePayload)).ToArray()
                     );
         }
 
@@ -71,25 +71,14 @@ namespace io.nem2.sdk.Model.Transactions
             return embeddedTransactionHashes[0];
         }
 
-        internal byte[] Serialize()
-        {
-            lock (this)
-            {
-                DataSerializer serializer = new DataSerializer(8 + PayloadSize, 0);
-
-                serializer.SerializeProperty(PayloadSize);
-                serializer.SerializeProperty(new byte[4]);
-
-                foreach (byte[] p in EmbeddedTransactionsPayload)
-                    serializer.SerializeProperty(p);
-
-                return serializer.GetBytes()[0];
-            }
-        }
-
         internal override void Extend(DataSerializer serializer)
         {
             serializer.SerializeProperty(TransactionsHash);
+            serializer.SerializeProperty(PayloadSize);
+            serializer.SerializeProperty(new byte[4]);
+
+            foreach (byte[] p in EmbeddedTransactionsPayload)
+                serializer.SerializeProperty(p);
         }
 
         internal override int AddSize()
@@ -99,7 +88,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal override byte SetVersion()
         {
-            return 0x01;
+            return 0x03;
         }
 
         internal override TransactionTypes.Types SetType()
@@ -107,34 +96,15 @@ namespace io.nem2.sdk.Model.Transactions
             return TransactionTypes.Types.AGGREGATE_COMPLETE;
         }
 
-    }
-
-    public class AggregateTransaction<T> : VerifiableTransaction where T : TransactionExtension
-    {
-        public AggregatePayload Payload { get; set; }
-
-        public AggregateTransaction(AggregatePayload payload, TransactionTypes.Types type, ulong fee)
+        private static byte[] Hash(byte[] data)
         {
-            
-            Payload = payload;
-            Size += (uint)Payload.AddSize();
-            Type = type.GetValue();
-            Version = 0x03;
-            Fee = DataConverter.ConvertFrom(fee);
+            var hash = new byte[32];
+
+            var sha3Hasher = new Sha3Digest(256);
+            sha3Hasher.BlockUpdate(data, 0, data.Length);
+            sha3Hasher.DoFinal(hash, 0);
+
+            return hash;
         }
-
-        internal override UnsignedTransaction Prepare()
-        {
-            var tBytes = base.Serialize(Size - Payload.PayloadSize - 8);
-
-            return new UnsignedTransaction()
-            {
-                Payload = [.. tBytes[0], .. Payload.Serialize()],
-                VerifiablePayload = tBytes[1]
-            };
-        }
-
-        internal override void Extend(DataSerializer serializer) => Payload.Extend(serializer);
-
     }
 }

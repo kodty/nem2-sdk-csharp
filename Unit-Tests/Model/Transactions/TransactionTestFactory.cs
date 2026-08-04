@@ -41,7 +41,7 @@ namespace Unit_Tests.Model.Transactions
 
         public SimpleTransaction CreateTransaction(TransactionExtension transaction, ulong fee)
         {
-            return new SimpleTransaction(transaction, NetworkType, fee)
+            return new SimpleTransaction(transaction, NetworkType, fee, Deadline.AddHours(1))
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
@@ -58,27 +58,16 @@ namespace Unit_Tests.Model.Transactions
         public SimpleTransaction CreateHashLockTransaction(string mosaic, ulong amount, ulong duration, string transactionHash, ulong fee)
         {
             return CreateTransaction(new LockFundsTransaction(mosaic, amount, duration, transactionHash), fee);
-
         }
 
-        public AggregateTransaction<AggregatePayload> CreateAggregateBonded(AggregatePayload payload, byte[] signer, ulong fee)
+        public SimpleTransaction CreateAggregateBonded(AggregatePayload payload, NetworkType.Types networkType, ulong fee)
         {
-            return new AggregateTransaction<AggregatePayload>(payload, TransactionTypes.Types.AGGREGATE_BONDED, fee)
-            {
-                Signer = signer,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks)
-            };
+            return CreateTransaction(payload, fee);
         }
 
-        public AggregateTransaction<AggregatePayload> CreateAggregateComplete(AggregatePayload payload, byte[] signer, ulong fee)
+        public SimpleTransaction CreateAggregateComplete(AggregatePayload payload, NetworkType.Types networkType, ulong fee)
         {
-            return new AggregateTransaction<AggregatePayload>(payload, TransactionTypes.Types.AGGREGATE_COMPLETE, fee)
-            {
-                Signer = signer,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks)
-            };
+            return CreateTransaction(payload, fee);
         }
 
         public SimpleTransaction CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions, ulong fee)

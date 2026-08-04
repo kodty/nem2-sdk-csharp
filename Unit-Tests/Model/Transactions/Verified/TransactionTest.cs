@@ -34,11 +34,13 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             // aggregate transaction complete
 
-            var aggregate = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
-                .CreateAggregateComplete(
+            var aggregate = VerifiableTransaction.Create(
                 new AggregatePayload([transfer]),
-                keys.PublicKey,
-                10000000);
+                NetworkType.Types.TEST_NET, 
+                10000000,
+                Deadline.AddHours(1));
+
+            aggregate.SetSigner(keys.PublicKeyString);
 
             var result = aggregate.SignTransaction(keys, HttpSetUp.genHash);
 
@@ -64,7 +66,8 @@ namespace Unit_Tests.Model.Transactions.Verified
                     mosaic: Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000)
                     ),
                  NetworkType.Types.TEST_NET,
-                1000000
+                1000000,
+                Deadline.AddHours(1)
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
@@ -139,12 +142,12 @@ namespace Unit_Tests.Model.Transactions.Verified
 
                 transfer2.SetSigner(keys2.PublicKeyString);
 
-            var aggregateBonded = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
-                .CreateAggregateBonded(
-                     new AggregatePayload([transfer, transfer2]),
-                    keys.PublicKey,
-                    4321000
-                );
+            var aggregateBonded = VerifiableTransaction.Create(
+                new AggregatePayload([transfer, transfer2]),
+                NetworkType.Types.TEST_NET,
+                10000000,
+                Deadline.AddHours(1));
+
 
             //aggregateBonded.Cosign([keys2]);
 

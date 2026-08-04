@@ -42,7 +42,7 @@ namespace io.nem2.sdk.Model
 
         public SimpleTransaction CreateTransaction(TransactionExtension transaction, ulong fee)
         {
-            return new SimpleTransaction(transaction, NetworkType, fee)
+            return new SimpleTransaction(transaction, NetworkType, fee, Deadline.AddHours(1))
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
@@ -60,24 +60,14 @@ namespace io.nem2.sdk.Model
             return CreateTransaction(new LockFundsTransaction(mosaic, amount, duration, transactionHash), fee);
         }
 
-        public AggregateTransaction<AggregatePayload> CreateAggregateBonded(AggregatePayload payload, byte[] signer, ulong fee)
+        public VerifiableTransaction CreateAggregateBonded(AggregatePayload payload, NetworkType.Types networkType, byte[] signer, ulong fee, Deadline deadline)
         {
-            return new AggregateTransaction<AggregatePayload>(payload, TransactionTypes.Types.AGGREGATE_BONDED, fee)
-            {
-                Signer = signer,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks)
-            };
+            return VerifiableTransaction.Create(payload, networkType, fee, deadline);
         }
 
-        public AggregateTransaction<AggregatePayload> CreateAggregateComplete(AggregatePayload payload, byte[] signer, ulong fee)
+        public SimpleTransaction<AggregatePayload> CreateAggregateComplete(AggregatePayload payload, NetworkType.Types networkType, byte[] signer, ulong fee, Deadline deadline)
         {
-            return new AggregateTransaction<AggregatePayload>(payload, TransactionTypes.Types.AGGREGATE_COMPLETE, fee)
-            {
-                Signer = signer,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks)
-            };
+            return VerifiableTransaction.Create(payload, networkType, fee, deadline);
         }
 
         public SimpleTransaction CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions, ulong fee)
