@@ -3,7 +3,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 {
-    public class AccountMetadataTransaction : VerifiableTransaction
+    public class AccountMetadataTransaction : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -14,24 +14,16 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
             serializer.SerializeProperty(Value);
         }
 
-        public AccountMetadataTransaction(TransactionTypes.Types type) : base(type, true) { }
-
-        public AccountMetadataTransaction(string targetAddress, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value) : base(TransactionTypes.Types.ACCOUNT_METADATA, true)
+        public AccountMetadataTransaction(string targetAddress, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value) 
         {
-            Version = 0x01;
             TargetAddress = targetAddress.IsBase32()
                       ? AddressEncoder.DecodeAddress(targetAddress)
                       : targetAddress.FromHex();
-
-            Size += 12;
 
             ScopedMetadataKey = scopedKey.FromHex();
             ValueSizeDelta = valueSizeDelta;
             ValueSize = valueSize;
             Value = value;
-
-            Size += (uint)TargetAddress.Length;
-            Size += (uint)Value.Length;
         }
 
         public byte[] TargetAddress { get; set; }
@@ -44,24 +36,19 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 
         public byte[] Value { get; set; }
 
-        public override AccountMetadataTransaction SetSigner(string signer)
+        internal override int AddSize()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return 36 + Value.Length;
         }
 
-        [Obsolete("This transaction is only available as an aggregate embedded transaction", true)]
-        public SignedTransaction WrapVerified(SecretKeyPair signer, string genHash)
+        internal override byte SetVersion()
         {
-            return null;
+            return 0x01;
         }
 
-        public override void SetVersion(byte version)
+        internal override TransactionTypes.Types SetType()
         {
-            if (version > 3) throw new Exception("invalid version");
-
-            Version = version;
+            return TransactionTypes.Types.ACCOUNT_METADATA;
         }
     }
 }

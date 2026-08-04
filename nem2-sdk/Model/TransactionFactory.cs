@@ -40,236 +40,130 @@ namespace io.nem2.sdk.Model
             Port = port;
         }
 
-        public TransferTransaction_V1 CreateTransferTransaction(Address address, IMessage messege, Mosaic mosaic, ulong fee, bool embedded)
+        public SimpleTransaction CreateTransaction(TransactionExtension transaction, ulong fee)
         {
-            return new TransferTransaction_V1(address, messege, mosaic, embedded)
+            return new SimpleTransaction(transaction, NetworkType, fee)
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks)
             };
         }
 
-        public LockFundsTransaction CreateHashLockTransaction(string mosaic, ulong amount, ulong duration, string transactionHash, ulong fee, bool embedded)
+        public SimpleTransaction CreateTransferTransaction(Address address, IMessage messege, Mosaic mosaic, ulong fee)
         {
-            return new LockFundsTransaction(mosaic, amount, duration, transactionHash, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new TransferTransaction_V1(address, messege, mosaic), fee);
         }
 
-        public AggregateTransaction CreateAggregateBonded(AggregatePayload payload, byte[] signer, ulong fee)
+        public SimpleTransaction CreateHashLockTransaction(string mosaic, ulong amount, ulong duration, string transactionHash, ulong fee)
         {
-            return new AggregateTransaction(payload, TransactionTypes.Types.AGGREGATE_BONDED)
+            return CreateTransaction(new LockFundsTransaction(mosaic, amount, duration, transactionHash), fee);
+        }
+
+        public AggregateTransaction<AggregatePayload> CreateAggregateBonded(AggregatePayload payload, byte[] signer, ulong fee)
+        {
+            return new AggregateTransaction<AggregatePayload>(payload, TransactionTypes.Types.AGGREGATE_BONDED, fee)
             {
                 Signer = signer,
                 Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks)
             };
         }
 
-        public AggregateTransaction CreateAggregateComplete(AggregatePayload payload, byte[] signer, ulong fee)
+        public AggregateTransaction<AggregatePayload> CreateAggregateComplete(AggregatePayload payload, byte[] signer, ulong fee)
         {
-            return new AggregateTransaction(payload, TransactionTypes.Types.AGGREGATE_COMPLETE)
+            return new AggregateTransaction<AggregatePayload>(payload, TransactionTypes.Types.AGGREGATE_COMPLETE, fee)
             {
                 Signer = signer,
                 Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
+                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks)
             };
         }
 
-        public MultisigAccountModificationTransaction CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions, ulong fee)
+        public SimpleTransaction CreateMultisigAccountTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions, ulong fee)
         {
-            return new MultisigAccountModificationTransaction(minApproval, minRemoval, addressAdditions, addressDeletions)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new MultisigAccountModificationTransaction(minApproval, minRemoval, addressAdditions, addressDeletions), fee);
         }
 
-        public AccountRestrictionsTransaction CreateAccountRestrictionTransaction(TransactionTypes.Types type, ushort restrictionFlags, string[] additions, string[] deletions, ulong fee, bool embedded)
+        public SimpleTransaction CreateAccountRestrictionTransaction(TransactionTypes.Types type, ushort restrictionFlags, string[] additions, string[] deletions, ulong fee)
         { // covers account mosaic, account address, account operation restrictions
-            return new AccountRestrictionsTransaction(type, restrictionFlags, additions, deletions, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+
+            return CreateTransaction(new AccountRestrictionsTransaction(type, restrictionFlags, additions, deletions), fee);
         }
 
-        public KeyLinkTransaction CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, byte linkAction, ulong fee, bool embedded)
+        public SimpleTransaction CreateKeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, byte linkAction, ulong fee)
         {
-            return new KeyLinkTransaction(type, linkedPublicKey, linkAction, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new KeyLinkTransaction(type, linkedPublicKey, linkAction), fee);
         }
 
-        public VotingKeyLinkTransaction CreateVotingKeyLinkTransaction(TransactionTypes.Types type, uint startEpoch, uint endEpoch, string linkedPublicKey, byte linkAction, ulong fee, bool embedded)
+        public SimpleTransaction CreateVotingKeyLinkTransaction(uint startEpoch, uint endEpoch, string linkedPublicKey, byte linkAction, ulong fee)
         {
-            return new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction), fee);
         }
 
-        public AddressAliasTransaction CreateAddressAliasTransaction(string address, string namepaceId, byte aliasAction, ulong fee, bool embedded)
+        public SimpleTransaction CreateAddressAliasTransaction(string address, string namepaceId, byte aliasAction, ulong fee)
         {
-            return new AddressAliasTransaction(address, namepaceId, aliasAction, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new AddressAliasTransaction(address, namepaceId, aliasAction), fee);
         }
 
-        public AccountMetadataTransaction CreateAccountMetadataTransaction(string targetAddress, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee)
+        public SimpleTransaction CreateAccountMetadataTransaction(string targetAddress, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee)
         {
-            return new AccountMetadataTransaction(targetAddress, scopedKey, valueSizeDelta, valueSize, value)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new AccountMetadataTransaction(targetAddress, scopedKey, valueSizeDelta, valueSize, value), fee);
         }
 
-        public MosaicAliasTransaction CreateMosaicAliasTransaction(string mosaicId, string namepaceId, byte aliasAction, ulong fee, bool embedded)
+        public SimpleTransaction CreateMosaicAliasTransaction(string mosaicId, string namepaceId, byte aliasAction, ulong fee)
         {
-            return new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction), fee);
         }
 
-        public MosaicMetadataTransaction CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, string targetMosaicId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee)
+        public SimpleTransaction CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, string targetMosaicId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee)
         {
-            return new MosaicMetadataTransaction(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new MosaicMetadataTransaction(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value), fee);
         }
 
-        public RegisterNamespace CreateNamespaceRegistrationTransaction(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, ulong fee, bool embedded)
+        public SimpleTransaction CreateNamespaceRegistrationTransaction(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, ulong fee)
         {
-            return new RegisterNamespace(duration, parentId, id, type, name, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new RegisterNamespace(duration, parentId, id, type, name), fee);
         }
 
-        public NamespaceMetadataTransaction CreateNamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee)
+        public SimpleTransaction CreateNamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee)
         {
-            return new NamespaceMetadataTransaction(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new NamespaceMetadataTransaction(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value), fee);
         }
 
-        public MosaicDefinitionTransaction CreateMosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties, ulong fee, bool embedded)
+        public SimpleTransaction CreateMosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties, ulong fee)
         {
-            return new MosaicDefinitionTransaction(id, nonce, properties, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new MosaicDefinitionTransaction(id, nonce, properties), fee);
         }
 
-        public MosaicAddressRestrictionTransaction CreateMosaicAddressRestrictionTransaction(string targetAddress, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, ulong fee, bool embedded)
+        public SimpleTransaction CreateMosaicAddressRestrictionTransaction(string targetAddress, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, ulong fee)
         {
-            return new MosaicAddressRestrictionTransaction(targetAddress, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new MosaicAddressRestrictionTransaction(targetAddress, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue), fee);
         }
 
-        public MosaicGlobalRestrictionTransaction CreateMosaicGlobalRestrictionTransaction(string referenceMosaicId, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, byte previousRestrictionType, byte newRestrictionType, ulong fee, bool embedded)
+        public SimpleTransaction CreateMosaicGlobalRestrictionTransaction(string referenceMosaicId, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, byte previousRestrictionType, byte newRestrictionType, ulong fee)
         {
-            return new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, previousRestrictionType, newRestrictionType, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, previousRestrictionType, newRestrictionType), fee);
         }
 
-        public MosaicSupplyChangeTransaction CreateMosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, ulong fee, bool embedded)
+        public SimpleTransaction CreateMosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, ulong fee)
         {
-            return new MosaicSupplyChangeTransaction(delta, mosaicId, supplyType, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new MosaicSupplyChangeTransaction(delta, mosaicId, supplyType), fee);
         }
 
-        public MosaicReclamationTransaction CreateMosaicReclamationTransaction(Address debtorImposed, string mosaicId, ulong amount, ulong fee, bool embedded)
+        public SimpleTransaction CreateMosaicReclamationTransaction(Address debtorImposed, string mosaicId, ulong amount, ulong fee)
         {
-            return new MosaicReclamationTransaction(debtorImposed, mosaicId, amount, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee = DataConverter.ConvertFrom(fee)
-            };
+            return CreateTransaction(new MosaicReclamationTransaction(debtorImposed, mosaicId, amount), fee);
         }
 
-        public SecretLockTransaction CreateSecretLockTransaction(string mosaic, ulong amount, ulong duration, string secret, HashType.Types hashAlgo, string recipient, ulong fee, bool embedded)
+        public SimpleTransaction CreateSecretLockTransaction(string mosaic, ulong amount, ulong duration, string secret, HashType.Types hashAlgo, string recipient, ulong fee)
         {
-            return new SecretLockTransaction(mosaic, amount, duration, secret, hashAlgo, recipient, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee =  DataConverter.ConvertFrom(fee)
-            };
-
+            return CreateTransaction(new SecretLockTransaction(mosaic, amount, duration, secret, hashAlgo, recipient), fee);
         }
 
-        public SecretProofTransaction CreateSecretProofTransaction(string recipientAddress, string secret, HashType.Types hashAlgo, string proof, ulong fee, bool embedded)
+        public SimpleTransaction CreateSecretProofTransaction(string recipientAddress, string secret, HashType.Types hashAlgo, string proof, ulong fee)
         {
-            return new SecretProofTransaction(recipientAddress, secret, hashAlgo, proof, embedded)
-            {
-                Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks),
-                Fee =  DataConverter.ConvertFrom(fee)           
-            };
+            return CreateTransaction(new SecretProofTransaction(recipientAddress, secret, hashAlgo, proof), fee);
         }
     }  
 }

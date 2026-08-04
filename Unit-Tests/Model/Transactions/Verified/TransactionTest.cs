@@ -7,7 +7,6 @@ using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Utils;
-using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace Unit_Tests.Model.Transactions.Verified
@@ -22,14 +21,14 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             // embedded transaction
 
-            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
-                .CreateTransferTransaction(
-                    address: Address.CreateFromEncoded("TAKSZ42GO35ENLHYRUBKE6EMSM4UUQAKUACXB5A"),
-                    messege: PlainMessage.Create("hello"),
-                    mosaic: Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
-                    fee: 0,
-                    embedded: true
-                );
+            var transfer = Transaction.Create(
+               new TransferTransaction_V1(
+                   address: Address.CreateFromEncoded("TDX7QVF6XXMJNDFFRIOYTV4N3GSVUGNTWVCIMZQ"),
+                   messege: EmptyMessage.Create(),
+                   mosaic: Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000)
+                   ),
+                NetworkType.Types.TEST_NET
+               );
 
             transfer.SetSigner(keys.PublicKeyString);
 
@@ -58,13 +57,14 @@ namespace Unit_Tests.Model.Transactions.Verified
         {
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
-            var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
-                .CreateTransferTransaction(
+            var transfer = VerifiableTransaction.Create(
+                new TransferTransaction_V1(
                     address: Address.CreateFromEncoded("TDX7QVF6XXMJNDFFRIOYTV4N3GSVUGNTWVCIMZQ"),
                     messege: EmptyMessage.Create(),
-                    mosaic: Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
-                    fee: 1000000,
-                    embedded: false
+                    mosaic: Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000)
+                    ),
+                 NetworkType.Types.TEST_NET,
+                1000000
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
@@ -87,8 +87,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                    Address.CreateFromEncoded(HttpSetUp.TestRecipient),
                    EmptyMessage.Create(),
                    Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
-                   1000000,
-                   false
+                   1000000
                );
 
             transfer.SetSigner(keys.PublicKeyString);
@@ -104,8 +103,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     10000000,
                     2880,
                     transferResult.Hash,
-                    1000000,
-                    false
+                    1000000
                 );
 
             hashlock.SetSigner(keys.PublicKeyString);
@@ -126,8 +124,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     Address.CreateFromEncoded("TDX7QVF6XXMJNDFFRIOYTV4N3GSVUGNTWVCIMZQ"),
                     PlainMessage.Create("hello"),
                     Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000),
-                    1000000,
-                    true
+                    1000000
                 );
 
                 transfer.SetSigner(keys.PublicKeyString);
@@ -137,8 +134,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     Address.CreateFromEncoded("TA3GCBHJBTRCEHVYVHCNUCULY2NB76W7MVECFUY"),
                     PlainMessage.Create("hello"),
                     Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 200),
-                    800000,
-                    true
+                    800000
                 );
 
                 transfer2.SetSigner(keys2.PublicKeyString);
@@ -182,8 +178,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     DataConverter.ConvertFrom(IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 827369870)).ToHex(),
                     827369870,
                     new MosaicProperties(true, true, true, true, 6, 259200),
-                    1000000,
-                    false);
+                    1000000);
 
             transfer.SetSigner(keys.PublicKeyString);
             transfer.Deadline = DataConverter.ConvertFrom(118101078075);
@@ -207,8 +202,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     root,
                     NamespaceTypes.Types.RootNamespace,
                     "plasma",
-                    100000,
-                    false);
+                    100000);
 
             transfer.SetSigner(keys.PublicKeyString);
             transfer.Deadline = DataConverter.ConvertFrom(118099407728);
@@ -232,8 +226,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     IdGenerator.GenerateId(root, "aeternae", true),
                     NamespaceTypes.Types.SubNamespace,
                     "aeternae",
-                    100000,
-                    false);
+                    100000);
 
             transfer.SetSigner(keys.PublicKeyString);
             transfer.Deadline = DataConverter.ConvertFrom(118099685418);
@@ -260,8 +253,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                    id,
                    DataConverter.ConvertFrom(sub).ToHex(),
                    0x1,
-                   1000000,
-                   false);
+                   1000000);
 
             transfer.SetSigner(keys.PublicKeyString);
             transfer.Deadline = DataConverter.ConvertFrom(118099831562);
@@ -285,8 +277,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     10000000000000,
                     DataConverter.ConvertFrom(sub).ToHex(),
                     MosaicSupplyType.Type.INCREASE,
-                    1000000,
-                    false);
+                    1000000);
 
             transfer.SetSigner(keys.PublicKeyString);
             transfer.Deadline = DataConverter.ConvertFrom(118101233052);
@@ -310,8 +301,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     Address.CreateFromEncoded("TAKSZ42GO35ENLHYRUBKE6EMSM4UUQAKUACXB5A"),
                     DataConverter.ConvertFrom(sub).ToHex(),
                     100000000,
-                    1000000,
-                    false);      
+                    1000000);      
             
             transfer.SetSigner(keys.PublicKeyString);
             transfer.Deadline = DataConverter.ConvertFrom(118250895120);
@@ -334,8 +324,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     "A6A7110A8D6A6FF5901235955DEA7EC0A0F5AFE717B14AAA5D6DF5869F7695CA",
                     HashType.Types.SHA3_512,
                     "TBEAFD6ZBP2J7LTUUWYC2A2ZLXONTWU2ABVCIBA", 
-                    1000000,
-                    false
+                    1000000
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
@@ -357,8 +346,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     "A6A7110A8D6A6FF5901235955DEA7EC0A0F5AFE717B14AAA5D6DF5869F7695CA",
                     HashType.Types.SHA3_512,
                     "955DEA7EC0A0",
-                    1000000,
-                    false
+                    1000000
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
@@ -379,8 +367,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     TransactionTypes.Types.ACCOUNT_KEY_LINK,
                     "F885063A6A798EE7BF34CEEE1E6FE17377E15E54590C90FE783F99690226C033",
                     0x1,
-                    1000000,
-                    false
+                    1000000
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
@@ -401,8 +388,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     TransactionTypes.Types.NODE_KEY_LINK,
                     "4F250755A54BB32675D5639D32A5B098A4B65FC86A232E0E8EEE1AB64E801091",
                     0x1,
-                    1000000,
-                    false
+                    1000000
                 );
            
             transfer.SetSigner(keys.PublicKeyString);
@@ -423,8 +409,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     TransactionTypes.Types.VRF_KEY_LINK,
                     "6A59D229673DC22D6EC7BF9173932D32B5567AAFAF1C23AFE6A427EEA275A368",
                     0x1,
-                    1000000,
-                    false
+                    1000000
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
@@ -442,13 +427,11 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateVotingKeyLinkTransaction(
-                    TransactionTypes.Types.VOTING_KEY_LINK,
                     4986,
                     5696,
                     "542E24FBBE86278CD2C3AA2F43E39F5330DA2C1AC48ED74DD4E11C916A5B3BE1",
                     0x1,
-                    1000000,
-                    false
+                    1000000
                 );
           
             transfer.SetSigner(keys.PublicKeyString);

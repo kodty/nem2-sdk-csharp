@@ -3,43 +3,31 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public abstract class AliasTransaction : VerifiableTransaction
+    public abstract class AliasTransaction : TransactionExtension
     {
-        public AliasTransaction(TransactionTypes.Types type, string namespaceId, byte aliasAction, bool embedded) : base(type, embedded)
-        {
-            Version = 0x01;
-            AliasAction = aliasAction;
+        public AliasTransaction(TransactionTypes.Types type, string namespaceId, byte aliasAction) 
+        {         
             NamespaceId = namespaceId.FromHex().Reverse().ToArray();
-            Size += 9;
+            AliasAction = aliasAction;
         }
 
         public byte[] NamespaceId { get; set; }
 
         public byte AliasAction { get; set; }
 
-        public override AliasTransaction SetSigner(string signer)
+        internal override byte SetVersion()
         {
-            Signer = signer.FromHex();
-           
-            return this;
-        }
-
-        public override void SetVersion(byte version)
-        {
-            if (version > 3) throw new Exception("invalid version");
-
-            Version = version;
+            return 0x01;
         }
     }
 
     public class AddressAliasTransaction : AliasTransaction
     {
-        public AddressAliasTransaction(string address, string namespaceId, byte aliasAction, bool embedded) : base(TransactionTypes.Types.ADDRESS_ALIAS, namespaceId, aliasAction, embedded)
+        public AddressAliasTransaction(string address, string namespaceId, byte aliasAction) : base(TransactionTypes.Types.ADDRESS_ALIAS, namespaceId, aliasAction)
         {
             Address = address.IsBase32()
                       ? AddressEncoder.DecodeAddress(address)
                       : address.FromHex();
-            Size += 8;
         }
 
         internal override void Extend(DataSerializer serializer)
@@ -50,15 +38,23 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         public byte[] Address { get; set; }
+
+        internal override int AddSize()
+        {
+            return 33;
+        }
+
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.ADDRESS_ALIAS;
+        }
     }
 
     public class MosaicAliasTransaction : AliasTransaction
     {
-        public MosaicAliasTransaction(string mosaicId, string namespaceId, byte aliasAction, bool embedded) : base(TransactionTypes.Types.MOSAIC_ALIAS, namespaceId, aliasAction, embedded)
+        public MosaicAliasTransaction(string mosaicId, string namespaceId, byte aliasAction) : base(TransactionTypes.Types.MOSAIC_ALIAS, namespaceId, aliasAction)
         {
             MosaicId = mosaicId.FromHex().Reverse().ToArray();
-           
-            Size += 8;
         }
 
         internal override void Extend(DataSerializer serializer)
@@ -69,5 +65,15 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         public byte[] MosaicId { get; set; }
+
+        internal override int AddSize()
+        {
+            return 17;
+        }
+
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.MOSAIC_ALIAS;
+        }
     }
 }

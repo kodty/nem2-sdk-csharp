@@ -2,7 +2,7 @@
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public class MultisigAccountModificationTransaction : VerifiableTransaction
+    public class MultisigAccountModificationTransaction : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -23,10 +23,8 @@ namespace io.nem2.sdk.Model.Transactions
         public string[] AddressAdditions { get; set; }
         public string[] AddressDeletions { get; set; }
 
-        public MultisigAccountModificationTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions) : base(TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION, true)
+        public MultisigAccountModificationTransaction(byte minApproval, byte minRemoval, string[] addressAdditions, string[] addressDeletions)
         {
-
-            Version = 0x01;
             MinApprovalDelta = minApproval;
             MinRemovalDelta = minRemoval;
             AddressAdditionsCount = (byte)AddressAdditions.Length;
@@ -35,18 +33,19 @@ namespace io.nem2.sdk.Model.Transactions
             AddressDeletions = addressDeletions;    
         }
 
-        public override MultisigAccountModificationTransaction SetSigner(string signer)
+        internal override int AddSize()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return 00000000000;
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.MULTISIG_ACCOUNT_MODIFICATION;
         }
     }
 }

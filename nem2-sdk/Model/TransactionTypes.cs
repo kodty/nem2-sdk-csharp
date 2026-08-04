@@ -31,7 +31,7 @@ namespace io.nem2.sdk.Model
             MOSAIC_SUPPLY_CHANGE = 0x424D,
             MOSAIC_ALIAS = 0x434E,
             MOSAIC_METADATA = 0x4244,
-            MOSAIC_SUPPLY_REVOCATION = 0x434D,
+            TOKEN_RECLAMATION = 0x434D,
             SECRET_LOCK = 0x4152,
             SECRET_PROOF = 0x4252,
         }
@@ -121,7 +121,7 @@ namespace io.nem2.sdk.Model
                 case 0x4244:
                     return Types.MOSAIC_METADATA;
                 case 0x434D:
-                    return Types.MOSAIC_SUPPLY_REVOCATION;
+                    return Types.TOKEN_RECLAMATION;
                 case 0x4152:
                     return Types.SECRET_LOCK;
                 case 0x4252:

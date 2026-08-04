@@ -3,7 +3,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
 {
-    public class MosaicRestrictionTransaction : VerifiableTransaction
+    public class MosaicRestrictionTransaction : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -13,11 +13,8 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
             serializer.SerializeProperty(NewRestrictionValue);
         }
 
-        public MosaicRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
-
-        public MosaicRestrictionTransaction(TransactionTypes.Types type, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded) : base(type, embedded)
+        public MosaicRestrictionTransaction(TransactionTypes.Types type, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue)
         {
-            Version = 0x01;
             MosaicId = mosaicID.FromHex();
             RestrictionKey = restrictionKey.FromHex();
             PreviousRestrictionValue = previousRestrictionValue.FromHex();
@@ -32,18 +29,19 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
 
         public byte[] NewRestrictionValue { get; set; }
 
-        public override MosaicRestrictionTransaction SetSigner(string signer)
+        internal override int AddSize()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return MosaicId.Length + RestrictionKey.Length + PreviousRestrictionValue.Length + NewRestrictionValue.Length;
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION;
         }
     }
 
@@ -58,14 +56,27 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
             serializer.SerializeProperty(TargetAddress);
         }
 
-        public MosaicAddressRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
-
-        public MosaicAddressRestrictionTransaction(string targetAddress, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, bool embedded) : base(TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
+        public MosaicAddressRestrictionTransaction(string targetAddress, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue) : base(TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue)
         {
             TargetAddress = targetAddress.IsBase32() ? AddressEncoder.DecodeAddress(targetAddress) : targetAddress.FromHex();
         }
 
         public byte[] TargetAddress { get; set; }
+
+        internal override int AddSize()
+        {
+            return MosaicId.Length + RestrictionKey.Length + PreviousRestrictionValue.Length + NewRestrictionValue.Length + TargetAddress.Length;
+        }
+
+        internal override byte SetVersion()
+        {
+            return 0x01;
+        }
+
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION;
+        }
     }
 
     public class MosaicGlobalRestrictionTransaction : MosaicRestrictionTransaction
@@ -80,9 +91,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
             serializer.SerializeProperty(NewRestrictionType);
         }
 
-        public MosaicGlobalRestrictionTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
-
-        public MosaicGlobalRestrictionTransaction(string mosaicID, string referenceMosaicId, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, byte previousRestrictionType, byte newRestrictionType, bool embedded) : base(TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, embedded)
+        public MosaicGlobalRestrictionTransaction(string mosaicID, string referenceMosaicId, string restrictionKey, string previousRestrictionValue, string newRestrictionValue, byte previousRestrictionType, byte newRestrictionType) : base(TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue)
         {
             ReferenceMosaicId = referenceMosaicId.FromHex();
         }
@@ -92,5 +101,20 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
         public byte PreviousRestrictionType { get; set; }
 
         public byte NewRestrictionType { get; set; }
+
+        internal override int AddSize()
+        {
+            return MosaicId.Length + RestrictionKey.Length + PreviousRestrictionValue.Length + NewRestrictionValue.Length + 2;
+        }
+
+        internal override byte SetVersion()
+        {
+            return 0x01;
+        }
+
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.MOSAIC_GLOBAL_RESTRICTION;
+        }
     }
 }

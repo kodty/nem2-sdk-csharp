@@ -189,7 +189,7 @@ namespace io.nem2.sdk.Infrastructure
 
             if (transaction.Type == TransactionTypes.Types.TRANSFER.GetValue())
             {
-                isReceptor = AddressEncoder.EncodeAddress(((TransferTransaction_V1)transaction).Address) == address.Plain;
+                isReceptor = AddressEncoder.EncodeAddress(((TransferTransaction_V1)((SimpleTransaction)transaction).TransactionExtension).Address) == address.Plain;
             }
 
             return Address.CreateFromPublicKey(transaction.Signer.ToHex(), address.NetworkByte).Plain == address.Plain || isReceptor;

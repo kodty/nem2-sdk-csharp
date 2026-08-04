@@ -2,7 +2,7 @@
 
 namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
 {
-    public class KeyLinkTransaction : VerifiableTransaction
+    public class KeyLinkTransaction : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -10,35 +10,32 @@ namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
             serializer.SerializeProperty(LinkAction);        
         }
 
-        public KeyLinkTransaction(TransactionTypes.Types type, bool embedded) : base (type, embedded) { }
-
-        public KeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, byte linkAction, bool embedded) : base(type, embedded)
+        public KeyLinkTransaction(TransactionTypes.Types type, string linkedPublicKey, byte linkAction)
         {
-            Version = 0x01;
-
-            Size += 33;
-
             LinkedPublicKey = linkedPublicKey.FromHex();
             LinkAction = linkAction;
-            
+            Type = type;
         }
 
         public byte[] LinkedPublicKey { get; set; }
 
         public byte LinkAction { get; set; }
 
-        public override KeyLinkTransaction SetSigner(string signer)
-        {
-            Signer = signer.FromHex();
+        private TransactionTypes.Types Type { get; set; }
 
-            return this;
+        internal override int AddSize()
+        {
+            return 33;
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return Type;
         }
     }
 }

@@ -6,40 +6,35 @@ namespace io.nem2.sdk.Model.Transactions.KeyLinkTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(LinkedPublicKey);
+            serializer.SerializeProperty(base.LinkedPublicKey);
             serializer.SerializeProperty(StartEpoch);   
             serializer.SerializeProperty(EndEpoch);
-            serializer.SerializeProperty(LinkAction);
+            serializer.SerializeProperty(base.LinkAction);
         }
 
-        public VotingKeyLinkTransaction(uint startEpoch, uint endEpoch, string linkedPublicKey, byte linkAction, bool embedded) : base (TransactionTypes.Types.VOTING_KEY_LINK, embedded)
-        {
-            Version = 0x01;
-           
-            LinkedPublicKey = linkedPublicKey.FromHex();      
+        public VotingKeyLinkTransaction(uint startEpoch, uint endEpoch, string linkedPublicKey, byte linkAction) : base(TransactionTypes.Types.VOTING_KEY_LINK, linkedPublicKey, linkAction)
+        {     
             StartEpoch = startEpoch;
             EndEpoch = endEpoch;
-            LinkAction = linkAction;
-
-            Size += 33 + 8;  
         }
 
         public uint StartEpoch { get; set; }
 
         public uint EndEpoch { get; set; }
 
-        public override VotingKeyLinkTransaction SetSigner(string signer)
+        internal override int AddSize()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return 41;
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.VOTING_KEY_LINK;
         }
     }
 }

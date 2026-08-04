@@ -4,7 +4,7 @@ using io.nem2.sdk.Utils;
 namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
 {
     //AccountMosaic, AccountAddress, AccountOperation
-    public class AccountRestrictionsTransaction : VerifiableTransaction
+    public class AccountRestrictionsTransaction : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -16,14 +16,8 @@ namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
             serializer.SerializeProperty(_RestrictionDeletions);
         }
 
-        public AccountRestrictionsTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded)
+        public AccountRestrictionsTransaction(TransactionTypes.Types type, ushort restrictionFlags, string[] restrictionAdditions, string[] restrictionsDeletions)
         {
-
-        }
-
-        public AccountRestrictionsTransaction(TransactionTypes.Types type, ushort restrictionFlags, string[] restrictionAdditions, string[] restrictionsDeletions, bool embedded) : base(type, embedded)
-        {
-            Version = 0x01;
             RestrictionFlags = restrictionFlags;
             _RestrictionAdditions = [];
             _RestrictionDeletions = [];
@@ -32,9 +26,10 @@ namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
             RestrictionDeletions = restrictionsDeletions;
             RestrictionsDeletionsCount = (byte)restrictionsDeletions.Count();
 
-            Size += (uint)(8 + _RestrictionAdditions.Length + _RestrictionDeletions.Length);
+            Type = type;
         }
 
+        private TransactionTypes.Types Type { get; set; }
         public ushort RestrictionFlags { get; set; }
         public byte RestrictionsAdditionsCount { get; set; }
         public byte RestrictionsDeletionsCount { get; set; }
@@ -76,18 +71,19 @@ namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
             return bitValues;
         }
 
-        public override AccountRestrictionsTransaction SetSigner(string signer)
+        internal override int AddSize()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return (8 + _RestrictionAdditions.Length + _RestrictionDeletions.Length);
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return Type;
         }
     }
 }

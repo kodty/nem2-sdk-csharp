@@ -93,7 +93,7 @@ namespace Integration_Tests.HttpRequests
             var qModel = new QueryModel(QueryModel.DefineRequest.SearchConfirmedTransactions);
 
             qModel.SetParam(QueryModel.DefinedParams.signerPublicKey, pubKey);
-            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION.GetValue());
+            qModel.SetParam(QueryModel.DefinedParams.type, TransactionTypes.Types.TOKEN_RECLAMATION.GetValue());
 
             var response = await client.SearchConfirmedTransactions(qModel);
 
@@ -310,7 +310,7 @@ namespace Integration_Tests.HttpRequests
             Assert.IsTrue(tx.SourceAddress.IsHex(48));
             Assert.That(tx.Size, Is.EqualTo(168));
             Assert.IsTrue(tx.MosaicId.IsHex(16));
-            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION));
+            Assert.That(tx.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.TOKEN_RECLAMATION));
             Assert.IsTrue(tx.SignerPublicKey.IsHex(64));
         }
 

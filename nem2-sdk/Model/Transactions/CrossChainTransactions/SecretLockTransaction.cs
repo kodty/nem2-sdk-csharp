@@ -4,7 +4,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 {
-    public class SecretLockTransaction : VerifiableTransaction
+    public class SecretLockTransaction : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -16,14 +16,8 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             serializer.SerializeProperty(HashAlgo);
         }
 
-        public SecretLockTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
-
-        public SecretLockTransaction(string mosaic, ulong amount, ulong duration, string secret, HashType.Types hashAlgo, string recipient, bool embedded) : base(TransactionTypes.Types.SECRET_LOCK, embedded)
+        public SecretLockTransaction(string mosaic, ulong amount, ulong duration, string secret, HashType.Types hashAlgo, string recipient)
         {
-            Version = 0x01;
-
-            Size += 81;
-
             Mosaic = mosaic.FromHex().Reverse().ToArray();
             Amount = amount;
             Duration = duration;
@@ -46,18 +40,19 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 
         public byte[] Recipient { get; set; }
 
-        public override SecretLockTransaction SetSigner(string signer)
+        internal override int AddSize()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return 81;
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.SECRET_LOCK;
         }
     }
 }

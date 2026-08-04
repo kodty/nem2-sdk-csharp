@@ -3,7 +3,7 @@ using Org.BouncyCastle.Crypto.Digests;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public class AggregatePayload
+    public class AggregatePayload : TransactionExtension
     {
         public byte[] TransactionsHash { get; set; }
 
@@ -70,67 +70,71 @@ namespace io.nem2.sdk.Model.Transactions
 
             return embeddedTransactionHashes[0];
         }
-    }
-
-    public class AggregateTransaction : VerifiableTransaction
-    {
-        public AggregatePayload Payload { get; set; }
-
-        public AggregateTransaction(AggregatePayload payload, TransactionTypes.Types type) : base(TransactionTypes.Types.AGGREGATE_COMPLETE, false)
-        {
-            Version = 0x03;
-
-            Size += 40;
-
-            Payload = payload;
-
-            Size += payload.PayloadSize;
-        }
-
-        internal override UnsignedTransaction Prepare()
-        {
-            var tBytes = base.Serialize(Size - 8 - Payload.PayloadSize);
-
-            return new UnsignedTransaction()
-            {
-                Payload = [.. tBytes[0], .. Serialize()],
-                VerifiablePayload = tBytes[1]
-            };
-        }
-
-        internal override void Extend(DataSerializer serializer)
-        {
-            serializer.SerializeProperty(Payload.TransactionsHash);
-        }
 
         internal byte[] Serialize()
         {
             lock (this)
             {
-                DataSerializer serializer = new DataSerializer(8 + Payload.PayloadSize, 0);
+                DataSerializer serializer = new DataSerializer(8 + PayloadSize, 0);
 
-                serializer.SerializeProperty(Payload.PayloadSize);
+                serializer.SerializeProperty(PayloadSize);
                 serializer.SerializeProperty(new byte[4]);
 
-                foreach (byte[] p in Payload.EmbeddedTransactionsPayload)
+                foreach (byte[] p in EmbeddedTransactionsPayload)
                     serializer.SerializeProperty(p);
 
                 return serializer.GetBytes()[0];
             }
         }
 
-        public override AggregateTransaction SetSigner(string signer)
+        internal override void Extend(DataSerializer serializer)
         {
-            Signer = signer.FromHex();
-
-            return this;
+            serializer.SerializeProperty(TransactionsHash);
         }
 
-        public override void SetVersion(byte version)
+        internal override int AddSize()
         {
-            if (version > 3) throw new Exception("invalid version");
-
-            Version = version;
+            return (int)PayloadSize + 40;
         }
+
+        internal override byte SetVersion()
+        {
+            return 0x01;
+        }
+
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.AGGREGATE_COMPLETE;
+        }
+
+    }
+
+    public class AggregateTransaction<T> : VerifiableTransaction where T : TransactionExtension
+    {
+        public AggregatePayload Payload { get; set; }
+
+        public AggregateTransaction(AggregatePayload payload, TransactionTypes.Types type, ulong fee)
+        {
+            
+            Payload = payload;
+            Size += (uint)Payload.AddSize();
+            Type = type.GetValue();
+            Version = 0x03;
+            Fee = DataConverter.ConvertFrom(fee);
+        }
+
+        internal override UnsignedTransaction Prepare()
+        {
+            var tBytes = base.Serialize(Size - Payload.PayloadSize - 8);
+
+            return new UnsignedTransaction()
+            {
+                Payload = [.. tBytes[0], .. Payload.Serialize()],
+                VerifiablePayload = tBytes[1]
+            };
+        }
+
+        internal override void Extend(DataSerializer serializer) => Payload.Extend(serializer);
+
     }
 }

@@ -3,7 +3,7 @@ using io.nem2.sdk.Model.Articles;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {
-    public class MosaicDefinitionTransaction : VerifiableTransaction
+    public class MosaicDefinitionTransaction : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -14,19 +14,13 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
             serializer.SerializeProperty(Divisibility);
         }
 
-        public MosaicDefinitionTransaction(TransactionTypes.Types type, bool embedded) : base(TransactionTypes.Types.MOSAIC_DEFINITION, embedded) { }
-
-        public MosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties, bool embedded) : base(TransactionTypes.Types.MOSAIC_DEFINITION, embedded) 
+        public MosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties) 
         {
-            Version = 0x01;
-
             MosaicId = id.FromHex().Reverse().ToArray();
             Duration = properties.Duration;
             Flags = properties.GetFlags();
             Nonce = nonce;
             Divisibility = properties.Divisibility;
-
-            Size += 22;
         }
 
         public byte[] MosaicId { get; set; }
@@ -39,18 +33,19 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 
         public byte Divisibility { get; set; }
 
-        public override MosaicDefinitionTransaction SetSigner(string signer)
+        internal override int AddSize()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return 22;
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.MOSAIC_DEFINITION;
         }
     }
 }

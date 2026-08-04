@@ -4,7 +4,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {
-    public class MosaicReclamationTransaction : VerifiableTransaction
+    public class MosaicReclamationTransaction : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -13,12 +13,8 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
             serializer.SerializeProperty(Amount);
         }
 
-        public MosaicReclamationTransaction(Address debtorImposed, string mosaicId, ulong amount, bool embedded) : base (TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION, embedded)
+        public MosaicReclamationTransaction(Address debtorImposed, string mosaicId, ulong amount)
         {
-            Version = 0x01;
-
-            Size += 40;
-
             DebtorImposed = AddressEncoder.DecodeAddress(debtorImposed.Plain);
             MosaicId = mosaicId.FromHex().Reverse().ToArray();
             Amount = amount;          
@@ -30,18 +26,19 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 
         public ulong Amount { get; set; }
 
-        public override MosaicReclamationTransaction SetSigner(string signer)
+        internal override int AddSize()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return 40;
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.TOKEN_RECLAMATION;
         }
     }
 }

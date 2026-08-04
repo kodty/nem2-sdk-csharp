@@ -4,8 +4,93 @@ using TweetNaclSharp;
 
 namespace io.nem2.sdk.Model.Transactions
 {
+    public abstract class TransactionExtension
+    {
+        internal abstract void Extend(DataSerializer serializer);
+        internal abstract int AddSize();
+        internal abstract byte SetVersion();
+        internal abstract TransactionTypes.Types SetType();
+    }
+
+    public class SimpleTransaction : VerifiableTransaction
+    {
+        public SimpleTransaction(TransactionExtension extension, NetworkType.Types networkType, ulong fee)
+        {
+            TransactionExtension = extension;
+            Size += (uint)TransactionExtension.AddSize();
+
+            base.Version = TransactionExtension.SetVersion();
+            base.Network = networkType.GetNetworkByte();
+            base.Type = TransactionExtension.SetType().GetValue();
+            
+            base.Fee = DataConverter.ConvertFrom(fee);
+        }
+
+        internal override void Extend(DataSerializer serializer) => TransactionExtension.Extend(serializer);
+
+        public TransactionExtension TransactionExtension { get; set; }
+
+        
+    }
+
+    public class SubTransaction : Transaction
+    {
+        public SubTransaction(TransactionExtension extension, NetworkType.Types networkType)
+        {
+            TransactionExtension = extension;
+            Size += (uint)TransactionExtension.AddSize();
+
+            Version = TransactionExtension.SetVersion();
+            Network = networkType.GetNetworkByte();
+            Type = TransactionExtension.SetType().GetValue();  
+        }
+
+        internal override void Extend(DataSerializer serializer) => TransactionExtension.Extend(serializer);
+
+        public TransactionExtension TransactionExtension { get; set;}
+
+        internal override byte[][] Serialize(uint size)
+        {
+            lock (this)
+            {
+                DataSerializer serializer = new DataSerializer(size, 44);
+
+                serializer.SerializeProperty(Size);
+                serializer.SerializeProperty(new byte[4]);
+                serializer.SerializeProperty(Signer);
+                serializer.SerializeProperty(new byte[4]);
+                serializer.SerializeProperty(Version);
+                serializer.SerializeProperty(Network);
+                serializer.SerializeProperty(Type);
+
+                Extend(serializer);
+
+                return serializer.GetBytes();
+            }
+        }
+    }
+
     public abstract class Transaction
     {
+        public static Transaction Create(TransactionExtension transaction, NetworkType.Types networkType)
+        {
+            return new SubTransaction(transaction, networkType);
+        }
+
+        public Transaction SetSigner(string signer)
+        {
+            Signer = signer.FromHex();
+
+            return this;
+        }
+
+        public void SetVersion(byte version)
+        {
+            if (version > 3) throw new Exception("invalid version");
+
+            Version = version;
+        }
+
         public uint Size { get; set; }
 
         public byte[] Signer { get; set; }
@@ -16,30 +101,20 @@ namespace io.nem2.sdk.Model.Transactions
 
         public ushort Type { get; set; }
 
-        internal bool IsEmbedded { get; set; }
-
-        public abstract Transaction SetSigner(string signer);
-
-        public abstract void SetVersion(byte version);
-
         internal abstract byte[][] Serialize(uint size);
 
         internal abstract void Extend(DataSerializer serializer);
 
-        public Transaction(TransactionTypes.Types type, bool isEmbedded)
+        public Transaction()
         {
-            IsEmbedded = isEmbedded;
-
             Size += 48;
-
-            Type = type.GetValue();
         }
 
         internal virtual UnsignedTransaction Prepare()
         {
             byte[][] tBytes = new byte[2][];
 
-            if (IsEmbedded && Size % 8 != 0)
+            if (Size % 8 != 0)
                 Size += (uint)((Math.Ceiling((decimal)Size / 8) * 8) - Size);
             
             tBytes = this.Serialize(Size);
@@ -64,73 +139,22 @@ namespace io.nem2.sdk.Model.Transactions
     }
     public abstract class VerifiableTransaction : Transaction
     {
-        public VerifiableTransaction(TransactionTypes.Types type, bool isEmbedded) : base(type, isEmbedded)
+
+        public static SimpleTransaction Create(TransactionExtension transaction, NetworkType.Types networkType, ulong fee)
         {
-            if(!isEmbedded)
-                Size += 80;
+            return new SimpleTransaction(transaction, networkType, fee);
+        }
+
+        public VerifiableTransaction()
+        {
+            Size += 80;
 
             Signature = new byte[64];   
         }
 
-        private byte[] _Signature { get; set; }
-        private byte[] _Fee { get; set; }
-        private byte[] _Deadline { get; set; }
-        public byte[] Signature
-        {
-            get
-            {
-                if (IsEmbedded)
-                {
-                    return new byte[] { };
-                }
-                else return _Signature;
-            }
-            set
-            {
-                if (_Signature != value && !IsEmbedded)
-                {
-                    _Signature = value;
-                }
-            }
-        }
-
-        public byte[] Fee
-        {
-            get
-            {
-                if (IsEmbedded)
-                {
-                    return new byte[] { };
-                }
-                else return _Fee;
-            }
-            set
-            {
-                if (_Fee != value && !IsEmbedded)
-                {
-                    _Fee = value;
-                }
-            }
-        }
-
-        public byte[] Deadline
-        {
-            get
-            {
-                if (IsEmbedded)
-                {
-                    return new byte[] { };
-                }
-                else return _Deadline;
-            }
-            set
-            {
-                if (_Deadline != value && !IsEmbedded)
-                {
-                    _Deadline = value;
-                }
-            }
-        }
+        public byte[] Signature { get; set; }
+        public byte[] Fee { get; set; }
+        public byte[] Deadline { get; set; }
 
         public SignedTransaction SignTransaction(SecretKeyPair keyPair, string networkGenHash) => SignTransaction(keyPair, networkGenHash.FromHex());
 
@@ -139,7 +163,7 @@ namespace io.nem2.sdk.Model.Transactions
             var tBytes = Prepare();
 
             byte[] signBytes = [.. networkGenHash, .. tBytes.VerifiablePayload];
-     
+
             this.Signature = NaclFast.SignDetached(msg: signBytes, signer.SecretKey.ToArray());
 
             for (int x = 0; x < 64; x++)
@@ -155,11 +179,37 @@ namespace io.nem2.sdk.Model.Transactions
             };
         }
 
+        internal override UnsignedTransaction Prepare()
+        {
+            byte[][] tBytes = new byte[2][];
+
+            tBytes = this.Serialize(Size);
+            
+            return new UnsignedTransaction()
+            {
+                Payload = tBytes[0],
+                VerifiablePayload = tBytes[1]
+            };
+        }
+
+        public static byte[] HashTransaction(byte[] signature, byte[] signer, byte[] signBytes)
+        {
+            var hash = new byte[32];
+
+            var sha3Hasher = new Sha3Digest(256);
+            sha3Hasher.BlockUpdate(signature, 0, signature.Length);
+            sha3Hasher.BlockUpdate(signer, 0, signer.Length);
+            sha3Hasher.BlockUpdate(signBytes, 0, signBytes.Length);
+            sha3Hasher.DoFinal(hash, 0);
+
+            return hash;
+        }
+
         internal override byte[][] Serialize(uint size)
         {
             lock (this)
             {
-                DataSerializer serializer = new DataSerializer(size, IsEmbedded ? 44 : 108);
+                DataSerializer serializer = new DataSerializer(size, 108);
 
                 serializer.SerializeProperty(Size);
                 serializer.SerializeProperty(new byte[4]);
@@ -176,19 +226,6 @@ namespace io.nem2.sdk.Model.Transactions
 
                 return serializer.GetBytes();
             }
-        }
-
-        public static byte[] HashTransaction(byte[] signature, byte[] signer, byte[] signBytes)
-        {
-            var hash = new byte[32];
-
-            var sha3Hasher = new Sha3Digest(256);
-            sha3Hasher.BlockUpdate(signature, 0, signature.Length);
-            sha3Hasher.BlockUpdate(signer, 0, signer.Length);
-            sha3Hasher.BlockUpdate(signBytes, 0, signBytes.Length);
-            sha3Hasher.DoFinal(hash, 0);
-
-            return hash;
         }
     }
 }

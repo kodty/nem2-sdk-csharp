@@ -6,7 +6,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public class TransferTransaction_V1 : VerifiableTransaction
+    public class TransferTransaction_V1 : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -32,34 +32,30 @@ namespace io.nem2.sdk.Model.Transactions
 
         public byte[] Message { get; set; }
 
-        public TransferTransaction_V1(Address address, IMessage messege, Mosaic mosaic, bool isEmbedded) : base(TransactionTypes.Types.TRANSFER, isEmbedded)
+        public TransferTransaction_V1(Address address, IMessage messege, Mosaic mosaic)
         {
-            // extended transaction size excluding variable length fields
-            Size += 48;
-
-            Version = 0x01;
             Address = AddressEncoder.DecodeAddress(address.Plain);         
             MosaicId = DataConverter.ConvertFrom(mosaic.MosaicId.Id).Reverse().ToArray();
             MosaicAmount = mosaic.Amount;
             MosaicsCount = 1;
             Message = messege.GetPayload();    
             MessegeSize = (ushort)Message.Length;
-
-            Size += MessegeSize;
+            
         }
 
-        public override TransferTransaction_V1 SetSigner(string signer)
+        internal override int AddSize() 
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return 48 + MessegeSize;
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.TRANSFER;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
             serializer.SerializeProperty(Value);
         }
 
-        public NamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, ushort valueSizeDelta, ushort valueSize, byte[] value) : base(TransactionTypes.Types.NAMESPACE_METADATA) 
+        public NamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, ushort valueSizeDelta, ushort valueSize, byte[] value) : base(targetAddress, scopedKey, valueSizeDelta, valueSize, value) 
         {
             TargetAddress = AddressEncoder.DecodeAddress(targetAddress);
             ScopedMetadataKey = scopedKey.FromHex();
@@ -23,32 +23,23 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
             ValueSizeDelta = valueSizeDelta;
             ValueSize = valueSize;
             Value = value;
-            
-            Size += 24;
-            Size += (uint)Value.Length;
-            Size += (uint)TargetAddress.Length;
         }
 
         public byte[] TargetNamespaceId { get; set; }
 
-        public override NamespaceMetadataTransaction SetSigner(string signer)
+        internal override int AddSize()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return TargetAddress.Length + ScopedMetadataKey.Length + TargetNamespaceId.Length + 4 + Value.Length;
         }
 
-        [Obsolete("This transaction is only available as an aggregate embedded transaction", true)]
-        public new SignedTransaction WrapVerified(SecretKeyPair signer, string genHash)
+        internal override byte SetVersion()
         {
-            return null;
+            return 0x01;
         }
 
-        public override void SetVersion(byte version)
+        internal override TransactionTypes.Types SetType()
         {
-            if (version > 3) throw new Exception("invalid version");
-
-            Version = version;
+            return TransactionTypes.Types.NAMESPACE_METADATA;
         }
     }
 }

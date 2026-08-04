@@ -2,7 +2,7 @@
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 {
-    public class LockFundsTransaction : VerifiableTransaction
+    public class LockFundsTransaction : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -13,17 +13,12 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
         }
 
 
-        public LockFundsTransaction(string mosaic, ulong amount, ulong duration, string transactionHash, bool isEmbedded) : base(TransactionTypes.Types.HASH_LOCK, isEmbedded)
+        public LockFundsTransaction(string mosaic, ulong amount, ulong duration, string transactionHash)
         {
-            Size += 48;
-
-            Version = 0x01;
             Mosaic = mosaic.FromHex().Reverse().ToArray();
             Amount = amount;
             Duration = duration;
             TransactionHash = transactionHash.FromHex();
-
-            Size += (uint)Mosaic.Length;
         }
 
         public byte[] Mosaic { get; set; }
@@ -34,18 +29,19 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 
         public byte[] TransactionHash { get; set; }
 
-        public override LockFundsTransaction SetSigner(string signer)
+        internal override int AddSize()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return 48 + Mosaic.Length;
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.HASH_LOCK;
         }
     }
 }

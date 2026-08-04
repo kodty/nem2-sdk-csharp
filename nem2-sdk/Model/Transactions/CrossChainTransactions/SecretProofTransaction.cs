@@ -3,7 +3,7 @@ using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 {
-    public class SecretProofTransaction : VerifiableTransaction
+    public class SecretProofTransaction : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -14,14 +14,8 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             serializer.SerializeProperty(Proof);
         }
 
-        public SecretProofTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) {}
-
-        public SecretProofTransaction(string recipient, string secret, HashType.Types hashAlgo, string proof, bool embedded) : base(TransactionTypes.Types.SECRET_PROOF, embedded)
+        public SecretProofTransaction(string recipient, string secret, HashType.Types hashAlgo, string proof)
         {
-            Version = 0x01;
-
-            Size += 59;
-
             Secret = secret.FromHex();
             HashAlgo = hashAlgo.GetHashTypeValue();
             Proof = proof.FromHex();
@@ -29,8 +23,6 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             Recipient = recipient.IsBase32()
                       ? AddressEncoder.DecodeAddress(recipient)
                       : recipient.FromHex();
-
-            Size += (uint)Proof.Length;
         }
 
         public byte[] Recipient { get; set; }
@@ -43,18 +35,19 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 
         public byte[] Proof { get; set; }
 
-        public override SecretProofTransaction SetSigner(string signer)
+        internal override int AddSize() 
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return Proof.Length + 59;
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.SECRET_PROOF;
         }
     }
 }

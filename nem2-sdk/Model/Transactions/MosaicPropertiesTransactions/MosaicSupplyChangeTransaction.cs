@@ -5,7 +5,7 @@ using io.nem2.sdk.Model.Transactions;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {   
-    public class MosaicSupplyChangeTransaction : VerifiableTransaction
+    public class MosaicSupplyChangeTransaction : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -14,15 +14,11 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
             serializer.SerializeProperty(SupplyType);
         }
 
-        public MosaicSupplyChangeTransaction(TransactionTypes.Types type, bool embedded) : base(type, embedded) { }
-
-        public MosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, bool embedded) : base(TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE, embedded)
+        public MosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType)
         {
-            Version = 0x01;
             MosaicId = mosaicId.FromHex().Reverse().ToArray();
             Delta = delta;
             SupplyType = supplyType.GetValue();
-            Size += 17;
         }
 
         public byte[] MosaicId { get; set; }
@@ -31,18 +27,19 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 
         public byte SupplyType { get; set; }
 
-        public override MosaicSupplyChangeTransaction SetSigner(string signer)
+        internal override int AddSize()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return 17;
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.MOSAIC_SUPPLY_CHANGE;
         }
     }
 }

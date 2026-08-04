@@ -6,15 +6,13 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(TargetAddress);
-            serializer.SerializeProperty(ScopedMetadataKey);
+            serializer.SerializeProperty(base.TargetAddress);
+            serializer.SerializeProperty(base.ScopedMetadataKey);
             serializer.SerializeProperty(TargetMosaicId);
-            serializer.SerializeProperty(ValueSizeDelta);
-            serializer.SerializeProperty(ValueSize);
-            serializer.SerializeProperty(Value);
+            serializer.SerializeProperty(base.ValueSizeDelta);
+            serializer.SerializeProperty(base.ValueSize);
+            serializer.SerializeProperty(base.Value);
         }
-
-        public MosaicMetadataTransaction(TransactionTypes.Types type) : base(TransactionTypes.Types.MOSAIC_METADATA) { }
 
         public MosaicMetadataTransaction(string targetAddress, string targetMosaicId, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value) : base(targetAddress,  scopedKey,  valueSizeDelta,  valueSize, value)
         {
@@ -23,25 +21,19 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 
         public byte[] TargetMosaicId { get; set; }
 
-
-        [Obsolete("This transaction is only available as an aggregate embedded transaction", true)]
-        public new SignedTransaction WrapVerified(SecretKeyPair signer, string genHash)
+        internal override int AddSize()
         {
-            return null;
+            return 44 + Value.Length;
         }
 
-        public override AccountMetadataTransaction SetSigner(string signer)
+        internal override byte SetVersion()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return 0x01;
         }
 
-        public override void SetVersion(byte version)
+        internal override TransactionTypes.Types SetType()
         {
-            if (version > 3) throw new Exception("invalid version");
-
-            Version = version;
+            return TransactionTypes.Types.MOSAIC_METADATA;
         }
     }
 }

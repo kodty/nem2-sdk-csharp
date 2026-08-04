@@ -6,7 +6,7 @@ using System.Text;
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public class RegisterNamespace : VerifiableTransaction
+    public class RegisterNamespace : TransactionExtension
     {
         internal override void Extend(DataSerializer serializer)
         {
@@ -18,16 +18,14 @@ namespace io.nem2.sdk.Model.Transactions
             serializer.SerializeProperty(Name);
         }
 
-        public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, bool embedded) : base(TransactionTypes.Types.NAMESPACE_REGISTRATION, embedded)
+        public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name) 
         {
-            Version = 0x01;
             _Duration = duration;
             _ParentId = parentId;
             Id = DataConverter.ConvertFrom(id).Reverse().ToArray();
             RegistrationType = type.GetValue();
             Name = Encoding.UTF8.GetBytes(name);
             NameSize = (byte)Name.Length;
-            Size += 18 + (uint)Name.Length;
         }
 
         internal ulong _Duration { get; set; }
@@ -69,18 +67,19 @@ namespace io.nem2.sdk.Model.Transactions
 
         public byte[] Name { get; internal set; }
 
-        public override RegisterNamespace SetSigner(string signer)
+        internal override int AddSize()
         {
-            Signer = signer.FromHex();
-
-            return this;
+            return 18 + Name.Length;
         }
 
-        public override void SetVersion(byte version)
+        internal override byte SetVersion()
         {
-            if (version > 3) throw new Exception("invalid version");
+            return 0x01;
+        }
 
-            Version = version;
+        internal override TransactionTypes.Types SetType()
+        {
+            return TransactionTypes.Types.NAMESPACE_REGISTRATION;
         }
     }
 }

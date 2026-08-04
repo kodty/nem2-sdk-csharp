@@ -317,7 +317,7 @@ namespace Integration_Tests.HttpRequests
 
             Assert.IsTrue(Voting.SignerPublicKey.IsHex(64));
             Assert.That(Voting.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
-            Assert.That(Voting.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.MOSAIC_SUPPLY_REVOCATION));
+            Assert.That(Voting.Type.GetRawValue(), Is.EqualTo(TransactionTypes.Types.TOKEN_RECLAMATION));
             Assert.That(Voting.Version, Is.EqualTo(1));
             Assert.IsTrue(Voting.MosaicId.IsHex(16));
             Assert.IsTrue(Voting.SourceAddress.IsHex(48));
