@@ -14,16 +14,16 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
             serializer.SerializeProperty(Divisibility);
         }
 
-        public MosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties) 
+        public MosaicDefinitionTransaction(ulong id, uint nonce, MosaicProperties properties) 
         {
-            MosaicId = id.FromHex().Reverse().ToArray();
+            MosaicId = id;
             Duration = properties.Duration;
             Flags = properties.GetFlags();
             Nonce = nonce;
             Divisibility = properties.Divisibility;
         }
 
-        public byte[] MosaicId { get; set; }
+        public ulong MosaicId { get; set; }
 
         public ulong Duration { get; set; }
 

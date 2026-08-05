@@ -13,16 +13,16 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
             serializer.SerializeProperty(Amount);
         }
 
-        public MosaicReclamationTransaction(Address debtorImposed, string mosaicId, ulong amount)
+        public MosaicReclamationTransaction(Address debtorImposed, ulong mosaicId, ulong amount)
         {
             DebtorImposed = AddressEncoder.DecodeAddress(debtorImposed.Plain);
-            MosaicId = mosaicId.FromHex().Reverse().ToArray();
+            MosaicId = mosaicId;
             Amount = amount;          
         }
 
         public byte[] DebtorImposed { get; set; }
 
-        public byte[] MosaicId { get; set; }
+        public ulong MosaicId { get; set; }
 
         public ulong Amount { get; set; }
 

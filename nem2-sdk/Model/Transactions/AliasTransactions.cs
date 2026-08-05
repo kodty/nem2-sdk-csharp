@@ -5,13 +5,13 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public abstract class AliasTransaction : TransactionExtension
     {
-        public AliasTransaction(TransactionTypes.Types type, string namespaceId, byte aliasAction) 
+        public AliasTransaction(TransactionTypes.Types type, ulong namespaceId, byte aliasAction) 
         {         
-            NamespaceId = namespaceId.FromHex().Reverse().ToArray();
+            NamespaceId = namespaceId;
             AliasAction = aliasAction;
         }
 
-        public byte[] NamespaceId { get; set; }
+        public ulong NamespaceId { get; set; }
 
         public byte AliasAction { get; set; }
 
@@ -23,7 +23,7 @@ namespace io.nem2.sdk.Model.Transactions
 
     public class AddressAliasTransaction : AliasTransaction
     {
-        public AddressAliasTransaction(string address, string namespaceId, byte aliasAction) : base(TransactionTypes.Types.ADDRESS_ALIAS, namespaceId, aliasAction)
+        public AddressAliasTransaction(string address, ulong namespaceId, byte aliasAction) : base(TransactionTypes.Types.ADDRESS_ALIAS, namespaceId, aliasAction)
         {
             Address = address.IsBase32()
                       ? AddressEncoder.DecodeAddress(address)
@@ -52,9 +52,9 @@ namespace io.nem2.sdk.Model.Transactions
 
     public class MosaicAliasTransaction : AliasTransaction
     {
-        public MosaicAliasTransaction(string mosaicId, string namespaceId, byte aliasAction) : base(TransactionTypes.Types.MOSAIC_ALIAS, namespaceId, aliasAction)
+        public MosaicAliasTransaction(ulong mosaicId, ulong namespaceId, byte aliasAction) : base(TransactionTypes.Types.MOSAIC_ALIAS, namespaceId, aliasAction)
         {
-            MosaicId = mosaicId.FromHex().Reverse().ToArray();
+            MosaicId = mosaicId;
         }
 
         internal override void Extend(DataSerializer serializer)
@@ -64,7 +64,7 @@ namespace io.nem2.sdk.Model.Transactions
             serializer.SerializeProperty(AliasAction);
         }
 
-        public byte[] MosaicId { get; set; }
+        public ulong MosaicId { get; set; }
 
         internal override int AddSize()
         {

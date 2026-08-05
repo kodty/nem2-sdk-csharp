@@ -26,7 +26,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public byte MosaicsCount { get; set; }
 
-        public byte[] MosaicId { get; set; }
+        public ulong MosaicId { get; set; }
 
         public ulong MosaicAmount { get; set; }
 
@@ -35,7 +35,7 @@ namespace io.nem2.sdk.Model.Transactions
         public TransferTransaction_V1(Address address, IMessage messege, Mosaic mosaic)
         {
             Address = AddressEncoder.DecodeAddress(address.Plain);         
-            MosaicId = DataConverter.ConvertFrom(mosaic.MosaicId.Id).Reverse().ToArray();
+            MosaicId = mosaic.MosaicId.Id;
             MosaicAmount = mosaic.Amount;
             MosaicsCount = 1;
             Message = messege.GetPayload();    

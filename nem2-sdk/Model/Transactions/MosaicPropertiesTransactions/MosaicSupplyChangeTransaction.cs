@@ -14,14 +14,14 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
             serializer.SerializeProperty(SupplyType);
         }
 
-        public MosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType)
+        public MosaicSupplyChangeTransaction(ulong delta, ulong mosaicId, MosaicSupplyType.Type supplyType)
         {
-            MosaicId = mosaicId.FromHex().Reverse().ToArray();
+            MosaicId = mosaicId;
             Delta = delta;
             SupplyType = supplyType.GetValue();
         }
 
-        public byte[] MosaicId { get; set; }
+        public ulong MosaicId { get; set; }
 
         public ulong Delta { get; set; }
 

@@ -27,25 +27,67 @@
             _BufferTwo[_offset1++ - dif] = value;
         }
 
-        public void SerializeProperty(uint value)
-        {
-            var source = DataConverter.ConvertFrom(value);
-
-            SerializeProperty(source);
-        }
-
         public void SerializeProperty(ushort value)
         {
-            var source = DataConverter.ConvertFrom(value);
-        
-            SerializeProperty(source);
+            for (var x = 0; x < 2; x++)
+            {
+                byte v = (byte)(value >> x * 8);
+
+                _BufferOne[_offset1 + x] = v;
+                _BufferTwo[_offset1 - dif + x] = v;
+            }
+
+            _offset1 += 2;
+        }
+
+        public void SerializeProperty(uint value)
+        {
+            if (!Exclude.Contains(_offset1))
+            {
+                for (var x = 0; x < 4; x++)
+                {
+                    byte v = (byte)(value >> x * 8);
+
+                    _BufferOne[_offset1 + x] = v;
+                    _BufferTwo[_offset1 - dif + x] = v;
+                }
+            }
+            else
+            {
+                for (var x = 0; x < 4; x++)
+                {
+                    _BufferOne[_offset1 + x] = (byte)(value >> x * 8);
+                }
+
+                dif += 4;
+            }
+
+            _offset1 += 4;
         }
 
         public void SerializeProperty(ulong value)
         {
-            var source = DataConverter.ConvertFrom(value);
+            if (!Exclude.Contains(_offset1))
+            {
+                for (var x = 0; x < 8; x++)
+                {
+                    byte v = (byte)(value >> x * 8);
 
-            SerializeProperty(source);
+                    _BufferOne[_offset1 + x] = v; 
+                    _BufferTwo[_offset1 - dif + x] = v;
+                }
+            }
+            else
+            {
+                for (var x = 0; x < 8; x++)
+                {
+                    _BufferOne[_offset1 + x] = (byte)(value >> x * 8);
+                }
+
+                dif += 8;
+            }
+
+            _offset1 += 8;
         }
 
         public void SerializeProperty(byte[] value)

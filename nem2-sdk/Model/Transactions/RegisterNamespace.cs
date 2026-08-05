@@ -22,7 +22,7 @@ namespace io.nem2.sdk.Model.Transactions
         {
             _Duration = duration;
             _ParentId = parentId;
-            Id = DataConverter.ConvertFrom(id).Reverse().ToArray();
+            Id = DataConverter.ConvertFrom(id);
             RegistrationType = type.GetValue();
             Name = Encoding.UTF8.GetBytes(name);
             NameSize = (byte)Name.Length;
@@ -53,7 +53,7 @@ namespace io.nem2.sdk.Model.Transactions
                 if (RegistrationType == 0x00)
                     return new byte[] { };
                 else if (RegistrationType == 0x01)
-                    return DataConverter.ConvertFrom(_ParentId).Reverse().ToArray();
+                    return DataConverter.ConvertFrom(_ParentId);
                 else
                     throw new Exception("invalid registration type");
             }

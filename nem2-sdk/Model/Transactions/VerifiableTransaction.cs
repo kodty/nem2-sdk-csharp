@@ -24,9 +24,9 @@ namespace io.nem2.sdk.Model.Transactions
 
         public byte[] Signature { get; set; }
 
-        public byte[] Fee { get; set; }
+        public ulong Fee { get; set; }
 
-        public byte[] Deadline { get; set; }
+        public ulong Deadline { get; set; }
 
         public abstract bool IsAggregate();
 

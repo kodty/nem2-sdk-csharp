@@ -26,7 +26,7 @@ namespace io.nem2.sdk.Model.Articles
 
         public MosaicId(string hexId)
         {
-            Id = hexId.FromHex().ConvertTo<ulong>();
+            Id = hexId.FromHex().Reverse().ToArray().ConvertTo<ulong>();
 
             HexId = hexId;
         }

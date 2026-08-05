@@ -13,8 +13,8 @@ namespace io.nem2.sdk.Model.Transactions
             base.Network = networkType.GetNetworkByte();
             base.Type = TransactionExtension.SetType().GetValue();
 
-            base.Fee = DataConverter.ConvertFrom(fee);
-            base.Deadline = DataConverter.ConvertFrom(deadline.Ticks);
+            base.Fee = fee;
+            base.Deadline = deadline.Ticks;
         }
 
         internal override void Extend(DataSerializer serializer) => TransactionExtension.Extend(serializer);
@@ -38,8 +38,8 @@ namespace io.nem2.sdk.Model.Transactions
             base.Network = networkType.GetNetworkByte();
             base.Type = TransactionExtension.SetType().GetValue();
 
-            base.Fee = DataConverter.ConvertFrom(fee);
-            base.Deadline = DataConverter.ConvertFrom(deadline.Ticks);
+            base.Fee = fee;
+            base.Deadline = deadline.Ticks;
         }
 
         internal override void Extend(DataSerializer serializer) => TransactionExtension.Extend(serializer);

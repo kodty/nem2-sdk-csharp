@@ -1,5 +1,4 @@
-﻿using Coppery;
-using io.nem2.sdk.Model.Accounts;
+﻿using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.AccountRestrictions;
@@ -46,7 +45,7 @@ namespace io.nem2.sdk.Model
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(Deadline.AddHours(1, NetworkType).Ticks)
+                Deadline = Deadline.AddHours(1, NetworkType).Ticks
             };
         }
 
@@ -91,7 +90,7 @@ namespace io.nem2.sdk.Model
             return CreateTransaction(new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction), fee);
         }
 
-        public SimpleTransaction<AddressAliasTransaction> CreateAddressAliasTransaction(string address, string namepaceId, byte aliasAction, ulong fee)
+        public SimpleTransaction<AddressAliasTransaction> CreateAddressAliasTransaction(string address, ulong namepaceId, byte aliasAction, ulong fee)
         {
             return CreateTransaction(new AddressAliasTransaction(address, namepaceId, aliasAction), fee);
         }
@@ -101,7 +100,7 @@ namespace io.nem2.sdk.Model
             return CreateTransaction(new AccountMetadataTransaction(targetAddress, scopedKey, valueSizeDelta, valueSize, value), fee);
         }
 
-        public SimpleTransaction<MosaicAliasTransaction> CreateMosaicAliasTransaction(string mosaicId, string namepaceId, byte aliasAction, ulong fee)
+        public SimpleTransaction<MosaicAliasTransaction> CreateMosaicAliasTransaction(ulong mosaicId, ulong namepaceId, byte aliasAction, ulong fee)
         {
             return CreateTransaction(new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction), fee);
         }
@@ -121,7 +120,7 @@ namespace io.nem2.sdk.Model
             return CreateTransaction(new NamespaceMetadataTransaction(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value), fee);
         }
 
-        public SimpleTransaction<MosaicDefinitionTransaction> CreateMosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties, ulong fee)
+        public SimpleTransaction<MosaicDefinitionTransaction> CreateMosaicDefinitionTransaction(ulong id, uint nonce, MosaicProperties properties, ulong fee)
         {
             return CreateTransaction(new MosaicDefinitionTransaction(id, nonce, properties), fee);
         }
@@ -136,12 +135,12 @@ namespace io.nem2.sdk.Model
             return CreateTransaction(new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, previousRestrictionType, newRestrictionType), fee);
         }
 
-        public SimpleTransaction<MosaicSupplyChangeTransaction> CreateMosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, ulong fee)
+        public SimpleTransaction<MosaicSupplyChangeTransaction> CreateMosaicSupplyChangeTransaction(ulong delta, ulong mosaicId, MosaicSupplyType.Type supplyType, ulong fee)
         {
             return CreateTransaction(new MosaicSupplyChangeTransaction(delta, mosaicId, supplyType), fee);
         }
 
-        public SimpleTransaction<MosaicReclamationTransaction> CreateMosaicReclamationTransaction(Address debtorImposed, string mosaicId, ulong amount, ulong fee)
+        public SimpleTransaction<MosaicReclamationTransaction> CreateMosaicReclamationTransaction(Address debtorImposed, ulong mosaicId, ulong amount, ulong fee)
         {
             return CreateTransaction(new MosaicReclamationTransaction(debtorImposed, mosaicId, amount), fee);
         }

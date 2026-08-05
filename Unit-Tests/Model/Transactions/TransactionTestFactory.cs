@@ -1,5 +1,4 @@
-﻿using Coppery;
-using io.nem2.sdk.Model;
+﻿using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions;
@@ -45,8 +44,8 @@ namespace Unit_Tests.Model.Transactions
             {
                 Signer = null,
                 Network = NetworkType.GetNetworkByte(),
-                Deadline = DataConverter.ConvertFrom(10101010101),
-                Fee = DataConverter.ConvertFrom(20202020202)
+                Deadline = 10101010101,
+                Fee = 20202020202
             };
         }
 
@@ -91,7 +90,7 @@ namespace Unit_Tests.Model.Transactions
             return CreateTransaction(new VotingKeyLinkTransaction(startEpoch, endEpoch, linkedPublicKey, linkAction), fee);
         }
 
-        public SimpleTransaction CreateAddressAliasTransaction(string address, string namepaceId, byte aliasAction, ulong fee)
+        public SimpleTransaction CreateAddressAliasTransaction(string address, ulong namepaceId, byte aliasAction, ulong fee)
         {
             return CreateTransaction(new AddressAliasTransaction(address, namepaceId, aliasAction), fee);
         }
@@ -101,7 +100,7 @@ namespace Unit_Tests.Model.Transactions
             return CreateTransaction(new AccountMetadataTransaction(targetAddress, scopedKey, valueSizeDelta, valueSize, value), fee);
         }
 
-        public SimpleTransaction CreateMosaicAliasTransaction(string mosaicId, string namepaceId, byte aliasAction, ulong fee)
+        public SimpleTransaction CreateMosaicAliasTransaction(ulong mosaicId, ulong namepaceId, byte aliasAction, ulong fee)
         {
             return CreateTransaction(new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction), fee);
         }
@@ -121,7 +120,7 @@ namespace Unit_Tests.Model.Transactions
             return CreateTransaction(new NamespaceMetadataTransaction(targetAddress, scopedKey, targetNamespaceId, valueSizeDelta, valueSize, value), fee);
         }
 
-        public SimpleTransaction CreateMosaicDefinitionTransaction(string id, uint nonce, MosaicProperties properties, ulong fee)
+        public SimpleTransaction CreateMosaicDefinitionTransaction(ulong id, uint nonce, MosaicProperties properties, ulong fee)
         {
             return CreateTransaction(new MosaicDefinitionTransaction(id, nonce, properties), fee);
         }
@@ -136,12 +135,12 @@ namespace Unit_Tests.Model.Transactions
             return CreateTransaction(new MosaicGlobalRestrictionTransaction(referenceMosaicId, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue, previousRestrictionType, newRestrictionType), fee);
         }
 
-        public SimpleTransaction CreateMosaicSupplyChangeTransaction(ulong delta, string mosaicId, MosaicSupplyType.Type supplyType, ulong fee)
+        public SimpleTransaction CreateMosaicSupplyChangeTransaction(ulong delta, ulong mosaicId, MosaicSupplyType.Type supplyType, ulong fee)
         {
             return CreateTransaction(new MosaicSupplyChangeTransaction(delta, mosaicId, supplyType), fee);
         }
 
-        public SimpleTransaction CreateMosaicReclamationTransaction(Address debtorImposed, string mosaicId, ulong amount, ulong fee)
+        public SimpleTransaction CreateMosaicReclamationTransaction(Address debtorImposed, ulong mosaicId, ulong amount, ulong fee)
         {
             return CreateTransaction(new MosaicReclamationTransaction(debtorImposed, mosaicId, amount), fee);
         }

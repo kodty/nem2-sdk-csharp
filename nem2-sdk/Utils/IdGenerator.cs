@@ -23,7 +23,7 @@ namespace io.nem2.sdk.Utils
         {
             var n = Encoding.UTF8.GetBytes(name);
 
-            return ReturnId(n, DataConverter.ConvertFrom(parentId).Reverse().ToArray(), isNamespace);
+            return ReturnId(n, DataConverter.ConvertFrom(parentId), isNamespace);
         }
 
         public static ulong ReturnId(byte[] n, byte[] p, bool isNamespace)
@@ -37,9 +37,9 @@ namespace io.nem2.sdk.Utils
 
             hash.DoFinal(result, 0);
 
-            result = result.Take(8).Reverse().ToArray();
+            result = result.Take(8).ToArray();
 
-            if (isNamespace) result[0] |= 128;
+            if (isNamespace) result[7] |= 128;
 
             return result.ConvertTo<ulong>();
         }    

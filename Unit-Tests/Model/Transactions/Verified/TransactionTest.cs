@@ -8,6 +8,7 @@ using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.CrossChainTransactions;
 using io.nem2.sdk.Model.Transactions.Messages;
 using io.nem2.sdk.Utils;
+using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace Unit_Tests.Model.Transactions.Verified
@@ -73,7 +74,7 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             transfer.SetSigner(keys.PublicKeyString);
 
-            transfer.Deadline = DataConverter.ConvertFrom(117756998097);
+            transfer.Deadline = 117756998097;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
 
@@ -97,7 +98,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                );
 
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(118252829489);
+            transfer.Deadline = 118252829489;
 
             var transferResult = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
 
@@ -114,7 +115,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 Deadline.AddHours(1));
 
             hashlock.SetSigner(keys.PublicKeyString);
-            hashlock.Deadline = DataConverter.ConvertFrom(118252829538);
+            hashlock.Deadline = 118252829538;
 
             var hashlockResult = keys.SignTransaction(hashlock, HttpSetUp.genHash.FromHex());
 
@@ -182,13 +183,13 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                  .CreateMosaicDefinitionTransaction(
-                    DataConverter.ConvertFrom(IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 827369870)).ToHex(),
+                    IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 827369870),
                     827369870,
                     new MosaicProperties(true, true, true, true, 6, 259200),
                     1000000);
 
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(118101078075);
+            transfer.Deadline = 118101078075;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
 
@@ -212,10 +213,10 @@ namespace Unit_Tests.Model.Transactions.Verified
                     100000);
 
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(118099407728);
+            transfer.Deadline = 118099407728;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
-
+            
             Assert.That(result.Payload.ToHex(), Is.EqualTo("98000000000000000A7E8459A239F63B9F01EBC5CFB4929A37574BE94574AFF683E0B46CB239D18E502329816E0BDA476856822A2B9EA4AF7EC54188D60E449FCE4585D7822EE901F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F70000000001984E41A08601000000000070F3457F1B00000080F403000000000086E4FDE34B139F8F0006706C61736D61"));
         }
 
@@ -236,7 +237,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                     100000);
 
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(118099685418);
+            transfer.Deadline = 118099685418;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
 
@@ -249,7 +250,7 @@ namespace Unit_Tests.Model.Transactions.Verified
         {
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
-            var id = DataConverter.ConvertFrom(IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 827369870)).ToHex();
+            var id = IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 827369870);
 
             var root = IdGenerator.GenerateId(0, "plasma", true);
 
@@ -258,12 +259,12 @@ namespace Unit_Tests.Model.Transactions.Verified
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                .CreateMosaicAliasTransaction(
                    id,
-                   DataConverter.ConvertFrom(sub).ToHex(),
+                   sub,
                    0x1,
                    1000000);
 
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(118099831562);
+            transfer.Deadline = 118099831562;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
 
@@ -282,12 +283,12 @@ namespace Unit_Tests.Model.Transactions.Verified
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicSupplyChangeTransaction(
                     10000000000000,
-                    DataConverter.ConvertFrom(sub).ToHex(),
+                    sub,
                     MosaicSupplyType.Type.INCREASE,
                     1000000);
 
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(118101233052);
+            transfer.Deadline = 118101233052;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
             
@@ -306,12 +307,12 @@ namespace Unit_Tests.Model.Transactions.Verified
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                 .CreateMosaicReclamationTransaction(
                     Address.CreateFromEncoded("TAKSZ42GO35ENLHYRUBKE6EMSM4UUQAKUACXB5A"),
-                    DataConverter.ConvertFrom(sub).ToHex(),
+                    sub,
                     100000000,
                     1000000);      
             
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(118250895120);
+            transfer.Deadline = 118250895120;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
 
@@ -335,7 +336,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(117986581510);
+            transfer.Deadline = 117986581510;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
 
@@ -357,7 +358,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(117994138799);
+            transfer.Deadline = 117994138799;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
 
@@ -378,7 +379,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(117996356712);
+            transfer.Deadline = 117996356712;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
 
@@ -399,7 +400,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
            
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(118001735974);
+            transfer.Deadline = 118001735974;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
 
@@ -420,7 +421,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(118001919791);
+            transfer.Deadline = 118001919791;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
 
@@ -442,7 +443,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
           
             transfer.SetSigner(keys.PublicKeyString);
-            transfer.Deadline = DataConverter.ConvertFrom(118006993952);
+            transfer.Deadline = 118006993952;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
 
