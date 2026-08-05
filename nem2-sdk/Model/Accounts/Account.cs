@@ -1,8 +1,7 @@
-﻿using Coppery;
-using System.Security.Cryptography;
-using Org.BouncyCastle.Crypto.Digests;
+﻿using Org.BouncyCastle.Crypto.Digests;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Infrastructure.Interfaces;
+using Org.BouncyCastle.Security;
 
 namespace io.nem2.sdk.Model.Accounts
 {
@@ -48,20 +47,9 @@ namespace io.nem2.sdk.Model.Accounts
 
         public static Account GenerateNewAccount(NetworkType.Types networkType)
         {
-            using (var ng = RandomNumberGenerator.Create())
-            {
-                var bytes = new byte[2048];
-                ng.GetNonZeroBytes(bytes);
+            var keyPair = SecretKeyPair.GenerateNewKeyPair();
 
-                var digestSha3 = new Sha3Digest(256);
-                var stepOne = new byte[32];
-                digestSha3.BlockUpdate(bytes, 0, 2048);
-                digestSha3.DoFinal(stepOne, 0);
-
-                var keyPair = SecretKeyPair.CreateFromPrivateKey(stepOne.ToHex());
-
-                return new Account(Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType), keyPair);
-            }         
+            return new Account(Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType), keyPair);                 
         }
     }
 }

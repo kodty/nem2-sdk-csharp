@@ -1,5 +1,7 @@
 ﻿using Coppery;
 using io.nem2.sdk.Model.Transactions;
+using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Security;
 using TweetNaclSharp;
 using TweetNaclSharp.Core.Extensions;
 
@@ -61,6 +63,26 @@ namespace io.nem2.sdk.Model
             var keyPair = NaclFast.SignKeyPairFromSeed(privateKeyArray);
 
             return new SecretKeyPair(keyPair.SecretKey);
+        }
+
+        public static SecretKeyPair CreateFromSeed(byte[] seed)
+        {
+            var keyPair = NaclFast.SignKeyPairFromSeed(seed);
+
+            return new SecretKeyPair(keyPair.SecretKey);
+        }
+
+        public static SecretKeyPair GenerateNewKeyPair()
+        {
+            var s = SecureRandom.GetInstance("SHA256PRNG");
+
+            var digestSha3 = new Sha3Digest(256);
+            var stepOne = new byte[32];
+            digestSha3.BlockUpdate(s.GenerateSeed(2048), 0, 2048);
+            digestSha3.DoFinal(stepOne, 0);
+            digestSha3.Reset();
+
+            return CreateFromSeed(stepOne);
         }
 
         public byte[] Sign(byte[] data)
