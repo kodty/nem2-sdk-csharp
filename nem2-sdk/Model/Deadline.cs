@@ -22,8 +22,9 @@
             switch (type)
             {
                 case NetworkType.Types.MAIN_NET:
-                    throw new Exception("Network unsupported code not tested sufficiently. Supported in development branch at your own risk"); //EpochDate = MainNet;
-            
+                    EpochDate = MainNet;
+                    break;
+
                 case NetworkType.Types.TEST_NET:
                     EpochDate = TestNet;
                     break;
