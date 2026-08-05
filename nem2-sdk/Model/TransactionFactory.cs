@@ -41,11 +41,10 @@ namespace io.nem2.sdk.Model
 
         public SimpleTransaction<T> CreateTransaction<T>(T transaction, ulong fee) where T : TransactionExtension
         {
-            return new SimpleTransaction<T>(transaction, NetworkType, fee, Deadline.AddHours(1))
+            return new SimpleTransaction<T>(transaction, NetworkType, fee, Deadline.AddHours(1, NetworkType))
             {
                 Signer = null,
-                Network = NetworkType.GetNetworkByte(),
-                Deadline = Deadline.AddHours(1, NetworkType).Ticks
+                Network = NetworkType.GetNetworkByte()
             };
         }
 
