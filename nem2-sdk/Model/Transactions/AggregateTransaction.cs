@@ -11,17 +11,15 @@ namespace io.nem2.sdk.Model.Transactions
 
         public UnsignedTransaction[] EmbeddedTransactions { get; set; }
 
-        public byte[][] EmbeddedTransactionsPayload { get; set; }
 
         public AggregatePayload(Transaction[] transactions)
         {
             EmbeddedTransactions = new UnsignedTransaction[transactions.Count()];
-            EmbeddedTransactionsPayload = new byte[transactions.Count()][];
 
             for (int i = 0; i < transactions.Count(); i++)
             {
                 EmbeddedTransactions[i] = transactions[i].Prepare();
-                EmbeddedTransactionsPayload[i] = EmbeddedTransactions[i].Payload;
+
                 PayloadSize += (uint)EmbeddedTransactions[i].Payload.Length;
             }
  
@@ -77,8 +75,8 @@ namespace io.nem2.sdk.Model.Transactions
             serializer.SerializeProperty(PayloadSize);
             serializer.SerializeProperty(new byte[4]);
 
-            foreach (byte[] p in EmbeddedTransactionsPayload)
-                serializer.SerializeProperty(p);
+            foreach (UnsignedTransaction p in EmbeddedTransactions)
+                serializer.SerializeProperty(p.Payload);
         }
 
         internal override int AddSize()
