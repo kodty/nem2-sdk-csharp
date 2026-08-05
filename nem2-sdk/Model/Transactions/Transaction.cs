@@ -4,6 +4,23 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public abstract class Transaction
     {
+        public uint Size { get; set; }
+
+        public byte[] Signer { get; set; }
+
+        public byte Version { get; set; }
+
+        public byte Network { get; set; }
+
+        public ushort Type { get; set; }
+
+        public Transaction()
+        {
+            Size += 48;
+        }
+
+        internal abstract void Extend(DataSerializer serializer);
+
         public static SubTransaction Create(TransactionExtension transaction, NetworkType.Types networkType)
         {
             return new SubTransaction(transaction, networkType);
@@ -28,25 +45,6 @@ namespace io.nem2.sdk.Model.Transactions
             Version = version;
         }
 
-        public uint Size { get; set; }
-
-        public byte[] Signer { get; set; }
-
-        public byte Version { get; set; }
-
-        public byte Network { get; set; }
-
-        public ushort Type { get; set; }
-
-        internal abstract byte[][] Serialize(uint size);
-
-        internal abstract void Extend(DataSerializer serializer);
-
-        public Transaction()
-        {
-            Size += 48;
-        }
-
         internal virtual UnsignedTransaction Prepare()
         {
             byte[][] tBytes = new byte[2][];
@@ -61,6 +59,26 @@ namespace io.nem2.sdk.Model.Transactions
                 Payload = tBytes[0],
                 VerifiablePayload = tBytes[1]
             };
+        }
+
+        internal virtual byte[][] Serialize(uint size)
+        {
+            lock (this)
+            {
+                DataSerializer serializer = new DataSerializer(size, 44);
+
+                serializer.SerializeProperty(Size);
+                serializer.SerializeProperty(new byte[4]);
+                serializer.SerializeProperty(Signer);
+                serializer.SerializeProperty(new byte[4]);
+                serializer.SerializeProperty(Version);
+                serializer.SerializeProperty(Network);
+                serializer.SerializeProperty(Type);
+
+                Extend(serializer);
+
+                return serializer.GetBytes();
+            }
         }
     }   
 }

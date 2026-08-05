@@ -17,26 +17,6 @@ namespace io.nem2.sdk.Model.Transactions
         internal override void Extend(DataSerializer serializer) => TransactionExtension.Extend(serializer);
 
         public TransactionExtension TransactionExtension { get; set; }
-
-        internal override byte[][] Serialize(uint size)
-        {
-            lock (this)
-            {
-                DataSerializer serializer = new DataSerializer(size, 44);
-
-                serializer.SerializeProperty(Size);
-                serializer.SerializeProperty(new byte[4]);
-                serializer.SerializeProperty(Signer);
-                serializer.SerializeProperty(new byte[4]);
-                serializer.SerializeProperty(Version);
-                serializer.SerializeProperty(Network);
-                serializer.SerializeProperty(Type);
-
-                Extend(serializer);
-
-                return serializer.GetBytes();
-            }
-        }
     }
 
     public class SubTransaction<T> : Transaction where T : TransactionExtension
@@ -54,25 +34,5 @@ namespace io.nem2.sdk.Model.Transactions
         internal override void Extend(DataSerializer serializer) => TransactionExtension.Extend(serializer);
 
         public T TransactionExtension { get; set; }
-
-        internal override byte[][] Serialize(uint size)
-        {
-            lock (this)
-            {
-                DataSerializer serializer = new DataSerializer(size, 44);
-
-                serializer.SerializeProperty(Size);
-                serializer.SerializeProperty(new byte[4]);
-                serializer.SerializeProperty(Signer);
-                serializer.SerializeProperty(new byte[4]);
-                serializer.SerializeProperty(Version);
-                serializer.SerializeProperty(Network);
-                serializer.SerializeProperty(Type);
-
-                Extend(serializer);
-
-                return serializer.GetBytes();
-            }
-        }
     }
 }
