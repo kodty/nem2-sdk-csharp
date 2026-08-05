@@ -58,7 +58,7 @@ namespace Unit_Tests.Crypto
             ulong deadline = 8207562320463688160;
             string txHash = "61E0F8B9AB2FE3E008DCE1380FECDAF5BCFB1851247BF990771154177A0B7E78";
 
-            var transactionFactory = new TransactionTestFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
+            var transactionFactory = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port);
             
            //transactionFactory.CreateTransferTransaction
 

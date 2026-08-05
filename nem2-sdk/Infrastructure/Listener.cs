@@ -25,8 +25,6 @@ namespace io.nem2.sdk.Infrastructure
 
         private readonly Subject<string> _subject = new Subject<string>();
 
-        private TransactionHttp TransactionHttpClient { get; set; }
-
         public class SocketTopic
         {
             public string Topic { get; set; }
