@@ -61,7 +61,7 @@ namespace io.nem2.sdk.Model.Transactions
             };
         }
 
-        internal virtual byte[][] Serialize(uint size)
+        protected virtual byte[][] Serialize(uint size)
         {
             lock (this)
             {

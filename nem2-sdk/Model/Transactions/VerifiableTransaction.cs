@@ -56,7 +56,7 @@ namespace io.nem2.sdk.Model.Transactions
             return hash;
         }
 
-        internal override byte[][] Serialize(uint size)
+        protected override byte[][] Serialize(uint size)
         {
             lock (this)
             {

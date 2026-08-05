@@ -2,9 +2,9 @@
 
 namespace io.nem2.sdk.Model.Transactions
 {
-    public class SimpleTransaction : VerifiableTransaction
+    public class SimpleTransaction<T> : VerifiableTransaction where T : TransactionExtension
     {
-        public SimpleTransaction(TransactionExtension extension, NetworkType.Types networkType, ulong fee, Deadline deadline)
+        public SimpleTransaction(T extension, NetworkType.Types networkType, ulong fee, Deadline deadline)
         {
             TransactionExtension = extension;
             Size += (uint)TransactionExtension.AddSize();
@@ -19,7 +19,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal override void Extend(DataSerializer serializer) => TransactionExtension.Extend(serializer);
 
-        public TransactionExtension TransactionExtension { get; set; }
+        public T TransactionExtension { get; set; }
 
         public override bool IsAggregate()
         {
