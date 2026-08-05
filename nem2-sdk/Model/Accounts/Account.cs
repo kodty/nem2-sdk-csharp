@@ -1,9 +1,4 @@
-﻿using Org.BouncyCastle.Crypto.Digests;
-using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.Infrastructure.Interfaces;
-using Org.BouncyCastle.Security;
-
-namespace io.nem2.sdk.Model.Accounts
+﻿namespace io.nem2.sdk.Model.Accounts
 {
     public class Account
     {
@@ -34,16 +29,6 @@ namespace io.nem2.sdk.Model.Accounts
             Address = Address.CreateFromPublicKey(KeyPair.PublicKeyString, networkType);
             PublicAccount = new PublicAccount(KeyPair.PublicKeyString, networkType);
         }
-
-        public CosignatureSignedTransaction SignCosignatureTransaction(CosignatureTransaction1 cosignatureTransaction)
-        {
-            return cosignatureTransaction.SignWith(KeyPair);
-        }
-
-        //public SignedTransaction SignTransactionWithCosignatories(AggregateTransaction transaction, List<Account> cosignatories, string networkGenHash)
-        //{
-        //    return transaction.SignWithAggregateCosigners(KeyPair, cosignatories, networkGenHash);
-        //}
 
         public static Account GenerateNewAccount(NetworkType.Types networkType)
         {
