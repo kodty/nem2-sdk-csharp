@@ -2,7 +2,6 @@
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions.Messages;
-using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -10,7 +9,7 @@ namespace io.nem2.sdk.Model.Transactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(Address);
+            serializer.SerializeProperty(Recipient);
             serializer.SerializeProperty(MessegeSize);
             serializer.SerializeProperty(MosaicsCount);
             serializer.SerializeProperty(0x0);
@@ -20,7 +19,7 @@ namespace io.nem2.sdk.Model.Transactions
             serializer.SerializeProperty(Message);
         }
 
-        public byte[] Address { get; set; }
+        public byte[] Recipient { get; set; }
 
         public ushort MessegeSize { get; set; }
 
@@ -34,7 +33,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public TransferTransaction_V1(Address address, IMessage messege, Mosaic mosaic)
         {
-            Address = AddressEncoder.DecodeAddress(address.Plain);         
+            Recipient = Address.DecodeAddress(address.Plain);         
             MosaicId = mosaic.MosaicId.Id;
             MosaicAmount = mosaic.Amount;
             MosaicsCount = 1;

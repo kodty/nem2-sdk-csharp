@@ -3,7 +3,7 @@ using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
 
 
-namespace io.nem2.sdk.Utils
+namespace io.nem2.sdk.Model.Articles
 {
     public static class IdGenerator
     {

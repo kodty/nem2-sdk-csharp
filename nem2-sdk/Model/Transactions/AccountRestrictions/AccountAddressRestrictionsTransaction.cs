@@ -1,5 +1,5 @@
 ﻿using Coppery;
-using io.nem2.sdk.Utils;
+using io.nem2.sdk.Model.Accounts;
 
 namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
 {
@@ -58,7 +58,7 @@ namespace io.nem2.sdk.Model.Transactions.AccountRestrictions
                 byte[] decoded = new byte[24];
 
                 if (item.IsBase32())
-                    decoded = AddressEncoder.DecodeAddress(item);
+                    decoded = Address.DecodeAddress(item);
 
                 if (item.IsHex())
                     decoded = item.FromHex();

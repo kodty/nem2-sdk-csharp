@@ -1,5 +1,5 @@
 ﻿using Coppery;
-using io.nem2.sdk.Utils;
+using io.nem2.sdk.Model.Accounts;
 
 namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
 {
@@ -21,7 +21,7 @@ namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
             Proof = proof.FromHex();
             ProofSize = (ushort)Proof.Length;
             Recipient = recipient.IsBase32()
-                      ? AddressEncoder.DecodeAddress(recipient)
+                      ? Address.DecodeAddress(recipient)
                       : recipient.FromHex();
         }
 

@@ -7,7 +7,6 @@ using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.CrossChainTransactions;
 using io.nem2.sdk.Model.Transactions.Messages;
-using io.nem2.sdk.Utils;
 using System.Diagnostics;
 using System.Reactive.Linq;
 
@@ -183,7 +182,7 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var transfer = new TransactionFactory(NetworkType.Types.TEST_NET, HttpSetUp.TestnetNode, HttpSetUp.Port)
                  .CreateMosaicDefinitionTransaction(
-                    IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 827369870),
+                    IdGenerator.GenerateMosaicId(Address.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 827369870),
                     827369870,
                     new MosaicProperties(true, true, true, true, 6, 259200),
                     1000000);
@@ -250,7 +249,7 @@ namespace Unit_Tests.Model.Transactions.Verified
         {
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
 
-            var id = IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 827369870);
+            var id = IdGenerator.GenerateMosaicId(Address.DecodeAddress(PublicAccount.CreateFromPublicKey(keys.PublicKeyString, NetworkType.Types.TEST_NET).Address.Plain), 827369870);
 
             var root = IdGenerator.GenerateId(0, "plasma", true);
 

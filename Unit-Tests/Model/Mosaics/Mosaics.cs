@@ -1,5 +1,6 @@
 ﻿using Coppery;
-using io.nem2.sdk.Utils;
+using io.nem2.sdk.Model.Accounts;
+using io.nem2.sdk.Model.Articles;
 
 namespace Unit_Tests.Model.Mosaics
 {
@@ -10,7 +11,7 @@ namespace Unit_Tests.Model.Mosaics
         {
             var symbolId = IdGenerator.GenerateId(0, "symbol", true);
 
-            var mosaicId = IdGenerator.GenerateMosaicId(AddressEncoder.DecodeAddress("TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q"), 812613930);
+            var mosaicId = IdGenerator.GenerateMosaicId(Address.DecodeAddress("TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q"), 812613930);
 
             var symbolXem = IdGenerator.GenerateId(symbolId, "xym", true);
 
@@ -58,7 +59,7 @@ namespace Unit_Tests.Model.Mosaics
         [Test]
         public static void GenerateMosaicId()
         { 
-            var decoded = AddressEncoder.DecodeAddress("TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q");
+            var decoded = Address.DecodeAddress("TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q");
 
             var id = IdGenerator.GenerateMosaicId(decoded, 713125680);
             var id2 = IdGenerator.GenerateMosaicId(decoded, 729902896);

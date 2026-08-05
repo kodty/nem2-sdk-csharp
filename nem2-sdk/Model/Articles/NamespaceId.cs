@@ -1,5 +1,4 @@
 ﻿using Coppery;
-using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Articles
 {

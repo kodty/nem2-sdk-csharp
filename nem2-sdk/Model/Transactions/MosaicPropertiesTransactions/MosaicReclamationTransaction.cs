@@ -1,6 +1,5 @@
 ﻿using Coppery;
 using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Utils;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 {
@@ -15,7 +14,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
 
         public MosaicReclamationTransaction(Address debtorImposed, ulong mosaicId, ulong amount)
         {
-            DebtorImposed = AddressEncoder.DecodeAddress(debtorImposed.Plain);
+            DebtorImposed = Address.DecodeAddress(debtorImposed.Plain);
             MosaicId = mosaicId;
             Amount = amount;          
         }

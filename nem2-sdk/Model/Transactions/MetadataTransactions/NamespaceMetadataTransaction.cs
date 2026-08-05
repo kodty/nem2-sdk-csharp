@@ -1,5 +1,5 @@
 ﻿using Coppery;
-using io.nem2.sdk.Utils;
+using io.nem2.sdk.Model.Accounts;
 
 namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 {
@@ -17,7 +17,7 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 
         public NamespaceMetadataTransaction(string targetAddress, string scopedKey, string targetNamespaceId, ushort valueSizeDelta, ushort valueSize, byte[] value) : base(targetAddress, scopedKey, valueSizeDelta, valueSize, value) 
         {
-            TargetAddress = AddressEncoder.DecodeAddress(targetAddress);
+            TargetAddress = Address.DecodeAddress(targetAddress);
             ScopedMetadataKey = scopedKey.FromHex();
             TargetNamespaceId = targetNamespaceId.FromHex();
             ValueSizeDelta = valueSizeDelta;

@@ -1,5 +1,5 @@
 ﻿using Coppery;
-using io.nem2.sdk.Utils;
+using io.nem2.sdk.Model.Accounts;
 
 namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
 {
@@ -17,7 +17,7 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
         public AccountMetadataTransaction(string targetAddress, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value) 
         {
             TargetAddress = targetAddress.IsBase32()
-                      ? AddressEncoder.DecodeAddress(targetAddress)
+                      ? Address.DecodeAddress(targetAddress)
                       : targetAddress.FromHex();
 
             ScopedMetadataKey = scopedKey.FromHex();

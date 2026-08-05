@@ -1,5 +1,5 @@
 ﻿using Coppery;
-using io.nem2.sdk.Utils;
+using io.nem2.sdk.Model.Accounts;
 
 namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
 {
@@ -58,7 +58,7 @@ namespace io.nem2.sdk.Model.Transactions.MosaicRestrictions
 
         public MosaicAddressRestrictionTransaction(string targetAddress, string mosaicID, string restrictionKey, string previousRestrictionValue, string newRestrictionValue) : base(TransactionTypes.Types.MOSAIC_ADDRESS_RESTRICTION, mosaicID, restrictionKey, previousRestrictionValue, newRestrictionValue)
         {
-            TargetAddress = targetAddress.IsBase32() ? AddressEncoder.DecodeAddress(targetAddress) : targetAddress.FromHex();
+            TargetAddress = targetAddress.IsBase32() ? Address.DecodeAddress(targetAddress) : targetAddress.FromHex();
         }
 
         public byte[] TargetAddress { get; set; }

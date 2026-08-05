@@ -1,11 +1,9 @@
 ﻿using Coppery;
-using io.nem2.sdk.Infrastructure.HttpClients;
 using io.nem2.sdk.Infrastructure.Interfaces;
 using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Transactions;
-using io.nem2.sdk.Utils;
 using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -187,7 +185,7 @@ namespace io.nem2.sdk.Infrastructure
 
             if (transaction.Type == TransactionTypes.Types.TRANSFER.GetValue())
             {
-                isReceptor = AddressEncoder.EncodeAddress(((TransferTransaction_V1)((SimpleTransaction)transaction).TransactionExtension).Address) == address.Plain;
+                isReceptor = Address.EncodeAddress(((TransferTransaction_V1)((SimpleTransaction)transaction).TransactionExtension).Recipient) == address.Plain;
             }
 
             return Address.CreateFromPublicKey(transaction.Signer.ToHex(), address.NetworkByte).Plain == address.Plain || isReceptor;
@@ -197,18 +195,6 @@ namespace io.nem2.sdk.Infrastructure
         {
             ClientSocket.Abort();
             LoopReads.Dispose();
-        }
-
-        //private bool TransactionFromAddress(Transaction1 transaction, Address address)
-        //{
-        //    var transactionFromAddress = TransactionHasSignerOrReceptor(transaction, address);
-        //
-        //    if (!transactionFromAddress && transaction.Type == TransactionTypes.Types.AGGREGATE_COMPLETE.GetValue() && ((AggregateTransaction)transaction).Cosignatures != null)
-        //    {
-        //        transactionFromAddress = ((AggregateTransaction)transaction).Cosignatures.Any(e => Address.CreateFromPublicKey(e.Signer.PublicKey, address.NetworkByte).Plain == address.Plain);
-        //    }
-        //
-        //    return transactionFromAddress;
-        //}     
+        }    
     }
 }
