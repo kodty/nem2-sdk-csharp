@@ -10,8 +10,8 @@ namespace io.nem2.sdk.Model.Transactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(Duration);
-            serializer.SerializeProperty(ParentId);
+            serializer.SerializeProperty(_Duration);
+            serializer.SerializeProperty(_ParentId);
             serializer.SerializeProperty(Id);
             serializer.SerializeProperty(RegistrationType);
             serializer.SerializeProperty(NameSize);
@@ -20,22 +20,22 @@ namespace io.nem2.sdk.Model.Transactions
 
         public RegisterNamespace(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name) 
         {
-            _Duration = duration;
-            _ParentId = parentId;
-            Id = DataConverter.ConvertFrom(id);
+            Duration = duration;
+            ParentId = parentId;
+            Id = id;
             RegistrationType = type.GetValue();
             Name = Encoding.UTF8.GetBytes(name);
             NameSize = (byte)Name.Length;
         }
 
-        internal ulong _Duration { get; set; }
+        public ulong Duration { get; set; }
 
-        public byte[] Duration
+        internal byte[] _Duration
         {
             get
             {
                 if (RegistrationType == 0x00)
-                    return DataConverter.ConvertFrom(_Duration);
+                    return DataConverter.ConvertFrom(Duration);
 
                 else if (RegistrationType == 0x01)
                     return new byte[] { };
@@ -44,22 +44,22 @@ namespace io.nem2.sdk.Model.Transactions
             }
         }
 
-        internal ulong _ParentId { get; set; }
+        public ulong ParentId { get; set; }
 
-        public byte[] ParentId
+        internal byte[] _ParentId
         {
             get
             {
                 if (RegistrationType == 0x00)
                     return new byte[] { };
                 else if (RegistrationType == 0x01)
-                    return DataConverter.ConvertFrom(_ParentId);
+                    return DataConverter.ConvertFrom(ParentId);
                 else
                     throw new Exception("invalid registration type");
             }
         }
 
-        public byte[] Id { get; set; }
+        public ulong Id { get; set; }
 
         public byte RegistrationType { get; internal set; }
 
