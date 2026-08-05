@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using io.nem2.sdk.Model.Transactions;
 using TweetNaclSharp;
 using TweetNaclSharp.Core.Extensions;
 
@@ -74,11 +75,48 @@ namespace io.nem2.sdk.Model
             return NaclFast.SignDetachedVerify(msg, signature, PublicKey);
         }
 
-        public byte[] SignOpen(byte[] data)
-        {
-            if (data == null) throw new ArgumentNullException(nameof(data));
+        public SignedTransaction SignTransaction<T>(SimpleTransaction<T> transaction, byte[] networkGenHash) where T : TransactionExtension
+        {      
+            var tBytes = transaction.Prepare();
 
-            return NaclFast.SignOpen(data, PublicKey);
+            byte[] signBytes = signBytes = [.. networkGenHash, .. tBytes.VerifiablePayload];
+
+            transaction.Signature = NaclFast.SignDetached(msg: signBytes, SecretKey);
+
+            return ProduceSignedTransaction(transaction, tBytes, signBytes);
+        }
+
+        public SignedTransaction SignTransaction(SimpleTransaction<AggregatePayload> transaction, byte[] networkGenHash)
+        {
+            var tBytes = transaction.Prepare();
+
+            byte[] signBytes = new byte[32 + 52];
+
+            for (int i = 0; i < 32; i++)
+                signBytes[i] = networkGenHash[i];
+
+            for (int i = 0; i < 52; i++)
+                signBytes[i + 32] = tBytes.VerifiablePayload[i];
+
+            transaction.Signature = NaclFast.SignDetached(msg: signBytes, SecretKey);
+
+            return ProduceSignedTransaction(transaction, tBytes, signBytes);
+            
+        }
+
+        private SignedTransaction ProduceSignedTransaction(VerifiableTransaction transaction, UnsignedTransaction tBytes, byte[] signBytes)
+        {
+            for (int x = 0; x < 64; x++)
+                tBytes.Payload[x + 8] = transaction.Signature[x];
+
+            return new SignedTransaction()
+            {
+                Signature = transaction.Signature.ToHex(),
+                VerifiablePayload = signBytes,
+                Signer = PublicKeyString,
+                Payload = tBytes.Payload,
+                Hash = VerifiableTransaction.HashTransaction(transaction.Signature, PublicKey, signBytes).ToHex()
+            };
         }
     }
 }

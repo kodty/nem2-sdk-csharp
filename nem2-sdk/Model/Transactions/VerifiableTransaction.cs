@@ -1,6 +1,5 @@
 ﻿using Coppery;
 using Org.BouncyCastle.Crypto.Digests;
-using TweetNaclSharp;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -30,44 +29,6 @@ namespace io.nem2.sdk.Model.Transactions
         public byte[] Deadline { get; set; }
 
         public abstract bool IsAggregate();
-
-        public SignedTransaction SignTransaction(SecretKeyPair keyPair, string networkGenHash) => SignTransaction(keyPair, networkGenHash.FromHex());
-
-        protected SignedTransaction SignTransaction(SecretKeyPair signer, byte[] networkGenHash)
-        {
-            var tBytes = Prepare();
-
-            byte[] signBytes = new byte[] { };
-
-            if (IsAggregate())
-            {
-                signBytes = new byte[32 + 52];
-
-                for (int i = 0; i < 32; i++)
-                    signBytes[i] = networkGenHash[i];
-
-                for (int i = 0; i < 52; i++)
-                    signBytes[i + 32] = tBytes.VerifiablePayload[i];
-            }
-            else
-            {
-                signBytes = [.. networkGenHash, .. tBytes.VerifiablePayload];
-            }
-
-            this.Signature = NaclFast.SignDetached(msg: signBytes, signer.SecretKey.ToArray());
-
-            for (int x = 0; x < 64; x++)
-                tBytes.Payload[x + 8] = this.Signature[x];
-
-            return new SignedTransaction()
-            {
-                Signature = this.Signature.ToHex(),
-                VerifiablePayload = signBytes,
-                Signer = signer.PublicKeyString,
-                Payload = tBytes.Payload,
-                Hash = HashTransaction(this.Signature, signer.PublicKey, signBytes).ToHex()
-            };
-        }
 
         internal override UnsignedTransaction Prepare()
         {
