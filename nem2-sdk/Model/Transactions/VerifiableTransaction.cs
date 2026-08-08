@@ -30,7 +30,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public abstract bool IsAggregate();
 
-        internal override UnsignedTransaction Prepare()
+        public override UnsignedTransaction Prepare()
         {
             byte[][] tBytes = new byte[2][];
 
@@ -39,7 +39,8 @@ namespace io.nem2.sdk.Model.Transactions
             return new UnsignedTransaction()
             {
                 Payload = tBytes[0],
-                VerifiablePayload = tBytes[1]
+                VerifiablePayload = tBytes[1],
+                IsAggregate = IsAggregate()
             };
         }
 

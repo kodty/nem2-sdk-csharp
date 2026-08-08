@@ -45,7 +45,7 @@ namespace io.nem2.sdk.Model.Transactions
             Version = version;
         }
 
-        internal virtual UnsignedTransaction Prepare()
+        public virtual UnsignedTransaction Prepare()
         {
             byte[][] tBytes = new byte[2][];
 

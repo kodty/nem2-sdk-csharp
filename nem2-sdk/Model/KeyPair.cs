@@ -97,47 +97,34 @@ namespace io.nem2.sdk.Model
             return NaclFast.SignDetachedVerify(msg, signature, PublicKey);
         }
 
+        public SignedTransaction SignTransaction(UnsignedTransaction transaction, byte[] networkGenHash)
+        {
+            byte[] signBytes = signBytes = [.. networkGenHash, .. transaction.IsAggregate ? transaction.VerifiablePayload.Take(52) : transaction.VerifiablePayload];
+
+            var signature = NaclFast.SignDetached(msg: signBytes, SecretKey);
+
+            return ProduceSignedTransaction(signature, transaction, signBytes);
+        }
+
         public SignedTransaction SignTransaction<T>(SimpleTransaction<T> transaction, byte[] networkGenHash) where T : TransactionExtension
         {      
             var tBytes = transaction.Prepare();
 
-            byte[] signBytes = signBytes = [.. networkGenHash, .. tBytes.VerifiablePayload];
-
-            transaction.Signature = NaclFast.SignDetached(msg: signBytes, SecretKey);
-
-            return ProduceSignedTransaction(transaction, tBytes, signBytes);
+            return SignTransaction(tBytes, networkGenHash);
         }
 
-        public SignedTransaction SignTransaction(SimpleTransaction<AggregatePayload> transaction, byte[] networkGenHash)
-        {
-            var tBytes = transaction.Prepare();
-
-            byte[] signBytes = new byte[32 + 52];
-
-            for (int i = 0; i < 32; i++)
-                signBytes[i] = networkGenHash[i];
-
-            for (int i = 0; i < 52; i++)
-                signBytes[i + 32] = tBytes.VerifiablePayload[i];
-
-            transaction.Signature = NaclFast.SignDetached(msg: signBytes, SecretKey);
-
-            return ProduceSignedTransaction(transaction, tBytes, signBytes);
-            
-        }
-
-        private SignedTransaction ProduceSignedTransaction(VerifiableTransaction transaction, UnsignedTransaction tBytes, byte[] signBytes)
+        private SignedTransaction ProduceSignedTransaction(byte[] signature, UnsignedTransaction tBytes, byte[] signBytes)
         {
             for (int x = 0; x < 64; x++)
-                tBytes.Payload[x + 8] = transaction.Signature[x];
+                tBytes.Payload[x + 8] = signature[x];
 
             return new SignedTransaction()
             {
-                Signature = transaction.Signature.ToHex(),
+                Signature = signature.ToHex(),
                 VerifiablePayload = signBytes,
                 Signer = PublicKeyString,
                 Payload = tBytes.Payload,
-                Hash = VerifiableTransaction.HashTransaction(transaction.Signature, PublicKey, signBytes).ToHex()
+                Hash = VerifiableTransaction.HashTransaction(signature, PublicKey, signBytes).ToHex()
             };
         }
     }

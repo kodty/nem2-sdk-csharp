@@ -11,6 +11,8 @@ namespace io.nem2.sdk.Model
         public byte[] VerifiablePayload { get; set; }
 
         public string Signer { get; set; }
+
+        public bool IsAggregate { get; set; }
     }
 
     public class SignedTransaction : UnsignedTransaction
@@ -35,7 +37,6 @@ namespace io.nem2.sdk.Model
             Hash = hash;
             Signer = signer;
             Signature = signature;
-            VerifiablePayload = signedBytes;
         }
 
         public static SignedTransaction Create(byte[] payload, byte[] signedBytes, byte[] hash, byte[] signer, byte[] signature, TransactionTypes.Types transactionType)
