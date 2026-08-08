@@ -10,8 +10,12 @@ namespace io.nem2.sdk.Model.Transactions
     {
         internal override void Extend(DataSerializer serializer)
         {
-            serializer.SerializeProperty(_Duration);
-            serializer.SerializeProperty(_ParentId);
+            if (RegistrationType == 0x00)
+                serializer.SerializeProperty(Duration);
+
+            if (RegistrationType == 0x01)
+                serializer.SerializeProperty(ParentId);
+           
             serializer.SerializeProperty(Id);
             serializer.SerializeProperty(RegistrationType);
             serializer.SerializeProperty(NameSize);
@@ -30,34 +34,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         public ulong Duration { get; set; }
 
-        internal byte[] _Duration
-        {
-            get
-            {
-                if (RegistrationType == 0x00)
-                    return DataConverter.ConvertFrom(Duration);
-
-                else if (RegistrationType == 0x01)
-                    return new byte[] { };
-                else
-                    throw new Exception("invalid registration type");
-            }
-        }
-
         public ulong ParentId { get; set; }
-
-        internal byte[] _ParentId
-        {
-            get
-            {
-                if (RegistrationType == 0x00)
-                    return new byte[] { };
-                else if (RegistrationType == 0x01)
-                    return DataConverter.ConvertFrom(ParentId);
-                else
-                    throw new Exception("invalid registration type");
-            }
-        }
 
         public ulong Id { get; set; }
 
