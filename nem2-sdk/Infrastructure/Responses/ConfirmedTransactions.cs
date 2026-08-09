@@ -26,7 +26,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
 
     public class Cosignature
     {
-        public int Version { get; set; }
+        public ulong Version { get; set; }
 
         public string SignerPublicKey { get; set; }
 
