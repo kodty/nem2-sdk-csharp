@@ -11,9 +11,22 @@ namespace io.nem2.sdk.Model.Transactions
 
         public UnsignedTransaction[] EmbeddedTransactions { get; set; }
 
+        public SignedTransaction[] Cosignatures = [];
 
-        public AggregatePayload(Transaction[] transactions)
+        internal bool IsComplete { get; set; }
+
+
+        public void AddCosignatures(SignedTransaction[] cosignatures, SimpleTransaction<AggregatePayload> aggregate)
         {
+            Cosignatures = cosignatures;
+   
+            aggregate.Size += (uint)((8 + 32 + 64) * Cosignatures.Count());
+        }
+
+        public AggregatePayload(Transaction[] transactions, bool isComplete)
+        {
+            IsComplete = isComplete;
+
             EmbeddedTransactions = new UnsignedTransaction[transactions.Count()];
 
             for (int i = 0; i < transactions.Count(); i++)
@@ -39,7 +52,6 @@ namespace io.nem2.sdk.Model.Transactions
 
             while (1 < numRemainingHashes)
             {
-
                 int i = 0;
 
                 while (i < numRemainingHashes)
@@ -77,11 +89,18 @@ namespace io.nem2.sdk.Model.Transactions
 
             foreach (UnsignedTransaction p in EmbeddedTransactions)
                 serializer.SerializeProperty(p.Payload);
+
+            foreach (SignedTransaction c in Cosignatures)
+            {
+                serializer.SerializeProperty((ulong)0);
+                serializer.SerializeProperty(c.Signer.FromHex());
+                serializer.SerializeProperty(c.Signature.FromHex());
+            }
         }
 
         internal override int AddSize()
         {
-            return (int)PayloadSize + 40;
+            return 32 + 4 + 4 + (int)PayloadSize;
         }
 
         internal override byte SetVersion()
@@ -91,7 +110,7 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal override TransactionTypes.Types SetType()
         {
-            return TransactionTypes.Types.AGGREGATE_COMPLETE;
+            return IsComplete ? TransactionTypes.Types.AGGREGATE_COMPLETE : TransactionTypes.Types.AGGREGATE_BONDED;
         }
 
         private static byte[] Hash(byte[] data)

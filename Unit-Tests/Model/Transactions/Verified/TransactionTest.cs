@@ -7,7 +7,6 @@ using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.CrossChainTransactions;
 using io.nem2.sdk.Model.Transactions.Messages;
-using System.Diagnostics;
 using System.Reactive.Linq;
 
 namespace Unit_Tests.Model.Transactions.Verified
@@ -19,9 +18,9 @@ namespace Unit_Tests.Model.Transactions.Verified
         public async Task CreateAggregateTransactionTest()
         {
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
-
-            // embedded transaction
-
+            var keys2 = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.privKey);
+            
+            // create embedded transaction(s)
             var transfer = Transaction.Create(
                new TransferTransaction_V1(
                    address: Address.CreateFromEncoded("TDX7QVF6XXMJNDFFRIOYTV4N3GSVUGNTWVCIMZQ"),
@@ -33,16 +32,25 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             transfer.SetSigner(keys.PublicKeyString);
 
-            // aggregate transaction complete
+            // create payload
+            var payload = new AggregatePayload([transfer], true);
 
+            // build aggregate
             var aggregate = VerifiableTransaction.Create(
-                new AggregatePayload([transfer]),
-                NetworkType.Types.TEST_NET, 
+                payload,
+                NetworkType.Types.TEST_NET,
                 10000000,
                 Deadline.AddHours(1));
 
             aggregate.SetSigner(keys.PublicKeyString);
 
+            // cosign aggregate
+            var cosignature = keys2.SignTransaction(aggregate, HttpSetUp.genHash.FromHex());
+
+            // add cosignatures
+            payload.AddCosignatures([cosignature], aggregate);
+
+            // sign aggregate
             var result = keys.SignTransaction(aggregate, HttpSetUp.genHash.FromHex());
 
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
@@ -72,7 +80,6 @@ namespace Unit_Tests.Model.Transactions.Verified
                 );
 
             transfer.SetSigner(keys.PublicKeyString);
-
             transfer.Deadline = 117756998097;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex());
@@ -146,12 +153,13 @@ namespace Unit_Tests.Model.Transactions.Verified
 
                 transfer2.SetSigner(keys2.PublicKeyString);
 
-
             var aggregateBonded = VerifiableTransaction.Create(
-                new AggregatePayload([transfer, transfer2]),
+                new AggregatePayload([transfer, transfer2], false),
                 NetworkType.Types.TEST_NET,
                 10000000,
                 Deadline.AddHours(1));
+
+            aggregateBonded.SetSigner(keys.PublicKeyString);
 
             //aggregateBonded.Cosign([keys2]);
 

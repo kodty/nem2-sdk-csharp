@@ -2,6 +2,7 @@
 using io.nem2.sdk.Model.Transactions;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Security;
+using System.Diagnostics;
 using TweetNaclSharp;
 using TweetNaclSharp.Core.Extensions;
 
@@ -100,7 +101,7 @@ namespace io.nem2.sdk.Model
         public SignedTransaction SignTransaction(UnsignedTransaction transaction, byte[] networkGenHash)
         {
             byte[] signBytes = signBytes = [.. networkGenHash, .. transaction.IsAggregate ? transaction.VerifiablePayload.Take(52) : transaction.VerifiablePayload];
-
+            Debug.WriteLine(signBytes.ToHex());
             var signature = NaclFast.SignDetached(msg: signBytes, SecretKey);
 
             return ProduceSignedTransaction(signature, transaction, signBytes);
@@ -117,6 +118,8 @@ namespace io.nem2.sdk.Model
         {
             for (int x = 0; x < 64; x++)
                 tBytes.Payload[x + 8] = signature[x];
+
+            Debug.WriteLine(tBytes.Payload.ToHex());
 
             return new SignedTransaction()
             {

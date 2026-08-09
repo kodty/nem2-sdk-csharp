@@ -57,7 +57,8 @@ namespace io.nem2.sdk.Model.Transactions
             return new UnsignedTransaction()
             {
                 Payload = tBytes[0],
-                VerifiablePayload = tBytes[1]
+                VerifiablePayload = tBytes[1],
+                Signer = Signer.ToHex()
             };
         }
 
