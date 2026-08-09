@@ -90,12 +90,13 @@ namespace io.nem2.sdk.Model.Transactions
             foreach (UnsignedTransaction p in EmbeddedTransactions)
                 serializer.SerializeProperty(p.Payload);
 
-            foreach (SignedTransaction c in Cosignatures)
-            {
-                serializer.SerializeProperty((ulong)0);
-                serializer.SerializeProperty(c.Signer.FromHex());
-                serializer.SerializeProperty(c.Signature.FromHex());
-            }
+            if(Cosignatures.Count() > 0)
+                foreach (SignedTransaction c in Cosignatures)
+                {
+                    serializer.SerializeProperty((ulong)0);
+                    serializer.SerializeProperty(c.Signer.FromHex());
+                    serializer.SerializeProperty(c.Signature.FromHex());
+                }
         }
 
         internal override int AddSize()
