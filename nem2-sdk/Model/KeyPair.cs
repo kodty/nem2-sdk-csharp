@@ -99,7 +99,7 @@ namespace io.nem2.sdk.Model
 
         public SignedTransaction SignTransaction(UnsignedTransaction transaction, byte[] networkGenHash)
         {
-            byte[] signBytes = signBytes = [.. networkGenHash, .. transaction.IsAggregate ? transaction.VerifiablePayload.Take(52) : transaction.VerifiablePayload];
+            byte[] signBytes = [.. networkGenHash, .. transaction.Signer == PublicKeyString ? transaction.VerifiablePayload : transaction.VerifiablePayload.Take(52)];
 
             var signature = NaclFast.SignDetached(msg: signBytes, SecretKey);
 
