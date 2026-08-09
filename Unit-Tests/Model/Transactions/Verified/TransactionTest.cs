@@ -18,19 +18,19 @@ namespace Unit_Tests.Model.Transactions.Verified
         public async Task CreateAggregateTransactionTest()
         {
             var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
-            var keys2 = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.privKey);
+            var keys2 = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.AggregateSubSK);
             
             // create embedded transaction(s)
             var transfer = Transaction.Create(
                new TransferTransaction_V1(
-                   address: Address.CreateFromEncoded("TDX7QVF6XXMJNDFFRIOYTV4N3GSVUGNTWVCIMZQ"),
+                   address: Address.CreateFromEncoded("TA3GCBHJBTRCEHVYVHCNUCULY2NB76W7MVECFUY"),
                    messege: EmptyMessage.Create(),
-                   mosaic: Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 1000000)
+                   mosaic: Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 10000000)
                    ),
                 NetworkType.Types.TEST_NET
                );
 
-            transfer.SetSigner(keys.PublicKeyString);
+            transfer.SetSigner(keys2.PublicKeyString);
 
             // create payload
             var payload = new AggregatePayload([transfer], true);
@@ -47,11 +47,11 @@ namespace Unit_Tests.Model.Transactions.Verified
             // cosign aggregate
             var cosignature = keys2.SignTransaction(aggregate, HttpSetUp.genHash.FromHex());
 
-            // add cosignatures
-            payload.AddCosignatures([cosignature], aggregate);
-
             // sign aggregate
             var result = keys.SignTransaction(aggregate, HttpSetUp.genHash.FromHex());
+
+            // add cosignatures
+            payload.AddCosignatures([cosignature], aggregate);
 
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
 
