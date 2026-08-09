@@ -15,11 +15,10 @@ namespace io.nem2.sdk.Model.Transactions
 
         internal bool IsComplete { get; set; }
 
-
         public void AddCosignatures(SignedTransaction[] cosignatures, SimpleTransaction<AggregatePayload> aggregate)
         {
             Cosignatures = cosignatures;
-   
+
             aggregate.Size += (uint)((8 + 32 + 64) * Cosignatures.Count());
         }
 
@@ -90,13 +89,12 @@ namespace io.nem2.sdk.Model.Transactions
             foreach (UnsignedTransaction p in EmbeddedTransactions)
                 serializer.SerializeProperty(p.Payload);
 
-            if(Cosignatures.Count() > 0)
-                foreach (SignedTransaction c in Cosignatures)
-                {
-                    serializer.SerializeProperty((ulong)0);
-                    serializer.SerializeProperty(c.Signer.FromHex());
-                    serializer.SerializeProperty(c.Signature.FromHex());
-                }
+            foreach (SignedTransaction c in Cosignatures)
+            {
+                serializer.SerializeProperty((ulong)0);
+                serializer.SerializeProperty(c.Signer.FromHex());
+                serializer.SerializeProperty(c.Signature.FromHex());
+            }
         }
 
         internal override int AddSize()
