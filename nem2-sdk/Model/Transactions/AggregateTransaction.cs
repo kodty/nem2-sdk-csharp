@@ -1,4 +1,6 @@
 ﻿using Coppery;
+using io.nem2.sdk.Infrastructure.Interfaces;
+using io.nem2.sdk.Infrastructure.Responses;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace io.nem2.sdk.Model.Transactions
@@ -9,24 +11,17 @@ namespace io.nem2.sdk.Model.Transactions
 
         public uint PayloadSize { get; set; }
 
-        public UnsignedTransaction[] EmbeddedTransactions { get; set; }
+        public SignedTransaction[] EmbeddedTransactions { get; set; }
 
-        public SignedTransaction[] Cosignatures = [];
+        public List<Cosignature> Cosignatures = new List<Cosignature>();
 
         internal bool IsComplete { get; set; }
-
-        public void AddCosignatures(SignedTransaction[] cosignatures, SimpleTransaction<AggregatePayload> aggregate)
-        {
-            Cosignatures = cosignatures;
-
-            aggregate.Size += (uint)((8 + 32 + 64) * Cosignatures.Count());
-        }
 
         public AggregatePayload(Transaction[] transactions, bool isComplete)
         {
             IsComplete = isComplete;
 
-            EmbeddedTransactions = new UnsignedTransaction[transactions.Count()];
+            EmbeddedTransactions = new SignedTransaction[transactions.Count()];
 
             for (int i = 0; i < transactions.Count(); i++)
             {
@@ -86,13 +81,13 @@ namespace io.nem2.sdk.Model.Transactions
             serializer.SerializeProperty(PayloadSize);
             serializer.SerializeProperty(new byte[4]);
 
-            foreach (UnsignedTransaction p in EmbeddedTransactions)
+            foreach (SignedTransaction p in EmbeddedTransactions)
                 serializer.SerializeProperty(p.Payload);
 
-            foreach (SignedTransaction c in Cosignatures)
+            foreach (Cosignature c in Cosignatures)
             {
                 serializer.SerializeProperty((ulong)0);
-                serializer.SerializeProperty(c.Signer.FromHex());
+                serializer.SerializeProperty(c.SignerPublicKey.FromHex());
                 serializer.SerializeProperty(c.Signature.FromHex());
             }
         }

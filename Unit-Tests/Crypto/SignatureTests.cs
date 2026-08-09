@@ -39,7 +39,7 @@ namespace Unit_Tests.Crypto
 
             tx.SetSigner(keyPair.PublicKeyString);
 
-            var st = keyPair.SignTransaction(tx, HttpSetUp.genHash.FromHex());
+            var st = keyPair.SignTransaction(tx, HttpSetUp.genHash.FromHex()).Prepare();
 
             Assert.True(st.VerifySignature());
         }

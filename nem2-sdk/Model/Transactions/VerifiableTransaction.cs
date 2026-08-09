@@ -29,19 +29,25 @@ namespace io.nem2.sdk.Model.Transactions
 
         public ulong Deadline { get; set; }
 
+        public string Hash { get; set; }
+
+        public byte[] VerifiedPayload { get; set; }
+
         public abstract bool IsAggregate();
 
-        public override UnsignedTransaction Prepare()
+        public override SignedTransaction Prepare()
         {
             byte[][] tBytes = new byte[2][];
 
             tBytes = this.Serialize(Size);
 
-            return new UnsignedTransaction()
+            return new SignedTransaction()
             {
                 Payload = tBytes[0],
                 VerifiablePayload = tBytes[1],
-                Signer = base.Signer.ToHex(),
+                Signature = Signature.ToHex(),
+                Signer = Signer.ToHex(),
+                Hash = Hash,
                 IsAggregate = IsAggregate()
             };
         }

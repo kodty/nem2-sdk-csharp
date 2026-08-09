@@ -48,7 +48,7 @@ namespace io.nem2.sdk.Model.Transactions
             Version = version;
         }
 
-        public virtual UnsignedTransaction Prepare()
+        public virtual SignedTransaction Prepare()
         {
             byte[][] tBytes = new byte[2][];
 
@@ -57,7 +57,7 @@ namespace io.nem2.sdk.Model.Transactions
             
             tBytes = this.Serialize(Size);
 
-            return new UnsignedTransaction()
+            return new SignedTransaction()
             {
                 Payload = tBytes[0],
                 VerifiablePayload = tBytes[1],
