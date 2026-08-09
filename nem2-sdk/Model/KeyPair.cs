@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model.Transactions;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Security;
@@ -97,35 +98,40 @@ namespace io.nem2.sdk.Model
             return NaclFast.SignDetachedVerify(msg, signature, PublicKey);
         }
 
-        public SignedTransaction SignTransaction(UnsignedTransaction transaction, byte[] networkGenHash)
+        public SimpleTransaction<T> SignTransaction<T>(SimpleTransaction<T> transaction, byte[] networkGenHash) where T : TransactionExtension
         {
-            byte[] signBytes = [.. networkGenHash, .. transaction.Signer == PublicKeyString ? transaction.VerifiablePayload : transaction.VerifiablePayload.Take(52)];
+            if (transaction.Signer.ToHex() == PublicKeyString)
+            {
+                var tBytes = transaction.Prepare();
 
-            var signature = NaclFast.SignDetached(msg: signBytes, SecretKey);
+                byte[] signBytes = [.. networkGenHash, .. tBytes.VerifiablePayload];
 
-            return ProduceSignedTransaction(signature, transaction, signBytes);
+                var signature = NaclFast.SignDetached(msg: signBytes, SecretKey);
+
+                transaction.Signature = signature;
+                transaction.VerifiedPayload = tBytes.VerifiablePayload;
+                transaction.Hash = VerifiableTransaction.HashTransaction(transaction.Signature, PublicKey, transaction.VerifiedPayload).ToHex();
+
+                return transaction;
+            }
+            else throw new Exception("signer mismatch");  
         }
 
-        public SignedTransaction SignTransaction<T>(SimpleTransaction<T> transaction, byte[] networkGenHash) where T : TransactionExtension
-        {      
-            var tBytes = transaction.Prepare();
-
-            return SignTransaction(tBytes, networkGenHash);
-        }
-
-        private SignedTransaction ProduceSignedTransaction(byte[] signature, UnsignedTransaction tBytes, byte[] signBytes)
+        public SimpleTransaction<AggregatePayload> CosignTransaction(SimpleTransaction<AggregatePayload> transaction, byte[] networkGenHash)
         {
-            for (int x = 0; x < 64; x++)
-                tBytes.Payload[x + 8] = signature[x];
+            var signature = NaclFast.SignDetached(msg: [.. networkGenHash, ..transaction.VerifiedPayload.Take(52).ToArray()], SecretKey);
 
-            return new SignedTransaction()
+            Cosignature cosig = new Cosignature
             {
                 Signature = signature.ToHex(),
-                VerifiablePayload = signBytes,
-                Signer = PublicKeyString,
-                Payload = tBytes.Payload,
-                Hash = VerifiableTransaction.HashTransaction(signature, PublicKey, signBytes).ToHex()
+                SignerPublicKey = PublicKeyString,
+                Version = 0
             };
+
+            transaction.TransactionExtension.Cosignatures.Add(cosig);
+            transaction.Size += 8 + 32 + 64;
+
+            return transaction;
         }
     }
 }
