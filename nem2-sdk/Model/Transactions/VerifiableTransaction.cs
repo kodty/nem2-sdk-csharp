@@ -15,10 +15,11 @@ namespace io.nem2.sdk.Model.Transactions
             return new SimpleTransaction<T>(transaction, networkType, fee, deadline);
         }
 
-        public VerifiableTransaction()
+        public VerifiableTransaction(byte version, byte network, ushort type, ulong fee, Deadline deadline) : base(version, network, type)
         {
             Size += 80;
-
+            Fee = fee;
+            Deadline = deadline.Ticks;
             Signature = new byte[64];
         }
 
@@ -40,6 +41,7 @@ namespace io.nem2.sdk.Model.Transactions
             {
                 Payload = tBytes[0],
                 VerifiablePayload = tBytes[1],
+                Signer = base.Signer.ToHex(),
                 IsAggregate = IsAggregate()
             };
         }

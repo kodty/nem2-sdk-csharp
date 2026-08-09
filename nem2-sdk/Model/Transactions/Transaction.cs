@@ -14,9 +14,12 @@ namespace io.nem2.sdk.Model.Transactions
 
         public ushort Type { get; set; }
 
-        public Transaction()
+        public Transaction(byte version, byte network, ushort type)
         {
             Size += 48;
+            Version = version;
+            Network = network;
+            Type = type;
         }
 
         internal abstract void Extend(DataSerializer serializer);

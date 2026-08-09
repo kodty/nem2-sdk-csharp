@@ -4,14 +4,11 @@ namespace io.nem2.sdk.Model.Transactions
 {
     public class SubTransaction<T> : Transaction where T : TransactionExtension
     {
-        public SubTransaction(T extension, NetworkType.Types networkType)
-        {
+        public SubTransaction(T extension, NetworkType.Types networkType) 
+            : base(extension.SetVersion(), networkType.GetNetworkByte(), extension.SetType().GetValue())
+        {         
             TransactionExtension = extension;
             Size += (uint)TransactionExtension.AddSize();
-
-            Version = TransactionExtension.SetVersion();
-            Network = networkType.GetNetworkByte();
-            Type = TransactionExtension.SetType().GetValue();
         }
 
         internal override void Extend(DataSerializer serializer) => TransactionExtension.Extend(serializer);
