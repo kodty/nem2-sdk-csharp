@@ -110,7 +110,7 @@ namespace io.nem2.sdk.Model
 
                 transaction.Signature = signature;
                 transaction.VerifiedPayload = tBytes.VerifiablePayload;
-                transaction.Hash = VerifiableTransaction.HashTransaction(transaction.Signature, PublicKey, transaction.VerifiedPayload).ToHex();
+                transaction.Hash = VerifiableTransaction.HashTransaction(transaction.Signature, PublicKey, signBytes).ToHex();
 
                 return transaction;
             }
