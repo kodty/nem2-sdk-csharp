@@ -6,6 +6,7 @@ using io.nem2.sdk.Model.Transactions.Messages;
 using Org.BouncyCastle.Security;
 using System.Security.Cryptography;
 using System.Text.Json.Nodes;
+using TweetNaclSharp.Core.Extensions;
 
 namespace Unit_Tests.Model
 {
@@ -113,11 +114,11 @@ namespace Unit_Tests.Model
                 // encrypt using sender primary shared key, decrypt using receiver primary shared key
                 var senderPrimarySharedKey = SecureMessage.HKDF_Derive(SecureMessage.DeriveSharedKey(sender.KeyPair.PrivateKey, receiver.KeyPair.PublicKey), info, null);
 
-                var senderPrimaryCipher = SecureMessage.AesEncryptor(senderPrimarySharedKey, ivData, System.Text.Encoding.UTF8.GetString(msg));
+                byte[] senderPrimaryCipher = [.. new byte[] { 1 }, ..SecureMessage.AesEncryptor(senderPrimarySharedKey, ivData, System.Text.Encoding.UTF8.GetString(msg))];
 
                 var receiverPrimarySharedKey = SecureMessage.HKDF_Derive(SecureMessage.DeriveSharedKey(receiver.KeyPair.PrivateKey, sender.KeyPair.PublicKey), info, null);
 
-                var receiverPrimaryPlainText = SecureMessage.AesDecryptor(receiverPrimarySharedKey, ivData, senderPrimaryCipher);
+                var receiverPrimaryPlainText = SecureMessage.AesDecryptor(receiverPrimarySharedKey, ivData, senderPrimaryCipher.SubArray(1, senderPrimaryCipher.Length - 1));
 
                 Assert.That(sender.KeyPair.PrivateKey.ToHex() != receiver.KeyPair.PrivateKey.ToHex());
                 Assert.AreEqual(System.Text.Encoding.UTF8.GetString(msg), receiverPrimaryPlainText);

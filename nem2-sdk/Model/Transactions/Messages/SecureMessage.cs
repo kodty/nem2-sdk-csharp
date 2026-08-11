@@ -55,12 +55,12 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
         public override byte[] GetPayload()
         {
-            return Payload;
+            return [.. new byte[] { Type }, .. Payload];
         }
 
         public override ushort GetLength()
         {
-            return (ushort)Payload.Length;
+            return (ushort)(Payload.Length + 1);
         }
 
         // publicKey is canonical if the y coordinate is smaller than 2^255 - 19

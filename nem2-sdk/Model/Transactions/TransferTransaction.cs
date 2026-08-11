@@ -16,7 +16,9 @@ namespace io.nem2.sdk.Model.Transactions
             serializer.SerializeProperty(new byte[4]);
             serializer.SerializeProperty(MosaicId);
             serializer.SerializeProperty(MosaicAmount);
-            serializer.SerializeProperty(Message);
+
+            if(Message != null)
+                serializer.SerializeProperty(Message);
         }
 
         public byte[] Recipient { get; set; }
@@ -37,9 +39,14 @@ namespace io.nem2.sdk.Model.Transactions
             MosaicId = mosaic.MosaicId.Id;
             MosaicAmount = mosaic.Amount;
             MosaicsCount = 1;
-            Message = messege.GetPayload();    
-            MessegeSize = (ushort)Message.Length;
-            
+
+            if (Message != null)
+            {
+                Message = messege.GetPayload();
+                MessegeSize = (ushort)Message.Length;
+            }
+            else MessegeSize = 0;
+
         }
 
         internal override int AddSize() 

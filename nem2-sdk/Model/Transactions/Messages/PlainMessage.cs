@@ -23,22 +23,22 @@ namespace io.nem2.sdk.Model.Transactions.Messages
 
         public override byte[] GetPayload()
         {
-            return Payload;
+            return [.. new byte[] {Type}, .. Payload];
         }
 
         public override ushort GetLength()
         {
-            return (ushort)Payload.Length;
+            return (ushort)(Payload.Length + 1);
         }
 
         internal bool IsEncrypted()
         {
-            return false;     
+            return Type == 0;     
         }
 
         public string GetStringPayload()
         {
-            return Encoding.UTF8.GetString(Payload);
+            return Encoding.UTF8.GetString([.. new byte[] { Type }, .. Payload]);
         }
     }
 }
