@@ -9,6 +9,7 @@ using io.nem2.sdk.Model.Transactions.CrossChainTransactions;
 using io.nem2.sdk.Model.Transactions.Messages;
 using System.Diagnostics;
 using System.Reactive.Linq;
+using TweetNaclSharp;
 
 namespace Unit_Tests.Model.Transactions.Verified
 {
@@ -32,6 +33,7 @@ namespace Unit_Tests.Model.Transactions.Verified
                );
 
             transfer.SetSigner(keys2.PublicKeyString);
+            transfer.NetworkGenerationHash = HttpSetUp.genHash.FromHex();
 
             // create payload
             var payload = new AggregatePayload([transfer], true);
@@ -54,12 +56,12 @@ namespace Unit_Tests.Model.Transactions.Verified
             var result = aggregate.Prepare();
 
             var client = new TransactionHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
-            Debug.WriteLine(result.Payload.ToHex());
+
             var a = await client.Announce(result);
 
             Thread.Sleep(4321);
             var status = await client.GetTransactionStatus(result.Hash);
-
+           
             Assert.AreEqual(status.ComposedResponse.Code, "Success");
         }
 
@@ -84,8 +86,19 @@ namespace Unit_Tests.Model.Transactions.Verified
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex()).Prepare();
 
-            Assert.That(result.VerifiablePayload.ToHex() == HttpSetUp.genHash + "0198544140420F0000000000D131DD6A1B00000098EFF854BEBDD8968CA58A1D89D78DD9A55A19B3B54486660000010000000000CE8BA0672E21C07240420F0000000000");
+            Assert.That(result.VerifiablePayload.ToHex() == "0198544140420F0000000000D131DD6A1B00000098EFF854BEBDD8968CA58A1D89D78DD9A55A19B3B54486660000010000000000CE8BA0672E21C07240420F0000000000");
             Assert.That(result.Payload.ToHex(), Is.EqualTo("B000000000000000115504A388D963BF8B64400920CEBBC04597C0EC97E429C5B2660614440FD6A97E5A122FB7ADF2AC7DADA41CDEB23915E00BE23FE5F06B2B6896C4964E440600F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F7000000000198544140420F0000000000D131DD6A1B00000098EFF854BEBDD8968CA58A1D89D78DD9A55A19B3B54486660000010000000000CE8BA0672E21C07240420F0000000000"));
+            Assert.IsTrue(NaclFast.SignDetachedVerify([.. HttpSetUp.genHash.FromHex(), .. result.VerifiablePayload], result.Signature.FromHex(), keys.PublicKey));
+
+            keys.PrivateKey[31] = 0x01;
+
+            var corruptKeys = NaclFast.SignKeyPairFromSeed(keys.PrivateKey);
+
+            byte[] signBytes = [.. HttpSetUp.genHash.FromHex(), .. result.VerifiablePayload];
+
+            var signature = NaclFast.SignDetached(msg: signBytes, corruptKeys.SecretKey);
+
+            Assert.IsTrue(!NaclFast.SignDetachedVerify(result.VerifiablePayload, signature, corruptKeys.PublicKey));
         }
 
         [Test, Timeout(20000)]
@@ -223,7 +236,7 @@ namespace Unit_Tests.Model.Transactions.Verified
             transfer.Deadline = 118099407728;
 
             var result = keys.SignTransaction(transfer, HttpSetUp.genHash.FromHex()).Prepare();
-
+            Assert.That(result.Hash == "B4152F1E00335518CD370022252816DEAF61BEFEC7B4A8763D9D0E3BD863114C");
             Assert.That(result.Payload.ToHex(), Is.EqualTo("98000000000000000A7E8459A239F63B9F01EBC5CFB4929A37574BE94574AFF683E0B46CB239D18E502329816E0BDA476856822A2B9EA4AF7EC54188D60E449FCE4585D7822EE901F8D6857FBE59B1E30C6EF73C208E3082AB0102352C8B67175E24B83D371DF3F70000000001984E41A08601000000000070F3457F1B00000080F403000000000086E4FDE34B139F8F0006706C61736D61"));
         }
 
