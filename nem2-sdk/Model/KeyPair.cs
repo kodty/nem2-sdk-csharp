@@ -119,13 +119,13 @@ namespace io.nem2.sdk.Model
 
         public SimpleTransaction<AggregatePayload> CosignTransaction(SimpleTransaction<AggregatePayload> transaction, byte[] networkGenHash)
         {
-            var signature = NaclFast.SignDetached(msg: [.. networkGenHash, ..transaction.VerifiedPayload.Take(52).ToArray()], SecretKey);
+            var signature = NaclFast.SignDetached(msg: transaction.Hash.FromHex(), SecretKey);
 
             Cosignature cosig = new Cosignature
             {
-                Signature = signature.ToHex(),
+                Version = 0,
                 SignerPublicKey = PublicKeyString,
-                Version = 0
+                Signature = signature.ToHex(), 
             };
 
             transaction.TransactionExtension.Cosignatures.Add(cosig);

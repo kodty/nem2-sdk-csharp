@@ -1,4 +1,5 @@
 ﻿using Coppery;
+using Org.BouncyCastle.Crypto.Digests;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -61,8 +62,20 @@ namespace io.nem2.sdk.Model.Transactions
             {
                 Payload = tBytes[0],
                 VerifiablePayload = tBytes[1],
-                Signer = Signer.ToHex()
+                Signer = Signer.ToHex(),
+                Hash = Hash(tBytes[1]).ToHex()
             };
+        }
+
+        private static byte[] Hash(byte[] data3)
+        {
+            var hash = new byte[32];
+
+            var sha3Hasher = new Sha3Digest(256);
+            sha3Hasher.BlockUpdate(data3, 0, data3.Length);
+            sha3Hasher.DoFinal(hash, 0);
+
+            return hash;
         }
 
         protected virtual byte[][] Serialize(uint size)

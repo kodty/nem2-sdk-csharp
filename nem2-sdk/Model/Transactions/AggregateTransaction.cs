@@ -1,5 +1,4 @@
 ﻿using Coppery;
-using io.nem2.sdk.Infrastructure.Interfaces;
 using io.nem2.sdk.Infrastructure.Responses;
 using Org.BouncyCastle.Crypto.Digests;
 
@@ -32,15 +31,13 @@ namespace io.nem2.sdk.Model.Transactions
  
             TransactionsHash 
                 = CalculateMerkleRoot(
-                    EmbeddedTransactions.Select(e => Hash(e.VerifiablePayload)).ToArray()
+                    EmbeddedTransactions.Select(e => e.Hash.FromHex()).ToArray()
                     );
         }
 
         private byte[] CalculateMerkleRoot(byte[][] embeddedTransactionHashes)
         {
             var numRemainingHashes = embeddedTransactionHashes.Length;
-
-            var hash = new byte[32];
 
             var sha3Hasher = new Sha3Digest(256);
 
@@ -65,8 +62,6 @@ namespace io.nem2.sdk.Model.Transactions
 
                     sha3Hasher.DoFinal(embeddedTransactionHashes[(int)Math.Floor((double)i / 2)]);
                     i += 2;
-
-                    sha3Hasher.Reset();
                 }
 
                 numRemainingHashes = (int)Math.Floor((double)numRemainingHashes / 2);
