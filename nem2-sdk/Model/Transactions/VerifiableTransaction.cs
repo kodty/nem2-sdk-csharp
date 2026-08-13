@@ -37,14 +37,12 @@ namespace io.nem2.sdk.Model.Transactions
 
         public override SignedTransaction Prepare()
         {
-            byte[][] tBytes = new byte[2][];
-
-            tBytes = this.Serialize(Size);
+            Serialize();
 
             return new SignedTransaction()
             {
-                Payload = tBytes[0],
-                VerifiablePayload = tBytes[1],
+                Payload = Payload,
+                VerifiablePayload = VerifiablePayload,
                 Signature = Signature.ToHex(),
                 Signer = Signer.ToHex(),
                 Hash = Hash,
@@ -65,11 +63,13 @@ namespace io.nem2.sdk.Model.Transactions
             return hash;
         }
 
-        protected override byte[][] Serialize(uint size)
+        protected override void Serialize()
         {
+            Payload = new byte[Size];
+
             lock (this)
             {
-                DataSerializer serializer = new DataSerializer(size, 108);
+                DataSerializer serializer = new DataSerializer(Payload);
 
                 serializer.SerializeProperty(Size);
                 serializer.SerializeProperty(new byte[4]);
@@ -84,7 +84,7 @@ namespace io.nem2.sdk.Model.Transactions
 
                 Extend(serializer);
 
-                return serializer.GetBytes();
+                VerifiablePayload = Payload.Take(new Range(108, Payload.Length)).ToArray();
             }
         }
     }

@@ -15,6 +15,10 @@ namespace io.nem2.sdk.Model.Transactions
 
         public ushort Type { get; set; }
 
+        internal byte[] Payload { get; set; }
+
+        internal byte[] VerifiablePayload { get; set; }
+
         public Transaction(byte version, byte network, ushort type)
         {
             Size += 48;
@@ -51,19 +55,17 @@ namespace io.nem2.sdk.Model.Transactions
 
         public virtual SignedTransaction Prepare()
         {
-            byte[][] tBytes = new byte[2][];
-
             if (Size % 8 != 0)
                 Size += (uint)((Math.Ceiling((decimal)Size / 8) * 8) - Size);
             
-            tBytes = this.Serialize(Size);
+            Serialize();
 
             return new SignedTransaction()
             {
-                Payload = tBytes[0],
-                VerifiablePayload = tBytes[1],
+                Payload = Payload,
+                VerifiablePayload = VerifiablePayload,
                 Signer = Signer.ToHex(),
-                Hash = Hash(tBytes[1]).ToHex()
+                Hash = Hash(VerifiablePayload).ToHex()
             };
         }
 
@@ -78,11 +80,13 @@ namespace io.nem2.sdk.Model.Transactions
             return hash;
         }
 
-        protected virtual byte[][] Serialize(uint size)
+        protected virtual void Serialize()
         {
+            Payload = new byte[Size];
+            
             lock (this)
             {
-                DataSerializer serializer = new DataSerializer(size, 44);
+                DataSerializer serializer = new DataSerializer(Payload);
 
                 serializer.SerializeProperty(Size);
                 serializer.SerializeProperty(new byte[4]);
@@ -94,7 +98,7 @@ namespace io.nem2.sdk.Model.Transactions
 
                 Extend(serializer);
 
-                return serializer.GetBytes();
+                VerifiablePayload = Payload.Take(new Range(44, Payload.Length)).ToArray();
             }
         }
     }   

@@ -102,14 +102,13 @@ namespace io.nem2.sdk.Model
         {
             if (transaction.Signer.ToHex() == PublicKeyString)
             {
-                var tBytes = transaction.Prepare();
+                transaction.Prepare();
 
-                byte[] signBytes = [.. networkGenHash, .. tBytes.VerifiablePayload];
+                byte[] signBytes = [.. networkGenHash, .. transaction.VerifiablePayload];
 
                 var signature = NaclFast.SignDetached(msg: signBytes, SecretKey);
 
                 transaction.Signature = signature;
-                transaction.VerifiedPayload = tBytes.VerifiablePayload;
                 transaction.Hash = VerifiableTransaction.HashTransaction(transaction.Signature, PublicKey, signBytes).ToHex();
 
                 return transaction;

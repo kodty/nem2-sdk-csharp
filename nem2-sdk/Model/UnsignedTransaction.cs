@@ -17,9 +17,9 @@ namespace io.nem2.sdk.Model
 
         public bool IsAggregate { get; set; }
 
-        public bool VerifySignature()
+        public bool VerifySignature(byte[] networkGenHash)
         {
-            return NaclFast.SignDetachedVerify(VerifiablePayload, Signature.FromHex(), Signer.FromHex());
+            return NaclFast.SignDetachedVerify(networkGenHash.Concat(VerifiablePayload).ToArray(), Signature.FromHex(), Signer.FromHex());
         }
 
         public static bool VerifySignature(byte[] signedBytes, string signature, string signer)

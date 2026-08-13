@@ -41,7 +41,7 @@ namespace Unit_Tests.Crypto
 
             var st = keyPair.SignTransaction(tx, HttpSetUp.genHash.FromHex()).Prepare();
 
-            Assert.True(st.VerifySignature());
+            Assert.True(st.VerifySignature(HttpSetUp.genHash.FromHex()));
         }
 
         [Test, Timeout(20000)]
