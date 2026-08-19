@@ -38,6 +38,6 @@ namespace io.nem2.sdk.Infrastructure.HttpClients
             => HttpGetAsync<NodeRESTVersion>(["node", "server"]);
 
         public IObservable<ExtendedHttpResponseMessege<NodeUnlockedAccounts>> GetNodeHarvestingAccountInfo()
-            => HttpGetAsync<NodeUnlockedAccounts>(["node", "unlocked"]);
+            => HttpGetAsync<NodeUnlockedAccounts>(["node", "unlockedaccount"]);
     }
 }

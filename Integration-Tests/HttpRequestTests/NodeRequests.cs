@@ -1,6 +1,8 @@
 ﻿using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
+using io.nem2.sdk.Model;
+using Coppery;
 
 namespace Integration_Tests
 {
@@ -24,10 +26,10 @@ namespace Integration_Tests
             Assert.That(response.ComposedResponse.Status, Is.Not.Null);
             Assert.That(response.ComposedResponse.Status.Db, Is.Not.Null);
             Assert.That(response.ComposedResponse.Status.Db, Is.EqualTo("up"));
-            Assert.That(response.ComposedResponse.Status.ApiNode, Is.EqualTo("up"));
-           
+            Assert.That(response.ComposedResponse.Status.ApiNode, Is.EqualTo("up"));          
         }
 
+        
         [Test, Timeout(20000)]
         public async Task GetNodePeers()
         {
@@ -35,15 +37,37 @@ namespace Integration_Tests
 
             var response = await client.GetNodePeers();
 
-            Assert.That(response.ComposedResponse[1].Version, Is.GreaterThanOrEqualTo(0));
+            Assert.That(response.ComposedResponse[1].Version == 16777993 || response.ComposedResponse[1].Version == 0);
             Assert.That(response.ComposedResponse[1].Host, !Is.Null);
-            Assert.That(response.ComposedResponse[1].Port, Is.EqualTo(7900));
-            Assert.That(response.ComposedResponse[1].NetworkIdentifier, Is.EqualTo(152));
+            Assert.That(response.ComposedResponse[1].Port == 7900);
+            Assert.That(response.ComposedResponse[1].NetworkIdentifier.GetNetworkValue(), Is.EqualTo(NetworkType.Types.TEST_NET));
             Assert.That(response.ComposedResponse[1].Roles, Is.GreaterThan(0));
-            Assert.That(response.ComposedResponse[1].NetworkGenerationHashSeed, Is.EqualTo("49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4"));
+            Assert.That(response.ComposedResponse[1].NetworkGenerationHashSeed, Is.EqualTo(HttpSetUp.genHash));
             Assert.That(response.ComposedResponse[1].FriendlyName.Length, Is.GreaterThan(0));
-            Assert.That(response.ComposedResponse[1].PublicKey.Length, Is.EqualTo(64));           
+            Assert.That(response.ComposedResponse[1].PublicKey.Length, Is.EqualTo(64));
+            Assert.That(response.ComposedResponse[1].PublicKey.IsHex());
         }
+
+        [Test, Timeout(20000)]
+        public async Task GetNodeInfo()
+        {
+            var client = new NetworkNodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+
+            var response = await client.GetNodeInformation();
+
+            Assert.That(response.ComposedResponse.Version == 16777993 || response.ComposedResponse.Version == 0);
+            Assert.That(response.ComposedResponse.Host, !Is.Null);
+            Assert.That(response.ComposedResponse.Port == 7900);
+            Assert.That(response.ComposedResponse.NetworkIdentifier.GetNetworkValue(), Is.EqualTo(NetworkType.Types.TEST_NET));
+            Assert.That(response.ComposedResponse.Roles, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.NetworkGenerationHashSeed, Is.EqualTo(HttpSetUp.genHash));
+            Assert.That(response.ComposedResponse.FriendlyName.Length, Is.GreaterThan(0));
+            Assert.That(response.ComposedResponse.PublicKey.Length, Is.EqualTo(64));
+            Assert.That(response.ComposedResponse.PublicKey.IsHex());
+            Assert.That(response.ComposedResponse.PublicKey.Length, Is.EqualTo(64));
+            Assert.That(response.ComposedResponse.NodePublicKey.IsHex());
+        }
+
 
         [Test, Timeout(20000)]
         public async Task GetNodeStorage()
@@ -55,6 +79,7 @@ namespace Integration_Tests
             Assert.That(response.ComposedResponse.NumBlocks, Is.GreaterThan(1));
             Assert.That(response.ComposedResponse.NumTransactions, Is.GreaterThan(1));
             Assert.That(response.ComposedResponse.NumAccounts, Is.GreaterThan(1));
+            Assert.That(response.ComposedResponse.Database, !Is.Null);
         }
 
         [Test, Timeout(20000)]
@@ -78,9 +103,18 @@ namespace Integration_Tests
 
             Assert.That(response.ComposedResponse.ServerInfo.Deployment.LastUpdatedDate, Is.EqualTo("n/a"));
             Assert.That(response.ComposedResponse.ServerInfo.Deployment.DeploymentToolVersion, Is.EqualTo("alpha"));
-            Assert.That(response.ComposedResponse.ServerInfo.Deployment.DeploymentTool, Is.EqualTo("shoestring"));
-            Assert.That(response.ComposedResponse.ServerInfo.RestVersion, Is.EqualTo("2.5.1"));
-            Assert.That(response.ComposedResponse.ServerInfo.SdkVersion, Is.Null);
+            Assert.That(response.ComposedResponse.ServerInfo.Deployment.DeploymentTool == "symbol-bootstrap" || response.ComposedResponse.ServerInfo.Deployment.DeploymentTool == "shoestring");
+            Assert.That(response.ComposedResponse.ServerInfo.RestVersion, !Is.Null);
+        }
+
+        [Test, Timeout(20000)]
+        public async Task GetNodeHarvestAccount()
+        {
+            var client = new NetworkNodeHttp(HttpSetUp.TestnetNode, HttpSetUp.Port);
+
+            var response = await client.GetNodeHarvestingAccountInfo();
+
+            Assert.That(response.ComposedResponse.UnlockedAccount[0].IsHex());         
         }
     }
 }

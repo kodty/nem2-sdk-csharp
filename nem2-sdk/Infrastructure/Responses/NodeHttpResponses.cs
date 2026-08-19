@@ -29,7 +29,7 @@
 
         public int Port { get; set; }
 
-        public int NetworkIdentifier { get; set; }
+        public byte NetworkIdentifier { get; set; }
 
         public string FriendlyName { get; set; }
 
@@ -43,6 +43,8 @@
         public int NumTransactions { get; set; }
 
         public int NumAccounts { get; set; }
+
+        public string Database { get; set; }
     }
 
     public class CommunicationTimestamps
@@ -74,8 +76,6 @@
     public class ServerInfo
     {
         public string RestVersion { get; set; }
-
-        public string SdkVersion { get; set; }
 
         public Deployment Deployment { get; set; }
     }
