@@ -269,4 +269,10 @@
     {
         public int MaxMosaicRestrictionValues { get; set; }
     }
+
+    public class InflationInformation
+    {        
+        public ulong StartHeight { get; set; }
+        public ulong RewardAmount { get; set; }
+    }
 }

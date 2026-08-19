@@ -15,5 +15,7 @@ namespace io.nem2.sdk.Infrastructure.Interfaces
         IObservable<ExtendedHttpResponseMessege<NodeTime>> GetNodeTime();
         IObservable<ExtendedHttpResponseMessege<NodeRESTVersion>> GetNodeRESTVersion();
         IObservable<ExtendedHttpResponseMessege<NodeUnlockedAccounts>> GetNodeHarvestingAccountInfo();
+        IObservable<ExtendedHttpResponseMessege<InflationInformation[]>> GetNetworkInflation();
+        IObservable<ExtendedHttpResponseMessege<InflationInformation>> GetNetworkInflationAt(ulong height);
     }
 }

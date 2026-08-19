@@ -23,6 +23,29 @@ namespace Integration_Tests.HttpRequests
         }
 
         [Test, Timeout(20000)]
+        public async Task GetNetworkInflation()
+        {
+            var client = new NetworkNodeHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetNetworkInflation();
+
+            Assert.That(response.ComposedResponse[1].StartHeight, Is.EqualTo(5760));
+            Assert.That(response.ComposedResponse[1].RewardAmount, Is.EqualTo(191997042));
+
+        }
+
+        [Test]
+        public async Task GetNetworkInflationAtHeight()
+        {
+            var client = new NetworkNodeHttp(HttpSetUp.Node, HttpSetUp.Port);
+
+            var response = await client.GetNetworkInflationAt(5760);
+
+            Assert.That(response.ComposedResponse.RewardAmount, Is.EqualTo(191997042));
+
+        }
+
+        [Test, Timeout(20000)]
         public async Task GetNetworkRentalFees()
         {
             var client = new NetworkNodeHttp(HttpSetUp.Node, HttpSetUp.Port);

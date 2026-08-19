@@ -19,6 +19,12 @@ namespace io.nem2.sdk.Infrastructure.HttpClients
         public IObservable<ExtendedHttpResponseMessege<NetworkProperties>> GetNetworkProperties()
             => HttpGetAsync<NetworkProperties>(["network", "properties"]);
 
+        public IObservable<ExtendedHttpResponseMessege<InflationInformation[]>> GetNetworkInflation()
+           => HttpGetAsyncArray<InflationInformation>(["network", "inflation"]);
+
+        public IObservable<ExtendedHttpResponseMessege<InflationInformation>> GetNetworkInflationAt(ulong height)
+            => HttpGetAsync<InflationInformation>(["network", "inflation", "at", height]);
+
         public IObservable<ExtendedHttpResponseMessege<NodeHealth>> GetNodeHealth()
             => HttpGetAsync<NodeHealth>(["node", "health"]);    
 
