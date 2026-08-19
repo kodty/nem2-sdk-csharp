@@ -35,19 +35,6 @@
         public string Dummy { get; set; }
     }
 
-    public class AggregateProperties
-    {
-        public string MaxTransactionsPerAggregate { get; set; }
-
-        public string MaxCosignaturesPerAggregate { get; set; }
-
-        public bool EnableStrictCosignatureCheck { get; set; }
-
-        public bool EnableBondedAggregateSupport { get; set; }
-
-        public string MaxBondedTransactionLifetime { get; set; }
-    }
-
     public class Chain
     {
         public bool EnableVerifiableState { get; set; }
@@ -88,6 +75,8 @@
 
         public string MinVoterBalance { get; set; }
 
+        public ushort VotingSetGrouping { get; set; }
+
         public string MaxVotingKeysPerAccount { get; set; }
 
         public string MinVotingKeyLifetime { get; set; }
@@ -98,9 +87,24 @@
 
         public string HarvestNetworkPercentage { get; set; }
 
+        public string harvestNetworkFeeSinkAddressV1 { get; set; }
+
         public string HarvestNetworkFeeSinkAddress { get; set; }
 
         public string MaxTransactionsPerBlock { get; set; }
+    }
+
+    public class AggregateProperties
+    {
+        public string MaxTransactionsPerAggregate { get; set; }
+
+        public string MaxCosignaturesPerAggregate { get; set; }
+
+        public bool EnableStrictCosignatureCheck { get; set; }
+
+        public bool EnableBondedAggregateSupport { get; set; }
+
+        public string MaxBondedTransactionLifetime { get; set; }
     }
 
     public class Lockhash
@@ -131,6 +135,8 @@
         public string MaxMosaicDuration { get; set; }
 
         public string MaxMosaicDivisibility { get; set; }
+
+        public string MosaicRentalFeeSinkAddressV1 { get; set; }
 
         public string MosaicRentalFeeSinkAddress { get; set; }
 
@@ -245,10 +251,22 @@
         public string SkipSecretLockExpirations { get; set; }
 
         public string ForceSecretLockExpirations { get; set; }
+
+        public string UniqueAggregateTransactionHash { get; set; }
     }
 
     public class Transfer
     {
         public string MaxMessageSize { get; set; }
+    }
+
+    public class RestrictionAccount
+    {
+        public int MaxAccountRestrictionValues { get; set; }
+    }
+
+    public class RestrictionMosaic
+    {
+        public int MaxMosaicRestrictionValues { get; set; }
     }
 }

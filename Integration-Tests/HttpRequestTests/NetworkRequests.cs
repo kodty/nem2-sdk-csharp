@@ -58,6 +58,7 @@ namespace Integration_Tests.HttpRequests
 
             Assert.That(response.ComposedResponse.TreasuryReissuanceTransactionSignatures.Count, Is.GreaterThan(0));
 
+            Assert.That(response.ComposedResponse.Network.Identifier, Is.EqualTo("mainnet"));
             Assert.That(response.ComposedResponse.Network.NemesisSignerPublicKey, Is.EqualTo("BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F"));
             Assert.That(response.ComposedResponse.Network.NodeEqualityStrategy, Is.EqualTo("host"));
             Assert.That(response.ComposedResponse.Network.GenerationHashSeed, Is.EqualTo("57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6"));
