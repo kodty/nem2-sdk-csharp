@@ -1,5 +1,4 @@
 ﻿using Coppery;
-using io.nem2.sdk.Infrastructure.Interfaces;
 using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model;
 using System.Reactive.Linq;
@@ -11,10 +10,7 @@ namespace io.nem2.sdk.Infrastructure.HttpClients
 {
     public class TransactionHttp : HttpRouter, ITransactionRepository
     {
-        public TransactionHttp(string host, int port) : base(host, port) {
-
-            Composer = new ObjectComposer(TransactionTypes.CustomFunction);
-        }
+        public TransactionHttp(string host, int port) : base(host, port) { }
 
         public IObservable<ExtendedHttpResponseMessege<Datum<TransactionData>>> SearchConfirmedTransactions(QueryModel queryModel)
             => HttpGetAsync<Datum<TransactionData>>(queryModel, ["transactions", "confirmed"]);

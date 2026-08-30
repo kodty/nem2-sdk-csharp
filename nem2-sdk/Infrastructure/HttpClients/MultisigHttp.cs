@@ -1,4 +1,4 @@
-﻿using io.nem2.sdk.Infrastructure.Interfaces;
+﻿using Coppery;
 using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model.Accounts;
 

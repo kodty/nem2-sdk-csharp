@@ -1,4 +1,4 @@
-﻿using Integration_Tests;
+﻿using Integration_Tests.HttpRequestTests;
 using io.nem2.sdk.Model;
 
 namespace Unit_Tests.Model.Transactions.Embedded

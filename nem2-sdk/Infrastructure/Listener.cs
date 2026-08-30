@@ -1,5 +1,4 @@
-﻿using Coppery;
-using io.nem2.sdk.Infrastructure.Interfaces;
+﻿using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
@@ -10,7 +9,7 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Text.Json.Nodes;
 
-namespace io.nem2.sdk.Infrastructure
+namespace Coppery
 {
     public class Listener : HttpRouter
     {
@@ -35,8 +34,6 @@ namespace io.nem2.sdk.Infrastructure
 
         public Listener(string domain, int port = 3000) : base(domain, port)
         {
-            base.Composer.Function = TransactionTypes.CustomFunction;
-
             ClientSocket = new ClientWebSocket();
 		}
 
@@ -50,7 +47,7 @@ namespace io.nem2.sdk.Infrastructure
 
                 var input = JsonNode.Parse(ReadSocket().Result);
 
-                Uid = Composer.GenerateObject<WebsocketUID>(input);
+                Uid = JsonSerializerExtension.Deserialize<WebsocketUID>(input);
 
                 LoopReads = Task.Run(() => LoopRead());
 
@@ -103,8 +100,8 @@ namespace io.nem2.sdk.Infrastructure
         public IObservable<BlockInfo> NewBlock()
         {
             SubscribeToChannel("block");
-            
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "block")  
+
+            return _subject.Where(e => JsonSerializerExtension.Deserialize<SocketTopic>(e).Topic  == "block")  
                .Select(ReturnSocketBlockResponse);         
         }
 
@@ -112,7 +109,7 @@ namespace io.nem2.sdk.Infrastructure
         {
             SubscribeToChannel(string.Concat("confirmedAdded/", address.Plain));
 
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "confirmedAdded/" + address.Plain)
+            return _subject.Where(e => JsonSerializerExtension.Deserialize<SocketTopic>(e).Topic == "confirmedAdded/" + address.Plain)
                .Select(e => ReturnSocketTransactionResponse(e));         
             
         }
@@ -121,7 +118,7 @@ namespace io.nem2.sdk.Infrastructure
         {
             SubscribeToChannel(string.Concat("unconfirmedAdded/", address.Plain));
 
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(JsonNode.Parse(e)).Topic == "unconfirmedAdded/" + address.Plain)
+            return _subject.Where(e => JsonSerializerExtension.Deserialize<SocketTopic>(e).Topic == "unconfirmedAdded/" + address.Plain)
                  .Select(e => ReturnSocketTransactionResponse(e));
         }
 
@@ -129,7 +126,7 @@ namespace io.nem2.sdk.Infrastructure
         {
             SubscribeToChannel(string.Concat("unconfirmedRemoved/", address.Plain));
 
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "unconfirmedRemoved/" + address.Plain)
+            return _subject.Where(e => JsonSerializerExtension.Deserialize<SocketTopic>(e).Topic == "unconfirmedRemoved/" + address.Plain)
                  .Select(e => ReturnSocketTransactionResponse(e));
         }
 
@@ -137,7 +134,7 @@ namespace io.nem2.sdk.Infrastructure
         {
             SubscribeToChannel(string.Concat("partialAdded/", address.Plain));
 
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "partialAdded/" + address.Plain)
+            return _subject.Where(e => JsonSerializerExtension.Deserialize<SocketTopic>(e).Topic == "partialAdded/" + address.Plain)
                 .Select(e => ReturnSocketTransactionResponse(e));
         }
 
@@ -145,38 +142,34 @@ namespace io.nem2.sdk.Infrastructure
         {
             SubscribeToChannel(string.Concat("partialRemoved/", address.Plain));
 
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "partialRemoved/" + address.Plain)
+            return _subject.Where(e => JsonSerializerExtension.Deserialize<SocketTopic>(e).Topic == "partialRemoved/" + address.Plain)
                  .Select(e => ReturnSocketTransactionResponse(e));
         }
 
         private BlockInfo ReturnSocketBlockResponse(string data)
         {
-            var input = JsonNode.Parse(JsonNode.Parse(data)["data"].ToString());
+            return JsonSerializerExtension.Deserialize<BlockInfo>(JsonNode.Parse(data)["data"]);
 
-            return Composer.GenerateObject<BlockInfo>(input); 
-        }
-
+        }  
         private TransactionData ReturnSocketTransactionResponse(string data)
         {
-            var t = JsonNode.Parse(data)["data"];
-
-            return Composer.GenerateObject(typeof(TransactionData), t);
+            return JsonSerializerExtension.Deserialize<TransactionData>(JsonNode.Parse(data)["data"].ToString());
         }
 
         public IObservable<BroadcastStatus> GetTransactionStatus(Address address)
         {
             SubscribeToChannel(string.Concat("status/", address.Plain));
 
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "status/" + address.Plain)
-                .Select(e => Composer.GenerateObject<BroadcastStatus>(JsonNode.Parse(e)["data"].ToString()));
+            return _subject.Where(e => JsonSerializerExtension.Deserialize<SocketTopic>(e).Topic == "status/" + address.Plain)
+                .Select(e => JsonSerializerExtension.Deserialize<BroadcastStatus>(e));
         }
 
         public IObservable<CosignatureSignedTransaction> CosignatureAdded(Address address)
         {
             SubscribeToChannel(string.Concat("cosignature/", address.Plain));
 
-            return _subject.Where(e => Composer.GenerateObject<SocketTopic>(e).Topic == "cosignature/" + address.Plain)
-                .Select(e => Composer.GenerateObject<CosignatureSignedTransaction>(e));
+            return _subject.Where(e => JsonSerializerExtension.Deserialize<SocketTopic>(e).Topic == "cosignature/" + address.Plain)
+                .Select(e => JsonSerializerExtension.Deserialize<CosignatureSignedTransaction>(e));
         }
 
         private bool TransactionHasSignerOrReceptor(VerifiableTransaction transaction, Address address)

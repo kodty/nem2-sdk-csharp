@@ -52,6 +52,6 @@
 
     public class Namespace_Ids
     {
-        public List<string> namespaceIds { get; set; }
+        public List<string> NamespacesIds { get; set; }
     }
 }

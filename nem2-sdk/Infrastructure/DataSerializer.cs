@@ -1,4 +1,4 @@
-﻿namespace Coppery
+﻿namespace io.nem2.sdk.Infrastructure
 {
     public class DataSerializer
     {

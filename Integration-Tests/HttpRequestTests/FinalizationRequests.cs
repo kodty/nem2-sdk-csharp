@@ -1,8 +1,9 @@
 ﻿using Coppery;
+using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
 
-namespace Integration_Tests.HttpRequests
+namespace Integration_Tests.HttpRequestTests
 {
     internal class FinalizationRequests
     {

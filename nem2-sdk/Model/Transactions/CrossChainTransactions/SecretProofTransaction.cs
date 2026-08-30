@@ -1,7 +1,7 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Model.Accounts;
 
-namespace io.nem2.sdk.Model.Transactions.CrossChainTransactions
+namespace io.nem2.sdk.Model.Transactions
 {
     public class SecretProofTransaction : TransactionExtension
     {

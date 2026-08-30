@@ -1,4 +1,4 @@
-﻿namespace test.Model.AccountTest
+﻿namespace Unit_Tests.Model.AccountTest
 {
     public class MultisigAccountGraphInfoTest
     {

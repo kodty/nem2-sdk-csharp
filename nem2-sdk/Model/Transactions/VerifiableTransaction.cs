@@ -1,4 +1,4 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace io.nem2.sdk.Model.Transactions
@@ -29,8 +29,6 @@ namespace io.nem2.sdk.Model.Transactions
 
         public ulong Deadline { get; set; }
 
-        public string Hash { get; set; }
-
         public byte[] VerifiedPayload { get; set; }
 
         public abstract bool IsAggregate();
@@ -42,7 +40,7 @@ namespace io.nem2.sdk.Model.Transactions
             return new SignedTransaction()
             {
                 Payload = Payload,
-                VerifiablePayload = VerifiablePayload,
+                PayloadSigned = VerifiablePayload,
                 Signature = Signature.ToHex(),
                 Signer = Signer.ToHex(),
                 Hash = Hash,

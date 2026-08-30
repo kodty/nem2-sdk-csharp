@@ -1,4 +1,4 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.Responses;
 using Org.BouncyCastle.Crypto.Digests;
 
@@ -26,7 +26,7 @@ namespace io.nem2.sdk.Model.Transactions
             {
                 EmbeddedTransactions[i] = transactions[i].Prepare();
 
-                PayloadSize += (uint)EmbeddedTransactions[i].Payload.Length;
+				PayloadSize += (uint)EmbeddedTransactions[i].Payload.Length;
             }
  
             TransactionsHash 

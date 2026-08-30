@@ -1,12 +1,11 @@
-﻿using Coppery;
-using io.nem2.sdk.Infrastructure.HttpClients;
+﻿using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.Responses;
 
-namespace Integration_Tests.HttpRequests
+namespace Integration_Tests.HttpRequestTests
 {
     public class AccountRestrictionRequests
     {
@@ -21,7 +20,7 @@ namespace Integration_Tests.HttpRequests
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
             var restriction = await client.GetConfirmedTransaction("2A5280F16603DCF1544619D87BB0BC367F29C32D3D52C5B659744B7CEE6301A6");
-            var tx = (AccountRestriction)restriction.ComposedResponse.Transaction;
+            var tx = restriction.ComposedResponse.Transaction.AsExtendedType<AccountRestriction>();
            
             Assert.IsTrue(tx.RestrictionAdditions[0].IsHex(48));
             Assert.That(tx.RestrictionDeletions.Count, Is.EqualTo(0));

@@ -3,8 +3,9 @@ using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
+using Coppery;
 
-namespace Integration_Tests.HttpRequests
+namespace Integration_Tests.HttpRequestTests
 {
     internal class HashlockRequests
     {

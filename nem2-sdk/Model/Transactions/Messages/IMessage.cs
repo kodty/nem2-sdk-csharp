@@ -1,4 +1,4 @@
-﻿namespace io.nem2.sdk.Model.Transactions.Messages
+﻿namespace io.nem2.sdk.Model.Transactions
 {
     public abstract class IMessage
     {

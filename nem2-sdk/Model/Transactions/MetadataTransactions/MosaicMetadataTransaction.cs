@@ -1,6 +1,7 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
+using io.nem2.sdk.Model.Articles;
 
-namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
+namespace io.nem2.sdk.Model.Transactions
 {
     public class MosaicMetadataTransaction : AccountMetadataTransaction
     {
@@ -14,9 +15,10 @@ namespace io.nem2.sdk.Model.Transactions.MetadataTransactions
             serializer.SerializeProperty(base.Value);
         }
 
-        public MosaicMetadataTransaction(string targetAddress, string targetMosaicId, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value) : base(targetAddress,  scopedKey,  valueSizeDelta,  valueSize, value)
+        public MosaicMetadataTransaction(string targetAddress, Mosaic targetMosaicId, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value) 
+            : base(targetAddress,  scopedKey,  valueSizeDelta,  valueSize, value)
         {
-            TargetMosaicId = targetMosaicId.FromHex();
+            TargetMosaicId = targetMosaicId.MosaicId.HexId.FromHex();
         }
 
         public byte[] TargetMosaicId { get; set; }

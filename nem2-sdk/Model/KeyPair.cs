@@ -1,4 +1,4 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model.Transactions;
 using Org.BouncyCastle.Crypto.Digests;
@@ -32,6 +32,7 @@ namespace io.nem2.sdk.Model
             PublicKey = secretKey.SubArray(32, 32);
 
         }
+
         internal SecretKeyPair(string privateKey, string publicKey)
         {
             if (publicKey == null) throw new ArgumentNullException(nameof(publicKey));
@@ -52,8 +53,8 @@ namespace io.nem2.sdk.Model
             var keyPair = NaclFast.SignKeyPairFromSeed(privateKeyArray);
 
             return new SecretKeyPair(keyPair.SecretKey);
-
         }
+
         public static SecretKeyPair CreateFromPrivateKey(string privateKey)
         {
             if (privateKey == null) throw new ArgumentNullException(nameof(privateKey));

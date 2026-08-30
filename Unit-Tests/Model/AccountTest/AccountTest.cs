@@ -1,8 +1,8 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 
-namespace test.Model.AccountTest
+namespace Unit_Tests.Model.AccountTest
 {
     public class AccountTest
     {

@@ -1,4 +1,4 @@
-﻿namespace io.nem2.sdk.Infrastructure
+﻿namespace Coppery
 {
     public class ExtendedHttpResponseMessege<T>
     {

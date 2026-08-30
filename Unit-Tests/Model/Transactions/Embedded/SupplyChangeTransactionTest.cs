@@ -1,10 +1,5 @@
-﻿using Coppery;
-using Integration_Tests;
+﻿using Integration_Tests.HttpRequestTests;
 using io.nem2.sdk.Model;
-using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model.Articles;
-
-
 
 namespace Unit_Tests.Model.Transactions.Embedded
 {

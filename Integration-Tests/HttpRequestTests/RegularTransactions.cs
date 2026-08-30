@@ -1,12 +1,11 @@
 ﻿using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
-using Coppery;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.Responses;
 
-namespace Integration_Tests.HttpRequests
+namespace Integration_Tests.HttpRequestTests
 {
     internal class RegularTransactions
     {

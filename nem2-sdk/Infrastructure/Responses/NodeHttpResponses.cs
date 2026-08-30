@@ -38,13 +38,13 @@
 
     public class NodeStorage
     {
-        public int NumBlocks { get; set; }
+        public ulong NumBlocks { get; set; }
 
-        public int NumTransactions { get; set; }
+        public ulong NumTransactions { get; set; }
 
-        public int NumAccounts { get; set; }
+        public ulong NumAccounts { get; set; }
 
-        public string Database { get; set; }
+       // public string Database { get; set; }
     }
 
     public class CommunicationTimestamps

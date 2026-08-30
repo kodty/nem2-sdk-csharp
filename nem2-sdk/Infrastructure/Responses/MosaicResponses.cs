@@ -2,10 +2,17 @@
 {
     public class MosaicIds
     {
-        public List<string> mosaicIds { get; set; }
+        public List<string> MosaicsIds { get; set; }
     }
+
     public class MosaicTransfer
     {
+        public MosaicTransfer(string id, ulong amount)
+        {
+            Id = id;
+            Amount = amount;
+        }
+
         public string Id { get; set; }
 
         public ulong Amount { get; set; }

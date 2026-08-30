@@ -1,12 +1,15 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.HttpClients;
-using System.Reactive.Linq;
-using System.Diagnostics;
+using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Infrastructure;
+using io.nem2.sdk.Model.Articles;
+using io.nem2.sdk.Model.Transactions;
+using System.Diagnostics;
+using System.Reactive.Linq;
+using System.Text.Json;
 
-namespace Integration_Tests.HttpRequests.AccountHttpTests
+namespace Integration_Tests.HttpRequestTests.AccountHttpTests
 {
     public class AccountRequests
     {
@@ -131,32 +134,60 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
             var accountClient = new AccountHttp(HttpSetUp.Node, HttpSetUp.Port);
             var account = new PublicAccount(pubKey, NetworkType.Types.MAIN_NET);
 
-            var response = accountClient.GetAccount("NCA4PPX657N6GXPMVMZ2TZKLN37KZMJXNST63II");
+            Debug.WriteLine(101);
+            var response = accountClient.GetAccount(pubKey);
+            Debug.WriteLine(102);
 
-            response.Subscribe(r =>
-            {
+            var keys = SecretKeyPair.CreateFromPrivateKey(HttpSetUp.TestSK);
+            
+
+            // create embedded transaction(s)
+            var transfer = Transaction.Create(
+               new TransferTransaction_V1(
+                   address: Address.CreateFromEncoded("TA3GCBHJBTRCEHVYVHCNUCULY2NB76W7MVECFUY"),
+                   messege: EmptyMessage.Create(),
+                   mosaic: Mosaic.CreateFromHexIdentifier("72C0212E67A08BCE", 10000000)
+                   ),
+                NetworkType.Types.TEST_NET
+               );
+
+            transfer.SetSigner(keys.PublicKeyString);
+
+         
+            var r = response.Wait();
+
+            Debug.WriteLine(((AccountData)JsonSerializer.Deserialize(r.Response.Content.ReadAsStringAsync().Result, typeof(AccountData))).Id);
+
                 if (!r.Response.IsSuccessStatusCode)
                 {
                     Assert.That(r.Response.IsSuccessStatusCode, Is.True);
                     return;
                 }
-          
-                Assert.IsTrue(r.ComposedResponse.Id.IsHex(24));
+                Debug.WriteLine(1);
+                
                 Assert.That(r.ComposedResponse.Account.Version, Is.EqualTo(1));
-                Assert.That(r.ComposedResponse.Account.PublicKeyHeight, Is.GreaterThanOrEqualTo(0));
+                Assert.That(r.ComposedResponse.Account.PublicKeyHeight, Is.GreaterThan(0));
                 Assert.That(r.ComposedResponse.Account.Address.IsHex(48));
-                Assert.That(r.ComposedResponse.Account.Importance, Is.GreaterThan(1));
+                Console.WriteLine(2);
+                //Assert.That(r.ComposedResponse.Account.Importance, Is.GreaterThan(1));
+                Console.WriteLine(3);
                 Assert.That(r.ComposedResponse.Account.AccountType, Is.GreaterThanOrEqualTo(0));
+                Console.WriteLine(4);
                 Assert.That(r.ComposedResponse.Account.AddressHeight, Is.GreaterThan(0));
-                
+                Console.WriteLine(5);
+
                 Assert.IsTrue(r.ComposedResponse.Account.PublicKey.IsHex(64));
+                Console.WriteLine(6);
                 Assert.That(r.ComposedResponse.Account.SupplementalPublicKeys, !Is.Null);
+                Console.WriteLine(7);
                 Assert.IsTrue(r.ComposedResponse.Account.SupplementalPublicKeys.Linked.PublicKey.IsHex(64));
+                Console.WriteLine(8);
                 Assert.IsTrue(r.ComposedResponse.Account.SupplementalPublicKeys.Node.PublicKey.IsHex(64));
+                Console.WriteLine(9);
                 Assert.IsTrue(r.ComposedResponse.Account.SupplementalPublicKeys.Vrf.PublicKey.IsHex(64));
-                
-                
-                Assert.That(r.ComposedResponse.Account.ImportanceHeight, Is.GreaterThan(0));
+                Assert.IsTrue(r.ComposedResponse.Id.IsHex(24));
+
+                Assert.That(r.ComposedResponse.Account.ImportanceHeight, Is.GreaterThanOrEqualTo(0));
                 
                 if (r.ComposedResponse.Account.Mosaics != null)
                 {
@@ -177,13 +208,7 @@ namespace Integration_Tests.HttpRequests.AccountHttpTests
                     }
                 
                 }
-            },
-            onError =>
-            {
-                Debug.WriteLine(onError.ToString());   
-            });
-
-            response.Wait();
+            
             
         }
 

@@ -2,12 +2,6 @@
 using io.nem2.sdk.Model.Articles;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.AccountRestrictions;
-using io.nem2.sdk.Model.Transactions.CrossChainTransactions;
-using io.nem2.sdk.Model.Transactions.KeyLinkTransactions;
-using io.nem2.sdk.Model.Transactions.Messages;
-using io.nem2.sdk.Model.Transactions.MetadataTransactions;
-using io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions;
-using io.nem2.sdk.Model.Transactions.MosaicRestrictions;
 
 namespace io.nem2.sdk.Model
 {
@@ -104,9 +98,9 @@ namespace io.nem2.sdk.Model
             return CreateTransaction(new MosaicAliasTransaction(mosaicId, namepaceId, aliasAction), fee);
         }
 
-        public SimpleTransaction<MosaicMetadataTransaction> CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, string targetMosaicId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee)
+        public SimpleTransaction<MosaicMetadataTransaction> CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, Mosaic targetMosaicId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee)
         {
-            return CreateTransaction(new MosaicMetadataTransaction(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value), fee);
+            return CreateTransaction(new MosaicMetadataTransaction(targetAddress, targetMosaicId, scopedKey, valueSizeDelta, valueSize, value), fee);
         }
 
         public SimpleTransaction<RegisterNamespace> CreateNamespaceRegistrationTransaction(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, ulong fee)

@@ -1,11 +1,11 @@
-﻿using Coppery;
-using io.nem2.sdk.Infrastructure.HttpClients;
+﻿using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.Responses;
+using Coppery;
 
-namespace Integration_Tests.HttpRequests
+namespace Integration_Tests.HttpRequestTests
 {
     internal class NamespaceRequests
     {
@@ -15,7 +15,7 @@ namespace Integration_Tests.HttpRequests
         }
 
         [Test, Timeout(20000)]
-        public async Task SearcNameSpaceRegistrationTransaction()
+        public async Task SearchNameSpaceRegistrationTransaction()
         {
             string pubKey = "BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F";
 

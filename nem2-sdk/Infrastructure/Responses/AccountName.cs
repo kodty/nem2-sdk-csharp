@@ -2,7 +2,7 @@
 {
     public class Account_Ids
     {
-        public List<string> addresses { get; set; }
+        public List<string> Addresses { get; set; }
     }
 
     public class Account_Names

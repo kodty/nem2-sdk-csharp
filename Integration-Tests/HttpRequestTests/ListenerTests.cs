@@ -1,19 +1,15 @@
-﻿using io.nem2.sdk.Infrastructure;
-using io.nem2.sdk.Infrastructure.HttpClients;
+﻿using Coppery;
+using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model.Articles;
-using io.nem2.sdk.Model.Transactions.Messages;
 using System.Reactive.Linq;
 
-namespace Integration_Tests.HttpRequests
+namespace Integration_Tests.HttpRequestTests
 {
     public class ListenerTests
     {
-        
-
-        [Test, Timeout(20000)]
+        [Test, Timeout(30000)]
         public async Task ListenForUnconfirmedTransactionAdded()
         {
             for (int x = 0; x < 10; x++)
@@ -65,6 +61,7 @@ namespace Integration_Tests.HttpRequests
             await listener.Open();
 
             var block = await listener.NewBlock().Take(1);
+
             Assert.That(block.Block.Height, Is.GreaterThan(100));
             Assert.AreEqual(1, block.Block.Version);
         }

@@ -1,5 +1,4 @@
-﻿
-namespace IntegrationTests.Infrastructure.Transactions
+﻿namespace Integration_Tests.TransactionBroadcastTests
 {
     public class TransferTransactionTests
     {

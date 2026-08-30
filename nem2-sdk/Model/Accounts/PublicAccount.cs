@@ -1,4 +1,4 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 

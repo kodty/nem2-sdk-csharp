@@ -25,6 +25,8 @@
 
     public class Block
     {
+        public uint Size { get; set; }
+
         public string Signature { get; set; }
 
         public string SignerPublicKey { get; set; }
@@ -75,12 +77,12 @@
 
         public ulong TotalFee { get; set; }
 
-        public int TotalTransactionsCount { get; set; }
+        public ulong TotalTransactionsCount { get; set; }
 
         public List<string> StateHashSubCacheMerkleRoots { get; set; }
 
-        public int TransactionsCount { get; set; }
+        public ulong TransactionsCount { get; set; }
 
-        public int StatementsCount { get; set; }
+        public ulong StatementsCount { get; set; }
     }
 }

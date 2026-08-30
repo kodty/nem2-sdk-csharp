@@ -2,13 +2,13 @@
 {
     public class TransactionIdentifiers
     {
-        public string[] transactionIds { get; set; }
+        public string[] TransactionIds { get; set; }
        
     }
 
     public class TransactionHashes
     {
-        public string[] hashes { get; set; }
+        public string[] Hashes { get; set; }
 
     }
 }

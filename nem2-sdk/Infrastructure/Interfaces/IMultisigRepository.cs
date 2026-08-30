@@ -1,4 +1,4 @@
-﻿namespace io.nem2.sdk.Infrastructure.Interfaces
+﻿namespace Coppery
 {
     internal interface IMultisigRepository
     {

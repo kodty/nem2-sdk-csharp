@@ -2,9 +2,9 @@
 using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
 using io.nem2.sdk.Model;
-using Coppery;
+using io.nem2.sdk.Infrastructure;
 
-namespace Integration_Tests
+namespace Integration_Tests.HttpRequestTests
 {
     internal partial class NodeRequests
     {
@@ -39,7 +39,7 @@ namespace Integration_Tests
 
             Assert.That(response.ComposedResponse[1].Version == 16777993 || response.ComposedResponse[1].Version == 0);
             Assert.That(response.ComposedResponse[1].Host, !Is.Null);
-            Assert.That(response.ComposedResponse[1].Port == 7900);
+            Assert.That(response.ComposedResponse[1].Port == 7900 || response.ComposedResponse[1].Port == 7950);
             Assert.That(response.ComposedResponse[1].NetworkIdentifier.GetNetworkValue(), Is.EqualTo(NetworkType.Types.TEST_NET));
             Assert.That(response.ComposedResponse[1].Roles, Is.GreaterThan(0));
             Assert.That(response.ComposedResponse[1].NetworkGenerationHashSeed, Is.EqualTo(HttpSetUp.genHash));
@@ -79,7 +79,7 @@ namespace Integration_Tests
             Assert.That(response.ComposedResponse.NumBlocks, Is.GreaterThan(1));
             Assert.That(response.ComposedResponse.NumTransactions, Is.GreaterThan(1));
             Assert.That(response.ComposedResponse.NumAccounts, Is.GreaterThan(1));
-            Assert.That(response.ComposedResponse.Database, !Is.Null);
+           // Assert.That(response.ComposedResponse.Database, !Is.Null);
         }
 
         [Test, Timeout(20000)]

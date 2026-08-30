@@ -1,10 +1,10 @@
-﻿using Coppery;
-using io.nem2.sdk.Infrastructure.HttpClients;
+﻿using io.nem2.sdk.Infrastructure.HttpClients;
 using System.Reactive.Linq;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Infrastructure;
+using Coppery;
 
-namespace Integration_Tests.HttpRequests
+namespace Integration_Tests.HttpRequestTests
 {
     internal class MosaicRequests
     {

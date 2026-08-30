@@ -1,12 +1,12 @@
-﻿using Coppery;
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using System.Diagnostics;
 using io.nem2.sdk.Infrastructure.HttpClients;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Infrastructure.Responses;
+using io.nem2.sdk.Infrastructure;
 
-namespace Integration_Tests.HttpRequests
+namespace Integration_Tests.HttpRequestTests
 {
     internal class EmbeddedTransactions
     {
@@ -540,9 +540,9 @@ namespace Integration_Tests.HttpRequests
 
             var embedded = (EmbeddedMultisigModification)tx.Transactions[0].Transaction;
 
-            Assert.That(embedded.minRemovalDelta, Is.EqualTo(5));
-            Assert.That(embedded.addressAdditions[0].IsHex(48));
-            Assert.That(embedded.addressDeletions.Count, Is.EqualTo(0));
+            Assert.That(embedded.MinRemovalDelta, Is.EqualTo(5));
+            Assert.That(embedded.AddressAdditions[0].IsHex(48));
+            Assert.That(embedded.AddressDeletions.Count, Is.EqualTo(0));
         }
     }
 }

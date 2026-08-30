@@ -17,8 +17,4 @@
     <Folder Include="Model\Articles\Distinct\Symbol\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Coppery\Coppery.csproj" />
-  </ItemGroup>
-
 </Project>

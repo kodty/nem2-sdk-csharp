@@ -1,7 +1,7 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Model.Articles;
 
-namespace io.nem2.sdk.Model.Transactions.MosaicPropertiesTransactions
+namespace io.nem2.sdk.Model.Transactions
 {
     public class MosaicDefinitionTransaction : TransactionExtension
     {

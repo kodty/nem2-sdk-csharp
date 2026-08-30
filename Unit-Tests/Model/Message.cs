@@ -1,8 +1,8 @@
-﻿using Coppery;
-using Integration_Tests;
+﻿using Integration_Tests.HttpRequestTests;
+using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model.Transactions.Messages;
+using io.nem2.sdk.Model.Transactions;
 using Org.BouncyCastle.Security;
 using System.Security.Cryptography;
 using System.Text.Json.Nodes;

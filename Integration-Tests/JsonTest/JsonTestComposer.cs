@@ -1,5 +1,6 @@
-﻿using Coppery;
+﻿using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace Integration_Tests.JsonTest
 {
@@ -299,12 +300,14 @@ namespace Integration_Tests.JsonTest
                 ]
                 """;
 
-            var composer = new ObjectComposer();
-
-
             var input = JsonNode.Parse(JsonNode.Parse(json).AsArray()[0].ToString());
 
-            var root = composer.GenerateObject<Root>(input);
+            JsonSerializerOptions options = new JsonSerializerOptions();
+            options.PropertyNameCaseInsensitive = true;
+            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+
+            var root = JsonSerializer.Deserialize<Root>(input, options);
 
             Assert.That(root.productId, Is.EqualTo(1001));
             Assert.That(root.Stock.available, Is.EqualTo(true));

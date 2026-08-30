@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-using Coppery;
-using io.nem2.sdk.Infrastructure.Interfaces;
+using io.nem2.sdk.Infrastructure;
+using io.nem2.sdk.Model;
 
-namespace io.nem2.sdk.Model.Transactions
+namespace Coppery
 {
     public class CosignatureTransaction1
     {

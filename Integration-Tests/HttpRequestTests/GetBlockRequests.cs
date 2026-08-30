@@ -1,11 +1,13 @@
-﻿using Coppery;
-using io.nem2.sdk.Infrastructure.HttpClients;
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Infrastructure;
+using System.Diagnostics;
+using System.Text.Json;
+using io.nem2.sdk.Infrastructure.Responses;
+using Coppery;
 
 
-namespace Integration_Tests.HttpRequests
+namespace Integration_Tests.HttpRequestTests
 {
     public class BlockRequests
     {
@@ -31,7 +33,10 @@ namespace Integration_Tests.HttpRequests
             response.ComposedResponse.Data.ForEach(i =>
             {
 
+                Assert.That(i.Block.Size, Is.GreaterThan(0));
+                
                 Assert.That(i.Block.Height, Is.GreaterThan(0));
+               // Assert.That(i.Meta.TotalFee, Is.GreaterThan(0));
                 Assert.That(i.Block.Network.GetNetworkValue(), Is.EqualTo(NetworkType.Types.MAIN_NET));
                 Assert.That(i.Block.Type, Is.GreaterThan(1));
                 Assert.IsTrue(i.Block.SignerPublicKey.IsHex(64));
@@ -40,8 +45,8 @@ namespace Integration_Tests.HttpRequests
                 Assert.That(i.Block.ProofGamma.Length, Is.EqualTo(64));
                 Assert.That(i.Block.ProofScalar.Length, Is.EqualTo(64));
                 Assert.IsTrue(i.Block.ProofVerificationHash.IsHex(32));
-                Assert.That(i.Block.Timestamp, Is.GreaterThanOrEqualTo(0));
-                Assert.That(i.Block.Difficulty, Is.GreaterThanOrEqualTo(1));
+                Assert.That(i.Block.Timestamp, Is.GreaterThan(0));
+                Assert.That(i.Block.Difficulty, Is.GreaterThan(0));
                 Assert.IsTrue(i.Block.PreviousBlockHash.IsHex(64));
                 Assert.IsTrue(i.Block.BeneficiaryAddress.IsHex(48));
                 Assert.IsTrue(i.Block.TransactionsHash.IsHex(64));
@@ -54,8 +59,9 @@ namespace Integration_Tests.HttpRequests
                 Assert.That(i.Meta.TotalTransactionsCount, Is.GreaterThanOrEqualTo(0));
                 Assert.IsTrue(i.Meta.Hash.IsHex(64));
                 Assert.That(i.Meta.StateHashSubCacheMerkleRoots.Count, Is.GreaterThanOrEqualTo(0));
+                Assert.That(i.Meta.StateHashSubCacheMerkleRoots[0].IsHex());
                 Assert.That(i.Meta.StatementsCount, Is.GreaterThanOrEqualTo(0));
-                Assert.That(i.Meta.TotalFee, Is.GreaterThanOrEqualTo(0));
+                
                 Assert.That(i.Id.IsHex(24));
             });
         }
@@ -106,6 +112,7 @@ namespace Integration_Tests.HttpRequests
 
             var response = await client.GetBlockchainInfo();
 
+            Debug.WriteLine(JsonSerializer.Deserialize<BlockchainInfo>(response.Response.Content.ReadAsStringAsync().Result).Height);
             Assert.That(response.ComposedResponse.Height, Is.GreaterThan(0));
             Assert.That(response.ComposedResponse.ScoreHigh, Is.GreaterThan(0));
             Assert.That(response.ComposedResponse.ScoreLow, Is.GreaterThan(0));

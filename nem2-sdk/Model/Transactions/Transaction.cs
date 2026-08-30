@@ -1,4 +1,4 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace io.nem2.sdk.Model.Transactions
@@ -18,6 +18,8 @@ namespace io.nem2.sdk.Model.Transactions
         internal byte[] Payload { get; set; }
 
         internal byte[] VerifiablePayload { get; set; }
+
+        public string Hash { get; set; }
 
         public Transaction(byte version, byte network, ushort type)
         {
@@ -55,21 +57,21 @@ namespace io.nem2.sdk.Model.Transactions
 
         public virtual SignedTransaction Prepare()
         {
-            if (Size % 8 != 0)
-                Size += (uint)((Math.Ceiling((decimal)Size / 8) * 8) - Size);
+            //if (Size % 8 != 0)
+            //    Size += (uint)((Math.Ceiling((decimal)Size / 8) * 8) - Size);
             
             Serialize();
 
             return new SignedTransaction()
             {
                 Payload = Payload,
-                VerifiablePayload = VerifiablePayload,
+                PayloadSigned = VerifiablePayload,
                 Signer = Signer.ToHex(),
-                Hash = Hash(VerifiablePayload).ToHex()
+                Hash = HashTransaction(Signer.Concat(Payload).ToArray()).ToHex()
             };
         }
 
-        private static byte[] Hash(byte[] data3)
+        private static byte[] HashTransaction(byte[] data3)
         {
             var hash = new byte[32];
 

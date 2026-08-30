@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Coppery
+namespace io.nem2.sdk.Infrastructure
 {
     public static class DataValidationUtils
     {

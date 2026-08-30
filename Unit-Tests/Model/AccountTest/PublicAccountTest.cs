@@ -2,7 +2,7 @@
 using io.nem2.sdk.Model.Accounts;
 
 
-namespace test.Model.AccountTest
+namespace Unit_Tests.Model.AccountTest
 {
 
     public class PublicAccountTest

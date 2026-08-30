@@ -1,7 +1,8 @@
-﻿using io.nem2.sdk.Infrastructure.Responses;
+﻿using io.nem2.sdk.Infrastructure;
+using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model;
 
-namespace io.nem2.sdk.Infrastructure.Interfaces
+namespace Coppery
 {
     interface ITransactionRepository
     {

@@ -2,7 +2,8 @@
 {
     public class BlockchainInfo
     {
-        public int Height { get; set; }
+
+        public ulong Height { get; set; }
 
         public ulong ScoreHigh { get; set; }
 
@@ -15,7 +16,9 @@
     {
         public int FinalizationEpoch { get; set; }
 
-        public int Height { get; set; }
+        public int FinalizationPoint { get; set; }
+
+        public ulong Height { get; set; }
 
         public string Hash { get; set; }
     }

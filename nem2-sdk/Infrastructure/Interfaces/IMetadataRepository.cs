@@ -1,6 +1,7 @@
-﻿using io.nem2.sdk.Infrastructure.Responses;
+﻿using io.nem2.sdk.Infrastructure;
+using io.nem2.sdk.Infrastructure.Responses;
 
-namespace io.nem2.sdk.Infrastructure.Interfaces
+namespace Coppery
 {
     public interface IMetadataRepository
     {

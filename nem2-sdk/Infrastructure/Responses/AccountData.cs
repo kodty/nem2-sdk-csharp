@@ -3,6 +3,7 @@
     public class AccountData
     {
        public AccountInfo Account {  get; set; }
+
        public string Id { get; set; }
     }
 

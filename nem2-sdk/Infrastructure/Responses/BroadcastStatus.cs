@@ -10,7 +10,7 @@
         public string Group { get; set; }
         public string Code { get; set; }
         public string Hash { get; set; }
-        public string Deadline { get; set; }
-        public string Height { get; set; }
+        public ulong Deadline { get; set; }
+        public ulong Height { get; set; }
     }
 }

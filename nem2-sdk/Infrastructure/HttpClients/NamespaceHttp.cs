@@ -1,7 +1,7 @@
-﻿using io.nem2.sdk.Infrastructure.Interfaces;
+﻿using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.Responses;
 
-namespace io.nem2.sdk.Infrastructure.HttpClients
+namespace Coppery
 {
     public class MosaicNamespaceHttp : HttpRouter, IMosaicNamespaceRepository
     {

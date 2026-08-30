@@ -1,4 +1,4 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace Unit_Tests.Crypto

@@ -1,10 +1,12 @@
-﻿using io.nem2.sdk.Model.Accounts;
+﻿using Coppery;
+using io.nem2.sdk.Model.Accounts;
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 
 namespace io.nem2.sdk.Infrastructure.Responses
 {
-    public class Aggregate : TransactionData.BaseTransaction
+    public class Aggregate : BaseTransaction
     {
         public string TransactionsHash { get; set; }
 
@@ -13,15 +15,15 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public List<EmbeddedTransactionData> Transactions { get; set; }
     }
 
-    public class EmbeddedMultisigModification : EmbeddedTransactionData.EmbeddedBaseTransaction // Multisig modification must be embedded
+    public class EmbeddedMultisigModification : EmbeddedBaseTransaction // Multisig modification must be embedded
     {
-        public int minRemovalDelta { get; set; }
+        public int MinRemovalDelta { get; set; }
 
-        public int minApprovalDelta { get; set; }
+        public int MinApprovalDelta { get; set; }
 
-        public List<string> addressAdditions { get; set; }
+        public List<string> AddressAdditions { get; set; }
 
-        public List<string> addressDeletions { get; set; }
+        public List<string> AddressDeletions { get; set; }
     }
 
     public class Cosignature
@@ -37,6 +39,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
     {
         public Metadata Meta { get; set; }
 
+        [JsonConverter(typeof(ExtendEmbeddedBaseTransactionConverter))]
         public EmbeddedBaseTransaction Transaction { get; set; }
 
         public string Id { get; set; }
@@ -56,23 +59,31 @@ namespace io.nem2.sdk.Infrastructure.Responses
             public int FeeMultiplier { get; set; }
         }
 
-        public class EmbeddedBaseTransaction
+       
+    }
+
+    public class EmbeddedBaseTransaction
+    {
+        public string SignerPublicKey { get; set; }
+
+        public byte Version { get; set; }
+
+        public byte Network { get; set; }
+
+        public ushort Type { get; set; }
+
+        public T AsExtendedType<T>() where T : EmbeddedBaseTransaction
         {
-            public string SignerPublicKey { get; set; }
-
-            public byte Version { get; set; }
-
-            public byte Network { get; set; }
-
-            public ushort Type { get; set; }
+            return (T)this;
         }
     }
 
-    public class TransactionData
+    public class TransactionData<T> where T : BaseTransaction
     {
         public Metadata Meta { get; set; }
 
-        public BaseTransaction Transaction { get; set; }
+        [JsonConverter(typeof(ExtendBaseTransactionConverter))]
+        public T Transaction { get; set; }
 
         public string Id { get; set; }
 
@@ -89,29 +100,59 @@ namespace io.nem2.sdk.Infrastructure.Responses
             public ulong Timestamp { get; set; }
 
             public int FeeMultiplier { get; set; }
-        }
+        }     
+    }
 
-        public class BaseTransaction
+    public class BaseTransaction
+    {
+        public int Size { get; set; }
+
+        public string Signature { get; set; }
+
+        public string SignerPublicKey { get; set; }
+
+        public byte Version { get; set; }
+
+        public byte Network { get; set; }
+
+        public ushort Type { get; set; }
+
+        public ulong MaxFee { get; set; }
+
+        public ulong Deadline { get; set; }
+
+        public T AsExtendedType<T>() where T : BaseTransaction
         {
-            public int Size { get; set; }
-
-            public string Signature { get; set; }
-
-            public string SignerPublicKey { get; set; }
-
-            public byte Version { get; set; }
-
-            public byte Network { get; set; }
-
-            public ushort Type { get; set; }
-          
-            public ulong MaxFee { get; set; }
-
-            public ulong Deadline { get; set; }
+            return (T)this;
         }
     }
 
-    public class AccountMetadata : TransactionData.BaseTransaction
+    public class TransactionData
+    {      
+        public Metadata Meta { get; set; }
+
+        [JsonConverter(typeof(ExtendBaseTransactionConverter))]
+        public BaseTransaction Transaction { get; set; }
+    
+        public string Id { get; set; }
+
+        public class Metadata
+        {
+            public ulong Height { get; set; }
+
+            public string Hash { get; set; }
+
+            public string MerkleComponentHash { get; set; }
+
+            public int Index { get; set; }
+
+            public ulong Timestamp { get; set; }
+
+            public int FeeMultiplier { get; set; }
+        }
+    }
+
+    public class AccountMetadata : BaseTransaction
     {
         public string TargetAddress { get; set; }
 
@@ -124,7 +165,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public string Value { get; set; }
     }
 
-    public class EmbeddedAccountMetadata : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedAccountMetadata : EmbeddedBaseTransaction
     {
         public string TargetAddress { get; set; }
 
@@ -137,7 +178,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public string Value { get; set; }
     }
 
-    public class EmbeddedSimpleTransfer : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedSimpleTransfer : EmbeddedBaseTransaction
     {
         public string RecipientAddress { get; set; }
 
@@ -146,7 +187,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public string Message { get; set; }
     }
 
-    public class SimpleTransfer : TransactionData.BaseTransaction
+    public class SimpleTransfer : BaseTransaction
     {
         public string RecipientAddress { get; set; }
 
@@ -155,7 +196,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public string Message { get; set; }
     }
 
-    public class EmbeddedKeyLink : EmbeddedTransactionData.EmbeddedBaseTransaction // account key link + node key link + VRF key link
+    public class EmbeddedKeyLink : EmbeddedBaseTransaction // account key link + node key link + VRF key link
     {
         public string LinkedPublicKey { get; set; }
 
@@ -163,7 +204,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
     }
 
     [Description("Account, Node, VRF, Differentiate with field Type of type TransactionType.Types")]
-    public class KeyLink : TransactionData.BaseTransaction // account key link + node key link + VRF key link
+    public class KeyLink : BaseTransaction // account key link + node key link + VRF key link
     {
         public string LinkedPublicKey { get; set; }
 
@@ -211,20 +252,20 @@ namespace io.nem2.sdk.Infrastructure.Responses
     {
         public string TargetNamespaceId { get; set; }
     }
-    public class EmbeddedEventMetadata : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedEventMetadata : EmbeddedBaseTransaction
     {
         public string TargetAddress { get; set; }
 
         public string ScopedMetadataKey { get; set; }
 
-        public int ValueSizeDelta { get; set; }
+        public ushort ValueSizeDelta { get; set; }
 
-        public int ValueSize { get; set; }
+        public ushort ValueSize { get; set; }
 
         public string Value { get; set; }
     }
 
-    public class EventMetadata : TransactionData.BaseTransaction
+    public class EventMetadata : BaseTransaction
     {
         public string TargetAddress { get; set; }
 
@@ -237,7 +278,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public string Value { get; set; }
     }
 
-    public class EmbeddedMosaicSupplyChange : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedMosaicSupplyChange : EmbeddedBaseTransaction
     {
         public string MosaicId { get; set; }
 
@@ -246,7 +287,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public ulong Delta { get; set; }
     }
 
-    public class MosaicSupplyChange : TransactionData.BaseTransaction
+    public class MosaicSupplyChange : BaseTransaction
     {
         public string MosaicId { get; set; }
 
@@ -255,7 +296,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public ulong Delta { get; set; }     
     }
 
-    public class EmbeddedMosaicSupplyRevocation : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedMosaicSupplyRevocation : EmbeddedBaseTransaction
     {
         public string SourceAddress { get; set; }
 
@@ -264,7 +305,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public ulong Amount { get; set; }
     }
 
-    public class MosaicSupplyRevocation : TransactionData.BaseTransaction
+    public class MosaicSupplyRevocation : BaseTransaction
     {
         public string SourceAddress { get; set; }
 
@@ -273,18 +314,18 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public ulong Amount { get; set; }
     }
 
-    public class EmbeddedNamespaceRegistration : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedNamespaceRegistration : EmbeddedBaseTransaction
     {
-        public int RegistrationType { get; set; }
+        public ushort RegistrationType { get; set; }
 
         public string Id { get; set; }
 
         public string Name { get; set; }
     }
 
-    public class NamespaceRegistration : TransactionData.BaseTransaction
+    public class NamespaceRegistration : BaseTransaction
     {
-        public int RegistrationType { get; set; }
+        public ushort RegistrationType { get; set; }
 
         public string Id { get; set; }
 
@@ -311,7 +352,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public string ParentId { get; set; }
     }
 
-    public class EmbeddedSecretProofLock : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedSecretProofLock : EmbeddedBaseTransaction
     {
         public int HashAlgorithm { get; set; }
 
@@ -320,7 +361,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public string RecipientAddress { get; set; }
     }
 
-    public class SecretProofLock : TransactionData.BaseTransaction
+    public class SecretProofLock : BaseTransaction
     {
         public int HashAlgorithm { get; set; }
 
@@ -329,7 +370,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public string RecipientAddress { get; set; }
     }
 
-    public class EmbeddedHashLockT : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedHashLockT : EmbeddedBaseTransaction
     {
         public ulong Duration { get; set; }
 
@@ -340,7 +381,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public string Hash { get; set; }
     }
 
-    public class HashLockT : TransactionData.BaseTransaction
+    public class HashLockT : BaseTransaction
     {     
         public ulong Duration { get; set; }
 
@@ -384,7 +425,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         
     }
 
-    public class EmbeddedAccountAddressRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
+    public class EmbeddedAccountAddressRestriction : EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
     {
         public List<string> RestrictionAdditions { get; set; }
 
@@ -393,7 +434,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public int RestrictionFlags { get; set; }
     }
 
-    public class AccountRestriction : TransactionData.BaseTransaction
+    public class AccountRestriction : BaseTransaction
     {
         public List<string> RestrictionAdditions { get; set; }
 
@@ -402,7 +443,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public int RestrictionFlags { get; set; }
     }
 
-    public class EmbeddedAccountRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
+    public class EmbeddedAccountRestriction : EmbeddedBaseTransaction // Address, Mosaic, Operation Restriction
     {
         public List<string> RestrictionAdditions { get; set; }
 
@@ -411,7 +452,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public int RestrictionFlags { get; set; }
     }
 
-    public class AccountOperationRestriction : TransactionData.BaseTransaction
+    public class AccountOperationRestriction : BaseTransaction
     {
         public List<ushort> RestrictionAdditions { get; set; }
 
@@ -420,7 +461,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public int RestrictionFlags { get; set; }
     }
 
-    public class EmbeddedAccountOperationRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedAccountOperationRestriction : EmbeddedBaseTransaction
     {
         public List<ushort> RestrictionAdditions { get; set; }
 
@@ -429,7 +470,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public int RestrictionFlags { get; set; }
     }
 
-    public class EmbeddedMosaicAddressRestriction : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedMosaicAddressRestriction : EmbeddedBaseTransaction
     {
         public string MosaicId { get; set; }
 
@@ -442,7 +483,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public string NewRestrictionValue { get; set; }
     }
 
-    public class MosaicAddressRestriction : TransactionData.BaseTransaction
+    public class MosaicAddressRestriction : BaseTransaction
     {
         public string MosaicId { get; set; }
 
@@ -455,14 +496,14 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public ulong NewRestrictionValue { get; set; }      
     }
 
-    public class EmbeddedAliasTransaction : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedAliasTransaction : EmbeddedBaseTransaction
     {
         public string NamespaceId { get; set; }
 
         public int AliasAction { get; set; }
     }
 
-    public class AliasTransaction : TransactionData.BaseTransaction
+    public class AliasTransaction : BaseTransaction
     {
         public string NamespaceId { get; set; }
 
@@ -490,7 +531,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
         public string MosaicId { get; set; }
     }
 
-    public class EmbeddedMosaicDefinition : EmbeddedTransactionData.EmbeddedBaseTransaction
+    public class EmbeddedMosaicDefinition : EmbeddedBaseTransaction
     {
         public ulong Nonce { get; set; }
 
@@ -504,7 +545,7 @@ namespace io.nem2.sdk.Infrastructure.Responses
 
     }
 
-    public class MosaicDefinition : TransactionData.BaseTransaction
+    public class MosaicDefinition : BaseTransaction
     {
         public ulong Nonce { get; set; }
 

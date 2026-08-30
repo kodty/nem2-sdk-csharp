@@ -1,11 +1,11 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace io.nem2.sdk.Infrastructure
+namespace Coppery
 {
     public class HttpRouter
     {
@@ -15,8 +15,6 @@ namespace io.nem2.sdk.Infrastructure
 
         internal int Port { get; set; }
 
-        internal ObjectComposer Composer { get; set; }
-
         protected HttpRouter(string host, int port)
         {
             if (string.IsNullOrEmpty(host)) throw new ArgumentException("Value cannot be null or empty.", nameof(host));
@@ -24,7 +22,6 @@ namespace io.nem2.sdk.Infrastructure
             Host = host;
             Port = port;
             Client = new HttpClient();
-            Composer = new ObjectComposer();
         }       
 
         internal Uri GetUri(object[] segs)
@@ -83,14 +80,13 @@ namespace io.nem2.sdk.Infrastructure
         internal static ExtendedHttpResponseMessege<T> ExtendResponse<T>(HttpResponseMessage msg)
         {
             if (!msg.IsSuccessStatusCode)
-            {
+            {             
                 throw new Exception(msg.Content.ReadAsStringAsync().Result);
             }
 
             return new ExtendedHttpResponseMessege<T>()
             {
                 Response = msg
-
             };
         }
        
@@ -99,10 +95,10 @@ namespace io.nem2.sdk.Infrastructure
             var objs = JsonNode.Parse(extendedResponse.Response.Content.ReadAsStringAsync().Result);
 
             var values = new T[objs.AsArray().Count];
-            
+
             for (var x = 0; x < objs.AsArray().Count;  x++)
             {
-                values[x] = Composer.GenerateObject<T>(objs.AsArray()[x]);
+                values[x] = JsonSerializerExtension.Deserialize<T>(objs.AsArray()[x]);
             }
 
             extendedResponse.ComposedResponse = values;
@@ -113,8 +109,10 @@ namespace io.nem2.sdk.Infrastructure
         internal ExtendedHttpResponseMessege<T> FormResponse<T>(ExtendedHttpResponseMessege<T> extendedResponse)
         {
             if (extendedResponse.Response.IsSuccessStatusCode)
-                extendedResponse.ComposedResponse = Composer.GenerateObject<T>(JsonNode.Parse(extendedResponse.Response.Content.ReadAsStringAsync().Result));
-
+            {
+                extendedResponse.ComposedResponse = JsonSerializerExtension.Deserialize<T>(extendedResponse.Response.Content.ReadAsStringAsync().Result);
+            }
+                       
             return extendedResponse;
         }
     }

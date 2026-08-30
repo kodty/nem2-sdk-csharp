@@ -1,6 +1,6 @@
-﻿using Coppery;
-using Org.BouncyCastle.Crypto.Digests;
+﻿using Org.BouncyCastle.Crypto.Digests;
 using io.nem2.sdk.Model.Transactions;
+using io.nem2.sdk.Infrastructure;
 
 namespace Unit_Tests.Crypto
 {

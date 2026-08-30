@@ -1,6 +1,5 @@
 ﻿using io.nem2.sdk.Model;
 
-
 namespace Unit_Tests.DeadlineTests
 {
     internal class DeadlineTests

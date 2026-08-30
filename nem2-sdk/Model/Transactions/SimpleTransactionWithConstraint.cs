@@ -1,4 +1,4 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 
 namespace io.nem2.sdk.Model.Transactions
 {

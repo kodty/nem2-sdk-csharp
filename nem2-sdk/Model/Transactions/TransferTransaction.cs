@@ -1,7 +1,6 @@
-﻿using Coppery;
+﻿using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Articles;
-using io.nem2.sdk.Model.Transactions.Messages;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -39,6 +38,7 @@ namespace io.nem2.sdk.Model.Transactions
             MosaicId = mosaic.MosaicId.Id;
             MosaicAmount = mosaic.Amount;
             MosaicsCount = 1;
+            Message = messege.GetPayload();
 
             if (Message != null)
             {

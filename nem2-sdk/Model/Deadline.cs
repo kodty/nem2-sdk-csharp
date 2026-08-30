@@ -37,6 +37,26 @@
             Ticks = (ulong)deadline.Add(time).TotalMilliseconds;
         }
 
+        public Deadline(NetworkType.Types type, ulong ticks)
+        {
+            switch (type)
+            {
+                case NetworkType.Types.MAIN_NET:
+                    EpochDate = MainNet;
+                    break;
+
+                case NetworkType.Types.TEST_NET:
+                    EpochDate = TestNet;
+                    break;
+            }
+
+            var now = DateTime.UtcNow;
+
+            var deadline = now - EpochDate;
+
+            Ticks = ticks;
+        }
+
         public Deadline(ulong timestamp, TimeSpan time)
         {
             Ticks = (ulong)(timestamp + time.TotalMilliseconds);

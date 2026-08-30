@@ -1,7 +1,5 @@
-﻿using Coppery;
-using io.nem2.sdk.Infrastructure.Responses;
+﻿using io.nem2.sdk.Infrastructure.Responses;
 using System.ComponentModel;
-using System.Text.Json.Nodes;
 
 namespace io.nem2.sdk.Model
 {
@@ -34,34 +32,6 @@ namespace io.nem2.sdk.Model
             TOKEN_RECLAMATION = 0x434D,
             SECRET_LOCK = 0x4152,
             SECRET_PROOF = 0x4252,
-        }
-
-        internal static dynamic CustomFunction(dynamic actual, Type genType, ObjectComposer composer, JsonNode item)
-        {
-            if(genType.Name == "BaseTransaction" || genType.Name == "EmbeddedBaseTransaction")
-            {
-                var t_type = GetTransactionType(item, embedded: genType.Name == "EmbeddedBaseTransaction");
-
-                actual = composer.GenerateObject(t_type, item);
-            }
-            if (genType.Name == "TransactionData" || genType.Name == "EmbeddedTransactionData")
-            {
-                var t_type = GetTransactionType(item["transaction"], embedded: genType.Name == "EmbeddedTransactionData");
-
-                actual.Transaction = composer.GenerateObject(t_type, item["transaction"]);
-            }
-
-            return actual;
-        }
-
-        internal static Type GetTransactionType(JsonNode t, bool embedded = false)
-        {
-            var type = (ushort)t["type"];
-
-            if (type == 16718)
-                type += (ushort)t["registrationType"];
-
-            return embedded ? type.GetEmbeddedTypeValue() : type.GetTypeValue();
         }
 
         public static ushort GetValue(this Types type)

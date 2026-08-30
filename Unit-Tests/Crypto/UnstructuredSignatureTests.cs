@@ -1,9 +1,8 @@
-﻿using Coppery;
-using Integration_Tests;
+﻿using Integration_Tests.HttpRequestTests;
+using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Articles;
 using System.Text.Json.Nodes;
-using Unit_Tests.Model.Transactions;
 
 namespace Unit_Tests.Crypto
 {
