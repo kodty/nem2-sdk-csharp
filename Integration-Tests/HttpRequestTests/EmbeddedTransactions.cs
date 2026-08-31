@@ -22,7 +22,7 @@ namespace Integration_Tests.HttpRequestTests
 
             var response = await client.GetConfirmedTransaction("95837D9332DD2ED42C6FED83DC9EA0907E0046A4EEAEE761E185F5E6FAA2EA4C");
 
-            var embedded = (EmbeddedSimpleTransfer)((Aggregate)response.ComposedResponse.Transaction).Transactions[0].Transaction;
+            var embedded = response.ComposedResponse.Transaction.AsExtendedType<Aggregate>().Transactions[0].Transaction.AsExtendedType<EmbeddedSimpleTransfer>();
 
             Assert.That(embedded.Message, Is.EqualTo("00E5B091E381AAE38184E381A7E38199E38191E381A9E38081E381BFE38293E382B8E383A0E58F82E58AA0E381AEE3818AE7A4BCE381A7E38199E38082"));
         }
@@ -418,7 +418,7 @@ namespace Integration_Tests.HttpRequestTests
 
             var client = new TransactionHttp(HttpSetUp.Node, HttpSetUp.Port);
 
-            var response = await client.GetConfirmedTransactions(new string[] { "6644D77CED4FBE214609E6F5", "6644D77CED4FBE214609F21C" });
+            var response = await client.GetConfirmedTransactions(new string[] { "6A3FCF5F54AA6949C704A839", "6A3FCF6054AA6949C704B3BD" });
 
             Debug.WriteLine(response.Response.Content.ReadAsStringAsync().Result);
             var aggTx1 = (Aggregate)response.ComposedResponse[0].Transaction;

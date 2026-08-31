@@ -14,7 +14,6 @@ namespace Unit_Tests.Model.Transactions.Verified
 {
     internal class TransactionTest
     {
-
         [Test]
         public async Task RegenerateHash()
         {
@@ -61,6 +60,7 @@ namespace Unit_Tests.Model.Transactions.Verified
             Debug.WriteLine(hash.ToHex());
 
         }
+
         [Test, Timeout(20000)]
         public async Task CreateAggregateTransactionTest()
         {
