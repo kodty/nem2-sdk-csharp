@@ -1,5 +1,4 @@
 ﻿using Coppery;
-using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.Responses;
 using io.nem2.sdk.Model;
 using io.nem2.sdk.Model.Accounts;
@@ -26,6 +25,7 @@ namespace Integration_Tests.HttpRequestTests
 
                 socketResponses.Subscribe(t =>
                 {
+                    
                     var c = t.Transaction.Type.GetTypeValue();
 
                     if (t.Meta.Hash == tx.Item1.Hash && c == typeof(SimpleTransfer))
