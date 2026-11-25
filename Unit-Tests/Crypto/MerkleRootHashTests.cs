@@ -43,7 +43,7 @@ namespace Unit_Tests.Crypto
             {
                 sha3Hasher.BlockUpdate(originalHashes[i], 0, 32);
                 sha3Hasher.BlockUpdate(originalHashes[i + 1], 0, 32);
-
+                
                 reducedHashes[i / 2] = new byte[32];
                 sha3Hasher.DoFinal(reducedHashes[i / 2]);
             }

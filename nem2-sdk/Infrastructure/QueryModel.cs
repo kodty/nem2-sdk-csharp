@@ -53,6 +53,8 @@
 
         public void SetParam(DefinedParams param, int value) => SetParam(param, value.ToString());
 
+        public void SetParam(DefinedParams param, ulong value) => SetParam(param, value.ToString());
+
         public void SetParam(DefinedParams param, Order order) => SetParam(param, order.ToString());
 
         public void SetParam(DefinedParams param, OrderBy orderBy) => SetParam(param, orderBy.ToString());
