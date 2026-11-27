@@ -71,7 +71,7 @@ namespace io.nem2.sdk.Model.Transactions
             };
         }
 
-        private static byte[] HashTransaction(byte[] data3)
+        public static byte[] HashTransaction(byte[] data3)
         {
             var hash = new byte[32];
 
