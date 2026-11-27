@@ -15,7 +15,7 @@ namespace io.nem2.sdk.Model.Transactions
             serializer.SerializeProperty(base.Value);
         }
 
-        public MosaicMetadataTransaction(string targetAddress, Mosaic targetMosaicId, string scopedKey, ushort valueSizeDelta, ushort valueSize, byte[] value) 
+        public MosaicMetadataTransaction(string targetAddress, string scopedKey, Mosaic targetMosaicId, ushort valueSizeDelta, ushort valueSize, byte[] value) 
             : base(targetAddress,  scopedKey,  valueSizeDelta,  valueSize, value)
         {
             TargetMosaicId = targetMosaicId.MosaicId.HexId.FromHex();

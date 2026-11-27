@@ -31,23 +31,22 @@ namespace Integration_Tests.HttpRequestTests
 
             var result = await client.GetConfirmedTransaction("F30769768E5279428A85688FBC072B59B052713CF655596332B8CC961EF8FEA3");
 
-            var transaction = (Aggregate)result.ComposedResponse.Transaction;
+            var transaction = result.ComposedResponse.Transaction.AsExtendedType<Aggregate>();
 
-            var mosaicMeta = (EmbeddedMosaicMetadata)transaction.Transactions[0].Transaction;
+            var mosaicMeta = transaction.Transactions[0].Transaction.AsExtendedType<EmbeddedMosaicMetadata>();
             
+            // payload w/ reverse parameters
             var pMosaicMeta = Transaction.Create(
                 new MosaicMetadataTransaction(
-                    mosaicMeta.TargetAddress, 
-                    Mosaic.CreateFromHexIdentifier(mosaicMeta.TargetMosaicId.FromHex().Reverse().ToArray().ToHex(), 0), 
-                    mosaicMeta.ScopedMetadataKey.FromHex().Reverse().ToArray().ToHex(), 
+                    mosaicMeta.TargetAddress,
+                    mosaicMeta.ScopedMetadataKey.FromHex().Reverse().ToArray().ToHex(),
+                    Mosaic.CreateFromHexIdentifier(mosaicMeta.TargetMosaicId.FromHex().Reverse().ToArray().ToHex(), 0),         
                     mosaicMeta.ValueSizeDelta,
                     mosaicMeta.ValueSize, 
                     mosaicMeta.Value.FromHex()),
                 NetworkType.Types.TEST_NET
                 );
 
-            Debug.WriteLine(mosaicMeta.TargetMosaicId.FromHex().Reverse().ToArray().ToHex());
-            Debug.WriteLine(mosaicMeta.ScopedMetadataKey.FromHex().Reverse().ToArray().ToHex());
             Assert.True(transaction.Deadline == 119511733869);
             Assert.True(transaction.MaxFee == 32800);
             Assert.True(pMosaicMeta.Version == 1);
@@ -60,7 +59,14 @@ namespace Integration_Tests.HttpRequestTests
             Assert.True(pMosaicMeta.TransactionExtension.ValueSize == mosaicMeta.ValueSize);
             Assert.True(pMosaicMeta.TransactionExtension.ValueSizeDelta == mosaicMeta.ValueSizeDelta);
 
+            // set signer of embedded tx
             pMosaicMeta.Signer = mosaicMeta.SignerPublicKey.FromHex();
+
+            var embeddedPayload = pMosaicMeta.Prepare();
+
+            var componentHash = Transaction.HashTransaction(pMosaicMeta.Signer.Concat(embeddedPayload.PayloadSigned).ToArray());
+
+            Debug.WriteLine(componentHash.ToHex());
 
             var payload = new AggregatePayload([pMosaicMeta], true);
 
@@ -75,8 +81,7 @@ namespace Integration_Tests.HttpRequestTests
             tx.Fee = transaction.MaxFee;
             tx.Signature = transaction.Signature.FromHex();
             tx.Signer = transaction.SignerPublicKey.FromHex();
-            tx.TransactionExtension.TransactionsHash = "D8D0F0AD8E68A01C4122F465AC08548EF171D44B055712EB44927037B6E9790C".FromHex();
-                  
+         
             Assert.True(tx.Version == 3);
             Assert.True(tx.Network == 152);
             Assert.True(tx.Type.GetRawValue() == TransactionTypes.Types.AGGREGATE_COMPLETE);
@@ -85,7 +90,9 @@ namespace Integration_Tests.HttpRequestTests
             var preparedTransaction = tx.Prepare();
 
             Debug.WriteLine(preparedTransaction.Payload.ToHex());
-            Debug.WriteLine(preparedTransaction.PayloadSigned.ToHex());
+            Debug.WriteLine("signed payload " + preparedTransaction.PayloadSigned.ToHex());
+
+            // append network gen hash
             Assert.True(NaclFast.SignDetachedVerify(HttpSetUp.genHash.FromHex().Concat(preparedTransaction.PayloadSigned.Take(52)).ToArray(), transaction.Signature.FromHex(), transaction.SignerPublicKey.FromHex()));
             Assert.That(tx.Hash == "F30769768E5279428A85688FBC072B59B052713CF655596332B8CC961EF8FEA3");
         }
