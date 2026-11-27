@@ -100,7 +100,7 @@ namespace io.nem2.sdk.Model
 
         public SimpleTransaction<MosaicMetadataTransaction> CreateMosaicMetadataTransaction(string targetAddress, string scopedKey, Mosaic targetMosaicId, ushort valueSizeDelta, ushort valueSize, byte[] value, ulong fee)
         {
-            return CreateTransaction(new MosaicMetadataTransaction(targetAddress, targetMosaicId, scopedKey, valueSizeDelta, valueSize, value), fee);
+            return CreateTransaction(new MosaicMetadataTransaction(targetAddress, scopedKey, targetMosaicId, valueSizeDelta, valueSize, value), fee);
         }
 
         public SimpleTransaction<RegisterNamespace> CreateNamespaceRegistrationTransaction(ulong duration, ulong parentId, ulong id, NamespaceTypes.Types type, string name, ulong fee)
