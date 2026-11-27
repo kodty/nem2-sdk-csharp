@@ -1,6 +1,7 @@
 ﻿using io.nem2.sdk.Infrastructure;
 using io.nem2.sdk.Infrastructure.Responses;
 using Org.BouncyCastle.Crypto.Digests;
+using System.Diagnostics;
 
 namespace io.nem2.sdk.Model.Transactions
 {
@@ -25,7 +26,7 @@ namespace io.nem2.sdk.Model.Transactions
             for (int i = 0; i < transactions.Count(); i++)
             {
                 EmbeddedTransactions[i] = transactions[i].Prepare();
-
+                Debug.WriteLine(EmbeddedTransactions[0].Payload.ToHex());
 				PayloadSize += (uint)EmbeddedTransactions[i].Payload.Length;
             }
  
