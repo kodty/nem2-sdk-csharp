@@ -18,7 +18,7 @@ namespace Unit_Tests.Model.Transactions.Verified
         public async Task RegenerateHash()
         {
             /*
-              "version": 1,
+          "version": 1,
           "network": 152,
           "type": 16964,
           "targetAddress": "98B15E0BEF86203EEDB4F91D993023FEEEBDFC7DE2922887",
@@ -27,7 +27,7 @@ namespace Unit_Tests.Model.Transactions.Verified
           "valueSizeDelta": 0,
           "valueSize": 4,
           "value": "91220000"
-             */
+            */
 
             byte version = 01;
             byte network = 0x98;
