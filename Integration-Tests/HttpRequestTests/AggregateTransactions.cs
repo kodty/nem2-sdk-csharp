@@ -85,7 +85,6 @@ namespace Integration_Tests.HttpRequestTests
             Assert.True(tx.Version == 3);
             Assert.True(tx.Network == 152);
             Assert.True(tx.Type.GetRawValue() == TransactionTypes.Types.AGGREGATE_COMPLETE);
-           
 
             var preparedTransaction = tx.Prepare();
 
